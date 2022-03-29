@@ -13,9 +13,40 @@ tags = {
   POC = "ye.wu@nih.gov"
 }
 certificate_domain_name = "*.cancer.gov"
-backend_container_port = 8080
-frontend_container_port = 80
-frontend_container_image_name = "cbiitssrepo/bento-frontend"
-backend_container_image_name = "cbiitssrepo/bento-backend"
 internal_alb = true
 app_sub_domain = "prostatenaturalhistory"
+elasticsearch_instance_type = "t3.medium.elasticsearch"
+
+microservices  = {
+  frontend = {
+    name = "frontend"
+    port = 80
+    health_check_path = "/"
+    priority_rule_number = 20
+    image_url = "cbiitssrepo/bento-frontend:latest"
+    cpu = 256
+    memory = 512
+    path = "/*"
+  },
+  backend = {
+    name = "backend"
+    port = 8080
+    health_check_path = "/ping"
+    priority_rule_number = 20
+    image_url = "cbiitssrepo/bento-frontend:latest"
+    cpu = 512
+    memory = 1024
+    path = "/v1/graphql/*"
+  },
+  frontend = {
+    name = "auth"
+    port = 8082
+    health_check_path = "/api/auth/ping"
+    priority_rule_number = 20
+    image_url = "cbiitssrepo/bento-auth:latest"
+    cpu = 256
+    memory = 512
+    path = "/api/auth/*"
+  }
+
+}

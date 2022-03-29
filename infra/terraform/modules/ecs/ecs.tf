@@ -39,7 +39,7 @@ resource "aws_ecs_service" "service" {
   deployment_maximum_percent         = 200
   network_configuration {
     security_groups  = [aws_security_group.app_sg.id]
-    subnets          = var.private_subnets
+    subnets          = var.private_subnet_ids
     assign_public_ip = false
   }
   load_balancer {
