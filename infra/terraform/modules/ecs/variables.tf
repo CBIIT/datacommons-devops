@@ -170,7 +170,7 @@ variable "microservice_port" {
 }
 variable "microservice_cpu" {
   type = number
-  description = "cpu requirement for the microservice
+  description = "cpu requirement for the microservice"
 }
 variable "microservice_memory" {
   type = number
