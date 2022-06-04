@@ -6,6 +6,7 @@ module "s3" {
   versioning = {
     enabled = var.enable_version
   }
+  policy = var.bucket_policy
   lifecycle_rule = var.lifecycle_rule
   tags = var.tags
 }
