@@ -20,12 +20,9 @@ variable "bucket_acl" {
   description = "type of bucket acl to apply"
   type = string
   default = "private"
-<<<<<<< HEAD
 }
 variable "bucket_policy" {
   description = "s3 bucket policy"
   type = any
   default = []
-=======
->>>>>>> main
 }
