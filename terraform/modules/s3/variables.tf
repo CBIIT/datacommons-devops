@@ -21,3 +21,8 @@ variable "bucket_acl" {
   type = string
   default = "private"
 }
+variable "bucket_policy" {
+  description = "s3 bucket policy"
+  type = any
+  default = []
+}

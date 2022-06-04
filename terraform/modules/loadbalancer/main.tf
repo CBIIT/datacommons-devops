@@ -4,12 +4,10 @@ locals {
   any_protocol = "-1"
   tcp_protocol = "tcp"
   https_port   = "443"
-  all_ips      = ["0.0.0.0/0"]
 }
-
 data "aws_acm_certificate" "cert" {
   domain      = var.certificate_domain_name
-  types       = [var.acm_certificate_issue_type]
+  types       = [var.acm_certificate_issued_type]
   most_recent = true
 }
 
@@ -17,10 +15,10 @@ resource "aws_lb" "alb" {
   name               = "${var.stack_name}-${var.alb_name}-${var.env}"
   load_balancer_type = var.lb_type
   subnets            = var.alb_subnet_ids
-  security_groups    = [aws_security_group.alb-sg.id]
+  security_groups    = var.alb_security_group_ids
   internal = var.internal_alb
   access_logs  {
-    bucket  = var.alb_logs_bucket_name
+    bucket  = var.alb_log_bucket_name
     prefix  = "alb-logs"
     enabled = true
   }
@@ -35,45 +33,6 @@ resource "aws_lb" "alb" {
   },
   var.tags,
   )
-}
-
-#create alb security group
-resource "aws_security_group" "alb-sg" {
-  name   = "${var.stack_name}-${var.env}-alb-sg"
-  vpc_id = var.vpc_id
-  tags = merge(
-  {
-    "Name" = format("%s-%s-alb-sg", var.stack_name, var.env)
-  },
-  var.tags,
-  )
-}
-
-resource "aws_security_group_rule" "inbound_http" {
-  from_port   = local.http_port
-  protocol    = local.tcp_protocol
-  to_port     = local.http_port
-  cidr_blocks = var.alb_allowed_ip_range
-  security_group_id = aws_security_group.alb-sg.id
-  type              = "ingress"
-}
-
-resource "aws_security_group_rule" "inbound_https" {
-  from_port   = local.https_port
-  protocol    = local.tcp_protocol
-  to_port     = local.https_port
-  cidr_blocks = var.alb_allowed_ip_range
-  security_group_id = aws_security_group.alb-sg.id
-  type              = "ingress"
-}
-
-resource "aws_security_group_rule" "all_outbound" {
-  from_port   = local.any_port
-  protocol    = local.any_protocol
-  to_port     = local.any_port
-  cidr_blocks = local.all_ips
-  security_group_id = aws_security_group.alb-sg.id
-  type              = "egress"
 }
 
 #create https redirect
