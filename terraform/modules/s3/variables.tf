@@ -26,3 +26,8 @@ variable "bucket_policy" {
   type = any
   default = []
 }
+variable "attach_bucket_policy" {
+  description = "set to true if you want bucket policy and provide value for policy variable"
+  type        = bool
+  default     = false
+}

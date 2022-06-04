@@ -9,4 +9,5 @@ module "s3" {
   policy = var.bucket_policy
   lifecycle_rule = var.lifecycle_rule
   tags = var.tags
+  attach_policy = var.attach_bucket_policy
 }
