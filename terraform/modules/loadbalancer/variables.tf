@@ -55,7 +55,6 @@ variable "alb_subnet_ids" {
   description = "list of subnets to use for the alb"
   type = list(string)
 }
-
 variable "alb_security_group_ids" {
   description = "list of alb security groups"
   type = list(string)
