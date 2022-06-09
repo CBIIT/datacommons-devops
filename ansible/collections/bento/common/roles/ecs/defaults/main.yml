@@ -1,2 +1,4 @@
 ---
-#comment
+iam_prefix: ""
+execution_role: "{{ iam_prefix }}{{ project_name }}-ecs-task-execution-role-{{ tier }}"
+task_role: "{{ iam_prefix }}{{ project_name }}-ecs-task-role-{{ tier }}"
