@@ -21,5 +21,5 @@ module "iam_policy" {
   name        =  var.custom_policy_name
   path        = "/"
   description = var.iam_policy_description
-  policy = var.iam_policy_document
+  policy = var.iam_policy
 }

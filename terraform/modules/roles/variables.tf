@@ -13,7 +13,7 @@ variable "iam_role_name" {
   type = string
 }
 variable "add_custom_policy" {
-  description = "add other policys other than managed policy"
+  description = "add other policies other than managed policy"
   type = bool
   default = false
 }
@@ -27,7 +27,7 @@ variable "iam_policy_description" {
   type = string
   default = null
 }
-variable "iam_policy_document" {
+variable "iam_policy" {
   description = "iam policy document"
   type = string
   default = null
