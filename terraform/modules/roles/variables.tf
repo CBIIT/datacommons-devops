@@ -32,3 +32,8 @@ variable "iam_policy_document" {
   type = string
   default = null
 }
+variable "trusted_role_services" {
+  default =  null
+  description = "list of trusted service"
+  type = list(string)
+}
