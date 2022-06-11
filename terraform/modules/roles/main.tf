@@ -11,6 +11,7 @@ module "iam_assumable_role" {
   role_requires_mfa = false
   custom_role_policy_arns = local.all_custom_policy_arns
   number_of_custom_role_policy_arns = length(local.all_custom_policy_arns)
+  trusted_role_services = var.trusted_role_services
 }
 
 module "iam_policy" {
