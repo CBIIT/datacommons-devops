@@ -6,8 +6,8 @@ resource "aws_ecs_task_definition" "task" {
   requires_compatibilities = ["FARGATE"]
   cpu = each.value.cpu
   memory = each.value.memory
-  execution_role_arn =  aws_iam_role.task_execution_role.arn
-  task_role_arn = aws_iam_role.task_role.arn
+  execution_role_arn =  var.ecs_execution_role_arn
+  task_role_arn = var.ecs_task_role_arn
   container_definitions = jsonencode([
     {
       name         =  each.value.name
@@ -34,7 +34,7 @@ resource "aws_ecs_service" "service" {
   name              = "${var.stack_name}-${var.env}-${each.value.name}"
   cluster           = aws_ecs_cluster.ecs_cluster.id
   task_definition   = aws_ecs_task_definition.task[each.key].arn
-  desired_count     = var.number_container_replicas
+  desired_count     = each.value.number_container_replicas
   launch_type       = var.ecs_launch_type
   scheduling_strategy = var.ecs_scheduling_strategy
   deployment_minimum_healthy_percent = 50
@@ -44,8 +44,8 @@ resource "aws_ecs_service" "service" {
     rollback = true
   }
   network_configuration {
-    security_groups  = [aws_security_group.app_sg.id,aws_security_group.fargate_sg.id]
-    subnets          = var.private_subnet_ids
+    security_groups  = var.ecs_security_group_ids
+    subnets          = var.ecs_subnet_ids
     assign_public_ip = false
   }
   load_balancer {
@@ -96,69 +96,6 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   )
 
 }
-
-resource "aws_security_group" "fargate_sg" {
-  name = "${var.stack_name}-${var.env}-fargate-sg"
-  vpc_id = var.vpc_id
-  tags = merge(
-  {
-    "Name" = format("%s-%s-fargate-sg",var.stack_name,var.env),
-  },
-  var.tags,
-  )
-}
-
-resource "aws_security_group_rule" "all_outbound_fargate" {
-  from_port = local.any_port
-  protocol = local.any_protocol
-  to_port = local.any_port
-  cidr_blocks = local.all_ips
-  security_group_id = aws_security_group.fargate_sg.id
-  type = "egress"
-}
-
-resource "aws_security_group_rule" "inbound_fargate" {
-  for_each = toset(var.fargate_security_group_ports)
-  from_port = each.key
-  protocol = local.tcp_protocol
-  to_port = each.key
-  security_group_id = aws_security_group.fargate_sg.id
-  cidr_blocks = [data.aws_vpc.vpc.cidr_block]
-  type = "ingress"
-}
-
-resource "aws_security_group" "app_sg" {
-  name = "${var.stack_name}-${var.env}-app-sg"
-  vpc_id = var.vpc_id
-  tags = merge(
-  {
-    "Name" = format("%s-%s-frontend-sg",var.stack_name,var.env),
-  },
-  var.tags,
-  )
-}
-
-resource "aws_security_group_rule" "inbound_alb" {
-  for_each = var.microservices
-  from_port = each.value.port
-  protocol = local.tcp_protocol
-  to_port = each.value.port
-  security_group_id = aws_security_group.app_sg.id
-  source_security_group_id = aws_security_group.alb-sg.id
-  type = "ingress"
-}
-
-
-
-resource "aws_security_group_rule" "all_outbound_frontend" {
-  from_port = local.any_port
-  protocol = local.any_protocol
-  to_port = local.any_port
-  cidr_blocks = local.all_ips
-  security_group_id = aws_security_group.app_sg.id
-  type = "egress"
-}
-
 #create alb target group
 resource "aws_lb_target_group" "target_group" {
   for_each = var.microservices
@@ -192,7 +129,7 @@ resource "aws_lb_target_group" "target_group" {
 
 resource "aws_lb_listener_rule" "alb_listener" {
   for_each = var.microservices
-  listener_arn = aws_lb_listener.listener_https.arn
+  listener_arn = var.alb_https_listener_arn
   priority = each.value.priority_rule_number
   action {
     type = "forward"
