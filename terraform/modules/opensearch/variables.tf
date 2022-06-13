@@ -10,6 +10,7 @@ variable "stack_name" {
 variable "opensearch_instance_type" {
   description = "type of instance to be used to create the elasticsearch cluster"
   type = string
+  default = "t3.medium.elasticsearch"
 }
 
 variable "opensearch_version" {
