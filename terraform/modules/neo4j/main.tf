@@ -23,7 +23,7 @@ EOF
 
   part {
     content_type = "text/x-shellscript"
-    content      = file("ssm.sh")
+    content      = file("${path.module}/ssm.sh")
   }
 }
 
