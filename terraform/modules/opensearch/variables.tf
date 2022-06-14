@@ -18,6 +18,7 @@ variable "opensearch_version" {
   description = "specify es version"
   default     = "OpenSearch_1.2"
 }
+
 variable "create_os_service_role" {
   type        = bool
   default     = false
