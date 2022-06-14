@@ -47,6 +47,12 @@ resource "aws_elasticsearch_domain" "es" {
     volume_size = var.opensearch_ebs_volume_size
   }
 
+  log_publishing_options {
+    enabled                  = var.opensearch_logs_enabled
+    cloudwatch_log_group_arn = aws_cloudwatch_log_group.es.arn
+    log_type                 = var.opensearch_log_type
+  }
+
   access_policies = <<CONFIG
 {
   "Version": "2012-10-17",
@@ -63,5 +69,34 @@ resource "aws_elasticsearch_domain" "es" {
   snapshot_options {
     automated_snapshot_start_hour = var.automated_snapshot_start_hour
   }
+
   tags = var.tags
+}
+
+resource "aws_cloudwatch_log_group" "es" {
+  name = "${local.domain_name}-logs"
+}
+
+resource "aws_cloudwatch_log_resource_policy" "es" {
+  policy_name = "${local.domain_name}-log-policy"
+
+  policy_document = <<CONFIG
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "es.amazonaws.com"
+      },
+      "Action": [
+        "logs:PutLogEvents",
+        "logs:PutLogEventsBatch",
+        "logs:CreateLogStream"
+      ],
+      "Resource": "arn:aws:logs:*"
+    }
+  ]
+}
+CONFIG
 }

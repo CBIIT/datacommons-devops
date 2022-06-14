@@ -56,3 +56,15 @@ variable "multi_az_enabled" {
   description = "set to true to enable multi-az deployment"
   type        = bool
 }
+
+variable "opensearch_log_type" {
+  description = "type of opensearch logs to send to cloudwatch (INDEX_SLOW_LOGS, SEARCH_SLOW_LOGS, AUDIT_LOGS, ES_APPLICATION_LOGS)"
+  type        = string
+  default     = "INDEX_SLOW_LOGS"
+}
+
+variable "opensearch_logs_enabled" {
+  description = "set to true to enable OpenSearch to forward logs to CloudWatch"
+  type        = bool
+  default     = true
+}
