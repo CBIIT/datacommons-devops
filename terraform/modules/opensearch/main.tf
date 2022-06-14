@@ -14,7 +14,7 @@ resource "aws_elasticsearch_domain" "es" {
   domain_name           = local.domain_name
   elasticsearch_version = var.opensearch_version
 
-  ####
+
   cluster_config {
     instance_type          = var.opensearch_instance_type
     instance_count         = var.opensearch_instance_count
