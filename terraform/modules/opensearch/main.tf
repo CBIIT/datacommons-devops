@@ -1,10 +1,3 @@
-locals {
-  domain_name = "${var.stack_name}-${var.env}-opensearch"
-}
-
-data "aws_region" "region" {}
-data "aws_caller_identity" "caller" {}
-
 resource "aws_iam_service_linked_role" "es" {
   count            = var.create_os_service_role ? 1 : 0
   aws_service_name = "es.amazonaws.com"
@@ -21,18 +14,15 @@ resource "aws_opensearch_domain" "es" {
     zone_awareness_enabled = var.multi_az_enabled
   }
 
-  # not using variables so that security is applied by default
   domain_endpoint_options {
     enforce_https       = true
     tls_security_policy = "Policy-Min-TLS-1-2-2019-07"
   }
 
-  # not using variables so that security is applied by default
   encrypt_at_rest {
     enabled = true
   }
 
-  # not using variables so that security is applied by default
   node_to_node_encryption {
     enabled = true
   }
@@ -53,19 +43,6 @@ resource "aws_opensearch_domain" "es" {
     log_type                 = var.opensearch_log_type
   }
 
-  access_policies = <<CONFIG
-{
-  "Version": "2012-10-17",
-  "Statement": [
-      {
-          "Action": "es:*",
-          "Principal": "*",
-          "Effect": "Allow",
-          "Resource": "arn:aws:es:${data.aws_region.region.name}:${data.aws_caller_identity.caller.account_id}:domain/${local.domain_name}/*"
-      }
-  ]
-}
-  CONFIG
   snapshot_options {
     automated_snapshot_start_hour = var.automated_snapshot_start_hour
   }
