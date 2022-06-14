@@ -1,0 +1,39 @@
+
+name: Terraform
+on:
+  - pull_request 
+
+jobs:
+  format:
+    name: 'TF Format'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Repository Checkout
+      id: checkout
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+    - name: Terraform Format
+      run: terraform fmt -recursive
+      working-directory: ./terraform/modules
+  
+  documentation:
+    name: 'Create Module Documentation'
+    needs: format
+    runs-on: ubuntu-latest
+    steps:
+    - name: Repository Checkout
+      id: checkout
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+    - name: Terraform Documentation
+      uses: terraform-docs/gh-actions@v1.0.0
+      with:
+        working-dir: ./terraform
+        output-file: README.md
+        output-method: inject 
+        recursive: true
+        git-push: true
