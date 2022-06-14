@@ -1,9 +1,9 @@
-resource "aws_iam_service_linked_role" "es" {
+resource "aws_iam_service_linked_role" "os" {
   count            = var.create_os_service_role ? 1 : 0
   aws_service_name = "es.amazonaws.com"
 }
 
-resource "aws_opensearch_domain" "es" {
+resource "aws_opensearch_domain" "os" {
   domain_name    = local.domain_name
   engine_version = var.opensearch_version
 
@@ -39,7 +39,7 @@ resource "aws_opensearch_domain" "es" {
 
   log_publishing_options {
     enabled                  = var.opensearch_logs_enabled
-    cloudwatch_log_group_arn = aws_cloudwatch_log_group.es.arn
+    cloudwatch_log_group_arn = aws_cloudwatch_log_group.os.arn
     log_type                 = var.opensearch_log_type
   }
 
@@ -50,30 +50,13 @@ resource "aws_opensearch_domain" "es" {
   tags = var.tags
 }
 
-resource "aws_cloudwatch_log_group" "es" {
+resource "aws_cloudwatch_log_group" "os" {
   name = "${local.domain_name}-logs"
+  tags = var.tags
 }
 
-resource "aws_cloudwatch_log_resource_policy" "es" {
-  policy_name = "${local.domain_name}-log-policy"
-
-  policy_document = <<CONFIG
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "es.amazonaws.com"
-      },
-      "Action": [
-        "logs:PutLogEvents",
-        "logs:PutLogEventsBatch",
-        "logs:CreateLogStream"
-      ],
-      "Resource": "arn:aws:logs:*"
-    }
-  ]
-}
-CONFIG
+resource "aws_cloudwatch_log_resource_policy" "os" {
+  policy_name     = "${local.domain_name}-log-policy"
+  policy_document = data.aws_iam_policy_document.os.json
+  tags            = var.tags
 }
