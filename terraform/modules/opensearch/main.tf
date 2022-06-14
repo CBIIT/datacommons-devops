@@ -6,21 +6,47 @@ data "aws_region" "region" {}
 data "aws_caller_identity" "caller" {}
 
 resource "aws_iam_service_linked_role" "es" {
-  count = var.create_os_service_role ? 1: 0
+  count            = var.create_os_service_role ? 1 : 0
   aws_service_name = "es.amazonaws.com"
 }
 
 resource "aws_elasticsearch_domain" "es" {
-  domain_name = local.domain_name
+  domain_name           = local.domain_name
   elasticsearch_version = var.opensearch_version
+
+  ####
+  cluster_config {
+    instance_type          = var.opensearch_instance_type
+    instance_count         = var.opensearch_instance_count
+    zone_awareness_enabled = var.multi_az_enabled
+  }
+
+  # not using variables so that security is applied by default
+  domain_endpoint_options {
+    enforce_https       = true
+    tls_security_policy = "Policy-Min-TLS-1-2-2019-07"
+  }
+
+  # not using variables so that security is applied by default
+  encrypt_at_rest {
+    enabled = true
+  }
+
+  # not using variables so that security is applied by default
+  node_to_node_encryption {
+    enabled = true
+  }
+
   vpc_options {
-    subnet_ids = [element(var.opensearch_subnet_ids,0)]
+    subnet_ids         = [element(var.opensearch_subnet_ids, 0)]
     security_group_ids = var.opensearch_security_group_ids
   }
+
   ebs_options {
     ebs_enabled = true
     volume_size = var.opensearch_ebs_volume_size
   }
+
   access_policies = <<CONFIG
 {
   "Version": "2012-10-17",
@@ -39,4 +65,3 @@ resource "aws_elasticsearch_domain" "es" {
   }
   tags = var.tags
 }
-
