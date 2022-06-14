@@ -138,7 +138,7 @@ resource "aws_lb_listener_rule" "alb_listener" {
 
   condition {
     host_header {
-      values = [var.microservice_url]
+      values = [var.application_url]
     }
   }
   condition {

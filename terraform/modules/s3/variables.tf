@@ -31,3 +31,8 @@ variable "attach_bucket_policy" {
   type        = bool
   default     = false
 }
+variable "force_destroy_bucket" {
+  description = "force destroy s3 bucket."
+  type = bool
+  default = false
+}

@@ -10,4 +10,5 @@ module "s3" {
   lifecycle_rule = var.lifecycle_rule
   tags = var.tags
   attach_policy = var.attach_bucket_policy
+  force_destroy = var.force_destroy_bucket
 }
