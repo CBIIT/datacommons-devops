@@ -47,7 +47,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_opensearch_arn"></a> [opensearch\_arn](#output\_opensearch\_arn) | n/a |
-| <a name="output_opensearch_cloudwatch_log_group_arn"></a> [opensearch\_cloudwatch\_log\_group\_arn](#output\_opensearch\_cloudwatch\_log\_group\_arn) | n/a |
-| <a name="output_opensearch_endpoint"></a> [opensearch\_endpoint](#output\_opensearch\_endpoint) | n/a |
+| <a name="output_opensearch_arn"></a> [opensearch\_arn](#output\_opensearch\_arn) | the OpenSearch domain arn |
+| <a name="output_opensearch_cloudwatch_log_group_arn"></a> [opensearch\_cloudwatch\_log\_group\_arn](#output\_opensearch\_cloudwatch\_log\_group\_arn) | the log group arn that collects OpenSearch logs |
+| <a name="output_opensearch_endpoint"></a> [opensearch\_endpoint](#output\_opensearch\_endpoint) | the opensearch domain endpoint url |
 <!-- END_TF_DOCS -->
