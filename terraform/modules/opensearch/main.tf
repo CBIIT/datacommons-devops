@@ -10,9 +10,9 @@ resource "aws_iam_service_linked_role" "es" {
   aws_service_name = "es.amazonaws.com"
 }
 
-resource "aws_elasticsearch_domain" "es" {
-  domain_name           = local.domain_name
-  elasticsearch_version = var.opensearch_version
+resource "aws_opensearch_domain" "es" {
+  domain_name    = local.domain_name
+  engine_version = var.opensearch_version
 
 
   cluster_config {
