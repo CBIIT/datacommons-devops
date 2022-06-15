@@ -3,9 +3,9 @@ resource "aws_lb" "alb" {
   load_balancer_type = var.lb_type
   subnets            = var.alb_subnet_ids
   security_groups    = var.alb_security_group_ids
-  internal = var.internal_alb
-  
-  access_logs  {
+  internal           = var.internal_alb
+
+  access_logs {
     bucket  = var.alb_log_bucket_name
     prefix  = "alb-logs"
     enabled = true
@@ -16,10 +16,10 @@ resource "aws_lb" "alb" {
   }
 
   tags = merge(
-  {
-    "Name" = format("%s-%s-alb", var.stack_name, var.env)
-  },
-  var.tags,
+    {
+      "Name" = format("%s-%s-alb", var.stack_name, var.env)
+    },
+    var.tags,
   )
 }
 

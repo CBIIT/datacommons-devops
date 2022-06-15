@@ -37,34 +37,34 @@ data "aws_ssm_parameter" "sshkey" {
 }
 
 resource "aws_instance" "db" {
-  ami            =  data.aws_ssm_parameter.amz_linux.value
-  instance_type  =  var.database_instance_type
-  key_name                 = var.ssh_key_name
-  subnet_id                = var.db_subnet_id
-  iam_instance_profile =  var.iam_instance_profile_name
-  source_dest_check           = false
+  ami                    = data.aws_ssm_parameter.amz_linux.value
+  instance_type          = var.database_instance_type
+  key_name               = var.ssh_key_name
+  subnet_id              = var.db_subnet_id
+  iam_instance_profile   = var.iam_instance_profile_name
+  source_dest_check      = false
   vpc_security_group_ids = var.db_security_group_ids
-  user_data  = data.template_cloudinit_config.user_data.rendered
-  private_ip = var.db_private_ip
+  user_data              = data.template_cloudinit_config.user_data.rendered
+  private_ip             = var.db_private_ip
   root_block_device {
-    volume_type   = var.ebs_volume_type
-    volume_size   = var.db_instance_volume_size
+    volume_type           = var.ebs_volume_type
+    volume_size           = var.db_instance_volume_size
     delete_on_termination = true
   }
   tags = merge(
-  {
-    "Name" = "${var.stack_name}-${var.env}-${var.database_name}-4",
-  },
-  var.tags,
+    {
+      "Name" = "${var.stack_name}-${var.env}-${var.database_name}-4",
+    },
+    var.tags,
   )
 }
 
 #create boostrap script to hook up the node to ecs cluster
 resource "aws_ssm_document" "ssm_neo4j_boostrap" {
-  name          = "${var.stack_name}-${var.env}-setup-database"
-  document_type = "Command"
+  name            = "${var.stack_name}-${var.env}-setup-database"
+  document_type   = "Command"
   document_format = "YAML"
-  content = <<DOC
+  content         = <<DOC
 ---
 schemaVersion: '2.2'
 description: State Manager Bootstrap Example
@@ -86,10 +86,10 @@ mainSteps:
     - systemctl restart neo4j
 DOC
   tags = merge(
-  {
-    "Name" = format("%s-%s",var.stack_name,"ssm-document")
-  },
-  var.tags,
+    {
+      "Name" = format("%s-%s", var.stack_name, "ssm-document")
+    },
+    var.tags,
   )
 }
 
