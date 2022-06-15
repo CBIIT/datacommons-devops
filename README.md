@@ -24,4 +24,22 @@ This repository serves as a centralized registry for reusable infrastructure and
 - Creating `Security Groups` in modules is recommended, but `Security Group Rules` attached to these `Security Groups` should be defined in project repositories.
 
 ### Folder Structure
-- Each module directory should be structured with main.tf, variables.tf, outputs.tf, locals.tf, data.tf and a README.md file
+- Terraform Modules stored in the `terraform/modules/` directory should have the following folder structure:
+<pre><code>
+|-- terraform
+|   |-- modules
+|   |   |-- resource1
+|   |   |   |-- data.tf
+|   |   |   |-- locals.tf
+|   |   |   |-- main.tf
+|   |   |   |-- outputs.tf
+|   |   |   |-- variables.tf
+|   |   |   |-- README.md
+|   |   |-- resource2
+|   |   |   |-- data.tf
+|   |   |   |-- locals.tf
+|   |   |   |-- main.tf
+|   |   |   |-- outputs.tf
+|   |   |   |-- variables.tf
+|   |   |   |-- README.md
+</code></pre>
