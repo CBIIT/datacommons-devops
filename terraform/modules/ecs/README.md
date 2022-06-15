@@ -40,7 +40,7 @@ No modules.
 | <a name="input_ecs_subnet_ids"></a> [ecs\_subnet\_ids](#input\_ecs\_subnet\_ids) | Provide list private subnets to use in this VPC. Example 10.0.10.0/24,10.0.11.0/24 | `list(string)` | n/a | yes |
 | <a name="input_ecs_task_role_arn"></a> [ecs\_task\_role\_arn](#input\_ecs\_task\_role\_arn) | ecs task iam role arn | `string` | n/a | yes |
 | <a name="input_env"></a> [env](#input\_env) | name of the environment to provision | `string` | n/a | yes |
-| <a name="input_microservices"></a> [microservices](#input\_microservices) | n/a | <pre>map(object({<br>    name = string<br>    port = number<br>    health_check_path = string<br>    priority_rule_number = number<br>    image_url = string<br>    cpu = number<br>    memory = number<br>    path = string<br>    number_container_replicas = number<br>  }))</pre> | n/a | yes |
+| <a name="input_microservices"></a> [microservices](#input\_microservices) | n/a | <pre>map(object({<br>    name                      = string<br>    port                      = number<br>    health_check_path         = string<br>    priority_rule_number      = number<br>    image_url                 = string<br>    cpu                       = number<br>    memory                    = number<br>    path                      = string<br>    number_container_replicas = number<br>  }))</pre> | n/a | yes |
 | <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | tags to associate with this instance | `map(string)` | n/a | yes |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC Id to to launch the ALB | `string` | n/a | yes |
