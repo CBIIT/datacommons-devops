@@ -29,7 +29,7 @@ resource "aws_opensearch_domain" "os" {
 
   vpc_options {
     subnet_ids         = [element(var.opensearch_subnet_ids, 0)]
-    security_group_ids = var.opensearch_security_group_ids
+    security_group_ids = [aws_security_group.os.id]
   }
 
   ebs_options {
@@ -59,4 +59,11 @@ resource "aws_cloudwatch_log_resource_policy" "os" {
   policy_name     = "${local.domain_name}-log-policy"
   policy_document = data.aws_iam_policy_document.os.json
   tags            = var.tags
+}
+
+resource "aws_security_group" "os" {
+  name        = "${local.domain_name}-securitygroup"
+  description = "The security group regulating network access to the OpenSearch cluster"
+  vpc_id      = var.vpc_id
+  tags        = var.tags
 }

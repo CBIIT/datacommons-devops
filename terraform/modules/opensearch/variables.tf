@@ -2,13 +2,18 @@ variable "tags" {
   description = "tags to associate with this instance"
   type        = map(string)
 }
+
 variable "stack_name" {
   description = "name of the project"
   type        = string
 }
 
+variable "vpc_id" {
+  description = "the ID of the VPC the OpenSearch cluster is being deployed into"
+}
+
 variable "opensearch_instance_type" {
-  description = "type of instance to be used to create the elasticsearch cluster"
+  description = "type of instance to be used to create the OpenSearch cluster"
   type        = string
   default     = "t3.medium.elasticsearch"
 }
@@ -24,6 +29,7 @@ variable "create_os_service_role" {
   default     = false
   description = "change this value to true if running this script for the first time"
 }
+
 variable "opensearch_subnet_ids" {
   description = "list of subnet ids to use"
   type        = list(string)
@@ -33,15 +39,13 @@ variable "env" {
   description = "name of the environment to provision"
   type        = string
 }
+
 variable "automated_snapshot_start_hour" {
   description = "hour when automated snapshot to be taken"
   type        = number
   default     = 23
 }
-variable "opensearch_security_group_ids" {
-  description = "security group ids to apply to this resource"
-  type        = list(string)
-}
+
 variable "opensearch_ebs_volume_size" {
   description = "size of the ebs volume attached to the opensearch instance"
   type        = number
