@@ -1,18 +1,11 @@
-locals {
-  domain_name = "${var.stack_name}-${var.env}-opensearch"
-}
-
-data "aws_region" "region" {}
-data "aws_caller_identity" "caller" {}
-
-resource "aws_iam_service_linked_role" "es" {
+resource "aws_iam_service_linked_role" "os" {
   count            = var.create_os_service_role ? 1 : 0
   aws_service_name = "es.amazonaws.com"
 }
 
-resource "aws_elasticsearch_domain" "es" {
-  domain_name           = local.domain_name
-  elasticsearch_version = var.opensearch_version
+resource "aws_opensearch_domain" "os" {
+  domain_name    = local.domain_name
+  engine_version = var.opensearch_version
 
 
   cluster_config {
@@ -21,25 +14,22 @@ resource "aws_elasticsearch_domain" "es" {
     zone_awareness_enabled = var.multi_az_enabled
   }
 
-  # not using variables so that security is applied by default
   domain_endpoint_options {
     enforce_https       = true
     tls_security_policy = "Policy-Min-TLS-1-2-2019-07"
   }
 
-  # not using variables so that security is applied by default
   encrypt_at_rest {
     enabled = true
   }
 
-  # not using variables so that security is applied by default
   node_to_node_encryption {
     enabled = true
   }
 
   vpc_options {
     subnet_ids         = [element(var.opensearch_subnet_ids, 0)]
-    security_group_ids = var.opensearch_security_group_ids
+    security_group_ids = [aws_security_group.os.id]
   }
 
   ebs_options {
@@ -47,21 +37,33 @@ resource "aws_elasticsearch_domain" "es" {
     volume_size = var.opensearch_ebs_volume_size
   }
 
-  access_policies = <<CONFIG
-{
-  "Version": "2012-10-17",
-  "Statement": [
-      {
-          "Action": "es:*",
-          "Principal": "*",
-          "Effect": "Allow",
-          "Resource": "arn:aws:es:${data.aws_region.region.name}:${data.aws_caller_identity.caller.account_id}:domain/${local.domain_name}/*"
-      }
-  ]
-}
-  CONFIG
+  log_publishing_options {
+    enabled                  = var.opensearch_logs_enabled
+    cloudwatch_log_group_arn = aws_cloudwatch_log_group.os.arn
+    log_type                 = var.opensearch_log_type
+  }
+
   snapshot_options {
     automated_snapshot_start_hour = var.automated_snapshot_start_hour
   }
+
   tags = var.tags
+}
+
+resource "aws_cloudwatch_log_group" "os" {
+  name = "${local.domain_name}-logs"
+  tags = var.tags
+}
+
+resource "aws_cloudwatch_log_resource_policy" "os" {
+  policy_name     = "${local.domain_name}-log-policy"
+  policy_document = data.aws_iam_policy_document.os.json
+  tags            = var.tags
+}
+
+resource "aws_security_group" "os" {
+  name        = "${local.domain_name}-securitygroup"
+  description = "The security group regulating network access to the OpenSearch cluster"
+  vpc_id      = var.vpc_id
+  tags        = var.tags
 }
