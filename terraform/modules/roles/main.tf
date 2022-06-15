@@ -1,7 +1,3 @@
-locals {
-  all_custom_policy_arns = var.add_custom_policy ? concat([module.iam_policy[0].arn], var.custom_role_policy_arns) : var.custom_role_policy_arns
-}
-
 module "iam_assumable_role" {
   source                            = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
   trusted_role_arns                 = var.trusted_role_arns
