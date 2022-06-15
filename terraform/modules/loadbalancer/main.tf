@@ -4,8 +4,8 @@ resource "aws_lb" "alb" {
   subnets                    = var.alb_subnet_ids
   security_groups            = [aws_security_group.alb.id]
   internal                   = var.alb_internal
-  drop_invalid_header_fields = var.alb_drop_invalid_header_fields
-  enable_deletion_protection = var.alb_enable_deleetion_protection
+  drop_invalid_header_fields = true
+  enable_deletion_protection = true
 
 
 
