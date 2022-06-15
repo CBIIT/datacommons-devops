@@ -1,23 +1,10 @@
-
-locals {
-  http_port    = 80
-  any_port     = 0
-  any_protocol = "-1"
-  tcp_protocol = "tcp"
-  https_port   = "443"
-}
-data "aws_acm_certificate" "cert" {
-  domain      = var.certificate_domain_name
-  types       = [var.acm_certificate_issued_type]
-  most_recent = true
-}
-
 resource "aws_lb" "alb" {
   name               = "${var.stack_name}-${var.alb_name}-${var.env}"
   load_balancer_type = var.lb_type
   subnets            = var.alb_subnet_ids
   security_groups    = var.alb_security_group_ids
   internal = var.internal_alb
+  
   access_logs  {
     bucket  = var.alb_log_bucket_name
     prefix  = "alb-logs"
