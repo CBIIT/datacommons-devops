@@ -1,9 +1,13 @@
 resource "aws_lb" "alb" {
-  name               = "${var.stack_name}-${var.alb_name}-${var.env}"
-  load_balancer_type = var.lb_type
-  subnets            = var.alb_subnet_ids
-  security_groups    = var.alb_security_group_ids
-  internal           = var.internal_alb
+  name                       = local.alb_name
+  load_balancer_type         = var.alb_type
+  subnets                    = var.alb_subnet_ids
+  security_groups            = [aws_security_group.alb.id]
+  internal                   = var.alb_internal
+  drop_invalid_header_fields = var.alb_drop_invalid_header_fields
+  enable_deletion_protection = var.alb_enable_deleetion_protection
+
+
 
   access_logs {
     bucket  = var.alb_log_bucket_name
@@ -17,39 +21,54 @@ resource "aws_lb" "alb" {
 
   tags = merge(
     {
-      "Name" = format("%s-%s-alb", var.stack_name, var.env)
+      "Name" = format("%s-%s-lb", var.stack_name, var.env)
     },
     var.tags,
   )
 }
 
 #create https redirect
-resource "aws_lb_listener" "redirect_https" {
+resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.alb.arn
   port              = local.http_port
   protocol          = "HTTP"
+
   default_action {
     type = "redirect"
+
     redirect {
       port        = local.https_port
       protocol    = "HTTPS"
       status_code = "HTTP_301"
     }
   }
+
+  tags = var.tags
 }
 
-resource "aws_lb_listener" "listener_https" {
+resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.alb.arn
   port              = local.https_port
   protocol          = "HTTPS"
   ssl_policy        = var.ssl_policy
-  certificate_arn   = data.aws_acm_certificate.cert.arn
+  certificate_arn   = var.alb_certificate_arn
+
   default_action {
     type = "fixed-response"
+
     fixed_response {
       content_type = "text/plain"
       message_body = var.default_message
       status_code  = "200"
     }
   }
+
+  tags = var.tags
+}
+
+resource "aws_security_group" "alb" {
+  name        = "${local.alb_name}-sg"
+  description = local.alb_sg_description
+  vpc_id      = var.vpc_id
+  tags        = var.tags
 }
