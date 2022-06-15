@@ -1,7 +1,3 @@
-data "aws_route53_zone" "zone" {
-  name  = var.domain_name
-}
-
 resource "aws_route53_record" "dns_record" {
   name = "${var.application_subdomain}-${var.env}"
   type = "A"
