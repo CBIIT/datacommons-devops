@@ -6,8 +6,7 @@ resource "aws_lb" "alb" {
   internal                   = var.alb_internal
   drop_invalid_header_fields = true
   enable_deletion_protection = true
-
-
+  desync_mitigation_mode     = "strictest"
 
   access_logs {
     bucket  = var.alb_log_bucket_name
