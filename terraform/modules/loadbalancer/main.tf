@@ -8,8 +8,6 @@ resource "aws_lb" "alb" {
   enable_deletion_protection = true
   desync_mitigation_mode     = "strictest"
 
-
-
   access_logs {
     bucket  = var.alb_log_bucket_name
     prefix  = "alb-logs"
