@@ -2,8 +2,6 @@
 name: Terraform
 on:
   - pull_request 
-
-
 jobs:
   documentation:
     name: 'Documentation'
@@ -17,7 +15,7 @@ jobs:
     - name: Terraform Documentation
       uses: terraform-docs/gh-actions@v1.0.0
       with:
-        working-dir: ./terraform/modules
+        working-dir: ./terraform
         output-file: README.md
         output-method: inject 
         recursive: true
