@@ -58,7 +58,7 @@ variable "opensearch_ebs_volume_size" {
 variable "opensearch_engine_version" {
   type        = string
   description = "The version of the OpenSearch engine (i.e. OpenSearch_1.2)"
-  default     = "OpenSearch_1."
+  default     = "OpenSearch_1.2"
 }
 
 variable "iam_prefix" {
