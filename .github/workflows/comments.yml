@@ -17,5 +17,5 @@ jobs:
           commenter_version: latest
           soft_fail_commenter: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          tfsec_args: --var-file="./.github/configs/scan-opensearch.tfvars
+          tfsec_args: --var-file="./.github/configs/scan-opensearch.tfvars"
           working_directory: ./terraform/modules/opensearch
