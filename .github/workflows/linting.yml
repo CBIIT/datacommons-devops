@@ -4,17 +4,15 @@ jobs:
   tflint:
     name: Lint
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform/modules/opensearch/examples
     steps:
       - name: Clone repo
         uses: actions/checkout@master
 
       - name: Install Terraform
-        run: |
-          brew install terraform
-
-      - name: Change Directory
-        run: |
-          cd ./terraform/modules/opensearch/examples
+        uses: hashicorp/setup-terraform@v2
 
       - name: Terraform init
         run: |
@@ -24,7 +22,6 @@ jobs:
         uses: reviewdog/action-tflint@master
         with:
           github_token: ${{ secrets.github_token }}
-          working_directory: ./terraform/modules/opensearch/examples
           reporter: github-pr-review
           fail_on_error: "false"
           filter_mode: "file" 
