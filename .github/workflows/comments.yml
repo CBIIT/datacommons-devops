@@ -1,6 +1,7 @@
-name: Terraform
+name: Comments
 on:
   - pull_request 
+jobs:
   security:
     name: 'Secure OpenSearch'
     runs-on: ubuntu-latest
