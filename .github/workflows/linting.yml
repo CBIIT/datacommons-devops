@@ -4,7 +4,6 @@ jobs:
   tflint:
     name: Lint
     runs-on: ubuntu-latest
-    working_directory: ./terraform/modules/opensearch/examples
     steps:
       - name: Clone repo
         uses: actions/checkout@master
@@ -12,6 +11,10 @@ jobs:
       - name: Install Terraform
         run: |
           brew install terraform
+
+      - name: Change Directory
+        run: |
+          cd ./terraform/modules/opensearch/examples
 
       - name: Terraform init
         run: |
