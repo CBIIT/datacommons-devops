@@ -7,7 +7,6 @@ resource "aws_opensearch_domain" "os" {
   domain_name    = local.domain_name
   engine_version = var.opensearch_version
 
-
   cluster_config {
     instance_type          = var.opensearch_instance_type
     instance_count         = var.opensearch_instance_count
@@ -48,22 +47,4 @@ resource "aws_opensearch_domain" "os" {
   }
 
   tags = var.tags
-}
-
-resource "aws_cloudwatch_log_group" "os" {
-  name = "${local.domain_name}-logs"
-  tags = var.tags
-}
-
-resource "aws_cloudwatch_log_resource_policy" "os" {
-  policy_name     = "${local.domain_name}-log-policy"
-  policy_document = data.aws_iam_policy_document.os.json
-  tags            = var.tags
-}
-
-resource "aws_security_group" "os" {
-  name        = "${local.domain_name}-securitygroup"
-  description = "The security group regulating network access to the OpenSearch cluster"
-  vpc_id      = var.vpc_id
-  tags        = var.tags
 }
