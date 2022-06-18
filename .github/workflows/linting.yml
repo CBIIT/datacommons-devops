@@ -1,0 +1,28 @@
+name: TFLint
+on: [pull_request]
+jobs:
+  tflint:
+    name: Lint
+    runs-on: ubuntu-latest
+    working_directory: ./terraform/modules/opensearch/examples
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@master
+
+      - name: Install Terraform
+        run: |
+          brew install terraform
+
+      - name: Terraform init
+        run: |
+          terraform init
+
+      - name: tflint
+        uses: reviewdog/action-tflint@master
+        with:
+          github_token: ${{ secrets.github_token }}
+          working_directory: ./terraform/modules/opensearch/examples
+          reporter: github-pr-review
+          fail_on_error: "false"
+          filter_mode: "file" 
+          flags: "--module"

@@ -1,3 +1,16 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "4.19.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "us-east-1"
+}
+
 module "opensearch" {
   source = "github.com/CBIIT/CTOS-DevOps-Innersource/terraform/modules/opensearch-manual-snapshot"
 
