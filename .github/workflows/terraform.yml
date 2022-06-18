@@ -32,7 +32,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
       - name: scan
-        uses: aquasecurity/tfsec-pr-commenter-action@master
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
         with:
           tfsec_version: latest
           commenter_version: latest
