@@ -1,0 +1,14 @@
+  app             = "example"
+  data_node_count = 2
+  ebs_enabled     = true
+  ebs_volume_size = 80
+  engine_version  = "OpenSearch_1.2"
+  iam_prefix      = "power-user"
+  instance_type   = "t3.medium.search"
+  log_retention   = 90
+  log_type        = "INDEX_SLOW_LOGS"
+  multi-az        = true
+  snapshot_hour   = 23
+  subnet_ids      = ["subnet-12345678", "subnet-23456789"]
+  tier            = "example"
+  vpc_id          = "vpc-12345678"
