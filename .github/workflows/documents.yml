@@ -19,3 +19,4 @@ jobs:
         output-method: inject 
         recursive: true
         git-push: true
+        find-dir: modules/
