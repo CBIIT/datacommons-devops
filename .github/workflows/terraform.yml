@@ -4,29 +4,14 @@ on:
   - pull_request 
 
 jobs:
-  format:
-    name: 'TF Format'
-    runs-on: ubuntu-latest
-    steps:
-    - name: Repository Checkout
-      id: checkout
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ github.event.pull_request.head.ref }}
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-    - name: Terraform Format
-      run: terraform fmt -recursive
-      working-directory: ./terraform/modules
-  
+
   documentation:
-    name: 'Create Module Documentation'
-    needs: format
+    name: 'Documentation'
     runs-on: ubuntu-latest
     steps:
-    - name: Repository Checkout
+    - name: Clone Repository
       id: checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@master
       with:
         ref: ${{ github.event.pull_request.head.ref }}
     - name: Terraform Documentation
@@ -37,3 +22,21 @@ jobs:
         output-method: inject 
         recursive: true
         git-push: true
+  
+  security:
+    name: 'Secure OpenSearch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@master
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: scan
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+        with:
+          tfsec_version: latest
+          commenter_version: latest
+          soft_fail_commenter: true
+          github_token: ${{ github.token }}
+          tfsec_args: --update --color-theme "light" --minimum-severity "MEDIUM" --run-statistics
+          working_directory: ./terraform/modules/opensearch
