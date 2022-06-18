@@ -38,5 +38,5 @@ jobs:
           commenter_version: latest
           soft_fail_commenter: true
           github_token: ${{ github.token }}
-          tfsec_args: --update --color-theme "light" --minimum-severity "MEDIUM" --run-statistics
+          tfsec_args: --update --minimum-severity "MEDIUM" --run-statistics
           working_directory: ./terraform/modules/opensearch
