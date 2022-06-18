@@ -26,6 +26,7 @@ jobs:
   security:
     name: 'Secure OpenSearch'
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Clone Repository
         uses: actions/checkout@master
@@ -37,6 +38,6 @@ jobs:
           tfsec_version: latest
           commenter_version: latest
           soft_fail_commenter: true
-          github_token: ${{ secrets.PAT }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           # tfsec_args: --update --minimum-severity "MEDIUM" --run-statistics
           working_directory: ./terraform/modules/opensearch
