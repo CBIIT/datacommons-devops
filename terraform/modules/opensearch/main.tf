@@ -7,7 +7,6 @@ resource "aws_opensearch_domain" "os" {
   domain_name    = local.domain_name
   engine_version = var.opensearch_version
 
-
   cluster_config {
     instance_type          = var.opensearch_instance_type
     instance_count         = var.opensearch_instance_count
