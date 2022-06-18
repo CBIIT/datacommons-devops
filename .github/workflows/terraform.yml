@@ -3,8 +3,8 @@ name: Terraform
 on:
   - pull_request 
 
-jobs:
 
+jobs:
   documentation:
     name: 'Documentation'
     runs-on: ubuntu-latest
@@ -17,27 +17,8 @@ jobs:
     - name: Terraform Documentation
       uses: terraform-docs/gh-actions@v1.0.0
       with:
-        working-dir: ./terraform
+        working-dir: ./terraform/modules
         output-file: README.md
         output-method: inject 
         recursive: true
         git-push: true
-  
-  security:
-    name: 'Secure OpenSearch'
-    runs-on: ubuntu-latest
-    permissions: write-all
-    steps:
-      - name: Clone Repository
-        uses: actions/checkout@master
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-      - name: scan
-        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
-        with:
-          tfsec_version: latest
-          commenter_version: latest
-          soft_fail_commenter: true
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # tfsec_args: --update --minimum-severity "MEDIUM" --run-statistics
-          working_directory: ./terraform/modules/opensearch
