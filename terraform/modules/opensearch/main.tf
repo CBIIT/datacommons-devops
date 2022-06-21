@@ -53,8 +53,8 @@ resource "aws_opensearch_domain" "os" {
     rollback_on_disable = var.opensearch_rollback_on_autotune_disable
 
     maintenance_schedule {
-      start_at                       = "2022-06-20T23:00:30-0400"
-      cron_expression_for_recurrence = "0 59 23 ? 0 0"
+      start_at                       = local.autotune_start
+      cron_expression_for_recurrence = local.autotune_reoccurance_cron
       duration {
         unit  = "HOURS"
         value = 2
