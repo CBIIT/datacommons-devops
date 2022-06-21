@@ -72,3 +72,16 @@ variable "opensearch_logs_enabled" {
   type        = bool
   default     = true
 }
+
+variable "opensearch_autotune_desired_state" {
+  description = "Auto-Tune desired state for the domain - options are 'ENABLED' or 'DISABLED'"
+  type        = string
+  default     = "ENABLED"
+}
+
+variable "opensearch_rollback_on_autotune_disable" {
+  description = "Whether to roll back to default Auto-Tune settings when disabling Auto-Tune - options are 'DEFAULT_ROLLBACK' or 'NO_ROLLBACK'"
+  type        = string
+  default     = "DEFAULT_ROLLBACK"
+}
+
