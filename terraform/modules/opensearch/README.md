@@ -1,3 +1,16 @@
+## Notes on module configuration:
+
+- Project decides if a service-linked role is created by the module. 
+- HTTPS is enforced using TLS 1.2 by default for security purposes. 
+- Encryption is applied at rest by default for security purposes.
+- Node-to-node encryption is applied by default for security purposes.
+- A security group is created by the module - but the project must specify the security group rules to attach to the security group. The security group identifiers are exported as outputs to use as a reference in rule development at the project level.
+- Automated snapshots are on by default
+- Auto-tune is enabled by default, but can be disabled at by passing in "DISABLED" from the project for the opensearch_autotune_desired_state argument. Autotune set to occur daily at 11:59 PM EST. 
+- Logs are sent to cloudwatch, and cloudwatch group created in module. Need to decide as team as to which logs to send from OpenSearch.
+
+
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
