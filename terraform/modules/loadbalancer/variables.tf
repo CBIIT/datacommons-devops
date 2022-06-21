@@ -20,13 +20,13 @@ variable "alb_internal" {
   type        = bool
 }
 
-variable "ssl_policy" {
+variable "alb_ssl_policy" {
   description = "specify ssl policy to use"
   default     = "ELBSecurityPolicy-2016-08"
   type        = string
 }
 
-variable "default_message" {
+variable "alb_default_message" {
   description = "default message response from alb when resource is not available"
   default     = "The requested resource is not found"
 }
