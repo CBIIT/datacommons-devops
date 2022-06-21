@@ -72,7 +72,6 @@ resource "aws_cloudwatch_log_group" "os" {
 resource "aws_cloudwatch_log_resource_policy" "os" {
   policy_name     = "${local.domain_name}-log-policy"
   policy_document = data.aws_iam_policy_document.os.json
-  tags            = var.tags
 }
 
 resource "aws_security_group" "os" {
