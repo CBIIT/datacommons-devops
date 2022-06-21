@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
       version = "4.19.0"
     }
   }
@@ -11,6 +11,20 @@ provider "aws" {
   region = "us-east-1"
 }
 
+module "example" {
+  source = "github.com/CBIIT/datacommons-devops/terraform/modules/loadbalancer"
+
+  stack_name          = "example"
+  alb_type            = "application"
+  alb_internal        = false
+  ssl_policy          = var.ssl_policy
+  default_message     = var.default_message
+  vpc_id              = ""
+  alb_certificate_arn = ""
+  env                 = "dev"
+  alb_subnet_ids      = var.alb_subnet_ids
+  alb_log_bucket_name = var.alb_log_bucket_name
+}
 
 
 
@@ -45,6 +59,7 @@ variable "ssl_policy" {
 variable "default_message" {
   description = "default message response from alb when resource is not available"
   default     = "The requested resource is not found"
+  type        = string
 }
 
 variable "vpc_id" {
@@ -65,10 +80,11 @@ variable "env" {
 variable "alb_subnet_ids" {
   description = "list of subnets to use for the alb"
   type        = list(string)
+
 }
 
 variable "alb_log_bucket_name" {
   description = "s3"
   type        = string
-  default = "project-log-bucket"
+  default     = "project-log-bucket"
 }

@@ -10,12 +10,13 @@ variable "stack_name" {
 
 variable "vpc_id" {
   description = "the ID of the VPC the OpenSearch cluster is being deployed into"
+  type        = string
 }
 
 variable "opensearch_instance_type" {
   description = "type of instance to be used to create the OpenSearch cluster"
   type        = string
-  default     = "t3.medium.elasticsearch"
+  default     = "t3.medium.search"
 }
 
 variable "opensearch_version" {
