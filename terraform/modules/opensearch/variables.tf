@@ -10,12 +10,13 @@ variable "stack_name" {
 
 variable "vpc_id" {
   description = "the ID of the VPC the OpenSearch cluster is being deployed into"
+  type        = string
 }
 
 variable "opensearch_instance_type" {
   description = "type of instance to be used to create the OpenSearch cluster"
   type        = string
-  default     = "t3.medium.elasticsearch"
+  default     = "t3.medium.search"
 }
 
 variable "opensearch_version" {
@@ -49,11 +50,13 @@ variable "automated_snapshot_start_hour" {
 variable "opensearch_ebs_volume_size" {
   description = "size of the ebs volume attached to the opensearch instance"
   type        = number
-  default     = 200
+  default     = 30
 }
 
 variable "opensearch_instance_count" {
   description = "the number of data nodes to provision for each instance in the cluster"
+  type = number 
+  default = 2
 }
 
 variable "multi_az_enabled" {
