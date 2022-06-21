@@ -55,8 +55,8 @@ variable "opensearch_ebs_volume_size" {
 
 variable "opensearch_instance_count" {
   description = "the number of data nodes to provision for each instance in the cluster"
-  type = number 
-  default = 2
+  type        = number
+  default     = 2
 }
 
 variable "multi_az_enabled" {
