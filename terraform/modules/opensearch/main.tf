@@ -27,7 +27,7 @@ resource "aws_opensearch_domain" "os" {
   }
 
   vpc_options {
-    subnet_ids         = [element(var.opensearch_subnet_ids, 0)]
+    subnet_ids         = local.subnets
     security_group_ids = [aws_security_group.os.id]
   }
 
@@ -36,6 +36,8 @@ resource "aws_opensearch_domain" "os" {
     volume_size = var.opensearch_ebs_volume_size
   }
 
+  # we can have multiple log_publishing_options blocks, one for each log type.
+  # we should set-up a dynamic resource to create a block for each variable map passed to the module.
   log_publishing_options {
     enabled                  = var.opensearch_logs_enabled
     cloudwatch_log_group_arn = aws_cloudwatch_log_group.os.arn
