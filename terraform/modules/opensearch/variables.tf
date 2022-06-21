@@ -50,11 +50,13 @@ variable "automated_snapshot_start_hour" {
 variable "opensearch_ebs_volume_size" {
   description = "size of the ebs volume attached to the opensearch instance"
   type        = number
-  default     = 200
+  default     = 30
 }
 
 variable "opensearch_instance_count" {
   description = "the number of data nodes to provision for each instance in the cluster"
+  type = number 
+  default = 2
 }
 
 variable "multi_az_enabled" {
