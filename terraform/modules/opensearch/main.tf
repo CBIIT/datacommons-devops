@@ -46,6 +46,20 @@ resource "aws_opensearch_domain" "os" {
     automated_snapshot_start_hour = var.automated_snapshot_start_hour
   }
 
+  auto_tune_options {
+    desired_state       = var.opensearch_autotune_desired_state
+    rollback_on_disable = var.opensearch_rollback_on_autotune_disable
+
+    maintenance_schedule {
+      start_at                       = "2022-06-20T23:00:30-0400"
+      cron_expression_for_recurrence = "0 59 23 ? 0 0"
+      duration {
+        unit  = "HOURS"
+        value = 2
+      }
+    }
+  }
+
   tags = var.tags
 }
 
