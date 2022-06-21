@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 module "opensearch" {
-  source = "github.com/CBIIT/datacommons-devops/terraform/modules/opensearch/examples"
+  source = "github.com/CBIIT/datacommons-devops/terraform/modules/opensearch"
 
   app             = var.app
   data_node_count = var.opensearch_data_node_count
