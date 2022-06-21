@@ -49,7 +49,7 @@ resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.alb.arn
   port              = local.https_port
   protocol          = "HTTPS"
-  ssl_policy        = var.ssl_policy
+  ssl_policy        = var.alb_ssl_policy
   certificate_arn   = var.alb_certificate_arn
 
   default_action {
@@ -57,7 +57,7 @@ resource "aws_lb_listener" "https" {
 
     fixed_response {
       content_type = "text/plain"
-      message_body = var.default_message
+      message_body = var.alb_default_message
       status_code  = "200"
     }
   }
