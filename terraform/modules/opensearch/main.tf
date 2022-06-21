@@ -67,7 +67,6 @@ resource "aws_opensearch_domain" "os" {
 
 resource "aws_cloudwatch_log_group" "os" {
   name = "${local.domain_name}-logs"
-  tags = var.tags
 }
 
 resource "aws_cloudwatch_log_resource_policy" "os" {
