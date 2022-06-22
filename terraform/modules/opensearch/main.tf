@@ -63,6 +63,12 @@ resource "aws_opensearch_domain" "os" {
   }
 
   tags = var.tags
+
+  lifecycle {
+    ignore_changes = [
+      auto_tune_options
+    ]
+  }
 }
 
 resource "aws_cloudwatch_log_group" "os" {
