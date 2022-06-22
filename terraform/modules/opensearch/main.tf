@@ -66,7 +66,9 @@ resource "aws_opensearch_domain" "os" {
 }
 
 resource "aws_cloudwatch_log_group" "os" {
-  name = "${local.domain_name}-logs"
+  name              = "${local.domain_name}-logs"
+  retention_in_days = local.log_retention
+  tags              = var.tags
 }
 
 resource "aws_cloudwatch_log_resource_policy" "os" {
@@ -75,8 +77,9 @@ resource "aws_cloudwatch_log_resource_policy" "os" {
 }
 
 resource "aws_security_group" "os" {
-  name        = "${local.domain_name}-securitygroup"
-  description = "The security group regulating network access to the OpenSearch cluster"
-  vpc_id      = var.vpc_id
-  tags        = var.tags
+  name                   = "${local.domain_name}-securitygroup"
+  description            = local.sg_description
+  revoke_rules_on_delete = true
+  vpc_id                 = var.vpc_id
+  tags                   = var.tags
 }
