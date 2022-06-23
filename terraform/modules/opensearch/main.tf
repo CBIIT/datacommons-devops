@@ -66,8 +66,8 @@ resource "aws_opensearch_domain" "os" {
 
   lifecycle {
     ignore_changes = [
-      "auto_tune_options[*].maintenance_schedule.start_at",
-      "auto_tune_options[*].maintenance_schedule"
+      "auto_tune_options[0].maintenance_schedule.start_at",
+      "auto_tune_options[0].maintenance_schedule"
     ]
   }
 }
