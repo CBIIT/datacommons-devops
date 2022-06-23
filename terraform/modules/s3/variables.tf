@@ -17,3 +17,13 @@ variable "tags" {
 #   type        = any
 #   default     = []
 # }
+
+variable "stack_name" {
+  description = "name of the project"
+  type        = string
+}
+
+variable "env" {
+  description = "name of the environment to provision"
+  type        = string
+}
