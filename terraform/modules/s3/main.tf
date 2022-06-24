@@ -32,10 +32,10 @@ resource "aws_s3_bucket_public_access_block" "s3" {
   restrict_public_buckets = true
 }
 ###### Need to decide if policy is passed in as variable or diff strategy?
-# resource "aws_s3_bucket_policy" "s3" {
-#   bucket = aws_s3_bucket.s3.id
-#   policy = data.aws_iam_policy_document.s3.json
-# }
+resource "aws_s3_bucket_policy" "s3" {
+  bucket = aws_s3_bucket.s3.id
+  policy = var.bucket_policy #data.aws_iam_policy_document.s3.json
+}
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "s3" {
   bucket = aws_s3_bucket.s3.id
