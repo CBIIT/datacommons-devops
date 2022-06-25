@@ -14,6 +14,7 @@ data "aws_iam_policy_document" "ecs_trust_policy" {
   }
 }
 
+
 # combine several below policies to define the task_execution_role (keeping things modular)
 data "aws_iam_policy_document" "ecs_task_execution_role_policy_doc" {
   source_policy_documents = [
@@ -67,6 +68,7 @@ data "aws_iam_policy_document" "task_execution_ecr" {
 
 
 # combine all policy docs defined below for the task_role (keeping things modular)
+
 data "aws_iam_policy_document" "ecs_task_role_exec_policy_doc" {
   source_policy_documents = [
     data.aws_iam_policy_document.ecs_exec_command.json,
@@ -141,5 +143,3 @@ data "aws_iam_policy_document" "ecs_exec_kms" {
     resources = [aws_kms_key.ecs_exec.arn]
   }
 }
-
-# 

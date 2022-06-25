@@ -12,8 +12,18 @@ variable "tags" {
   type        = map(string)
 }
 
-# variable "bucket_policy" {
-#   description = "s3 bucket policy"
-#   type        = any
-#   default     = []
-# }
+variable "bucket_policy" {
+  description = "s3 bucket policy"
+  type        = any
+  default     = []
+}
+
+variable "stack_name" {
+  description = "name of the project"
+  type        = string
+}
+
+variable "env" {
+  description = "name of the environment to provision"
+  type        = string
+}
