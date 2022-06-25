@@ -61,7 +61,9 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
     actions = [
       "logs:DescribeLogGroups"
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:logs:${aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*",
+      "arn:aws:logs:${aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*:*"]
   }
 
   #need to refine this to exec log groups be referencing ARN in resources
@@ -72,7 +74,7 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
       "logs:DescribeLogStreams",
       "logs:PutLogEvents"
     ]
-    resources = ["*"]
+    resources = ["${aws_cloudwatch_log_group.arn}/*"]
   }
 }
 
@@ -80,8 +82,11 @@ data "aws_iam_policy_document" "ecs_exec_kms" {
   #refine for KMS key
   statement {
     effect    = "Allow"
-    actions   = ["kms:Decrypt"]
-    resources = ["*"]
+    actions   = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey"
+      ]
+    resources = [aws_kms_key.ecs_exec.arn]
   }
 }
 

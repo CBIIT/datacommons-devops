@@ -5,12 +5,7 @@
 # Setting up ECS Exec
 - It’s important to notice that the container image requires `script` (part of util-linux) and `cat` (part of coreutils) to be installed in order to have command logs uploaded correctly to S3 and/or CloudWatch. The nginx container images have this support already installed. 
 - The SSM agent does not run as a separate container sidecar, it runs as an additional process inside the application container.
-- ECS Task role needs to allow communications with SSM and CloudWatch
-- Need to create a SG rule that allows ingress with tcp over port `80` with cidr `0.0.0.0/0`
 - Best practice, we suggest to set the initProcessEnabled parameter to `true` in task definition to avoid SSM agent child processes becoming orphaned.
-
-
-
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
