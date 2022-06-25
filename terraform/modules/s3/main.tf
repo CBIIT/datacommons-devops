@@ -31,11 +31,6 @@ resource "aws_s3_bucket_public_access_block" "s3" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
-###### Need to decide if policy is passed in as variable or diff strategy?
-# resource "aws_s3_bucket_policy" "s3" {
-#   bucket = aws_s3_bucket.s3.id
-#   policy = data.aws_iam_policy_document.s3.json
-# }
 
 #tfsec:ignore:aws-s3-encryption-customer-key
 resource "aws_s3_bucket_server_side_encryption_configuration" "s3" {
