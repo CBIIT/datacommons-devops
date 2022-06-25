@@ -37,6 +37,7 @@ resource "aws_s3_bucket_public_access_block" "s3" {
 #   policy = data.aws_iam_policy_document.s3.json
 # }
 
+#tfsec:ignore:aws-s3-encryption-customer-key
 resource "aws_s3_bucket_server_side_encryption_configuration" "s3" {
   bucket = aws_s3_bucket.s3.id
 
