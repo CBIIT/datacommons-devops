@@ -1,28 +1,3 @@
-locals {
-  account_arn = format("arn:aws:iam::%s:root", data.aws_caller_identity.current.account_id)
-}
-data "aws_caller_identity" "current" {}
-data "aws_iam_policy_document" "ecr_policy_doc" {
-
-  statement {
-    sid    = "ElasticContainerRegistryPushAndPull"
-    effect = "Allow"
-
-    principals {
-      identifiers = [local.account_arn]
-      type        = "AWS"
-    }
-    actions = [
-      "ecr:GetDownloadUrlForLayer",
-      "ecr:BatchGetImage",
-      "ecr:BatchCheckLayerAvailability",
-      "ecr:PutImage",
-      "ecr:InitiateLayerUpload",
-      "ecr:UploadLayerPart",
-      "ecr:CompleteLayerUpload",
-    ]
-  }
-}
 resource "aws_ecr_repository" "ecr" {
   for_each             = toset(var.ecr_repo_names)
   name                 = "${var.stack_name}-${each.key}"

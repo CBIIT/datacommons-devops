@@ -22,7 +22,7 @@ variable "alb_internal" {
 
 variable "alb_ssl_policy" {
   description = "specify ssl policy to use"
-  default     = "ELBSecurityPolicy-2016-08"
+  default     = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
   type        = string
 }
 
@@ -55,3 +55,4 @@ variable "alb_log_bucket_name" {
   description = "s3"
   type        = string
 }
+

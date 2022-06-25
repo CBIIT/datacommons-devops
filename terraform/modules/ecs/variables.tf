@@ -82,3 +82,9 @@ variable "ecs_execution_role_arn" {
   description = "ecs execution iam role arn"
   type        = string
 }
+
+variable "ecs_execute_command_logging" {
+  description = "The log setting to use for redirecting logs for ecs execute command results. Valid values are NONE, DEFAULT, and OVERRIDE."
+  type        = string
+  default     = "OVERRIDE"
+}
