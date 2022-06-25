@@ -21,36 +21,36 @@ data "aws_iam_policy_document" "ecs_exec_ssm" {
   #refine for all SSM in account
   statement {
     effect = "Allow"
-    actions = [ 
+    actions = [
       "ssmmessages:CreateControlChannel",
       "ssmmessages:CreateDataChannel",
       "ssmmessages:OpenControlChannel",
       "ssmmessages:OpenDataChannel"
-     ]
-     resources = [ "*" ]
+    ]
+    resources = ["*"]
   }
 }
 
 data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
-  
+
   #need to refine this to all log groups in the account
   statement {
     effect = "Allow"
-    actions = [ 
+    actions = [
       "logs:DescribeLogGroups"
-     ]
-    resources = [ "*" ]
+    ]
+    resources = ["*"]
   }
 
   #need to refine this to exec log groups be referencing ARN in resources
   statement {
     effect = "Allow"
-    actions = [ 
+    actions = [
       "logs:CreateLogStream",
       "logs:DescribeLogStreams",
       "logs:PutLogEvents"
-     ]
-    resources = [ "*" ]
+    ]
+    resources = ["*"]
   }
 }
 
@@ -58,35 +58,37 @@ data "aws_iam_policy_document" "ecs_exec_s3" {
 
   #need to conditionally create an S3 bucket for the logs? creating s3 should be something done outside of module?
   statement {
-    effect = "Allow"
-    actions = [ "s3:PutObject" ]
-    resources = [ "${var.ecs_exec_log_bucket}/*" ]
+    effect    = "Allow"
+    actions   = ["s3:PutObject"]
+    resources = ["${var.ecs_exec_log_bucket}/*"]
   }
 
   #need to conditionally create an S3 bucket for the logs? creating s3 should be something done outside of module?
   statement {
-    effect = "Allow"
-    actions = [ "s3:GetEncryptionConfiguration" ]
+    effect    = "Allow"
+    actions   = ["s3:GetEncryptionConfiguration"]
     resources = var.ecs_exec_log_bucket
   }
+}
 
+data "aws_iam_policy_document" "ecs_exec_kms" {
   #refine for KMS key
   statement {
-    effect = "Allow"
-    actions = [ "kms:Decrypt" ]
-    resources = [ "*" ]
+    effect    = "Allow"
+    actions   = ["kms:Decrypt"]
+    resources = ["*"]
   }
 }
 
 data "aws_iam_policy_document" "ecs_trust_policy" {
   statement {
-   effect = "Allow"
-   actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
 
-   principals {
-     type = "Service"
-     identifiers = [ "ecs-tasks.amazonaws.com" ]
-   }
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
   }
 }
 
