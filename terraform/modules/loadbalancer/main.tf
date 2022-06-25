@@ -3,6 +3,7 @@ resource "aws_lb" "alb" {
   load_balancer_type         = var.alb_type
   subnets                    = var.alb_subnet_ids
   security_groups            = [aws_security_group.alb.id]
+  #tfsec:ignore:aws-elb-alb-not-public
   internal                   = var.alb_internal
   drop_invalid_header_fields = true
   enable_deletion_protection = true
