@@ -2,6 +2,28 @@ data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
 
+data "aws_iam_policy_document" "ecs_trust_policy" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+# combine all policy docs defined below (keeping things modular)
+data "aws_iam_policy_document" "ecs_task_role_exec_policy_doc" {
+  source_policy_documents = [
+    data.aws_iam_policy_document.ecs_exec_command.json,
+    data.aws_iam_policy_document.ecs_exec_ssm.json,
+    data.aws_iam_policy_document.ecs_exec_cloudwatch.json,
+    data.aws_iam_policy_document.ecs_exec_kms.json
+  ]
+}
+
 data "aws_iam_policy_document" "ecs_exec_command" {
   statement {
     effect    = "Allow"
@@ -54,41 +76,12 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
   }
 }
 
-data "aws_iam_policy_document" "ecs_exec_s3" {
-
-  #need to conditionally create an S3 bucket for the logs? creating s3 should be something done outside of module?
-  statement {
-    effect    = "Allow"
-    actions   = ["s3:PutObject"]
-    resources = ["${var.ecs_exec_log_bucket}/*"]
-  }
-
-  #need to conditionally create an S3 bucket for the logs? creating s3 should be something done outside of module?
-  statement {
-    effect    = "Allow"
-    actions   = ["s3:GetEncryptionConfiguration"]
-    resources = var.ecs_exec_log_bucket
-  }
-}
-
 data "aws_iam_policy_document" "ecs_exec_kms" {
   #refine for KMS key
   statement {
     effect    = "Allow"
     actions   = ["kms:Decrypt"]
     resources = ["*"]
-  }
-}
-
-data "aws_iam_policy_document" "ecs_trust_policy" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
-    }
   }
 }
 
