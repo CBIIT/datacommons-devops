@@ -29,7 +29,10 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_bucket_name"></a> [bucket\_name](#input\_bucket\_name) | name of the s3 bucket | `string` | n/a | yes |
+| <a name="input_bucket_policy"></a> [bucket\_policy](#input\_bucket\_policy) | s3 bucket policy | `any` | `[]` | no |
+| <a name="input_env"></a> [env](#input\_env) | name of the environment to provision | `string` | n/a | yes |
 | <a name="input_s3_force_destroy"></a> [s3\_force\_destroy](#input\_s3\_force\_destroy) | force destroy s3 bucket | `string` | n/a | yes |
+| <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | tags to associate with this resource | `map(string)` | n/a | yes |
 
 ## Outputs
