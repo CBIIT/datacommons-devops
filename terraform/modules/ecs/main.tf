@@ -6,8 +6,8 @@ resource "aws_ecs_task_definition" "task" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = each.value.cpu
   memory                   = each.value.memory
-  execution_role_arn       = var.ecs_execution_role_arn
-  task_role_arn            = var.ecs_task_role_arn
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode([
     {
