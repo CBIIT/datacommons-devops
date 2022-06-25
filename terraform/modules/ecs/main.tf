@@ -8,6 +8,7 @@ resource "aws_ecs_task_definition" "task" {
   memory                   = each.value.memory
   execution_role_arn       = var.ecs_execution_role_arn
   task_role_arn            = var.ecs_task_role_arn
+
   container_definitions = jsonencode([
     {
       name      = each.value.name
@@ -20,7 +21,9 @@ resource "aws_ecs_task_definition" "task" {
           #          hostPort      = var.microservice_port
         }
       ]
-  }])
+    }
+  ])
+
   tags = merge(
     {
       "Name" = format("%s-%s-%s-%s", var.stack_name, var.env, each.value.name, "task-definition")
@@ -28,6 +31,7 @@ resource "aws_ecs_task_definition" "task" {
     var.tags,
   )
 }
+
 #ecs service
 resource "aws_ecs_service" "service" {
   for_each                           = var.microservices
@@ -39,22 +43,29 @@ resource "aws_ecs_service" "service" {
   scheduling_strategy                = var.ecs_scheduling_strategy
   deployment_minimum_healthy_percent = 50
   deployment_maximum_percent         = 200
+
   deployment_circuit_breaker {
     enable   = true
     rollback = true
   }
+
   network_configuration {
     security_groups  = var.ecs_security_group_ids
     subnets          = var.ecs_subnet_ids
     assign_public_ip = false
   }
+
   load_balancer {
     target_group_arn = aws_lb_target_group.target_group[each.key].arn
     container_name   = each.value.name
     container_port   = each.value.port
   }
+
   lifecycle {
-    ignore_changes = [task_definition, desired_count]
+    ignore_changes = [
+      task_definition,
+      desired_count
+    ]
   }
 }
 
@@ -87,12 +98,12 @@ resource "aws_appautoscaling_policy" "microservice_autoscaling_cpu" {
 #tfsec:ignore:aws-ecs-enable-container-insight
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.stack_name}-${var.env}-ecs"
-  
+
   configuration {
     execute_command_configuration {
       kms_key_id = aws_kms_key.ecs_exec.key_id
       logging    = var.ecs_execute_command_logging
-      
+
       log_configuration {
         cloud_watch_log_group_name     = aws_cloudwatch_log_group.ecs_execute_command_log_group.name
         cloud_watch_encryption_enabled = true
