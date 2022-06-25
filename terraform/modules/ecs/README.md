@@ -1,3 +1,14 @@
+# General Notes/Comments:
+- I think we're creating target groups in the ALB and the ECS modules - should we pick one? ECS makes most sense.
+
+# Setting up ECS Exec
+- It’s important to notice that the container image requires `script` (part of util-linux) and `cat` (part of coreutils) to be installed in order to have command logs uploaded correctly to S3 and/or CloudWatch. The nginx container images have this support already installed. 
+- The SSM agent does not run as a separate container sidecar, it runs as an additional process inside the application container.
+- ECS Task role needs to allow communications with SSM and CloudWatch
+
+
+
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

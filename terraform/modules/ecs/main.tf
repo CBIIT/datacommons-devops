@@ -58,8 +58,6 @@ resource "aws_ecs_service" "service" {
   }
 }
 
-
-#create ecs cluster
 resource "aws_appautoscaling_target" "microservice_autoscaling_target" {
   for_each           = var.microservices
   max_capacity       = 5
