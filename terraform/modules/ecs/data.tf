@@ -1,10 +1,6 @@
-data "aws_caller_identity" "current" {
+data "aws_caller_identity" "current" {}
 
-}
-
-data "aws_region" "current" {
-
-}
+data "aws_region" "current" {}
 
 data "aws_iam_policy_document" "ecs_exec_command" {
   statement {
@@ -81,3 +77,16 @@ data "aws_iam_policy_document" "ecs_exec_s3" {
     resources = [ "*" ]
   }
 }
+
+data "aws_iam_policy_document" "ecs_trust_policy" {
+  statement {
+   effect = "Allow"
+   actions = ["sts:AssumeRole"]
+
+   principals {
+     type = "Service"
+     identifiers = [ "ecs-tasks.amazonaws.com" ]
+   }
+  }
+}
+
