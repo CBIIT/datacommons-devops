@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "task_execution_kms" {
       "kms:Decrypt",
       "kms:GenerateDataKey"
     ]
-    resources = ["*"]
+    resources = ["arn:aws:kms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:key/*"]
   }
 }
 
