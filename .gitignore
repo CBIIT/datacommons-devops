@@ -42,3 +42,5 @@ override.tf.json
 
 .DS_Store
 .tflint.hcl
+.tflint.d/*
+.tflint.d
