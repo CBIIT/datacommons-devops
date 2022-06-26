@@ -95,9 +95,13 @@ resource "aws_appautoscaling_policy" "microservice_autoscaling_cpu" {
   }
 }
 
-#tfsec:ignore:aws-ecs-enable-container-insight
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.stack_name}-${var.env}-ecs"
+
+  setting {
+    name  = "containerInsights"
+    value = var.container_insights_setting
+  }
 
   configuration {
     execute_command_configuration {

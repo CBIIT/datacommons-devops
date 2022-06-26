@@ -88,3 +88,9 @@ variable "ecs_execute_command_logging" {
   type        = string
   default     = "OVERRIDE"
 }
+
+variable "container_insights_setting" {
+  description = "Whether or not the ECS cluster enables CloudWatch Container Insights"
+  type        = string
+  default     = "disabled"
+}
