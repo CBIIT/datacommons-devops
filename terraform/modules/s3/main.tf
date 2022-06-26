@@ -1,4 +1,6 @@
 resource "aws_s3_bucket" "s3" {
+	# checkov:skip=CKV_AWS_145: Ignore customer managed key (cmk) warning
+	# checkov:skip=CKV_AWS_144: Ignore cross-region replication warnings
   bucket        = local.bucket_name
   force_destroy = var.s3_force_destroy
   tags          = var.tags
