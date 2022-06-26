@@ -38,7 +38,11 @@ data "aws_iam_policy_document" "task_execution_kms" {
 data "aws_iam_policy_document" "task_execution_secrets" {
   effect = "Allow"
   actions = [
-    "secretsmanager:GetSecretValue"
+    "secretsmanager:GetSecretValue",
+    "secretsmanager:ListSecrets",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:ListSecretVersionIds",
+    "secretsmanager:GetResourcePolicy"
   ]
   resources = ["arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:*"]
 }
@@ -63,9 +67,6 @@ data "aws_iam_policy_document" "task_execution_ecr" {
     resources = ["arn:aws:ecr:${data.aws_region.account.name}:${data.aws_caller_identity.account.account_id}:repository/*"]
   }
 }
-
-
-
 
 # combine all policy docs defined below for the task_role (keeping things modular)
 
@@ -94,7 +95,7 @@ data "aws_iam_policy_document" "ecs_exec_command" {
 
 data "aws_iam_policy_document" "ecs_exec_ssm" {
 
-  #refine for all SSM in account
+  #this can't be refined, no resource types for ssm
   statement {
     effect = "Allow"
     actions = [
@@ -116,8 +117,8 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
       "logs:DescribeLogGroups"
     ]
     resources = [
-      "arn:aws:logs:${aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*",
-    "arn:aws:logs:${aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*:*"]
+      "arn:aws:logs:${aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*"
+    ]
   }
 
   #need to refine this to exec log groups be referencing ARN in resources
@@ -128,7 +129,10 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
       "logs:DescribeLogStreams",
       "logs:PutLogEvents"
     ]
-    resources = ["${aws_cloudwatch_log_group.arn}/*"]
+    resources = [
+      "arn:aws:logs:${aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*",
+      "arn:aws:logs:${aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*:*"
+    ]
   }
 }
 
