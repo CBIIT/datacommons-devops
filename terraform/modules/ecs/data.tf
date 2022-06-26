@@ -84,12 +84,6 @@ data "aws_iam_policy_document" "ecs_exec_command" {
     effect    = "Allow"
     actions   = ["ecs:ExecuteCommand"]
     resources = [aws_ecs_cluster.ecs_cluster.arn]
-
-    condition {
-      test     = "StringEquals"
-      values   = [var.stack_name]
-      variable = "aws:ResourceTag/tag-value"
-    }
   }
 }
 
@@ -114,24 +108,21 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
   statement {
     effect = "Allow"
     actions = [
-      "logs:DescribeLogGroups"
+      "logs:CreateLogStreams",
+      "logs:DescribeLogGroups",
+      "logs:DescribeLogStreams"
     ]
-    resources = [
-      "arn:aws:logs:${aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*"
-    ]
+    resources = [aws_cloudwatch_log_group.ecs_execute_command_log_group.arn]
   }
 
   #need to refine this to exec log groups be referencing ARN in resources
   statement {
     effect = "Allow"
     actions = [
-      "logs:CreateLogStream",
-      "logs:DescribeLogStreams",
       "logs:PutLogEvents"
     ]
     resources = [
-      "arn:aws:logs:${aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*",
-      "arn:aws:logs:${aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*:*"
+      "${aws_cloudwatch_log_group.ecs_execute_command_log_group.arn}:*"
     ]
   }
 }
