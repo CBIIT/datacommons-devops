@@ -9,11 +9,14 @@ resource "aws_instance" "db" {
   vpc_security_group_ids = var.db_security_group_ids
   user_data              = data.template_cloudinit_config.user_data.rendered
   private_ip             = var.db_private_ip
+
   root_block_device {
     volume_type           = var.ebs_volume_type
     volume_size           = var.db_instance_volume_size
     delete_on_termination = true
+    encrypted             = true
   }
+
   tags = merge(
     {
       "Name" = "${var.stack_name}-${var.env}-${var.database_name}-4",
@@ -58,9 +61,11 @@ DOC
 
 resource "aws_ssm_association" "database" {
   name = aws_ssm_document.ssm_neo4j_boostrap.name
+
   targets {
     key    = "tag:Name"
     values = ["${var.stack_name}-${var.env}-${var.database_name}-4"]
   }
+
   depends_on = [aws_instance.db]
 }
