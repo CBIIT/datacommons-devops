@@ -1,18 +1,3 @@
-# module "s3" {
-#   source  = "terraform-aws-modules/s3-bucket/aws"
-#   version = "3.2.3"
-#   bucket = var.bucket_name
-#   acl = var.bucket_acl
-#   versioning = {
-#     enabled = var.enable_version
-#   }
-#   policy = var.bucket_policy
-#   lifecycle_rule = var.lifecycle_rule
-#   tags = var.tags
-#   attach_policy = var.attach_bucket_policy
-#   force_destroy = var.force_destroy_bucket
-# }
-
 resource "aws_s3_bucket" "s3" {
   bucket        = local.bucket_name
   force_destroy = var.s3_force_destroy
@@ -47,39 +32,31 @@ resource "aws_s3_bucket_versioning" "s3" {
   bucket = aws_s3_bucket.s3.id
 
   versioning_configuration {
-    status = "Enabled"
+    status = var.s3_versioning_status
   }
-
 }
 
-resource "aws_s3_bucket_lifecycle_configuration" "s3" {
+resource "aws_s3_bucket_intelligent_tiering_configuration" "s3" {
+  bucket = aws_s3_bucket.s3.bucket
+  name = "${local.bucket_name}-intelligent-tiering"
+
+  status = var.s3_intelligent_tiering_status
+
+  tiering {
+    access_tier = "ARCHIVE_ACCESS"
+    days = var.days_for_archive_tiering
+  }
+
+  tiering {
+    access_tier = "DEEP_ARCHIVE_ACCESS"
+    days = var.days_for_deep_archive_tiering
+  }
+}
+
+resource "aws_s3_bucket_logging" "s3" {
+  count = var.s3_enable_access_logging == true ? 1 : 0
+  
   bucket = aws_s3_bucket.s3.id
-
-  rule {
-    id     = "transition_to_standard_ia"
-    status = "Enabled"
-
-    transition {
-      days          = 30
-      storage_class = "STANDARD_IA"
-    }
-
-    noncurrent_version_transition {
-      noncurrent_days = 30
-      storage_class   = "STANDARD_IA"
-    }
-  }
-
-  rule {
-    id     = "expire_objects"
-    status = "Enabled"
-
-    expiration {
-      days = 90
-    }
-
-    noncurrent_version_expiration {
-      noncurrent_days = 90
-    }
-  }
+  target_bucket = var.s3_access_log_bucket_id
+  target_prefix = var.s3_log_prefix
 }
