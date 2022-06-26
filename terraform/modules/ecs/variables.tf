@@ -7,6 +7,12 @@ variable "stack_name" {
   type        = string
 }
 
+variable "iam_prefix" {
+  description = "The string prefix for IAM roles and policies to conform to NCI power-user compliance"
+  type        = string
+  default     = "power-user"
+}
+
 variable "ecs_subnet_ids" {
   description = "Provide list private subnets to use in this VPC. Example 10.0.10.0/24,10.0.11.0/24"
   type        = list(string)
@@ -67,19 +73,6 @@ variable "microservices" {
 
 variable "alb_https_listener_arn" {
   description = "alb https listener arn"
-  type        = string
-}
-
-variable "ecs_security_group_ids" {
-  description = "list of security groups to apply to this ecs"
-  type        = list(string)
-}
-variable "ecs_task_role_arn" {
-  description = "ecs task iam role arn"
-  type        = string
-}
-variable "ecs_execution_role_arn" {
-  description = "ecs execution iam role arn"
   type        = string
 }
 
