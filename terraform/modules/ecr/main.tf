@@ -1,6 +1,6 @@
 resource "aws_ecr_repository" "ecr" {
   for_each             = toset(var.ecr_repo_names)
-  name                 = "${var.stack_name}-${each.key}"
+  name                 = "${var.stack_name}-${env}-${each.key}"
   image_tag_mutability = "MUTABLE"
   tags = merge(
     {
