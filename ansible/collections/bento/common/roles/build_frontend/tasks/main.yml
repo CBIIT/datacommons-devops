@@ -58,7 +58,7 @@
     source: build
   environment:
     DOCKER_BUILDKIT: 1
-  
+
 - name: test image for vulnerabilities
   block:
     - name: run trivy scanner on 

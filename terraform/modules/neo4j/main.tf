@@ -17,6 +17,10 @@ resource "aws_instance" "db" {
     encrypted             = true
   }
 
+  metadata_options {
+    http_tokens = "required"
+  }
+
   tags = merge(
     {
       "Name" = "${var.stack_name}-${var.env}-${var.database_name}-4",

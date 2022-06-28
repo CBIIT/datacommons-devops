@@ -2,6 +2,10 @@ data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
 
+data "aws_vpc" "current" {
+  id = var.vpc_id
+}
+
 data "aws_iam_policy_document" "ecs_trust_policy" {
   statement {
     effect  = "Allow"
@@ -14,7 +18,62 @@ data "aws_iam_policy_document" "ecs_trust_policy" {
   }
 }
 
-# combine all policy docs defined below (keeping things modular)
+
+# combine several below policies to define the task_execution_role (keeping things modular)
+data "aws_iam_policy_document" "ecs_task_execution_role_policy_doc" {
+  source_policy_documents = [
+    data.aws_iam_policy_document.task_execution_ecr.json,
+    data.aws_iam_policy_document.task_execution_secrets.json,
+    data.aws_iam_policy_document.task_execution_kms.json
+  ]
+}
+
+data "aws_iam_policy_document" "task_execution_kms" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey"
+    ]
+    resources = ["arn:aws:kms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:key/*"]
+  }
+}
+
+data "aws_iam_policy_document" "task_execution_secrets" {
+  effect = "Allow"
+  actions = [
+    "secretsmanager:GetSecretValue",
+    "secretsmanager:ListSecrets",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:ListSecretVersionIds",
+    "secretsmanager:GetResourcePolicy"
+  ]
+  resources = ["arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:*"]
+}
+
+data "aws_iam_policy_document" "task_execution_ecr" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:BatchGetImage",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:GetAuthorizationToken",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:PutImage",
+      "ecr:CompleteLayerUpload",
+      "ecr:DescribeRepositories",
+      "ecr:GetLifecyclePolicy",
+      "ecr:GetRepositoryPolicy",
+      "ecr:InitiateLayerUpload",
+      "ecr:ListTagsForResource",
+      "ecr:UploadLayerPart"
+    ]
+    resources = ["arn:aws:ecr:${data.aws_region.account.name}:${data.aws_caller_identity.account.account_id}:repository/*"]
+  }
+}
+
+# combine all policy docs defined below for the task_role (keeping things modular)
+
 data "aws_iam_policy_document" "ecs_task_role_exec_policy_doc" {
   source_policy_documents = [
     data.aws_iam_policy_document.ecs_exec_command.json,
@@ -29,18 +88,12 @@ data "aws_iam_policy_document" "ecs_exec_command" {
     effect    = "Allow"
     actions   = ["ecs:ExecuteCommand"]
     resources = [aws_ecs_cluster.ecs_cluster.arn]
-
-    condition {
-      test     = "StringEquals"
-      values   = [var.stack_name]
-      variable = "aws:ResourceTag/tag-value"
-    }
   }
 }
 
 data "aws_iam_policy_document" "ecs_exec_ssm" {
 
-  #refine for all SSM in account
+  #this can't be refined, no resource types for ssm
   statement {
     effect = "Allow"
     actions = [
@@ -59,29 +112,33 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
   statement {
     effect = "Allow"
     actions = [
-      "logs:DescribeLogGroups"
+      "logs:CreateLogStreams",
+      "logs:DescribeLogGroups",
+      "logs:DescribeLogStreams"
     ]
-    resources = ["*"]
+    resources = [aws_cloudwatch_log_group.ecs_execute_command_log_group.arn]
   }
 
   #need to refine this to exec log groups be referencing ARN in resources
   statement {
     effect = "Allow"
     actions = [
-      "logs:CreateLogStream",
-      "logs:DescribeLogStreams",
       "logs:PutLogEvents"
     ]
-    resources = ["*"]
+    resources = [
+      "${aws_cloudwatch_log_group.ecs_execute_command_log_group.arn}:*"
+    ]
   }
 }
 
 data "aws_iam_policy_document" "ecs_exec_kms" {
-  #refine for KMS key
+
   statement {
-    effect    = "Allow"
-    actions   = ["kms:Decrypt"]
-    resources = ["*"]
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey"
+    ]
+    resources = [aws_kms_key.ecs_exec.arn]
   }
 }
-

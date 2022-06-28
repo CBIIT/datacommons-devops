@@ -6,8 +6,8 @@ resource "aws_ecs_task_definition" "task" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = each.value.cpu
   memory                   = each.value.memory
-  execution_role_arn       = var.ecs_execution_role_arn
-  task_role_arn            = var.ecs_task_role_arn
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
 
   container_definitions = jsonencode([
     {
@@ -50,7 +50,7 @@ resource "aws_ecs_service" "service" {
   }
 
   network_configuration {
-    security_groups  = var.ecs_security_group_ids
+    security_groups  = [var.aws_security_group.ecs.id]
     subnets          = var.ecs_subnet_ids
     assign_public_ip = false
   }
@@ -95,9 +95,13 @@ resource "aws_appautoscaling_policy" "microservice_autoscaling_cpu" {
   }
 }
 
-#tfsec:ignore:aws-ecs-enable-container-insight
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.stack_name}-${var.env}-ecs"
+
+  setting {
+    name  = "containerInsights"
+    value = var.container_insights_setting
+  }
 
   configuration {
     execute_command_configuration {
