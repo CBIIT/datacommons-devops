@@ -1,18 +1,22 @@
 # ECS Outputs:
 output "ecs_task_definition_arn" {
+  for_each = var.microservices
   value = aws_ecs_task_definition.task[each.key].arn
 }
 
 output "ecs_task_service_arn" {
-  value = aws_ecs_service.service.arn
+  for_each = var.microservices
+  value = aws_ecs_service.service[each.key].arn
 }
 
 output "appautoscaling_target_arn" {
-  value = aws_appautoscaling_target.microservice_autoscaling_target.arn
+  for_each = var.microservices
+  value = aws_appautoscaling_target.microservice_autoscaling_target[each.key].arn
 }
 
 output "appautoscaling_policy_arn" {
-  value = aws_appautoscaling_policy.microservice_autoscaling_cpu.arn
+  for_each = var.microservices
+  value = aws_appautoscaling_policy.microservice_autoscaling_cpu[each.key].arn
 }
 
 output "ecs_cluster_arn" {
