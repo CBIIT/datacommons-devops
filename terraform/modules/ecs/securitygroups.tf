@@ -5,7 +5,7 @@ resource "aws_security_group" "ecs" {
 
   tags = merge(
     {
-      "Name" = format("%s-%s-%s", var.stack_name, var.env, "ecs", "sg")
+      "Name" = format("%s-%s-%s-%s", var.stack_name, var.env, "ecs", "sg")
     },
     var.tags
   )
