@@ -53,7 +53,7 @@ resource "aws_opensearch_domain" "os" {
 
     maintenance_schedule {
       start_at                       = timeadd(local.now, "1h")
-      cron_expression_for_recurrence = "15 1 * * * 0"
+      cron_expression_for_recurrence = "cron(15 1 * * * 0)"
 
       duration {
         value = 2
