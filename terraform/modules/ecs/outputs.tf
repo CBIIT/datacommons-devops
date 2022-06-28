@@ -1,6 +1,6 @@
 # ECS Outputs:
 output "ecs_task_definition_arn" {
-  value = aws_ecs_task_definition.task.arn
+  value = aws_ecs_task_definition.task[each.key].arn
 }
 
 output "ecs_task_service_arn" {
