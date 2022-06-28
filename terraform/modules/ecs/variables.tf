@@ -87,3 +87,8 @@ variable "container_insights_setting" {
   type        = string
   default     = "disabled"
 }
+
+variable "target_account_cloudone"{
+  description = "to add check conditions on whether the resources are brought up in cloudone or not"
+  type        = bool
+}
