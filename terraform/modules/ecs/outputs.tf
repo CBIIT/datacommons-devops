@@ -6,9 +6,9 @@ output "ecs_task_definition_arn" {
 output "ecs_task_service_arn" {
   value = {for k, v in aws_ecs_service.service: k => v.arn}
 }
-output "appautoscaling_target_arn" {
+/* output "appautoscaling_target_arn" {
   value = {for k, v in aws_appautoscaling_target.microservice_autoscaling_target: k => v.arn}
-}
+} */
 
 output "appautoscaling_policy_arn" {
   value = {for k, v in aws_appautoscaling_policy.microservice_autoscaling_cpu: k => v.arn}
