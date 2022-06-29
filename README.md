@@ -1,10 +1,6 @@
 ## About
 This repository serves as a centralized registry for reusable infrastructure and configuration management definitions to be used across FNL projects. 
 
-## Repository Structure
-
-## How to Contribute
-
 ## Terraform Module Best Practices & Standards
 
 ### Resource Naming Conventions
