@@ -78,7 +78,7 @@ variable "opensearch_log_types" {
 
 variable "opensearch_autotune_state" {
   description = "Tell OpenSearch to enable or disable autotuning. Options include ENABLED and DISABLED"
-  value       = string
+  type       = string
   default     = "ENABLED"
 }
 

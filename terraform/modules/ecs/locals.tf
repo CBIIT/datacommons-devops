@@ -7,5 +7,5 @@ locals {
   task_execution_role_policy_name = "${var.iam_prefix}-${var.stack_name}-${var.env}-ecs-task-execution-role-policy"
   nih_cidr_ranges                 = ["129.43.0.0/16", "137.187.0.0/16", "10.128.0.0/9", "165.112.0.0/16", "156.40.0.0/16", "10.208.0.0/21", "128.231.0.0/16", "130.14.0.0/16", "157.98.0.0/16", "10.133.0.0/16"]
   vpc_cidr                        = data.aws_vpc.current.cidr_block
-  permission_boundary_arn         = "arn:aws:iam::${data.aws_caller_identity.account.account_id}:policy/PermissionBoundary_PowerUser"
+  permission_boundary_arn         = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
 }

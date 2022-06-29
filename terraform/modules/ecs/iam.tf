@@ -1,7 +1,8 @@
 resource "aws_iam_role" "ecs_task_execution_role" {
   name                 = local.task_execution_role_name
   assume_role_policy   = data.aws_iam_policy_document.ecs_trust_policy.json
-  permissions_boundary = local.permission_boundary_arn
+  #permissions_boundary = local.permission_boundary_arn
+  permissions_boundary = var.target_account_cloudone ? local.permission_boundary_arn: null
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_attachment" {
@@ -17,7 +18,8 @@ resource "aws_iam_policy" "ecs_task_execution_role_policy" {
 resource "aws_iam_role" "ecs_task_role" {
   name                 = local.task_role_name
   assume_role_policy   = data.aws_iam_policy_document.ecs_trust_policy.json
-  permissions_boundary = local.permission_boundary_arn
+  #permissions_boundary = local.permission_boundary_arn
+  permissions_boundary = var.target_account_cloudone ? local.permission_boundary_arn: null
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_role_exec_attachment" {

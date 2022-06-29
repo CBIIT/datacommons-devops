@@ -5,7 +5,7 @@ resource "aws_security_group" "ecs" {
 
   tags = merge(
     {
-      "Name" = format("%s-%s-%s", var.stack_name, var.env, "ecs", "sg")
+      "Name" = format("%s-%s-%s-%s", var.stack_name, var.env, "ecs", "sg")
     },
     var.tags
   )
@@ -18,7 +18,7 @@ resource "aws_security_group_rule" "nih_network_ingress" {
   protocol          = "tcp"
   from_port         = 80
   to_port           = 80
-  cidr_blocks       = [local.nih_cidr_ranges]
+  cidr_blocks       = local.nih_cidr_ranges
 
 }
 
