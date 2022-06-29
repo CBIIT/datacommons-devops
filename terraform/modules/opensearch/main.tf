@@ -47,21 +47,6 @@ resource "aws_opensearch_domain" "os" {
     }
   }
 
-  auto_tune_options {
-    desired_state       = var.opensearch_autotune_state
-    rollback_on_disable = var.opensearch_autotune_rollback_type
-
-    maintenance_schedule {
-      start_at                       = timeadd(local.now, "1h")
-      cron_expression_for_recurrence = "15 1 * * 0"
-
-      duration {
-        value = 2
-        unit  = "HOURS"
-      }
-    }
-  }
-
   snapshot_options {
     automated_snapshot_start_hour = var.automated_snapshot_start_hour
   }
