@@ -1,0 +1,12 @@
+---
+#project:
+#tier:
+
+# Newrelic service vars
+#newrelic_license_key:
+#hostname:
+
+# Sumologic collector vars
+#sumo_access_id:
+#sumo_access_key:
+#app_type:

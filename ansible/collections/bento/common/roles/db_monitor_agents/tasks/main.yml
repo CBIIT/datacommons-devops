@@ -1,0 +1,82 @@
+---
+# Newrelic
+- name: setup newrelic repo
+  yum_repository:
+    name: newrelic-infra
+    description: Newrelic infrastruture repository
+    baseurl: https://download.newrelic.com/infrastructure_agent/linux/yum/el/7/x86_64/
+
+- name: install newrelic-infra
+  package:
+    name:
+      - libcap
+      - newrelic-infra
+    state: latest
+    disable_gpg_check: yes
+  environment:
+    NRIA_MODE: PRIVILEGED
+
+- name: copy newrelic config file to /etc/
+  template:
+    src: newrelic-infra.yml.j2
+    dest: /etc/newrelic-infra.yml
+
+- name: enable and restart newrelic-infra service
+  service:
+    name: newrelic-infra
+    state: restarted
+    enabled: yes
+
+# Sumologic
+---
+- name: download sumologic rpm
+  get_url:
+    url: https://collectors.sumologic.com/rest/download/rpm/64
+    dest: /tmp/sumologic.rpm
+
+- name: Install SumoCollector
+  yum:
+    name: '/tmp/sumologic.rpm'
+    state: installed
+
+- name: copy user.properties and source configuration
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    group: sumologic_collector
+  with_items:
+    - {src: 'sources.json.j2',dest: '{{ config }}/sources.json'}
+    - {src: 'user.properties.j2',dest: '{{ config }}/user.properties'}
+  notify: restart collector
+    
+- name: Restart service
+  service:
+    name: collector
+    state: restarted
+    enabled: yes
+---
+- name: download sumologic rpm
+  get_url:
+    url: https://collectors.sumologic.com/rest/download/rpm/64
+    dest: /tmp/sumologic.rpm
+
+- name: Install SumoCollector
+  yum:
+    name: '/tmp/sumologic.rpm'
+    state: installed
+
+- name: copy user.properties and source configuration
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    group: sumologic_collector
+  with_items:
+    - {src: 'sources.json.j2',dest: '{{ config }}/sources.json'}
+    - {src: 'user.properties.j2',dest: '{{ config }}/user.properties'}
+  notify: restart collector
+    
+- name: Restart service
+  service:
+    name: collector
+    state: restarted
+    enabled: yes

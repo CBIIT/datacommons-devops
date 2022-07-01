@@ -1,0 +1,12 @@
+---
+# handlers for newrelic
+- name: restart newrelic-infra
+  service:
+    name: newrelic-infra
+    state: restarted
+
+# handlers for sumologic
+- name: restart collector
+  service:
+    name: collector
+    state: restarted
