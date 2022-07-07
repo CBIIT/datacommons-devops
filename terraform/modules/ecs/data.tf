@@ -83,7 +83,8 @@ data "aws_iam_policy_document" "ecs_task_role_exec_policy_doc" {
     data.aws_iam_policy_document.task_execution_ecr.json,
     data.aws_iam_policy_document.ecs_exec_ssm.json,
     data.aws_iam_policy_document.ecs_exec_cloudwatch.json,
-    data.aws_iam_policy_document.ecs_exec_kms.json
+    data.aws_iam_policy_document.ecs_exec_kms.json,
+    data.aws_iam_policy_document.task_execution_secrets.json
   ]
 }
 
