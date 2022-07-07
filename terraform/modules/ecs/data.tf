@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "ecs_task_execution_role_policy_doc" {
   source_policy_documents = [
     data.aws_iam_policy_document.task_execution_ecr.json,
     data.aws_iam_policy_document.task_execution_secrets.json,
-    data.aws_iam_policy_document.task_execution_kms.json
+    data.aws_iam_policy_document.task_execution_kms.json,
     data.aws_iam_policy_document.ecs_exec_cloudwatch.json,
   ]
 }
