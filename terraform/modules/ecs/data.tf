@@ -25,6 +25,7 @@ data "aws_iam_policy_document" "ecs_task_execution_role_policy_doc" {
     data.aws_iam_policy_document.task_execution_ecr.json,
     data.aws_iam_policy_document.task_execution_secrets.json,
     data.aws_iam_policy_document.task_execution_kms.json
+    data.aws_iam_policy_document.ecs_exec_cloudwatch.json,
   ]
 }
 
@@ -118,6 +119,7 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
       "logs:CreateLogStreams",
       "logs:DescribeLogGroups",
       "logs:DescribeLogStreams"
+      "logs:CreateLogGroup"
     ]
     resources = [aws_cloudwatch_log_group.ecs_execute_command_log_group.arn]
   }
