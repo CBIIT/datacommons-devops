@@ -119,7 +119,7 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
     actions = [
       "logs:CreateLogStreams",
       "logs:DescribeLogGroups",
-      "logs:DescribeLogStreams"
+      "logs:DescribeLogStreams",
       "logs:CreateLogGroup"
     ]
     resources = [aws_cloudwatch_log_group.ecs_execute_command_log_group.arn]
