@@ -12,6 +12,7 @@ resource "aws_security_group" "ecs" {
 }
 
 resource "aws_security_group_rule" "nih_network_ingress" {
+  count = var.target_account_cloudone ? 1: 0
   security_group_id = aws_security_group.ecs.id
   description       = "Allow ingress network access to the ECS security group specified by CIDR Blocks"
   type              = "ingress"
