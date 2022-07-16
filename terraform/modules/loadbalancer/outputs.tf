@@ -18,12 +18,12 @@ output "alb_arn" {
   value       = aws_lb.alb.arn
 }
 
-output "alb_securitygroup-arn" {
+output "alb_securitygroup_arn" {
   description = "the arn for the security group associated with the alb"
   value       = aws_security_group.alb.arn
 }
 
-output "alb_securitygroup-id" {
+output "alb_securitygroup_id" {
   description = "the id for the security group associated with the alb"
   value       = aws_security_group.alb.id
 }
