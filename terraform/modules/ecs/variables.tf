@@ -92,9 +92,3 @@ variable "target_account_cloudone"{
   description = "to add check conditions on whether the resources are brought up in cloudone or not"
   type        = bool
 }
-
-variable "create_app_security_group" {
-  description = "create application security group"
-  type = bool
-  default = false
-}
