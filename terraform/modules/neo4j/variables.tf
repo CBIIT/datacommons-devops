@@ -70,3 +70,13 @@ variable "public_ssh_key_ssm_parameter_name" {
   default     = "ssh_public_key"
   type        = string
 }
+variable "require_http_tokens" {
+  type = string
+  description = "choose if http_tokens is required or optional"
+  default = "optional"
+}
+variable "enable_http_endpoint" {
+  type = string
+  description = "choose if http_endpoint is enabled or disabld"
+  default = "enabled"
+}

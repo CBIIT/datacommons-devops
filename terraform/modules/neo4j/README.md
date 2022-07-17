@@ -37,9 +37,11 @@ No modules.
 | <a name="input_db_private_ip"></a> [db\_private\_ip](#input\_db\_private\_ip) | private ip of the db instance | `string` | n/a | yes |
 | <a name="input_db_subnet_id"></a> [db\_subnet\_id](#input\_db\_subnet\_id) | subnet id to launch db | `string` | n/a | yes |
 | <a name="input_ebs_volume_type"></a> [ebs\_volume\_type](#input\_ebs\_volume\_type) | EVS volume type | `string` | `"standard"` | no |
+| <a name="input_enable_http_endpoint"></a> [enable\_http\_endpoint](#input\_enable\_http\_endpoint) | choose if http\_endpoint is enabled or disabld | `string` | `"enabled"` | no |
 | <a name="input_env"></a> [env](#input\_env) | name of the environment to provision | `string` | n/a | yes |
 | <a name="input_iam_instance_profile_name"></a> [iam\_instance\_profile\_name](#input\_iam\_instance\_profile\_name) | name of iam\_instance\_profile to apply to this instance | `string` | `"bento-dev-ecs-instance-profile"` | no |
 | <a name="input_public_ssh_key_ssm_parameter_name"></a> [public\_ssh\_key\_ssm\_parameter\_name](#input\_public\_ssh\_key\_ssm\_parameter\_name) | name of the ssm parameter holding ssh key content | `string` | `"ssh_public_key"` | no |
+| <a name="input_require_http_tokens"></a> [require\_http\_tokens](#input\_require\_http\_tokens) | choose if http\_tokens is required or optional | `string` | `"optional"` | no |
 | <a name="input_ssh_key_name"></a> [ssh\_key\_name](#input\_ssh\_key\_name) | name of the ssh key to manage the instances | `string` | `"devops"` | no |
 | <a name="input_ssh_user"></a> [ssh\_user](#input\_ssh\_user) | name of the ec2 user | `string` | `"bento"` | no |
 | <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |
