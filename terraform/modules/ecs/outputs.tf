@@ -46,9 +46,9 @@ output "ecs_security_group_arn" {
 }
 
 output "app_security_group_id" {
-  value = aws_security_group.app[count.index].id
+  value = aws_security_group.app.id
 }
 
 output "app_security_group_arn" {
-  value = aws_security_group.app[count.index].arn
+  value = aws_security_group.app.arn
 }
