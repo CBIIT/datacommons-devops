@@ -44,6 +44,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_automated_snapshot_start_hour"></a> [automated\_snapshot\_start\_hour](#input\_automated\_snapshot\_start\_hour) | hour when automated snapshot to be taken | `number` | `23` | no |
+| <a name="input_create_cloudwatch_log_policy"></a> [create\_cloudwatch\_log\_policy](#input\_create\_cloudwatch\_log\_policy) | Due cloudwatch log policy limits, this should be option, we can use an existing policy | `bool` | `false` | no |
 | <a name="input_create_os_service_role"></a> [create\_os\_service\_role](#input\_create\_os\_service\_role) | change this value to true if running this script for the first time | `bool` | `false` | no |
 | <a name="input_env"></a> [env](#input\_env) | name of the environment to provision | `string` | n/a | yes |
 | <a name="input_multi_az_enabled"></a> [multi\_az\_enabled](#input\_multi\_az\_enabled) | set to true to enable multi-az deployment | `bool` | n/a | yes |
