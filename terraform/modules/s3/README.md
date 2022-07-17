@@ -47,5 +47,6 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_bucket_id"></a> [bucket\_id](#output\_bucket\_id) | bucket id |
 | <a name="output_bucket_name"></a> [bucket\_name](#output\_bucket\_name) | name of the bucket |
 <!-- END_TF_DOCS -->
