@@ -6,7 +6,7 @@ resource "aws_instance" "db" {
   subnet_id              = var.db_subnet_id
   iam_instance_profile   = var.iam_instance_profile_name
   source_dest_check      = false
-  vpc_security_group_ids = var.db_security_group_ids
+  vpc_security_group_ids =  [aws_security_group.database_sg.id ]
   user_data              = data.template_cloudinit_config.user_data.rendered
   private_ip             = var.db_private_ip
 
