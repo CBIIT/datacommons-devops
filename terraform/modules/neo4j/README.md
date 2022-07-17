@@ -19,6 +19,7 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_instance.db](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
+| [aws_security_group.database_sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_ssm_association.database](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_association) | resource |
 | [aws_ssm_document.ssm_neo4j_boostrap](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_document) | resource |
 | [aws_ssm_parameter.amz_linux](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ssm_parameter) | data source |
@@ -50,5 +51,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_db_security_group_arn"></a> [db\_security\_group\_arn](#output\_db\_security\_group\_arn) | n/a |
+| <a name="output_db_security_group_id"></a> [db\_security\_group\_id](#output\_db\_security\_group\_id) | n/a |
 | <a name="output_private_ip"></a> [private\_ip](#output\_private\_ip) | n/a |
 <!-- END_TF_DOCS -->

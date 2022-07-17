@@ -63,6 +63,19 @@ DOC
   )
 }
 
+#create database security group
+resource "aws_security_group" "database_sg" {
+  name = "${var.stack_name}-${var.env}-database-sg"
+  description = "${var.stack_name} ${var.env} database security group"
+  vpc_id = var.vpc_id
+  tags = merge(
+  {
+    "Name" = format("%s-%s-%s",var.stack_name,var.env,"database-sg")
+  },
+  var.tags,
+  )
+}
+
 resource "aws_ssm_association" "database" {
   name = aws_ssm_document.ssm_neo4j_boostrap.name
 

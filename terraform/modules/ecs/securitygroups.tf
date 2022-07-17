@@ -25,10 +25,23 @@ resource "aws_security_group_rule" "nih_network_ingress" {
 
 resource "aws_security_group_rule" "all_egress" {
   security_group_id = aws_security_group.ecs.id
-  description       = "Allow outbound network access for the ecs security group"
   from_port         = 0
   protocol          = "-1"
   to_port           = 0
   cidr_blocks       = ["0.0.0.0/0"]
   type              = "egress"
+}
+
+#create app security group
+resource "aws_security_group" "app" {
+  count = var.create_app_security_group ? 1 : 0
+  name = "${var.stack_name}-${var.env}-app-sg"
+  description       = "Allow application to communicate with other aws resources"
+  vpc_id = var.vpc_id
+  tags = merge(
+  {
+    "Name" = format("%s-%s-frontend-sg",var.stack_name,terraform.workspace),
+  },
+  var.tags,
+  )
 }
