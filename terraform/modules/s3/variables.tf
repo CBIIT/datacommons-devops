@@ -60,3 +60,8 @@ variable "s3_access_log_bucket_id" {
   description = "The destination bucket of access logs for an S3 bucket"
   type = string 
 }
+variable "s3_bucket_policy" {
+  type = string
+  default = null
+  description = "This optional s3 bucket policy"
+}

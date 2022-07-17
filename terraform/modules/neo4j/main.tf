@@ -18,7 +18,8 @@ resource "aws_instance" "db" {
   }
 
   metadata_options {
-    http_tokens = "required"
+    http_tokens = var.require_http_tokens
+    http_endpoint = var.enable_http_endpoint
   }
 
   tags = merge(
