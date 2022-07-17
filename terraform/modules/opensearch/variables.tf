@@ -87,3 +87,9 @@ variable "opensearch_autotune_rollback_type" {
   type        = string
   default     = "DEFAULT_ROLLBACK"
 }
+
+variable "create_cloudwatch_log_policy" {
+  description = "Due cloudwatch log policy limits, this should be option, we can use an existing policy"
+  default = false
+  type = bool
+}

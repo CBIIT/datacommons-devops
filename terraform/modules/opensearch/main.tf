@@ -62,6 +62,7 @@ resource "aws_cloudwatch_log_group" "os" {
 }
 
 resource "aws_cloudwatch_log_resource_policy" "os" {
+  count = var.create_cloudwatch_log_policy ? 1: 0
   policy_name     = "${local.domain_name}-log-policy"
   policy_document = data.aws_iam_policy_document.os.json
 }
