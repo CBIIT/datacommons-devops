@@ -34,13 +34,12 @@ resource "aws_security_group_rule" "all_egress" {
 
 #create app security group
 resource "aws_security_group" "app" {
-  count = var.create_app_security_group ? 1 : 0
   name = "${var.stack_name}-${var.env}-app-sg"
   description       = "Allow application to communicate with other aws resources"
   vpc_id = var.vpc_id
   tags = merge(
   {
-    "Name" = format("%s-%s-frontend-sg",var.stack_name,terraform.workspace),
+    "Name" = format("%s-%s-app-sg",var.stack_name,terraform.workspace),
   },
   var.tags,
   )
