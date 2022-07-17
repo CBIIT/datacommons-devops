@@ -45,7 +45,7 @@ No modules.
 | <a name="output_alb_arn"></a> [alb\_arn](#output\_alb\_arn) | the arn for the alb |
 | <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | ALB dns name |
 | <a name="output_alb_https_listener_arn"></a> [alb\_https\_listener\_arn](#output\_alb\_https\_listener\_arn) | https listener arn |
-| <a name="output_alb_securitygroup-arn"></a> [alb\_securitygroup-arn](#output\_alb\_securitygroup-arn) | the arn for the security group associated with the alb |
-| <a name="output_alb_securitygroup-id"></a> [alb\_securitygroup-id](#output\_alb\_securitygroup-id) | the id for the security group associated with the alb |
+| <a name="output_alb_securitygroup_arn"></a> [alb\_securitygroup\_arn](#output\_alb\_securitygroup\_arn) | the arn for the security group associated with the alb |
+| <a name="output_alb_securitygroup_id"></a> [alb\_securitygroup\_id](#output\_alb\_securitygroup\_id) | the id for the security group associated with the alb |
 | <a name="output_alb_zone_id"></a> [alb\_zone\_id](#output\_alb\_zone\_id) | https listener arn |
 <!-- END_TF_DOCS -->
