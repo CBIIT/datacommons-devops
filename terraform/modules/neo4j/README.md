@@ -35,7 +35,6 @@ No modules.
 | <a name="input_database_password"></a> [database\_password](#input\_database\_password) | set database password | `string` | `"custodian"` | no |
 | <a name="input_db_instance_volume_size"></a> [db\_instance\_volume\_size](#input\_db\_instance\_volume\_size) | volume size of the instances | `number` | `100` | no |
 | <a name="input_db_private_ip"></a> [db\_private\_ip](#input\_db\_private\_ip) | private ip of the db instance | `string` | n/a | yes |
-| <a name="input_db_security_group_ids"></a> [db\_security\_group\_ids](#input\_db\_security\_group\_ids) | security group id for the db | `list(string)` | n/a | yes |
 | <a name="input_db_subnet_id"></a> [db\_subnet\_id](#input\_db\_subnet\_id) | subnet id to launch db | `string` | n/a | yes |
 | <a name="input_ebs_volume_type"></a> [ebs\_volume\_type](#input\_ebs\_volume\_type) | EVS volume type | `string` | `"standard"` | no |
 | <a name="input_env"></a> [env](#input\_env) | name of the environment to provision | `string` | n/a | yes |

@@ -60,10 +60,7 @@ variable "db_subnet_id" {
   description = "subnet id to launch db"
   type        = string
 }
-variable "db_security_group_ids" {
-  description = "security group id for the db"
-  type        = list(string)
-}
+
 variable "env" {
   description = "name of the environment to provision"
   type        = string
