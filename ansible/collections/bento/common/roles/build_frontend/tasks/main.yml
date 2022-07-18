@@ -70,9 +70,6 @@
       debug:
         msg: "{{ vuln_results.stdout_lines }}"
 
-- name: debug
-  debug:
-    msg: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}"
 - name: Add {{ project_name }}-{{ container_name }} image to ECR
   community.docker.docker_image:
     name: "{{ project_name }}-{{ container_name }}"
