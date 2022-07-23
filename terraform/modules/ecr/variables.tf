@@ -17,3 +17,9 @@ variable "env" {
   description = "name of the environment to provision"
   type        = string
 }
+
+variable "create_env_specific_repo" {
+  description = "choose to create environment specific repo. Example bento-dev-frontend"
+  type = bool
+  default = true
+}

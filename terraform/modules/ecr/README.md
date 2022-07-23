@@ -27,6 +27,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_create_env_specific_repo"></a> [create\_env\_specific\_repo](#input\_create\_env\_specific\_repo) | choose to create environment specific repo. Example bento-dev-frontend | `bool` | `true` | no |
 | <a name="input_ecr_repo_names"></a> [ecr\_repo\_names](#input\_ecr\_repo\_names) | list of repo names | `list(string)` | n/a | yes |
 | <a name="input_env"></a> [env](#input\_env) | name of the environment to provision | `string` | n/a | yes |
 | <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |
