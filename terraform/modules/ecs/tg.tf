@@ -45,7 +45,7 @@ resource "aws_lb_listener_rule" "alb_listener" {
   }
   condition {
     path_pattern {
-      values = [each.value.path]
+      values = each.value.path
     }
   }
 }

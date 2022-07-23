@@ -4,7 +4,6 @@ resource "aws_instance" "db" {
   instance_type          = var.database_instance_type
   key_name               = var.ssh_key_name
   subnet_id              = var.db_subnet_id
-  iam_instance_profile   = var.iam_instance_profile_name
   source_dest_check      = false
   vpc_security_group_ids =  [aws_security_group.database_sg.id ]
   user_data              = data.template_cloudinit_config.user_data.rendered

@@ -51,11 +51,6 @@ variable "stack_name" {
   type        = string
 }
 
-variable "iam_instance_profile_name" {
-  description = "name of iam_instance_profile to apply to this instance"
-  type        = string
-  default     = "bento-dev-ecs-instance-profile"
-}
 variable "db_subnet_id" {
   description = "subnet id to launch db"
   type        = string
