@@ -23,7 +23,7 @@ resource "aws_instance" "db" {
 
   tags = merge(
     {
-      "Name" = "${var.stack_name}-${var.env}-${var.database_name}-4",
+      "Name" = "${var.stack_name}-${var.env}-${var.database_name}",
     },
     var.tags,
   )
