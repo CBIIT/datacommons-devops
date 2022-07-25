@@ -7,8 +7,8 @@ resource "aws_instance" "db" {
   source_dest_check      = false
   vpc_security_group_ids =  [aws_security_group.database_sg.id ]
   user_data              = data.template_cloudinit_config.user_data.rendered
+  iam_instance_profile   = aws_iam_instance_profile.db_profile.name
   private_ip             = var.db_private_ip
-
   root_block_device {
     volume_type           = var.ebs_volume_type
     volume_size           = var.db_instance_volume_size
@@ -85,4 +85,15 @@ resource "aws_ssm_association" "database" {
   }
 
   depends_on = [aws_instance.db]
+}
+
+resource "aws_iam_role" "db_role" {
+  name = "${var.stack_name}-${var.env}-database-instance-role"
+  assume_role_policy = data.aws_iam_policy_document.sts_policy.json
+  managed_policy_arns = [data.aws_iam_policy.ssm_policy.arn]
+}
+
+resource "aws_iam_instance_profile" "db_profile" {
+  name = "${var.stack_name}-${var.env}-database-instance-profile"
+  role = aws_iam_role.db_role.name
 }
