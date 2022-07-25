@@ -60,7 +60,6 @@ data "aws_iam_policy_document" "task_execution_ecr" {
     actions = [
       "ecr:BatchGetImage",
       "ecr:GetDownloadUrlForLayer",
-      "ecr:GetAuthorizationToken",
       "ecr:BatchCheckLayerAvailability",
       "ecr:PutImage",
       "ecr:CompleteLayerUpload",
@@ -70,9 +69,13 @@ data "aws_iam_policy_document" "task_execution_ecr" {
       "ecr:InitiateLayerUpload",
       "ecr:ListTagsForResource",
       "ecr:UploadLayerPart",
-      "ecr:GetAuthorizationToken"
     ]
     resources = ["arn:aws:ecr:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:repository/*"]
+  }
+  statement {
+    effect = "Allow"
+    actions = ["ecr:GetAuthorizationToken"]
+    resources = ["*"]
   }
 }
 
