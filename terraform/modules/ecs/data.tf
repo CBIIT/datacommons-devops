@@ -90,7 +90,8 @@ data "aws_iam_policy_document" "ecs_task_role_exec_policy_doc" {
     data.aws_iam_policy_document.ecs_exec_ssm.json,
     data.aws_iam_policy_document.ecs_exec_cloudwatch.json,
     data.aws_iam_policy_document.ecs_exec_kms.json,
-    data.aws_iam_policy_document.task_execution_secrets.json
+    data.aws_iam_policy_document.task_execution_secrets.json,
+    data.aws_iam_policy_document.os_policy.json
   ]
 }
 
@@ -152,5 +153,13 @@ data "aws_iam_policy_document" "ecs_exec_kms" {
       "kms:GenerateDataKey"
     ]
     resources = [aws_kms_key.ecs_exec.arn]
+  }
+}
+
+data "aws_iam_policy_document" "os_policy" {
+  statement {
+    effect = "Allow"
+    actions = ["es:ESHttp*"]
+    resources = ["arn:aws:es:*:${data.aws_caller_identity.current.account_id}:domain/${local.os_domain_name}"]
   }
 }
