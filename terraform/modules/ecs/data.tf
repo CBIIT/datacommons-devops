@@ -74,7 +74,12 @@ data "aws_iam_policy_document" "task_execution_ecr" {
   }
   statement {
     effect = "Allow"
-    actions = ["ecr:GetAuthorizationToken"]
+    actions = [
+      "ecr:GetAuthorizationToken",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:CreateLogGroup"
+    ]
     resources = ["*"]
   }
 }
