@@ -33,3 +33,17 @@ data "aws_ssm_parameter" "amz_linux" {
 data "aws_ssm_parameter" "sshkey" {
   name = var.public_ssh_key_ssm_parameter_name
 }
+
+data "aws_iam_policy_document" "sts_policy" {
+  statement {
+    effect = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      identifiers = ["ec2.amazonaws.com"]
+      type        = "Service"
+    }
+  }
+}
+data "aws_iam_policy" "ssm_policy" {
+  arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
