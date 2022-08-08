@@ -160,6 +160,7 @@ data "aws_iam_policy_document" "os_policy" {
   statement {
     effect = "Allow"
     actions = ["es:ESHttp*"]
-    resources = ["arn:aws:es:*:${data.aws_caller_identity.current.account_id}:domain/${local.os_domain_name}"]
+    resources = ["arn:aws:es:*:${data.aws_caller_identity.current.account_id}:domain/${local.os_domain_name}/*"]
   }
 }
+

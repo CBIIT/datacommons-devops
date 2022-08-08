@@ -24,6 +24,7 @@
 
 - name: copy schema from frontend to resources
   template:
+    remote_src: yes
     src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ schema_file}}"
     dest: "{{ workspace }}/src/main/resources/graphql/{{ schema_file}}"
 
@@ -34,6 +35,7 @@
 
 - name: copy test queries from frontend to resources
   template:
+    remote_src: yes
     src: "{{ workspace }}/{{ project_name }}-frontend/yaml/{{ test_queries_file }}"
     dest: "{{ workspace }}/src/main/resources/yaml/{{ test_queries_file }}"
   when: test_queries.stat.exists
