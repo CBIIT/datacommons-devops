@@ -98,3 +98,9 @@ variable "add_opensearch_permission" {
   default = false
   description = "choose to create opensearch permission or not"
 }
+variable "allow_cloudwatch_stream" {
+  type = bool
+  default = false
+  description = "allow cloudwatch stream for the containers"
+
+}

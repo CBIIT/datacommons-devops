@@ -129,7 +129,7 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
       "logs:DescribeLogStreams",
       "logs:CreateLogGroup"
     ]
-    resources = [aws_cloudwatch_log_group.ecs_execute_command_log_group.arn]
+    resources = [ var.allow_cloudwatch_stream ? "*" : aws_cloudwatch_log_group.ecs_execute_command_log_group.arn]
   }
 
   #need to refine this to exec log groups be referencing ARN in resources
@@ -139,7 +139,7 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
       "logs:PutLogEvents"
     ]
     resources = [
-      "${aws_cloudwatch_log_group.ecs_execute_command_log_group.arn}:*"
+      var.allow_cloudwatch_stream ? "arn:aws:logs:*:${data.aws_caller_identity.current.account_id}:log-group:*:log-stream:*" : "${aws_cloudwatch_log_group.ecs_execute_command_log_group.arn}:*"
     ]
   }
 }
