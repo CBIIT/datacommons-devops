@@ -124,9 +124,9 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
   statement {
     effect = "Allow"
     actions = [
-      "logs:CreateLogStreams",
-      "logs:DescribeLogGroups",
-      "logs:DescribeLogStreams",
+      "logs:CreateLogStream",
+      "logs:DescribeLogGroup",
+      "logs:DescribeLogStream",
       "logs:CreateLogGroup"
     ]
     resources = [ var.allow_cloudwatch_stream ? "*" : aws_cloudwatch_log_group.ecs_execute_command_log_group.arn]
