@@ -64,6 +64,7 @@ No modules.
 | <a name="input_add_opensearch_permission"></a> [add\_opensearch\_permission](#input\_add\_opensearch\_permission) | choose to create opensearch permission or not | `bool` | `false` | no |
 | <a name="input_alb_https_listener_arn"></a> [alb\_https\_listener\_arn](#input\_alb\_https\_listener\_arn) | alb https listener arn | `string` | n/a | yes |
 | <a name="input_alb_target_type"></a> [alb\_target\_type](#input\_alb\_target\_type) | type of alb target - ip , instance, lambda | `string` | `"ip"` | no |
+| <a name="input_allow_cloudwatch_stream"></a> [allow\_cloudwatch\_stream](#input\_allow\_cloudwatch\_stream) | allow cloudwatch stream for the containers | `bool` | `false` | no |
 | <a name="input_application_url"></a> [application\_url](#input\_application\_url) | url of the application | `string` | n/a | yes |
 | <a name="input_container_insights_setting"></a> [container\_insights\_setting](#input\_container\_insights\_setting) | Whether or not the ECS cluster enables CloudWatch Container Insights | `string` | `"disabled"` | no |
 | <a name="input_ecs_execute_command_logging"></a> [ecs\_execute\_command\_logging](#input\_ecs\_execute\_command\_logging) | The log setting to use for redirecting logs for ecs execute command results. Valid values are NONE, DEFAULT, and OVERRIDE. | `string` | `"OVERRIDE"` | no |
