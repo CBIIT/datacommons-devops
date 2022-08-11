@@ -25,8 +25,11 @@
 - name: copy schema from frontend to resources
   template:
     remote_src: yes
-    src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ schema_file}}"
-    dest: "{{ workspace }}/src/main/resources/graphql/{{ schema_file}}"
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  loop:
+    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ schema_file}}"}
+    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ public_schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ public_schema_file}}"}
 
 - name: verify test queries file exists
   stat:
