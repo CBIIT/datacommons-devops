@@ -154,6 +154,7 @@ data "aws_iam_policy_document" "ecs_exec_kms" {
     ]
     resources = [aws_kms_key.ecs_exec.arn]
   }
+
 }
 
 data "aws_iam_policy_document" "os_policy" {
