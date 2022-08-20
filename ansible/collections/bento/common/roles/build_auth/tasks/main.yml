@@ -8,7 +8,7 @@
       pull: yes
       nocache: yes
     name: "{{ project_name }}-{{ container_name }}"
-    tag: "{{ image_version }}-{{ build_number }}"
+    tag: "{{ image_version }}.{{ build_number }}"
     push: no
     force_source: yes
     source: build
