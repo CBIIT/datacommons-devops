@@ -8,7 +8,7 @@
       pull: yes
       nocache: yes
     name: "{{ project_name }}-{{ container_name }}"
-    tag: "{{ image_version }}-{{ build_number }}"
+    tag: "{{ image_version }}.{{ build_number }}"
     push: no
     force_source: yes
     source: build
@@ -17,7 +17,7 @@
   block:
     - name: run trivy scanner on 
       #command: "trivy image --exit-code 1 --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}"
-      command: "trivy image --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}"
+      command: "trivy image --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
       register: vuln_results
   always:
     - name: echo vulnerability results
