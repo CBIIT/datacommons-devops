@@ -84,14 +84,14 @@
   docker_image:
     name: "{{ project_name }}-{{ container_name }}"
     repository: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}"
-    tag: "{{ image_version }}-{{ build_number }}"
+    tag: "{{ image_version }}.{{ build_number }}"
     force_tag: yes
     push: yes
     source: local
 
 - name: Add tag latest to {{ project_name }}-{{container_name}} image
   community.docker.docker_image:
-    name: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:{{ image_version }}-{{build_number}}"
+    name: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:{{ image_version }}.{{build_number}}"
     repository: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:latest"
     force_tag: yes
     push: yes
