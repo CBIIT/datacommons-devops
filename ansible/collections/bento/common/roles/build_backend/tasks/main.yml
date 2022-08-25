@@ -29,7 +29,7 @@
     dest: "{{item.dest}}"
   loop:
     - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ schema_file}}"}
-    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ public_schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ public_schema_file}}"}
+    #- { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ public_schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ public_schema_file}}"}
 
 - name: verify test queries file exists
   stat:
@@ -59,6 +59,7 @@
     build:
       args:
         ECR_REPO: "{{ container_registry_url }}"
+        PROJECT: "{{ project_name }}"
       path: "{{ workspace }}"
       dockerfile: "{{ dockerfile_path }}"
       pull: yes
