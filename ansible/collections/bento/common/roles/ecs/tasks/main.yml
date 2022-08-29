@@ -19,7 +19,7 @@
 #            awslogs-region: "{{ region }}"
 #            awslogs-create-group: "true"
 #            awslogs-stream-prefix: "{{ project_name }}-{{ container_name }}"
-      - name: newrelic-infra
+      - name: "{{ project_name }}-{{ tier }}-fargate-infra"
         essential: true
         image: "newrelic/nri-ecs:1.9.2"
         environment:
