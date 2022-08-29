@@ -26,9 +26,9 @@
           - name: NRIA_OVERRIDE_HOST_ROOT
             value: ""
           - name: NRIA_IS_FORWARD_ONLY
-            value: true
+            value: "true"
           - name: FARGATE
-            value: true
+            value: "true"
           - name: NRIA_PASSTHROUGH_ENVIRONMENT
             value: "ECS_CONTAINER_METADATA_URI,ECS_CONTAINER_METADATA_URI_V4,FARGATE"
           - name: NRIA_CUSTOM_ATTRIBUTES
