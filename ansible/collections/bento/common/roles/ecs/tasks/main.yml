@@ -19,6 +19,29 @@
 #            awslogs-region: "{{ region }}"
 #            awslogs-create-group: "true"
 #            awslogs-stream-prefix: "{{ project_name }}-{{ container_name }}"
+      - name: newrelic-infra
+        essential: true
+        image: "newrelic/nri-ecs:1.9.2"
+        environment:
+          - name: NRIA_OVERRIDE_HOST_ROOT
+            value: ""
+          - name: NRIA_IS_FORWARD_ONLY
+            value: true
+          - name: FARGATE
+            value: true
+          - name: NRIA_PASSTHROUGH_ENVIRONMENT
+            value: "ECS_CONTAINER_METADATA_URI,ECS_CONTAINER_METADATA_URI_V4,FARGATE"
+          - name: NRIA_CUSTOM_ATTRIBUTES
+            value: "{\"nrDeployMethod\":\"downloadPage\"}"
+          - name: NRIA_LICENSE_KEY
+            value: "{{ newrelic_license_key }}"
+#        logConfiguration:
+#          logDriver: awslogs
+#          options:
+#            awslogs-group: "/ecs/{{ project_name }}/{{ tier }}-{{ container_name }}/newrelic/logs"
+#            awslogs-region: "{{ region }}"
+#            awslogs-create-group: "true"
+#            awslogs-stream-prefix: "{{ project_name }}-{{ container_name }}"
       - name: "{{ container_name }}"
         essential: true
         image: "{{ container_image_url }}:{{ image_version }}"
