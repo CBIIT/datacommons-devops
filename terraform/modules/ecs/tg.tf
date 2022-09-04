@@ -55,7 +55,7 @@ resource "aws_lb_listener_rule" "alb_listener_additional_url" {
   listener_arn = var.alb_https_listener_arn
   action {
     type             = "forward"
-    target_group_arn = data.aws_lb_target_group.frontend.arn
+    target_group_arn = data.aws_lb_target_group.frontend[count.index].arn
   }
 
   condition {
