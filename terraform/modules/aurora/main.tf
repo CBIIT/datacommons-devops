@@ -30,7 +30,6 @@ resource "aws_rds_cluster" "rds" {
   db_subnet_group_name                =  aws_db_subnet_group.subnet_group.name
   vpc_security_group_ids              =  [aws_security_group.rds.id]
   kms_key_id                          =  data.aws_kms_alias.kms.id
-  storage_encrypted                   =  true
   serverlessv2_scaling_configuration {
     max_capacity =  var.max_capacity
     min_capacity =  var.min_capacity
