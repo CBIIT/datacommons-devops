@@ -17,7 +17,7 @@ resource "aws_lb_target_group" "target_group" {
     matcher             = "200"
     port                = each.value.port
     interval            = 45
-    timeout             = 30
+    timeout             = 40
     healthy_threshold   = 2
     unhealthy_threshold = 2
   }
