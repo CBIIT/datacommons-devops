@@ -9,6 +9,18 @@ resource "aws_route53_record" "dns_record" {
   }
 }
 
+resource "aws_route53_record" "dns_record_prod" {
+  count =  var.env ==  "prod" ? 1 : 0
+  name    = "${var.application_subdomain}"
+  type    = "A"
+  zone_id = data.aws_route53_zone.zone.id
+  alias {
+    evaluate_target_health = false
+    name                   = var.alb_dns_name
+    zone_id                = var.alb_zone_id
+  }
+}
+
 resource "aws_route53_record" "www" {
   count =  var.env ==  "prod" ? 1 : 0
   name = "www"
