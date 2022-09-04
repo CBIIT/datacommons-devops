@@ -84,7 +84,17 @@ variable "db_engine_version" {
   type        = string
   default     = "5.6.10a"
 }
-
+variable "lifecycle_policy_name" {
+  description = "name of resource lifecycle policy"
+  default = "ignore_changes"
+  type = string
+}
+variable "lifecycle_policy_value" {
+  description = "value of resource lifecycle policy"
+  default = [
+    kms_key_id
+  ]
+}
 variable "db_engine_mode" {
   type        = string
   default     = "serverless"

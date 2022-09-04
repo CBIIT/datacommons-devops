@@ -36,6 +36,10 @@ resource "aws_rds_cluster" "rds" {
   }
   tags = var.tags
 
+  lifecycle {
+    var.lifecycle_policy_name = var.lifecycle_policy_value
+  }
+
 }
 
 
