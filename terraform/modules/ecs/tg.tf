@@ -60,7 +60,12 @@ resource "aws_lb_listener_rule" "alb_listener_additional_url" {
 
   condition {
     host_header {
-      values = [var.domain_name,"www.${var.domain_name}"]
+      values = ["www.${var.domain_name}","${stack_name}.${var.domain_name}"]
+    }
+  }
+  condition {
+    path_pattern {
+      values = ["/*"]
     }
   }
 }
