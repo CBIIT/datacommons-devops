@@ -93,8 +93,3 @@ variable "create_cloudwatch_log_policy" {
   default = false
   type = bool
 }
-variable "domain_name " {
-  type = string
-  description = "domain name of this app"
-  default = "bento-tools.org"
-}
