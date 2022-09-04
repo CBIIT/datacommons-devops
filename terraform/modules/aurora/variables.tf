@@ -89,12 +89,7 @@ variable "lifecycle_policy_name" {
   default = "ignore_changes"
   type = string
 }
-variable "lifecycle_policy_value" {
-  description = "value of resource lifecycle policy"
-  default = [
-    kms_key_id
-  ]
-}
+
 variable "db_engine_mode" {
   type        = string
   default     = "serverless"
