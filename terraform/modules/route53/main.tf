@@ -25,7 +25,7 @@ resource "aws_route53_record" "bento_url" {
   zone_id = data.aws_route53_zone.zone.zone_id
   alias {
     evaluate_target_health = false
-    name = module.alb.alb_dns_name
-    zone_id = module.alb.alb_zone_id
+    name    = var.alb_dns_name
+    zone_id = var.alb_zone_id
   }
 }

@@ -19,3 +19,8 @@ variable "env" {
   description = "name of the environment to provision"
   type        = string
 }
+variable "stack_name" {
+  description = "stack name"
+  type = "string"
+  default = "bento"
+}
