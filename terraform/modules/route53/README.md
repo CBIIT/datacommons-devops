@@ -17,7 +17,10 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [aws_route53_record.bento_url](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_route53_record.dns_record](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
+| [aws_route53_record.dns_record_prod](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
+| [aws_route53_record.www](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_route53_zone.zone](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 
 ## Inputs
@@ -29,6 +32,7 @@ No modules.
 | <a name="input_application_subdomain"></a> [application\_subdomain](#input\_application\_subdomain) | subdomain of the app | `string` | n/a | yes |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | domain name for the application | `string` | n/a | yes |
 | <a name="input_env"></a> [env](#input\_env) | name of the environment to provision | `string` | n/a | yes |
+| <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | stack name | `string` | `"bento"` | no |
 
 ## Outputs
 
