@@ -50,6 +50,7 @@ No modules.
 | <a name="input_enable_http_endpoint"></a> [enable\_http\_endpoint](#input\_enable\_http\_endpoint) | enable HTTP endpoint for serverless. | `bool` | `false` | no |
 | <a name="input_enabled_cloudwatch_logs_exports"></a> [enabled\_cloudwatch\_logs\_exports](#input\_enabled\_cloudwatch\_logs\_exports) | List of log types to export to cloudwatch. | `list(string)` | <pre>[<br>  "audit",<br>  "error",<br>  "general",<br>  "slowquery"<br>]</pre> | no |
 | <a name="input_env"></a> [env](#input\_env) | environment | `string` | n/a | yes |
+| <a name="input_lifecycle_policy_name"></a> [lifecycle\_policy\_name](#input\_lifecycle\_policy\_name) | name of resource lifecycle policy | `string` | `"ignore_changes"` | no |
 | <a name="input_maintenance_window"></a> [maintenance\_window](#input\_maintenance\_window) | time to perform maintenance | `string` | `"sun:00:00-sun:02:00"` | no |
 | <a name="input_master_password_length"></a> [master\_password\_length](#input\_master\_password\_length) | length of master user password | `number` | `15` | no |
 | <a name="input_master_username"></a> [master\_username](#input\_master\_username) | username for this db | `string` | `""` | no |

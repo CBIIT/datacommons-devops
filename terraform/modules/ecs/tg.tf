@@ -49,3 +49,23 @@ resource "aws_lb_listener_rule" "alb_listener" {
     }
   }
 }
+
+resource "aws_lb_listener_rule" "alb_listener_additional_url" {
+  count = var.stack_name == "bento" && var.env == "prod" ? 1 : 0
+  listener_arn = var.alb_https_listener_arn
+  action {
+    type             = "forward"
+    target_group_arn = data.aws_lb_target_group.frontend[count.index].arn
+  }
+
+  condition {
+    host_header {
+      values = ["www.${var.domain_name}","${var.stack_name}.${var.domain_name}"]
+    }
+  }
+  condition {
+    path_pattern {
+      values = ["/*"]
+    }
+  }
+}

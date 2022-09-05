@@ -104,3 +104,8 @@ variable "allow_cloudwatch_stream" {
   description = "allow cloudwatch stream for the containers"
 
 }
+variable "domain_name" {
+  type = string
+  description = "domain name of this app"
+  default = "bento-tools.org"
+}
