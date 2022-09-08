@@ -2,16 +2,16 @@
 
 This module's purpose is to streamline the implementation of a metric delivery pipeline to support observability of AWS Managed Services that publish metric data to Amazon CloudWatch. The destination of the metric data collected is New Relic, FNL/CTOS' preferred metric observability platform. 
 
-## What's Included?
+## Resources Provided by the Module
 
-- Amazon CloudWatch Metric Stream
-- AWS Kinesis Data Firehose Delivery Stream
-- Amazon Identity and Access Management Roles
+-  Amazon CloudWatch Metric Stream
+-  AWS Kinesis Data Firehose Delivery Stream
+-  Amazon Identity and Access Management Roles
 
-## What's Not Included?
+## Resources Not Provided by the Module
 
-- Amazon Simple Storage Solution (S3 Bucket)
-- Metric Data Producers
+-  Amazon Simple Storage Solution (S3 Bucket)
+-  Metric Data Producers
 
 ## Solution Overview
 ![newrelic metric delivery pipeline diagram](./assets/diagram.png)
