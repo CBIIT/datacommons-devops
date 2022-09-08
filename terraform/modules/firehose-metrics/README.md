@@ -7,12 +7,29 @@
 - Verify New Relic endpoint
 - Create New Relic's readonly role
 - Determine how we can unify failed messages
-- Describe set-up in New Relic
+- Describe set-up in New Relic, including external id, endpoint value, access key
+
+## Introduction
+This module's purpose is to streamline the implementation of a metric delivery pipeline to support observability of AWS Managed Services that publish metric data to Amazon CloudWatch. The destination of the metric data collected is New Relic, FNL/CTOS' preferred metric observability platform. 
+
+### What's Included?
+
+- Amazon CloudWatch Metric Stream
+
+- AWS Kinesis Data Firehose Delivery Stream
+
+- Amazon Identity and Access Management Roles
+
+### What's Not Included?
+
+- Amazon Simple Storage Solution (S3 Bucket)
+
+- Metric Data Producers
 
 ## Solution Overview
 ![newrelic metric delivery pipeline diagram](./assets/diagram.png)
 
-## Usage Example
+## Usage Example (in progress)
 <pre><code>module "new_relic_metric_pipeline" {
   source = "github.com//CBIIT/datacommons-devops/terraform/modules/firehose-metrics/"
 
