@@ -18,7 +18,7 @@ This module's purpose is to streamline the implementation of a metric delivery p
 
 ## Usage Example (in progress)
 <pre><code>module "new_relic_metric_pipeline" {
-  source = "github.com//CBIIT/datacommons-devops/terraform/modules/firehose-metrics/"
+  source = "github.com/CBIIT/datacommons-devops/terraform/modules/firehose-metrics/"
 
   account_id               = data.aws_caller_identity.current.account_id
   app                      = "icdc"
