@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "cw_stream_to_firehose" {
       "firehose:PutRecord",
       "firehose:PutRecordBatch"
     ]
-    resources = [ aws_kinesis_firehose_delivery_stream.kenisis.arn ]
+    resources = [aws_kinesis_firehose_delivery_stream.kenisis.arn]
   }
 }
 
