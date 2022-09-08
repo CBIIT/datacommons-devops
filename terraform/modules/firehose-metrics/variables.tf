@@ -4,7 +4,7 @@
 
 variable "account_id" {
   type        = string
-  description = "Account ID for the deployment target - use 'data.aws_caller_identity.current.account_id"
+  description = "Account ID for the deployment target - use 'data.aws_caller_identity.current.account_id'"
 }
 
 variable "app" {
@@ -14,7 +14,7 @@ variable "app" {
 
 variable "external_id" {
   type        = string
-  description = "The external id for the delivery stream trust policy condition"
+  description = "The endpoint external id for the delivery stream trust policy condition"
 }
 
 variable "http_endpoint_access_key" {
@@ -61,7 +61,7 @@ variable "content_encoding" {
 
 variable "destination" {
   type        = string
-  description = "the destination to where the data is delivered. The only options are extended_s3, redshift, elasticsearch, and http_endpoint"
+  description = "the destination to where the data is delivered. The only options are 'extended_s3', 'redshift', 'elasticsearch', and 'http_endpoint'"
   default     = "http_endpoint"
 }
 
@@ -91,7 +91,7 @@ variable "include_filter" {
 
 variable "output_format" {
   type        = string
-  description = "Output format of the CloudWatch Metric Stream - can be json or opentelemetry0.7"
+  description = "Output format of the CloudWatch Metric Stream - can be 'json' or 'opentelemetry0.7'"
   default     = "opentelemetry0.7"
 }
 
@@ -103,7 +103,7 @@ variable "role_force_detach_policies" {
 
 variable "s3_backup_mode" {
   type        = string
-  description = "Defines how documents should be delivered to Amazon S3. Valid values are FailedDataOnly and AllData"
+  description = "Defines how documents should be delivered to Amazon S3. Valid values are 'FailedDataOnly' and 'AllData'"
   default     = "FailedDataOnly"
 }
 
