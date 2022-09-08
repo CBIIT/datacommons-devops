@@ -33,7 +33,7 @@ variable "program" {
 }
 
 variable "s3_bucket_arn" {
-  type = string 
+  type        = string
   description = "ARN of the bucket that serves as the destination for Kinesis delivery failures"
 }
 
