@@ -1,3 +1,13 @@
+# AWS-Managed Services Metric Collection
+
+### To Do: 
+- Add architecture diagram 
+- Add example module for usage instructions
+- Consider KMS to encrypt in transit?
+- Should we refactor into separate modules?
+- Verify New Relic endpoint
+
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
