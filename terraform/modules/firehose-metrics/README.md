@@ -4,14 +4,14 @@ This module's purpose is to streamline the implementation of a metric delivery p
 
 ## Resources Provided by the Module
 
-  -  Amazon CloudWatch Metric Stream
-  -  AWS Kinesis Data Firehose Delivery Stream
-  -  Amazon Identity and Access Management Roles
+  - Amazon CloudWatch Metric Stream
+  - AWS Kinesis Data Firehose Delivery Stream
+  - Amazon Identity and Access Management Roles
 
 ## Resources Not Provided by the Module
 
-  -  Amazon Simple Storage Solution (S3 Bucket)
-  -  Metric Data Producers
+  - Amazon Simple Storage Solution (S3 Bucket)
+  - Metric Data Producers
 
 ## Solution Overview
 ![newrelic metric delivery pipeline diagram](./assets/diagram.png)
