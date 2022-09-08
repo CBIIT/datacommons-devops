@@ -1,15 +1,28 @@
 # AWS-Managed Services Metric Collection
 
-### To Do: 
-- Add architecture diagram 
+### To Do
 - Add example module for usage instructions
 - Consider KMS to encrypt in transit?
 - Should we refactor into separate modules?
 - Verify New Relic endpoint
+- Create New Relic's readonly role
+- Determine how we can unify failed messages
+- Describe set-up in New Relic
 
-
+## Solution Overview
 ![newrelic metric delivery pipeline diagram](./assets/diagram.png)
 
+## Usage Example
+<pre><code>module "new_relic_metric_pipeline" {
+  source = "github.com//CBIIT/datacommons-devops/terraform/modules/firehose-metrics/"
+
+  account_id               = data.aws_caller_identity.current.account_id
+  app                      = "icdc"
+  external_id              = "1234567890"
+  http_endpoint_access_key = "KL3SDFJ6VX53QOROERTIBMCLPI2R39_"
+  level                    = "non-prod"
+  program                  = "crdc"
+}</code></pre>
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
