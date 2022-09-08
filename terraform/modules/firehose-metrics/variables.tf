@@ -60,11 +60,6 @@ variable "destination" {
   default     = "http_endpoint"
 }
 
-variable "firehose_delivery_stream_arn" {
-  type        = string
-  description = "ARN of the Amazon Kinesis Firehose delivery stream to use for this metric stream"
-}
-
 variable "http_endpoint_name" {
   type        = string
   description = "The HTTP endpoint name"
