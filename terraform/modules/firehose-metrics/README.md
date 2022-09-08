@@ -26,6 +26,7 @@ This module's purpose is to streamline the implementation of a metric delivery p
   http_endpoint_access_key = "KL3SDFJ6VX53QOROERTIBMCLPI2R39_"
   level                    = "non-prod"
   program                  = "crdc"
+  s3_bucket_arn            = "arn:aws:s3:::example-destination-bucket"
 }</code></pre>
 
 <!-- BEGIN_TF_DOCS -->

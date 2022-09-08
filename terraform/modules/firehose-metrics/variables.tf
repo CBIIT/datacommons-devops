@@ -32,6 +32,11 @@ variable "program" {
   description = "The name of the program (i.e. 'ccdi')"
 }
 
+variable "s3_bucket_arn" {
+  type = string 
+  description = "ARN of the bucket that serves as the destination for Kinesis delivery failures"
+}
+
 ############################################################################################################
 ############  Optional Variables  ##########################################################################
 ############################################################################################################
