@@ -8,6 +8,9 @@
 - Verify New Relic endpoint
 
 
+![newrelic metric delivery pipeline diagram](./assets/diagram.png)
+
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
