@@ -37,9 +37,9 @@ resource "aws_lambda_function" "slack_lambda" {
   runtime = "python3.8"
   environment {
     variables = {
-      "SLACK_URL" = jsondecode(data.aws_secretsmanager_secret_version.slack_url.secret_string)[var.slack_url_secret_key]
-      "SLACK_CHANNEL" = var.cloudfront_slack_channel_name
-      "REGION" = data.aws_region.current.name
+      SLACK_URL = jsondecode(data.aws_secretsmanager_secret_version.slack_url.secret_string)[var.slack_url_secret_key]
+      SLACK_CHANNEL = var.cloudfront_slack_channel_name
+      REGION = data.aws_region.current.name
     }
   }
 
@@ -66,13 +66,13 @@ resource "aws_lambda_function" "slack_waf" {
 
   environment {
     variables = {
-      "SLACK_URL" = jsondecode(data.aws_secretsmanager_secret_version.slack_url.secret_string)[var.slack_url_secret_key]
-      "SLACK_CHANNEL" = var.cloudfront_slack_channel_name
-      "BLOCK_IP_FILE_NAME" = "blocked_ip/ips.txt"
-      "WAF_SCOPE" = "CLOUDFRONT"
-      "S3_BUCKET_NAME" = aws_s3_bucket.kinesis_log.bucket
-      "TMP_FILE_NAME" = "/tmp/blocked_ip.txt"
-      "IP_SETS_NAME" = aws_wafv2_ip_set.ip_sets.name
+      SLACK_URL = jsondecode(data.aws_secretsmanager_secret_version.slack_url.secret_string)[var.slack_url_secret_key]
+      SLACK_CHANNEL = var.cloudfront_slack_channel_name
+      BLOCK_IP_FILE_NAME = "blocked_ip/ips.txt"
+      WAF_SCOPE = "CLOUDFRONT"
+      S3_BUCKET_NAME = aws_s3_bucket.kinesis_log.bucket
+      TMP_FILE_NAME = "/tmp/blocked_ip.txt"
+      IP_SETS_NAME = aws_wafv2_ip_set.ip_sets.name
     }
   }
 }
