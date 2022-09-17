@@ -1,11 +1,3 @@
-//resource "aws_s3_bucket" "files_bucket" {
-//  bucket = "${var.stack_name}-${terraform.workspace}-files"
-//  acl    = "private"
-//}
-
-locals {
-  s3_origin_id = "${var.stack_name}_files_origin_id"
-}
 # create origin access identity
 resource "aws_cloudfront_origin_access_identity" "origin_access" {
   comment = "origin access for bento-files"
@@ -13,19 +5,19 @@ resource "aws_cloudfront_origin_access_identity" "origin_access" {
 
 #create bucket for logs
 resource "aws_s3_bucket" "access_logs" {
-  bucket =  "${data.aws_s3_bucket.bento_files.bucket}-cloudfront-logs"
+  bucket =  "${data.aws_s3_bucket.files_bucket.bucket}-cloudfront-logs"
   acl    = "private"
   tags = var.tags
 }
 
 #create s3 bucket policy
 resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = data.aws_s3_bucket.bento_files.bucket
+  bucket = data.aws_s3_bucket.files_bucket.bucket
   policy = data.aws_iam_policy_document.s3_policy.json
 }
 
 #create cloudfront distribution
-resource "aws_cloudfront_distribution" "bento_distribution" {
+resource "aws_cloudfront_distribution" "distribution" {
   enabled             = true
   is_ipv6_enabled     = true
   wait_for_deployment = false
@@ -34,7 +26,7 @@ resource "aws_cloudfront_distribution" "bento_distribution" {
   web_acl_id = aws_wafv2_web_acl.waf.arn
 
   origin {
-    domain_name = data.aws_s3_bucket.bento_files.bucket_domain_name
+    domain_name = data.aws_s3_bucket.files_bucket.bucket_domain_name
     origin_id   = local.s3_origin_id
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.origin_access.cloudfront_access_identity_path
@@ -96,18 +88,6 @@ resource "aws_wafv2_web_acl" "waf" {
       rate_based_statement {
         limit              = 100
         aggregate_key_type = "IP"
-//        scope_down_statement {
-//          regex_pattern_set_reference_statement {
-//            arn = aws_wafv2_regex_pattern_set.api_files_pattern.arn
-//            text_transformation {
-//              priority = 1
-//              type = "NONE"
-//            }
-//            field_to_match {
-//              uri_path {}
-//            }
-//          }
-//        }
       }
     }
 
@@ -130,7 +110,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
 
 resource "aws_wafv2_regex_pattern_set" "api_files_pattern" {
-  name        =  "${var.stack_name}-${terraform.workspace}-api-files-pattern"
+  name        =  "${var.stack_name}-${var.env}-api-files-pattern"
   scope       = "CLOUDFRONT"
 
   regular_expression {
@@ -142,13 +122,13 @@ resource "aws_wafv2_regex_pattern_set" "api_files_pattern" {
 
 #create public key
 resource "aws_cloudfront_public_key" "public_key" {
-  comment     = "bento files public key"
-  encoded_key = file("${path.module}/cloudfront_public_key.pem")
+  comment     = "files public key"
+  encoded_key = jsondecode(data.aws_secretsmanager_secret_version.cloudfront.secret_string)["cloudfront"]
   name        = "${var.stack_name}-${var.env}-pub-key"
 }
 
 resource "aws_cloudfront_key_group" "key_group" {
-  comment = "bento files key group"
+  comment = "files key group"
   items   = [aws_cloudfront_public_key.public_key.id]
   name    = "${var.stack_name}-${var.env}-key-group"
 }
@@ -179,7 +159,7 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
 }
 
 resource "aws_wafv2_ip_set" "ip_sets" {
-  name               = "${var.stack_name}-${terraform.workspace}-ips-blocked-cloudfront"
+  name               = "${var.stack_name}-${var.env}-ips-blocked-cloudfront"
   description        = "ips to blocked as result of violation of cloudfront waf rule"
   scope              = "CLOUDFRONT"
   ip_address_version = "IPV4"

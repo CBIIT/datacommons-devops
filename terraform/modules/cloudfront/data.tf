@@ -64,6 +64,9 @@ data "aws_iam_policy_document" "firehose_policy" {
 data "aws_secretsmanager_secret_version" "slack_url" {
   secret_id = var.slack_secret_name
 }
+data "aws_secretsmanager_secret_version" "cloudfront" {
+  secret_id = "cloudfront"
+}
 
 data "aws_iam_policy_document" "lambda_assume_policy" {
   statement {
