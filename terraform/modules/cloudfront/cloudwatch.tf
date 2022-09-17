@@ -11,7 +11,7 @@ resource "aws_cloudwatch_metric_alarm" "cloudfront_alarm" {
   alarm_description         = "CloudFront alarm for ${each.value["name"]}"
   insufficient_data_actions = []
   dimensions = {
-    DistributionId = aws_cloudfront_distribution.bento_distribution.id
+    DistributionId = aws_cloudfront_distribution.distribution.id
     Region         = "Global"
   }
   alarm_actions       = [aws_sns_topic.cloudfront_alarm_topic.arn]
