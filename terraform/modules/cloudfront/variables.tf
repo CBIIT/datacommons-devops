@@ -1,3 +1,4 @@
+
 variable "tags" {
   description = "tags to associate with this instance"
   type = map(string)
@@ -6,26 +7,47 @@ variable "stack_name" {
   description = "name of the project"
   type = string
 }
+variable "domain_name" {
+  description = "domain name for the application"
+  type = string
+}
 variable "env" {
   description = "environment"
   type = string
 }
+
 variable "cloudfront_distribution_bucket_name" {
   description = "specify the name of s3 bucket for cloudfront"
   type = string
 }
-variable "cloudfront_distribution_log_bucket_name" {
-  description = "specify the name of s3 bucket for the cloudfront logs"
-  type = string
-}
-variable "cloudfront_origin_access_identity_description" {
-  description = "description for OAI"
-  type = string
-  default = "cloudfront origin access identify for s3"
-}
-variable "cloudfront_log_path_prefix_key" {
-  description = "path prefix to where cloudfront send logs to s3 bucket"
-  type = string
-  default = "cloudfront/logs"
+
+variable "alarms" {
+  description = "alarms to be configured"
+  type = map(map(string))
 }
 
+variable "slack_secret_name" {
+  type = string
+  description = "name of cloudfront slack secret"
+}
+variable "cloudfront_slack_channel_name" {
+  type = string
+  description = "cloudfront slack name"
+}
+
+variable "iam_prefix" {
+  description = "The string prefix for IAM roles and policies to conform to NCI power-user compliance"
+  type        = string
+  default     = "power-user"
+}
+
+variable "target_account_cloudone"{
+  description = "to add check conditions on whether the resources are brought up in cloudone or not"
+  type        = bool
+  default     =  false
+}
+variable "slack_url_secret_key" {
+  description = "secret key name for the slack url"
+  type = string
+  default = "cloud-front-slack-url"
+}
