@@ -8,5 +8,5 @@ locals {
   lambda_role_name        = var.target_account_cloudone ? "${var.iam_prefix}-${var.stack_name}-${var.env}-lambda-role" : "${var.stack_name}-${var.env}-lambda-role"
   lambda_policy_name      = var.target_account_cloudone ? "${var.iam_prefix}-${var.stack_name}-${var.env}-lambda-policy" : "${var.stack_name}-${var.env}-lambda-policy"
   cloudwatch_policy_name  = var.target_account_cloudone ? "${var.iam_prefix}-${var.stack_name}-${var.env}-cloudwatch-log-policy" : "${var.stack_name}-${var.env}-cloudwatch-log-policy"
-  files_log_bucket_name   = var.create_files_bucket ? "${local.files_bucket_name}-cloudfront-logs" : "${data.aws_s3_bucket.files_bucket.bucket}-cloudfront-logs"
+  files_log_bucket_name   = var.create_files_bucket ? "${local.files_bucket_name}-cloudfront-logs" : "${data.aws_s3_bucket.files_bucket[0].bucket}-cloudfront-logs"
 }

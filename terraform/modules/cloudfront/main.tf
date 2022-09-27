@@ -7,7 +7,7 @@ resource "aws_cloudfront_origin_access_identity" "origin_access" {
 #create bucket for logs
 resource "aws_s3_bucket" "files" {
   count = var.create_files_bucket ? 1 : 0
-  bucket =  "${data.aws_s3_bucket.files_bucket.bucket}-cloudfront-logs"
+  bucket =  local.files_bucket_name
   acl    = "private"
   tags = var.tags
 }
@@ -21,7 +21,7 @@ resource "aws_s3_bucket" "access_logs" {
 
 #create s3 bucket policy
 resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = data.aws_s3_bucket.files_bucket.bucket
+  bucket = local.files_bucket_name
   policy = data.aws_iam_policy_document.s3_policy.json
 }
 
