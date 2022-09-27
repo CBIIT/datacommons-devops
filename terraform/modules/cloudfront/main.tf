@@ -3,9 +3,18 @@ resource "aws_cloudfront_origin_access_identity" "origin_access" {
   comment = "origin access for bento-files"
 }
 
+
+#create bucket for logs
+resource "aws_s3_bucket" "files" {
+  count = var.create_files_bucket ? 1 : 0
+  bucket =  "${data.aws_s3_bucket.files_bucket.bucket}-cloudfront-logs"
+  acl    = "private"
+  tags = var.tags
+}
+
 #create bucket for logs
 resource "aws_s3_bucket" "access_logs" {
-  bucket =  "${data.aws_s3_bucket.files_bucket.bucket}-cloudfront-logs"
+  bucket =  local.files_log_bucket_name
   acl    = "private"
   tags = var.tags
 }
@@ -26,7 +35,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   web_acl_id = aws_wafv2_web_acl.waf.arn
 
   origin {
-    domain_name = data.aws_s3_bucket.files_bucket.bucket_domain_name
+    domain_name = var.create_files_bucket ?  aws_s3_bucket.files.bucket_domain_name : data.aws_s3_bucket.files_bucket.bucket_domain_name
     origin_id   = local.s3_origin_id
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.origin_access.cloudfront_access_identity_path
@@ -123,7 +132,7 @@ resource "aws_wafv2_regex_pattern_set" "api_files_pattern" {
 #create public key
 resource "aws_cloudfront_public_key" "public_key" {
   comment     = "files public key"
-  encoded_key = jsondecode(data.aws_secretsmanager_secret_version.cloudfront.secret_string)["cloudfront"]
+  encoded_key = jsondecode(data.aws_secretsmanager_secret_version.cloudfront.secret_string)["public-key"]
   name        = "${var.stack_name}-${var.env}-pub-key"
 }
 

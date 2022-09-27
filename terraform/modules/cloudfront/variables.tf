@@ -51,3 +51,8 @@ variable "slack_url_secret_key" {
   type = string
   default = "cloud-front-slack-url"
 }
+variable "create_files_bucket" {
+  description = "indicate if you want to create files bucket or use existing one"
+  type = bool
+  default = false
+}
