@@ -77,7 +77,7 @@ resource "aws_wafv2_web_acl" "waf" {
   }
 
   rule {
-    name     = "${var.stack_name}-${terraform.workspace}-ip-rate-rule"
+    name     = "${var.stack_name}-${var.env}-ip-rate-rule"
     priority = 1
 
     action {
@@ -93,7 +93,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "${var.stack_name}-${terraform.workspace}-ip-rate-metrics"
+      metric_name                = "${var.stack_name}-${var.env}-ip-rate-metrics"
       sampled_requests_enabled   = true
     }
   }
@@ -102,7 +102,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
   visibility_config {
     cloudwatch_metrics_enabled = true
-    metric_name                = "${var.stack_name}-${terraform.workspace}files-request-ip"
+    metric_name                = "${var.stack_name}-${var.env}files-request-ip"
     sampled_requests_enabled   = true
   }
 
