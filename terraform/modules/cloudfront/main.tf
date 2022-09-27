@@ -35,7 +35,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   web_acl_id = aws_wafv2_web_acl.waf.arn
 
   origin {
-    domain_name = var.create_files_bucket ?  aws_s3_bucket.files[0].bucket_domain_name : data.aws_s3_bucket.files_bucket.bucket_domain_name
+    domain_name = var.create_files_bucket ?  aws_s3_bucket.files[0].bucket_domain_name : data.aws_s3_bucket.files_bucket[0].bucket_domain_name
     origin_id   = local.s3_origin_id
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.origin_access.cloudfront_access_identity_path
