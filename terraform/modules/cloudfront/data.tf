@@ -1,4 +1,5 @@
 data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
 data "aws_s3_bucket" "files_bucket" {
   count = var.create_files_bucket ? 0 : 1
   bucket = var.cloudfront_distribution_bucket_name
