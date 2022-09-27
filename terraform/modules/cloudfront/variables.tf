@@ -56,3 +56,8 @@ variable "create_files_bucket" {
   type = bool
   default = false
 }
+variable "cloud_platform" {
+  description = "choose cloud platform to use. We have two - leidos or cloudone"
+  default = "leidos"
+  type = string
+}
