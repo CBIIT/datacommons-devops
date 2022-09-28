@@ -132,7 +132,7 @@ resource "aws_wafv2_regex_pattern_set" "api_files_pattern" {
 #create public key
 resource "aws_cloudfront_public_key" "public_key" {
   comment     = "files public key"
-  encoded_key = jsondecode(data.aws_secretsmanager_secret_version.cloudfront.secret_string)["publickey"]
+  encoded_key = var.public_key_path
   name        = "${var.stack_name}-${var.env}-pub-key"
 }
 

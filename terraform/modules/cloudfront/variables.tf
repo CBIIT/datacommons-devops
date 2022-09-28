@@ -56,3 +56,8 @@ variable "create_files_bucket" {
   type = bool
   default = false
 }
+
+variable "public_key_path" {
+  description = "path of public key"
+  default = null
+}
