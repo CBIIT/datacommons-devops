@@ -72,3 +72,12 @@ resource "aws_security_group" "alb" {
   vpc_id      = var.vpc_id
   tags        = var.tags
 }
+
+resource "aws_security_group_rule" "all_egress" {
+  security_group_id = aws_security_group.alb.id
+  from_port         = 0
+  protocol          = "-1"
+  to_port           = 0
+  cidr_blocks       = ["0.0.0.0/0"]
+  type              = "egress"
+}
