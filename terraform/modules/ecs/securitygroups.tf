@@ -11,17 +11,17 @@ resource "aws_security_group" "ecs" {
   )
 }
 
-resource "aws_security_group_rule" "nih_network_ingress" {
-  count = var.target_account_cloudone ? 1: 0
-  security_group_id = aws_security_group.ecs.id
-  description       = "Allow ingress network access to the ECS security group specified by CIDR Blocks"
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 80
-  to_port           = 80
-  cidr_blocks       = local.nih_cidr_ranges
-
-}
+#resource "aws_security_group_rule" "nih_network_ingress" {
+#  count = var.target_account_cloudone ? 1: 0
+#  security_group_id = aws_security_group.ecs.id
+#  description       = "Allow ingress network access to the ECS security group specified by CIDR Blocks"
+#  type              = "ingress"
+#  protocol          = "tcp"
+#  from_port         = 80
+#  to_port           = 80
+#  cidr_blocks       = local.nih_cidr_ranges
+#
+#}
 
 resource "aws_security_group_rule" "all_egress" {
   security_group_id = aws_security_group.ecs.id
@@ -43,4 +43,13 @@ resource "aws_security_group" "app" {
   },
   var.tags,
   )
+}
+
+resource "aws_security_group_rule" "app_all_egress" {
+  security_group_id = aws_security_group.app.id
+  from_port         = 0
+  protocol          = "-1"
+  to_port           = 0
+  cidr_blocks       = ["0.0.0.0/0"]
+  type              = "egress"
 }
