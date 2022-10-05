@@ -15,6 +15,13 @@
     requirements: "{{ workspace }}/requirements.txt"
     executable: pip3
 
+- name: check workspace
+  command: ls -l "{{workspace}}"
+  register: output
+
+- name: show output
+  debug:
+    msg: "{{output.stdout_lines}}"
 
 - name: check es-loader
   command: cat config/es_loader.yml
