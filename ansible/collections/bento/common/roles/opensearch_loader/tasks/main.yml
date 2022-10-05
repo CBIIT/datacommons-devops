@@ -14,16 +14,9 @@
     requirements: "{{ workspace }}/requirements.txt"
     executable: pip3
 
-- name: check workspace
-  command: ls -l "{{workspace}}"
-  register: output
-
-- name: show output
-  debug:
-    msg: "{{output.stdout_lines}}"
 
 - name: check es-loader
-  command: ls -l "{{ workspace }}/config"
+  command: cat "{{ workspace }}/config/es_loader.yml"
   register: output
 
 - name: show output
@@ -32,7 +25,7 @@
 - name: load data
   shell:
     cmd: >
-      python3 es_loader.py {{ indices_file }} config/es_loader.yml
+      python3 es_loader.py {{ indices_file }} "{{workspace}}/config/es_loader.yml
     chdir: "{{ workspace }}"
   register: data_loader
 
