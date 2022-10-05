@@ -16,6 +16,13 @@
     executable: pip3
 
 
+- name: check es-loader
+  command: cat config/es_loader.yml
+  register: output
+
+- name: show output
+  debug:
+    msg: "{{output.stdout_lines}}"
 - name: load data
   shell:
     cmd: >
