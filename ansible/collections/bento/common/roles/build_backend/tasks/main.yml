@@ -2,46 +2,10 @@
 #     Backend Build
 ############################################################################################################################
 
-- name: remove the application_example.properties file
-  file:
-    path: "{{ workspace }}/src/main/resources/application_example.properties"
-    state: absent
-
 - name: copy application.properties file to /src/main/resources/
   template:
     src: "{{ workspace }}/src/main/resources/application.properties.j2"
     dest: "{{ workspace }}/src/main/resources/application.properties"
-
-- name: create graphql directory in backend
-  file:
-    state: directory
-    path: "{{ workspace }}/src/main/resources/graphql"
-
-- name: create yaml directory in backend
-  file:
-    state: directory
-    path: "{{ workspace }}/src/main/resources/yaml"
-
-- name: copy schema from frontend to resources
-  template:
-    remote_src: yes
-    src: "{{item.src}}"
-    dest: "{{item.dest}}"
-  loop:
-    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ schema_file}}"}
-    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ public_schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ public_schema_file}}"}
-
-- name: verify test queries file exists
-  stat:
-    path: "{{ workspace }}/{{ project_name }}-frontend/yaml/{{ test_queries_file }}"
-  register: test_queries
-
-- name: copy test queries from frontend to resources
-  template:
-    remote_src: yes
-    src: "{{ workspace }}/{{ project_name }}-frontend/yaml/{{ test_queries_file }}"
-    dest: "{{ workspace }}/src/main/resources/yaml/{{ test_queries_file }}"
-  when: test_queries.stat.exists
 
 - name: build springboot code
   command: mvn package -DskipTests
