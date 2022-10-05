@@ -4,7 +4,6 @@
     dest: "{{ workspace }}/config/es_indices_bento.yml"
     src: "{{ indices_file }}"
 
-
 - name: update server config file
   template:
     dest: "{{ workspace }}/config/es_loader.yml"
@@ -24,7 +23,7 @@
     msg: "{{output.stdout_lines}}"
 
 - name: check es-loader
-  command: cat config/es_loader.yml
+  command: ls -l "{{ workspace }}/config"
   register: output
 
 - name: show output
