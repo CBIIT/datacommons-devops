@@ -31,6 +31,6 @@ variable "force_detach_policies" {
 }
 
 variable "permission_boundary_arn" {
-  type = string 
+  type        = string
   description = "The arn of the permission boundary associated with the role"
 }

@@ -8,7 +8,7 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis" {
     access_key         = var.http_endpoint_access_key
     buffering_size     = var.buffer_size
     buffering_interval = var.buffer_interval
-    role_arn           = aws_iam_role.kinesis.arn
+    role_arn           = var.role_arn
     s3_backup_mode     = var.s3_backup_mode
 
     request_configuration {
@@ -26,3 +26,5 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis" {
     compression_format  = var.s3_compression_format
   }
 }
+
+

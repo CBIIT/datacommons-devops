@@ -13,6 +13,10 @@ This module's purpose is to streamline the implementation of a metric delivery p
   - Amazon Simple Storage Solution (S3 Bucket)
   - Metric Data Producers
 
+## Requirements Prior to Implementation
+  - Access to the CTOS New Relic Instance
+  - New Relic permissions to register a new AWS account
+
 ## Solution Overview
 ![newrelic metric delivery pipeline diagram](./assets/diagram.png)
 

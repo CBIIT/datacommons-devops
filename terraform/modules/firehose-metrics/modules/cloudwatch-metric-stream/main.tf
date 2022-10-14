@@ -6,7 +6,7 @@ resource "aws_cloudwatch_metric_stream" "cw_stream" {
 
   dynamic "include_filter" {
     for_each = var.include_filter
-    
+
     content {
       namespace = include_filter.value
     }

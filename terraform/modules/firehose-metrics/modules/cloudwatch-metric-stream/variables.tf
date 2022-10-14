@@ -22,7 +22,7 @@ variable "program" {
 }
 
 variable "role_arn" {
-  type = string 
+  type        = string
   description = "The arn of the role for cloudwatch metric stream to assume"
 }
 

@@ -30,3 +30,12 @@ module "kinesis_firehose_datastream" {
   level   = var.level
   program = var.program
 }
+
+module "iam_kinesis_firehose_datastream" {
+  source = "./modules/iam-kinesis-firehose-datastream"
+
+  app     = var.app
+  level   = var.level
+  program = var.program
+
+}
