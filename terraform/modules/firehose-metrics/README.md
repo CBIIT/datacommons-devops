@@ -41,9 +41,7 @@ No requirements.
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+No providers.
 
 ## Modules
 
@@ -51,25 +49,12 @@ No requirements.
 |------|--------|---------|
 | <a name="module_cloudwatch_metric_stream"></a> [cloudwatch\_metric\_stream](#module\_cloudwatch\_metric\_stream) | ./modules/cloudwatch-metric-stream | n/a |
 | <a name="module_iam_cloudwatch_metric_stream"></a> [iam\_cloudwatch\_metric\_stream](#module\_iam\_cloudwatch\_metric\_stream) | ./modules/iam-cloudwatch-metric-stream | n/a |
+| <a name="module_iam_kinesis_firehose_datastream"></a> [iam\_kinesis\_firehose\_datastream](#module\_iam\_kinesis\_firehose\_datastream) | ./modules/iam-kinesis-firehose-datastream | n/a |
 | <a name="module_kinesis_firehose_datastream"></a> [kinesis\_firehose\_datastream](#module\_kinesis\_firehose\_datastream) | ./modules/kinesis-firehose-datastream | n/a |
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [aws_cloudwatch_metric_stream.cw_stream](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_stream) | resource |
-| [aws_iam_policy.cw_stream_to_firehose](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
-| [aws_iam_policy.kinesis](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
-| [aws_iam_role.cw_stream_to_firehose](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role.kinesis](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy_attachment.cw_stream_to_firehose](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
-| [aws_iam_role_policy_attachment.kinesis](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
-| [aws_kinesis_firehose_delivery_stream.kinesis](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream) | resource |
-| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| [aws_iam_policy_document.cw_stream_to_firehose](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.cw_stream_to_firehose_assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.kenisis](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.kinesis_assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+No resources.
 
 ## Inputs
 
