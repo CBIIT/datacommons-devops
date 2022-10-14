@@ -1,8 +1,3 @@
-variable "account_id" {
-  type        = string
-  description = "Account ID for the deployment target - use 'data.aws_caller_identity.current.account_id"
-}
-
 variable "app" {
   type        = string
   description = "The name of the application (i.e. 'mtp')"
