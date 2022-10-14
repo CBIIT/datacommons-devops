@@ -15,7 +15,7 @@ module "iam_cloudwatch_metric_stream" {
 
   account_id              = var.account_id
   app                     = var.app
-  force_detach_policies   = var.role_force_detach_policies
+  force_detach_policies   = var.force_detach_policies
   iam_prefix              = var.iam_prefix
   level                   = var.level
   permission_boundary_arn = var.permission_boundary_arn
