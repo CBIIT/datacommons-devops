@@ -3,10 +3,10 @@
 import json
 import requests
 
-def setsyntheticscondition(project, tier, key, synthetics_id, policy_id):
+def setsyntheticscondition(project, tier, key, api_name, synthetics_id, policy_id):
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_synthetics_conditions.json'
 
-   condition_name = '{}-{} Url Condition'.format(project.title(), tier.title())
+   condition_name = '{}-{} {} Condition'.format(project.title(), tier.title(), api_name.title())
    condition_found = False
    headers = {'Api-Key': key}
    data = {'policy_id': policy_id}

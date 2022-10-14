@@ -3,12 +3,12 @@
 import os
 import json
 import requests
-from monitors.alerts.conditions import set_synthetics_condition
+from monitors.alerts.conditions import set_fargate_nrql_cpu_condition, set_fargate_nrql_mem_condition, set_fargate_nrql_restarts_condition
 
-def seturlalertpolicy(project, tier, email_id, slack_id, synthetics_id, key):
+def setfargatealertpolicy(project, tier, key):
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_policies.json'
 
-   policy_name = '{}-{} Synthetics Policy'.format(project.title(), tier.title())
+   policy_name = '{}-{} Fargate Policy'.format(project.title(), tier.title())
    policy_found = False
    headers = {'Api-Key': key}
    
@@ -43,12 +43,6 @@ def seturlalertpolicy(project, tier, email_id, slack_id, synthetics_id, key):
        raise SystemExit(e)
      policy_id = response.json()['policy'].get("id", "none")
 
-     # add notification channels
-     data = {
-       "policy_id": '{}'.format(policy_id),
-       "channel_ids": '{},{}'.format(email_id, slack_id)
-     }
-
      try:
        response = requests.put('https://api.newrelic.com/v2/alerts_policy_channels.json', headers=headers, data=json.dumps(data), allow_redirects=False)
      except requests.exceptions.RequestException as e:
@@ -65,6 +59,14 @@ def seturlalertpolicy(project, tier, email_id, slack_id, synthetics_id, key):
        response = requests.put('{}'.format(API_ENDPOINT), headers=headers, data=json.dumps(data), allow_redirects=False)
      except requests.exceptions.RequestException as e:
        raise SystemExit(e)
+     
+   # add fargate CPU condition
+   set_fargate_nrql_cpu_condition.setfargatecpucondition(key, project, tier, policy_id)
 
-   # add synthetics condition
-   set_synthetics_condition.setsyntheticscondition(project, tier, key, synthetics_id, policy_id)
+   # add fargate Memory condition
+   set_fargate_nrql_mem_condition.setfargatememcondition(key, project, tier, policy_id)
+
+   # add fargate Restarts condition
+   set_fargate_nrql_restarts_condition.setfargaterestartscondition(key, project, tier, policy_id)
+   
+   return(policy_id)
