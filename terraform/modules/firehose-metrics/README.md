@@ -20,19 +20,52 @@ This module's purpose is to streamline the implementation of a metric delivery p
 ## Solution Overview
 ![newrelic metric delivery pipeline diagram](./assets/diagram.png)
 
-## Usage Example (in progress)
+## Usage Examples
+
+Please note that the following are just examples. The example values provided for the access keys, external IDs, etc. are fictitious. 
+
+### Minimum Configuration 
 <pre><code>module "new_relic_metric_pipeline" {
   source = "github.com/CBIIT/datacommons-devops/terraform/modules/firehose-metrics/"
 
-  account_id               = data.aws_caller_identity.current.account_id
-  app                      = "icdc"
-  external_id              = "1234567890"
-  http_endpoint_access_key = "KL3SDFJ6VX53QOROERTIBMCLPI2R39_"
-  include_filter           = [ "AWS/ES", "AWS/ApplicationELB" ]
-  level                    = "non-prod"
-  program                  = "crdc"
-  s3_bucket_arn            = "arn:aws:s3:::example-destination-bucket"
+  account_id                = data.aws_caller_identity.current.account_id
+  app                       = "icdc"
+  http_endpoint_access_key  = "KL3SDFJ6VX53QOROERTIBMCLPI2R39_" 
+  level                     = "non-prod"
+  new_relic_account_id      = 123456789101
+  new_relic_external_id     = 987654
+  permission_boundary_arn   = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
+  program                   = "crdc"
+  s3_bucket_arn             = "arn:aws:s3:::example-icdc-destination-bucket"
 }</code></pre>
+
+### Maximum Configuration
+<pre><code>module "new_relic_metric_pipeline" {
+  source = "github.com/CBIIT/datacommons-devops/terraform/modules/firehose-metrics/"
+
+  account_id                = data.aws_caller_identity.current.account_id
+  app                       = "icdc"
+  buffer_interval           = 60
+  buffer_size               = 1
+  content_encoding          = "GZIP"
+  destination               = "http_endpoint"
+  force_detach_policies     = false
+  http_endpoint_access_key  = "KL3SDFJ6VX53QOROERTIBMCLPI2R39_" 
+  iam_prefix                = "power-user"
+  include_filter            = [ "AWS/ES", "AWS/ApplicationELB" ]
+  level                     = "non-prod"
+  output_format             = "opentelemetry0.7
+  new_relic_account_id      = 123456789101
+  new_relic_external_id     = 987654
+  permission_boundary_arn   = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
+  program                   = "crdc"
+  s3_backup_mode            = "FailedDataOnly"
+  s3_bucket_arn             = "arn:aws:s3:::example-icdc-destination-bucket"
+  s3_compression_format     = "UNCOMPRESSED"
+  s3_error_output_prefix    = null 
+  s3_object_prefix          = null
+}</code></pre>
+
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
