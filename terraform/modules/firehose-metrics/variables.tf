@@ -12,11 +12,6 @@ variable "app" {
   description = "The name of the application (i.e. 'mtp')"
 }
 
-variable "new_relic_external_id" {
-  type        = string
-  description = "The endpoint external id for the delivery stream trust policy condition"
-}
-
 variable "http_endpoint_access_key" {
   type        = string
   description = "The access key required for Kinesis Firehose to authenticate with the HTTP endpoint selected as the destination"
@@ -25,6 +20,18 @@ variable "http_endpoint_access_key" {
 variable "level" {
   type        = string
   description = "The account level - either 'nonprod' or 'prod' are accepted"
+}
+
+variable "new_relic_account_id" {
+  type        = string
+  description = "The account provided by New Relic during the account link registration process"
+  sensitive   = true
+}
+
+variable "new_relic_external_id" {
+  type        = string
+  description = "The external ID provided by New Relic during the account link registration process"
+  sensitive   = true
 }
 
 variable "permission_boundary_arn" {

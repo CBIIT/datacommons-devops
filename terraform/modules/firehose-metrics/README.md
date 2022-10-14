@@ -20,19 +20,52 @@ This module's purpose is to streamline the implementation of a metric delivery p
 ## Solution Overview
 ![newrelic metric delivery pipeline diagram](./assets/diagram.png)
 
-## Usage Example (in progress)
+## Usage Examples
+
+Please note that the following are just examples. The example values provided for the access keys, external IDs, etc. are fictitious. 
+
+### Minimum Configuration 
 <pre><code>module "new_relic_metric_pipeline" {
   source = "github.com/CBIIT/datacommons-devops/terraform/modules/firehose-metrics/"
 
-  account_id               = data.aws_caller_identity.current.account_id
-  app                      = "icdc"
-  external_id              = "1234567890"
-  http_endpoint_access_key = "KL3SDFJ6VX53QOROERTIBMCLPI2R39_"
-  include_filter           = [ "AWS/ES", "AWS/ApplicationELB" ]
-  level                    = "non-prod"
-  program                  = "crdc"
-  s3_bucket_arn            = "arn:aws:s3:::example-destination-bucket"
+  account_id                = data.aws_caller_identity.current.account_id
+  app                       = "icdc"
+  http_endpoint_access_key  = "KL3SDFJ6VX53QOROERTIBMCLPI2R39_" 
+  level                     = "non-prod"
+  new_relic_account_id      = 123456789101
+  new_relic_external_id     = 987654
+  permission_boundary_arn   = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
+  program                   = "crdc"
+  s3_bucket_arn             = "arn:aws:s3:::example-icdc-destination-bucket"
 }</code></pre>
+
+### Maximum Configuration
+<pre><code>module "new_relic_metric_pipeline" {
+  source = "github.com/CBIIT/datacommons-devops/terraform/modules/firehose-metrics/"
+
+  account_id                = data.aws_caller_identity.current.account_id
+  app                       = "icdc"
+  buffer_interval           = 60
+  buffer_size               = 1
+  content_encoding          = "GZIP"
+  destination               = "http_endpoint"
+  force_detach_policies     = false
+  http_endpoint_access_key  = "KL3SDFJ6VX53QOROERTIBMCLPI2R39_" 
+  iam_prefix                = "power-user"
+  include_filter            = [ "AWS/ES", "AWS/ApplicationELB" ]
+  level                     = "non-prod"
+  output_format             = "opentelemetry0.7
+  new_relic_account_id      = 123456789101
+  new_relic_external_id     = 987654
+  permission_boundary_arn   = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
+  program                   = "crdc"
+  s3_backup_mode            = "FailedDataOnly"
+  s3_bucket_arn             = "arn:aws:s3:::example-icdc-destination-bucket"
+  s3_compression_format     = "UNCOMPRESSED"
+  s3_error_output_prefix    = null 
+  s3_object_prefix          = null
+}</code></pre>
+
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -74,7 +107,8 @@ No resources.
 | <a name="input_iam_prefix"></a> [iam\_prefix](#input\_iam\_prefix) | The string prefix for IAM resource name attributes | `string` | `"power-user"` | no |
 | <a name="input_include_filter"></a> [include\_filter](#input\_include\_filter) | Specify the service namespaces to include in metric stream in a list | `set(string)` | <pre>[<br>  "AWS/ES",<br>  "AWS/ApplicationELB"<br>]</pre> | no |
 | <a name="input_level"></a> [level](#input\_level) | The account level - either 'nonprod' or 'prod' are accepted | `string` | n/a | yes |
-| <a name="input_new_relic_external_id"></a> [new\_relic\_external\_id](#input\_new\_relic\_external\_id) | The endpoint external id for the delivery stream trust policy condition | `string` | n/a | yes |
+| <a name="input_new_relic_account_id"></a> [new\_relic\_account\_id](#input\_new\_relic\_account\_id) | The account provided by New Relic during the account link registration process | `string` | n/a | yes |
+| <a name="input_new_relic_external_id"></a> [new\_relic\_external\_id](#input\_new\_relic\_external\_id) | The external ID provided by New Relic during the account link registration process | `string` | n/a | yes |
 | <a name="input_output_format"></a> [output\_format](#input\_output\_format) | Output format of the CloudWatch Metric Stream - can be json or opentelemetry0.7 | `string` | `"opentelemetry0.7"` | no |
 | <a name="input_permission_boundary_arn"></a> [permission\_boundary\_arn](#input\_permission\_boundary\_arn) | The arn of the permission boundaries for roles. Set to null for prod account levels | `string` | n/a | yes |
 | <a name="input_program"></a> [program](#input\_program) | The name of the program (i.e. 'ccdi') | `string` | n/a | yes |
