@@ -107,7 +107,8 @@ No resources.
 | <a name="input_iam_prefix"></a> [iam\_prefix](#input\_iam\_prefix) | The string prefix for IAM resource name attributes | `string` | `"power-user"` | no |
 | <a name="input_include_filter"></a> [include\_filter](#input\_include\_filter) | Specify the service namespaces to include in metric stream in a list | `set(string)` | <pre>[<br>  "AWS/ES",<br>  "AWS/ApplicationELB"<br>]</pre> | no |
 | <a name="input_level"></a> [level](#input\_level) | The account level - either 'nonprod' or 'prod' are accepted | `string` | n/a | yes |
-| <a name="input_new_relic_external_id"></a> [new\_relic\_external\_id](#input\_new\_relic\_external\_id) | The endpoint external id for the delivery stream trust policy condition | `string` | n/a | yes |
+| <a name="input_new_relic_account_id"></a> [new\_relic\_account\_id](#input\_new\_relic\_account\_id) | The account provided by New Relic during the account link registration process | `string` | n/a | yes |
+| <a name="input_new_relic_external_id"></a> [new\_relic\_external\_id](#input\_new\_relic\_external\_id) | The external ID provided by New Relic during the account link registration process | `string` | n/a | yes |
 | <a name="input_output_format"></a> [output\_format](#input\_output\_format) | Output format of the CloudWatch Metric Stream - can be json or opentelemetry0.7 | `string` | `"opentelemetry0.7"` | no |
 | <a name="input_permission_boundary_arn"></a> [permission\_boundary\_arn](#input\_permission\_boundary\_arn) | The arn of the permission boundaries for roles. Set to null for prod account levels | `string` | n/a | yes |
 | <a name="input_program"></a> [program](#input\_program) | The name of the program (i.e. 'ccdi') | `string` | n/a | yes |
