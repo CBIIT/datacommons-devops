@@ -1,19 +1,20 @@
-##################################
-#  Required Variables ############
-##################################
+##########################################################################################
+######  Required Variables ###############################################################
+##########################################################################################
+
 variable "app" {
   type        = string
   description = "The name of the application (i.e. 'mtp')"
 }
 
-variable "firehose_delivery_stream_arn" {
-  type        = string
-  description = "ARN of the Amazon Kinesis Firehose delivery stream to use for this metric stream"
-}
-
 variable "level" {
   type        = string
   description = "The account level - either 'nonprod' or 'prod' are accepted"
+}
+
+variable "permission_boundary_arn" {
+  type        = string
+  description = "The arn of the permission boundaries for roles. Set to null for prod account levels"
 }
 
 variable "program" {
@@ -26,9 +27,9 @@ variable "role_arn" {
   description = "The arn of the role for cloudwatch metric stream to assume"
 }
 
-##################################
-#  Optional Variables ############
-##################################
+##########################################################################################
+######  Optional Variables ###############################################################
+##########################################################################################
 
 variable "include_filter" {
   type        = set(string)
@@ -41,3 +42,5 @@ variable "output_format" {
   description = "Output format of the CloudWatch Metric Stream - can be json or opentelemetry0.7"
   default     = "opentelemetry0.7"
 }
+
+

@@ -1,6 +1,7 @@
-##################################
-#  Required Variables ############
-##################################
+##########################################################################################
+######  Required Variables ###############################################################
+##########################################################################################
+
 variable "account_id" {
   type        = string
   description = "The ID of the target account (use data.aws_caller_identity.current.account_id)"
@@ -11,9 +12,24 @@ variable "app" {
   description = "The name of the application (i.e. 'mtp')"
 }
 
+variable "new_relic_external_id" {
+  type        = string
+  description = "The endpoint external id for the delivery stream trust policy condition"
+}
+
+variable "http_endpoint_access_key" {
+  type        = string
+  description = "The access key required for Kinesis Firehose to authenticate with the HTTP endpoint selected as the destination"
+}
+
 variable "level" {
   type        = string
   description = "The account level - either 'nonprod' or 'prod' are accepted"
+}
+
+variable "permission_boundary_arn" {
+  type        = string
+  description = "The arn of the permission boundaries for roles. Set to null for prod account levels"
 }
 
 variable "program" {
@@ -31,90 +47,9 @@ variable "s3_bucket_arn" {
   description = "The arn of the S3 bucket where failed message deliveries to New Relic are delivered"
 }
 
-##################################
-#  Optional Variables ############
-##################################
-
-variable "force_detach_policies" {
-  type        = bool
-  description = "Set to true to automatically detach policies when deleting a role"
-  default     = false
-}
-
-variable "include_filter" {
-  type        = set(string)
-  description = "Specify the service namespaces to include in metric stream in a list"
-  default     = ["AWS/ES", "AWS/ApplicationELB"]
-}
-
-variable "output_format" {
-  type        = string
-  description = "Output format of the CloudWatch Metric Stream - can be json or opentelemetry0.7"
-  default     = "opentelemetry0.7"
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-############################################################################################################
-############  Old Stuff  ##########################################################################
-############################################################################################################
-
-variable "account_id" {
-  type        = string
-  description = "Account ID for the deployment target - use 'data.aws_caller_identity.current.account_id'"
-}
-
-variable "app" {
-  type        = string
-  description = "The name of the application (i.e. 'mtp')"
-}
-
-variable "external_id" {
-  type        = string
-  description = "The endpoint external id for the delivery stream trust policy condition"
-}
-
-variable "http_endpoint_access_key" {
-  type        = string
-  description = "The access key required for Kinesis Firehose to authenticate with the HTTP endpoint selected as the destination"
-}
-
-variable "level" {
-  type        = string
-  description = "The account level - either 'nonprod' or 'prod' are accepted"
-}
-
-variable "program" {
-  type        = string
-  description = "The name of the program (i.e. 'ccdi')"
-}
-
-variable "s3_bucket_arn" {
-  type        = string
-  description = "ARN of the bucket that serves as the destination for Kinesis delivery failures"
-}
-
-############################################################################################################
-############  Optional Variables  ##########################################################################
-############################################################################################################
+##########################################################################################
+######  Optional Variables ###############################################################
+##########################################################################################
 
 variable "buffer_interval" {
   type        = number
@@ -140,6 +75,12 @@ variable "destination" {
   default     = "http_endpoint"
 }
 
+variable "force_detach_policies" {
+  type        = bool
+  description = "Set to true to automatically detach policies when deleting a role"
+  default     = false
+}
+
 variable "http_endpoint_name" {
   type        = string
   description = "The HTTP endpoint name"
@@ -149,7 +90,7 @@ variable "http_endpoint_name" {
 variable "http_endpoint_url" {
   type        = string
   description = "The HTTP endpoint URL to which Kinesis Firehose sends your data"
-  default     = "https://aws-api.newrelic.com/cloudwatch-metrics/v1"
+  default     = "https://gov-metric-api.newrelic.com/metric/v1"
 }
 
 variable "iam_prefix" {
@@ -166,14 +107,8 @@ variable "include_filter" {
 
 variable "output_format" {
   type        = string
-  description = "Output format of the CloudWatch Metric Stream - can be 'json' or 'opentelemetry0.7'"
+  description = "Output format of the CloudWatch Metric Stream - can be json or opentelemetry0.7"
   default     = "opentelemetry0.7"
-}
-
-variable "role_force_detach_policies" {
-  type        = bool
-  description = "Force detaching any policies the role has before destroying it"
-  default     = false
 }
 
 variable "s3_backup_mode" {

@@ -1,6 +1,6 @@
-############################################################################################################
-############  Required Variables  ##########################################################################
-############################################################################################################
+##########################################################################################
+######  Required Variables ###############################################################
+##########################################################################################
 
 variable "app" {
   type        = string
@@ -22,14 +22,19 @@ variable "program" {
   description = "The name of the program (i.e. 'ccdi')"
 }
 
-variable "s3_bucket_arn" {
+variable "role_arn" {
   type        = string
-  description = "ARN of the bucket that serves as the destination for Kinesis delivery failures"
+  description = "The arn of the role for cloudwatch metric stream to assume"
 }
 
-############################################################################################################
-############  Optional Variables  ##########################################################################
-############################################################################################################
+variable "s3_bucket_arn" {
+  type        = string
+  description = "The arn of the S3 bucket where failed message deliveries to New Relic are delivered"
+}
+
+##########################################################################################
+######  Optional Variables ###############################################################
+##########################################################################################
 
 variable "buffer_interval" {
   type        = number
@@ -64,7 +69,7 @@ variable "http_endpoint_name" {
 variable "http_endpoint_url" {
   type        = string
   description = "The HTTP endpoint URL to which Kinesis Firehose sends your data"
-  default     = "https://aws-api.newrelic.com/cloudwatch-metrics/v1"
+  default     = "https://gov-metric-api.newrelic.com/metric/v1"
 }
 
 variable "s3_backup_mode" {

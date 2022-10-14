@@ -3,7 +3,7 @@ resource "aws_iam_role" "kinesis" {
   description           = "Allows kenisis delivery streams to delivery failed messages to S3"
   force_detach_policies = var.force_detach_policies
   assume_role_policy    = data.aws_iam_policy_document.kinesis_assume_role.json
-  permissions_boundary  = local.permission_boundary_arn
+  permissions_boundary  = var.permission_boundary_arn
 }
 
 resource "aws_iam_policy" "kinesis" {
