@@ -37,11 +37,6 @@ variable "program" {
   description = "The name of the program (i.e. 'ccdi')"
 }
 
-variable "role_arn" {
-  type        = string
-  description = "The arn of the role for cloudwatch metric stream to assume"
-}
-
 variable "s3_bucket_arn" {
   type        = string
   description = "The arn of the S3 bucket where failed message deliveries to New Relic are delivered"
