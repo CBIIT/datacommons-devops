@@ -2,7 +2,7 @@
 #  Required Variables ############
 ##################################
 variable "account_id" {
-  type = string 
+  type        = string
   description = "The ID of the target account (use data.aws_caller_identity.current.account_id)"
 }
 
@@ -36,9 +36,9 @@ variable "s3_bucket_arn" {
 ##################################
 
 variable "force_detach_policies" {
-  type = bool 
-  description = "Set to true to automatically detach policies when deleting a role" 
-  default = false
+  type        = bool
+  description = "Set to true to automatically detach policies when deleting a role"
+  default     = false
 }
 
 variable "include_filter" {
