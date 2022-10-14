@@ -7,11 +7,6 @@ variable "app" {
   description = "The name of the application (i.e. 'mtp')"
 }
 
-variable "firehose_delivery_stream_arn" {
-  type        = string
-  description = "ARN of the Amazon Kinesis Firehose delivery stream to use for this metric stream"
-}
-
 variable "level" {
   type        = string
   description = "The account level - either 'nonprod' or 'prod' are accepted"
@@ -25,6 +20,11 @@ variable "program" {
 variable "role_arn" {
   type        = string
   description = "The arn of the role for cloudwatch metric stream to assume"
+}
+
+variable "s3_bucket_arn" {
+  type        = string
+  description = "The arn of the S3 bucket where failed message deliveries to New Relic are delivered"
 }
 
 ##################################

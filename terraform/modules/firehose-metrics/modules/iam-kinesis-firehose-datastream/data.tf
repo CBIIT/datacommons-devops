@@ -8,12 +8,6 @@ data "aws_iam_policy_document" "kinesis_assume_role" {
       type        = "Service"
       identifiers = ["firehose.amazonaws.com"]
     }
-
-    condition {
-      test     = "StringEquals"
-      variable = "sts:ExternalId"
-      values   = [var.external_id]
-    }
   }
 }
 
