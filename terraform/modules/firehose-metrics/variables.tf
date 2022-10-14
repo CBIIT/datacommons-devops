@@ -12,9 +12,16 @@ variable "app" {
   description = "The name of the application (i.e. 'mtp')"
 }
 
+variable "new_relic_account_id" {
+  type        = string
+  description = "The account provided by New Relic during the account link registration process"
+  sensitive   = true
+}
+
 variable "new_relic_external_id" {
   type        = string
-  description = "The endpoint external id for the delivery stream trust policy condition"
+  description = "The external ID provided by New Relic during the account link registration process"
+  sensitive   = true
 }
 
 variable "http_endpoint_access_key" {
