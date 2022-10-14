@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys, getopt
-from monitors.alerts.policies import set_fargate_policy
+from monitors.alerts.policies import set_fargate_policy, set_alb_policy
 from monitors.synthetics import set_synthetics_monitor
 from monitors.alerts.destinations import set_email_destination, set_slack_destination
 from monitors.alerts.workflows import set_workflow
@@ -45,6 +45,7 @@ if __name__ == "__main__":
    slack_id = set_slack_destination.setalertslack("Expand Data Commons", project, tier, key)
    workflow_id = set_workflow.setalertworkflow(project.capitalize() + "-" + tier.capitalize() + " Notifications", email_id, slack_id, project, tier, key)
 
+   alb_policy_id = set_alb_policy.setalbalertpolicy(project, tier, key)
    fargate_policy_id = set_fargate_policy.setfargatealertpolicy(project, tier, key)
    
    synthetics_location = '2292606-leidos_cloud-DFA'
@@ -56,7 +57,8 @@ if __name__ == "__main__":
    
    apiList = [
      {'name':'url','endpoint':'','location':url_location},
-     {'name':'files','endpoint':'/files','location':synthetics_location}
+     {'name':'files','endpoint':'/api/files','location':synthetics_location},
+     {'name':'auth','endpoint':'/api/auth','location':synthetics_location}
    ]
    
    for api in apiList:
