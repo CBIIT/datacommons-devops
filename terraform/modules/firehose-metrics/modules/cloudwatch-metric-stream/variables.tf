@@ -7,6 +7,11 @@ variable "app" {
   description = "The name of the application (i.e. 'mtp')"
 }
 
+variable "firehose_delivery_stream_arn" {
+  type = string 
+  description = "The arn of the kinesis firehose delivery stream to push metrics to"
+}
+
 variable "level" {
   type        = string
   description = "The account level - either 'nonprod' or 'prod' are accepted"
