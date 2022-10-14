@@ -6,8 +6,9 @@ import requests
 import re
 import time
 from tags import set_tags_nrql
+from monitors.alerts.conditions import set_synthetics_condition
 
-def setsyntheticsmonitor(project, tier, key, api):
+def setsyntheticsmonitor(project, tier, key, api, policy_id):
    API_ENDPOINT = 'https://synthetics.newrelic.com/synthetics/api/v3/monitors'
    DOMAIN = os.getenv('URL_DOMAIN')
 
@@ -83,4 +84,7 @@ def setsyntheticsmonitor(project, tier, key, api):
    # set tags on the monitor
    set_tags_nrql.settagsnrql(project, tier, current_monitor.get('name'), key)
 
-   return(current_monitor.get('id'))
+   #return(current_monitor.get('id'))
+   
+   # add synthetics condition
+   set_synthetics_condition.setsyntheticscondition(project, tier, key, api['name'].lower(), current_monitor.get('id'), policy_id)

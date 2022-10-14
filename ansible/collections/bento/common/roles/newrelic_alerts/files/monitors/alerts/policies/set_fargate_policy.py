@@ -68,3 +68,5 @@ def setfargatealertpolicy(project, tier, key):
 
    # add fargate Restarts condition
    set_fargate_nrql_restarts_condition.setfargaterestartscondition(key, project, tier, policy_id)
+   
+   return(policy_id)
