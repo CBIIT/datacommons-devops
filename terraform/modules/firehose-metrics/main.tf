@@ -7,7 +7,7 @@ module "cloudwatch_metric_stream" {
   level                        = var.level
   output_format                = var.output_format
   program                      = var.program
-  role_arn                     = module.iam_cloudwatch_metric_stream.role_arn
+  role_arn                     = module.iam_cloudwatch_metric_stream.arn
 }
 
 module "iam_cloudwatch_metric_stream" {
