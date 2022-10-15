@@ -120,10 +120,5 @@ No resources.
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_cw-metric-stream-arn"></a> [cw-metric-stream-arn](#output\_cw-metric-stream-arn) | n/a |
-| <a name="output_cw-metric-stream-name"></a> [cw-metric-stream-name](#output\_cw-metric-stream-name) | n/a |
-| <a name="output_cw-metric-stream-output_format"></a> [cw-metric-stream-output\_format](#output\_cw-metric-stream-output\_format) | n/a |
-| <a name="output_kinesis_arn"></a> [kinesis\_arn](#output\_kinesis\_arn) | n/a |
+No outputs.
 <!-- END_TF_DOCS -->
