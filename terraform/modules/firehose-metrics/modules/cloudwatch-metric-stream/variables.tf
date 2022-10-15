@@ -17,11 +17,6 @@ variable "level" {
   description = "The account level - either 'nonprod' or 'prod' are accepted"
 }
 
-variable "permission_boundary_arn" {
-  type        = string
-  description = "The arn of the permission boundaries for roles. Set to null for prod account levels"
-}
-
 variable "program" {
   type        = string
   description = "The name of the program (i.e. 'ccdi')"
