@@ -17,7 +17,7 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis" {
   }
 
   s3_configuration {
-    role_arn            = aws_iam_role.kinesis.arn
+    role_arn            = var.role_arn
     bucket_arn          = var.s3_bucket_arn
     prefix              = var.s3_object_prefix
     error_output_prefix = var.s3_error_output_prefix
