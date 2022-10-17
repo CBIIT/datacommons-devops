@@ -4,7 +4,7 @@ import json
 import requests
 from tags import set_tags_nrql
 
-def setalbelb4xxcondition(key, project, tier, policy_id):
+def setcondition(key, project, tier, policy_id):
 
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_nrql_conditions.json'
 
@@ -38,13 +38,13 @@ def setalbelb4xxcondition(key, project, tier, policy_id):
        "terms" : [ {
          "duration" : "5",
          "operator" : "above",
-         "threshold" : "90.0",
+         "threshold" : "0",
          "time_function" : "all",
          "priority" : "critical"
        }, {
-         "duration" : "2",
+         "duration" : "3",
          "operator" : "above",
-         "threshold" : "80.0",
+         "threshold" : "0",
          "time_function" : "all",
          "priority" : "warning"
        } ],

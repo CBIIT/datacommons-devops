@@ -4,7 +4,7 @@ import json
 import requests
 from tags import set_tags_nrql
 
-def setfargatecpucondition(key, project, tier, policy_id):
+def setcondition(key, project, tier, policy_id):
 
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_nrql_conditions.json'
 
@@ -44,7 +44,7 @@ def setfargatecpucondition(key, project, tier, policy_id):
        }, {
          "duration" : "2",
          "operator" : "above",
-         "threshold" : "80.0",
+         "threshold" : "90.0",
          "time_function" : "all",
          "priority" : "warning"
        } ],

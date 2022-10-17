@@ -4,7 +4,7 @@ import json
 import requests
 from tags import set_tags_nrql
 
-def setfargaterestartscondition(key, project, tier, policy_id):
+def setcondition(key, project, tier, policy_id):
 
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_nrql_conditions.json'
 

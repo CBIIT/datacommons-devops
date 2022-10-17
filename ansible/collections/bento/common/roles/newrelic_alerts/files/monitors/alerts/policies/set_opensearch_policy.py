@@ -3,12 +3,12 @@
 import os
 import json
 import requests
-from monitors.alerts.conditions import set_alb_nrql_elb_4xx_condition, set_alb_nrql_elb_5xx_condition, set_alb_nrql_target_5xx_condition, set_alb_nrql_target_response_condition, set_alb_nrql_tls_condition, set_alb_nrql_unhealthy_host_condition
+from monitors.alerts.conditions import set_os_nrql_5xx_condition, set_os_nrql_cluster_red_condition, set_os_nrql_cluster_yellow_condition, set_os_nrql_cpu_condition, set_os_nrql_disk_throttle_condition, set_os_nrql_jvm_memory_condition, set_os_nrql_master_cpu_condition, set_os_nrql_master_jvm_memory_condition, set_os_nrql_master_sys_memory_condition, set_os_nrql_search_queue_condition, set_os_nrql_storage_condition, set_os_nrql_sys_memory_condition
 
 def setpolicy(project, tier, key):
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_policies.json'
 
-   policy_name = '{}-{} ALB Policy'.format(project.title(), tier.title())
+   policy_name = '{}-{} Opensearch Policy'.format(project.title(), tier.title())
    policy_found = False
    headers = {'Api-Key': key}
    
@@ -60,22 +60,18 @@ def setpolicy(project, tier, key):
      except requests.exceptions.RequestException as e:
        raise SystemExit(e)
      
-   # add alb elb 4xx condition
-   set_alb_nrql_elb_4xx_condition.setcondition(key, project, tier, policy_id)
-
-   # add alb elb 5xx condition
-   set_alb_nrql_elb_5xx_condition.setcondition(key, project, tier, policy_id)
-
-   # add alb target 5xx condition
-   set_alb_nrql_target_5xx_condition.setcondition(key, project, tier, policy_id)
-
-   # add alb target response condition
-   set_alb_nrql_target_response_condition.setcondition(key, project, tier, policy_id)
-   
-   # add alb tls condition
-   set_alb_nrql_tls_condition.setcondition(key, project, tier, policy_id)
-
-   # add alb unhealthy host condition
-   set_alb_nrql_unhealthy_host_condition.setcondition(key, project, tier, policy_id)
+   # add conditions
+   set_os_nrql_5xx_condition.setcondition(key, project, tier, policy_id)
+   set_os_nrql_cluster_red_condition.setcondition(key, project, tier, policy_id)
+   set_os_nrql_cluster_yellow_condition.setcondition(key, project, tier, policy_id)
+   set_os_nrql_cpu_condition.setcondition(key, project, tier, policy_id)
+   set_os_nrql_disk_throttle_condition.setcondition(key, project, tier, policy_id)
+   set_os_nrql_jvm_memory_condition.setcondition(key, project, tier, policy_id)
+   set_os_nrql_master_cpu_condition.setcondition(key, project, tier, policy_id)
+   set_os_nrql_master_jvm_memory_condition.setcondition(key, project, tier, policy_id)
+   set_os_nrql_master_sys_memory_condition.setcondition(key, project, tier, policy_id)
+   set_os_nrql_search_queue_condition.setcondition(key, project, tier, policy_id)
+   set_os_nrql_storage_condition.setcondition(key, project, tier, policy_id)
+   set_os_nrql_sys_memory_condition.setcondition(key, project, tier, policy_id)
 
    return(policy_id)

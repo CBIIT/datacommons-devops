@@ -3,7 +3,7 @@
 import json
 import requests
 
-def setsyntheticscondition(project, tier, key, api_name, synthetics_id, policy_id):
+def setcondition(project, tier, key, api_name, synthetics_id, policy_id):
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_synthetics_conditions.json'
 
    condition_name = '{}-{} {} Condition'.format(project.title(), tier.title(), api_name.title())

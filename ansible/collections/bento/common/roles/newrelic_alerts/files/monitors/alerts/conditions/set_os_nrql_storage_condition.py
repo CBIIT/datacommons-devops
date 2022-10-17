@@ -8,7 +8,7 @@ def setcondition(key, project, tier, policy_id):
 
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_nrql_conditions.json'
 
-   condition_name = '{}-{} ALB TLS Errors'.format(project.title(), tier.title())
+   condition_name = '{}-{} Opensearch Storage Usage'.format(project.title(), tier.title())
    condition_found = False
    headers = {'Api-Key': key}
    data = {'policy_id': policy_id}
@@ -36,21 +36,21 @@ def setcondition(key, project, tier, policy_id):
        "name" : "{}".format(condition_name),
        "enabled" : True,
        "terms" : [ {
-         "duration" : "5",
-         "operator" : "above",
-         "threshold" : "0",
+         "duration" : "1",
+         "operator" : "below",
+         "threshold" : "7680",
          "time_function" : "all",
          "priority" : "critical"
        }, {
-         "duration" : "3",
-         "operator" : "above",
-         "threshold" : "0",
+         "duration" : "1",
+         "operator" : "below",
+         "threshold" : "9216",
          "time_function" : "all",
          "priority" : "warning"
        } ],
        "value_function" : "single_value",
        "nrql" : {
-         "query" : "FROM Metric SELECT sum(`aws.applicationelb.TargetTLSNegotiationErrorCount`) WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ApplicationELB' AND entity.name LIKE '%{}-{}-lb%'".format(project.lower(), tier.lower())
+         "query" : "FROM  Metric SELECT average(`aws.es.FreeStorageSpace.byCluster`) WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND entity.name = '{}-{}-opensearch'".format(project.lower(), tier.lower())
        },
        "signal" : {
          "aggregation_window" : "60",
