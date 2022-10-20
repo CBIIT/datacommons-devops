@@ -8,7 +8,7 @@ variable "app" {
 }
 
 variable "firehose_delivery_stream_arn" {
-  type = string 
+  type        = string
   description = "The arn of the kinesis firehose delivery stream to push metrics to"
 }
 

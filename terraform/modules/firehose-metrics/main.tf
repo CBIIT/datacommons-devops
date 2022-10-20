@@ -30,7 +30,7 @@ module "kinesis_firehose_datastream" {
   buffer_size              = var.buffer_size
   content_encoding         = var.content_encoding
   destination              = var.destination
-  http_endpoint_access_key = var.http_endpoint_access_key
+  http_endpoint_access_key = var.module.new_relic_account_link.api_key
   http_endpoint_name       = var.http_endpoint_name
   http_endpoint_url        = var.http_endpoint_url
   level                    = var.level
@@ -64,7 +64,21 @@ module "iam_read_only" {
   iam_prefix              = var.iam_prefix
   level                   = var.level
   new_relic_account_id    = var.new_relic_account_id
-  new_relic_external_id   = var.new_relic_external_id
+  new_relic_external_id   = module.new_relic_linked_account_id.external_id
   permission_boundary_arn = var.permission_boundary_arn
   program                 = var.program
+}
+
+module "new_relic_account_link" {
+  source = "./modules/new_relic_account_link"
+
+  account_id                       = var.account_id
+  app                              = var.app
+  iam_prefix                       = var.iam_prefix
+  level                            = var.level
+  new_relic_account_id             = var.new_relic_account_id
+  new_relic_ingest_type            = var.new_relic_ingest_type
+  new_relic_key_type               = var.new_relic_key_type
+  new_relic_metric_collection_mode = var.new_relic_metric_collection_mode
+  program                          = var.program
 }
