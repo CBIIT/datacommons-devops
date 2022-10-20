@@ -67,6 +67,7 @@ module "iam_read_only" {
   new_relic_external_id   = module.new_relic_linked_account_id.external_id
   permission_boundary_arn = var.permission_boundary_arn
   program                 = var.program
+  set_external_id_condition = var.set_external_id_condition
 }
 
 module "new_relic_account_link" {
