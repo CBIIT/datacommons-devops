@@ -14,7 +14,7 @@ resource "newrelic_one_dashboard" "os_dashboard" {
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT min(`aws.es.ClusterStatus.green`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -29,7 +29,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT min(`aws.es.ClusterStatus.yellow`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -62,7 +62,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT min(`aws.es.ClusterStatus.red`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -77,7 +77,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.Nodes`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -92,7 +92,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT sum(`aws.es.SearchRate.byNode`),sum(`aws.es.SearchRate.byCluster`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES auto SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -107,7 +107,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT sum(`aws.es.4xx`) as `4xx` FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES auto SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -122,7 +122,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT sum(`aws.es.5xx`) as `5xx` FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES auto SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -137,7 +137,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.CPUUtilization.byNode`) as `By Node`,average(`aws.es.CPUUtilization.byCluster`) as `By Cluster` FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -152,7 +152,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.AutomatedSnapshotFailure`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -167,7 +167,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT max(`aws.es.ClusterUsedSpace`) / 1024 FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -182,7 +182,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.FreeStorageSpace.byCluster`) / 1024 FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -197,7 +197,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.JVMMemoryPressure.byNode`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -212,7 +212,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.DeletedDocuments`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -227,7 +227,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.ReadLatency`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -242,7 +242,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.ReadThroughput`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -257,7 +257,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.ReadIOPS`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -272,7 +272,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.WriteLatency`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -287,7 +287,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.WriteThroughput`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -302,7 +302,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.WriteIOPS`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -317,7 +317,7 @@ EOT
       width = 6
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.DiskQueueDepth`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -332,7 +332,7 @@ EOT
       width = 6
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.SearchableDocuments`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -347,7 +347,7 @@ EOT
       width = 6
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.MasterJVMMemoryPressure`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT
@@ -362,7 +362,7 @@ EOT
       width = 6
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.es.MasterCPUUtilization`) FROM  Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND aws.es.DomainName LIKE '${var.app}-%' TIMESERIES 1 minutes SINCE 1 hour ago UNTIL 5 minutes ago FACET entity.name
 EOT

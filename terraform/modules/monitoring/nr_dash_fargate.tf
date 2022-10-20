@@ -25,7 +25,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 FROM ContainerSample SELECT max(restartCount) - min(restartCount) WHERE ecsClusterName LIKE '${var.app}-${terraform.workspace}-%' TIMESERIES FACET ecsContainerName
 EOT
@@ -40,7 +40,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.ecs.CPUUtilization.byService`) as 'CPU utilization (%)' FROM Metric WHERE aws.ecs.ClusterName LIKE '${var.app}-${terraform.workspace}-%' TIMESERIES auto
 EOT
@@ -55,7 +55,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.ecs.MemoryUtilization.byService`) as 'Memory utilization (%)' FROM Metric WHERE aws.ecs.ClusterName LIKE '${var.app}-${terraform.workspace}-%' TIMESERIES auto
 EOT
@@ -70,7 +70,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
  FROM Metric SELECT average(`docker.container.cpuUsedCoresPercent`) as 'CPU cores (%)' WHERE docker.ecsClusterName LIKE '${var.app}-${terraform.workspace}-%' TIMESERIES auto FACET docker.ecsContainerName
 EOT
@@ -85,7 +85,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 FROM ContainerSample SELECT average(`memoryUsageBytes`) as 'Mem Used (bytes)' WHERE ecsClusterName LIKE '${var.app}-${terraform.workspace}-%' FACET ecsContainerName
 EOT

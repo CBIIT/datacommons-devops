@@ -14,7 +14,7 @@ resource "newrelic_one_dashboard" "alb_dashboard" {
       width = 8
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT sum(`aws.applicationelb.RequestCount.byAlb`) from Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ApplicationELB' AND entity.name LIKE '%${var.app}%' TIMESERIES FACET  entityName UNTIL 6 minutes ago
 EOT
@@ -47,7 +47,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.applicationelb.TargetResponseTime`) as 'seconds' FROM Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ApplicationELB' AND entity.name LIKE '%${var.app}%'
 EOT
@@ -62,7 +62,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT sum(`aws.applicationelb.HTTPCode_ELB_3XX_Count`) as '300 errors (backend)', sum(`aws.applicationelb.HTTPCode_ELB_4XX_Count`) as '400 errors (backend)', sum(`provider.HTTPCode_ELB_5XX_Count`) as '500 errors (backend)', sum(`provider.HTTPCodeElb4XXCount`) as '400 errors (frontend)', sum(`provider.HTTPCodeElb5XXCount`) as '500 errors (frontend)' FROM Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ApplicationELB' AND entity.name LIKE '%${var.app}%' TIMESERIES UNTIL 6 minutes ago
 EOT
@@ -77,7 +77,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT rate(sum(`aws.applicationelb.RequestCount.byAlb`), 1 minute) as 'requests/second' FROM Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ApplicationELB' AND entity.name LIKE '%${var.app}%' since 60 minutes ago
 EOT
@@ -92,7 +92,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT rate(sum(`aws.applicationelb.RequestCount.byTargetGroup`), 1 minute) as 'requests/second' FROM Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ApplicationELB' AND entity.name LIKE '%${var.app}%' since 60 minutes ago
 EOT
@@ -107,7 +107,7 @@ EOT
       width = 12
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT average(`aws.applicationelb.TargetResponseTime`) FROM Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ApplicationELB' AND entity.name LIKE '%${var.app}%' TIMESERIES facet entityName UNTIL 6 minutes ago
 EOT
@@ -122,7 +122,7 @@ EOT
       width = 4
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT uniqueCount(entity.id) from Metric WHERE collector.name='cloudwatch-metric-streams' and aws.Namespace = 'AWS/ApplicationELB' AND entity.name LIKE '%${var.app}%' facet aws.region
 EOT
@@ -137,7 +137,7 @@ EOT
       width = 8
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT sum(`aws.applicationelb.RequestCount.byAlb`) from Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ApplicationELB' AND entity.name LIKE '%${var.app}%' TIMESERIES FACET aws.region UNTIL 6 minutes ago
 EOT
@@ -152,7 +152,7 @@ EOT
       width = 12
 
       nrql_query {
-        account_id = 2292606
+        account_id = ${newrelic_account_id}
         query = <<EOT
 SELECT sum(`aws.applicationelb.ActiveConnectionCount`) as 'active', sum(`aws.applicationelb.NewConnectionCount`) as 'new', sum(`aws.applicationelb.RejectedConnectionCount`) as 'rejected' FROM Metric WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace = 'AWS/ApplicationELB' AND entity.name LIKE '%${var.app}%' TIMESERIES UNTIL 6 minutes ago
 EOT
