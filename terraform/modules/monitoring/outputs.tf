@@ -10,7 +10,3 @@ output "files_source_url" {
   value       = regex("([^/]+)(?:[^/]+$)", sumologic_http_source.files_source.url)[0]
   description = "files source url"
 }
-output "newrelic_private_location_key" {
-  value       = internal_location.key
-  description = "private location key"
-}
