@@ -70,7 +70,11 @@ Please note that the following are just examples. The example values provided fo
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
+| <a name="requirement_newrelic"></a> [newrelic](#requirement\_newrelic) | 3.5.1 |
 
 ## Providers
 
@@ -85,6 +89,7 @@ No providers.
 | <a name="module_iam_kinesis_firehose_datastream"></a> [iam\_kinesis\_firehose\_datastream](#module\_iam\_kinesis\_firehose\_datastream) | ./modules/iam-kinesis-firehose-datastream | n/a |
 | <a name="module_iam_read_only"></a> [iam\_read\_only](#module\_iam\_read\_only) | ./modules/iam-read-only | n/a |
 | <a name="module_kinesis_firehose_datastream"></a> [kinesis\_firehose\_datastream](#module\_kinesis\_firehose\_datastream) | ./modules/kinesis-firehose-datastream | n/a |
+| <a name="module_new_relic_account_link"></a> [new\_relic\_account\_link](#module\_new\_relic\_account\_link) | ./modules/new_relic_account_link | n/a |
 
 ## Resources
 
@@ -117,6 +122,7 @@ No resources.
 | <a name="input_s3_compression_format"></a> [s3\_compression\_format](#input\_s3\_compression\_format) | File compression format - values are 'GZIP', 'ZIP', 'Snappy', & 'HADOOP\_SNAPPY' | `string` | `"UNCOMPRESSED"` | no |
 | <a name="input_s3_error_output_prefix"></a> [s3\_error\_output\_prefix](#input\_s3\_error\_output\_prefix) | Prefix added to failed records before writing them to S3 - immediately follows bucket name | `string` | `null` | no |
 | <a name="input_s3_object_prefix"></a> [s3\_object\_prefix](#input\_s3\_object\_prefix) | The 'YYYY/MM/DD/HH' time format prefix is automatically used for delivered S3 files. You can specify an extra prefix to be added in front of the time format prefix | `string` | `null` | no |
+| <a name="input_set_external_id_condition"></a> [set\_external\_id\_condition](#input\_set\_external\_id\_condition) | Set to true to use New Relic's external ID as a condition in the assume role policy | `bool` | n/a | yes |
 
 ## Outputs
 

@@ -41,3 +41,8 @@ variable "permission_boundary_arn" {
   type        = string
   description = "The arn of the permission boundary associated with the role"
 }
+
+variable "set_external_id_condition" {
+  type = bool 
+  description = "Set to true to use New Relic's external ID as a condition in the assume role policy"
+}

@@ -7,9 +7,9 @@ data "aws_iam_policy_document" "assume_role" {
       identifiers = [var.new_relic_account_id]
     }
     condition {
-      test     = "StringEquals"
-      variable = "sts:ExternalId"
-      values   = [var.new_relic_external_id]
+      test     = var.set_external_id_condition ? "StringEquals" : null
+      variable = var.set_external_id_condition ? "sts:ExternalId" : null
+      values   = var.set_external_id_condition ? [var.new_relic_external_id] : null
     }
   }
 }
