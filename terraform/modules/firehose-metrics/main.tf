@@ -30,7 +30,7 @@ module "kinesis_firehose_datastream" {
   buffer_size              = var.buffer_size
   content_encoding         = var.content_encoding
   destination              = var.destination
-  http_endpoint_access_key = var.module.newrelic_api_access_key.api_key
+  http_endpoint_access_key = module.newrelic_api_access_key.api_key
   http_endpoint_name       = var.http_endpoint_name
   http_endpoint_url        = var.http_endpoint_url
   level                    = var.level
