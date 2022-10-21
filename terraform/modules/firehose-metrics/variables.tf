@@ -13,7 +13,7 @@ variable "app" {
 }
 
 variable "http_endpoint_access_key" {
-  type = string 
+  type        = string
   description = "The New Relic api key (of type User)"
 }
 
