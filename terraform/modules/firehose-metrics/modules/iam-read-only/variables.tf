@@ -31,18 +31,13 @@ variable "new_relic_account_id" {
   sensitive   = true
 }
 
-variable "new_relic_external_id" {
+variable "new_relic_aws_account_id" {
   type        = string
-  description = "The external ID provided by New Relic during the account link registration process"
-  sensitive   = true
+  description = "The standard New Relic AWS account identifier - nonsensitive"
+  default     = "754728514883"
 }
 
 variable "permission_boundary_arn" {
   type        = string
   description = "The arn of the permission boundary associated with the role"
-}
-
-variable "set_external_id_condition" {
-  type = bool 
-  description = "Set to true to use New Relic's external ID as a condition in the assume role policy"
 }
