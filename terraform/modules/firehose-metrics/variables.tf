@@ -43,11 +43,6 @@ variable "s3_bucket_arn" {
   description = "The arn of the S3 bucket where failed message deliveries to New Relic are delivered"
 }
 
-variable "set_external_id_condition" {
-  type        = bool
-  description = "Set to true to use New Relic's external ID as a condition in the assume role policy"
-}
-
 ##########################################################################################
 ######  Optional Variables ###############################################################
 ##########################################################################################
