@@ -69,17 +69,3 @@ module "iam_read_only" {
   program                 = var.program
   set_external_id_condition = var.set_external_id_condition
 }
-
-module "new_relic_account_link" {
-  source = "./modules/new_relic_account_link"
-
-  account_id                       = var.account_id
-  app                              = var.app
-  iam_prefix                       = var.iam_prefix
-  level                            = var.level
-  new_relic_account_id             = var.new_relic_account_id
-  new_relic_ingest_type            = var.new_relic_ingest_type
-  new_relic_key_type               = var.new_relic_key_type
-  new_relic_metric_collection_mode = var.new_relic_metric_collection_mode
-  program                          = var.program
-}
