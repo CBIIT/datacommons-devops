@@ -74,7 +74,6 @@ Please note that the following are just examples. The example values provided fo
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0.0 |
-| <a name="requirement_newrelic"></a> [newrelic](#requirement\_newrelic) | >= 3.0.0 |
 
 ## Providers
 
@@ -89,8 +88,6 @@ No providers.
 | <a name="module_iam_kinesis_firehose_datastream"></a> [iam\_kinesis\_firehose\_datastream](#module\_iam\_kinesis\_firehose\_datastream) | ./modules/iam-kinesis-firehose-datastream | n/a |
 | <a name="module_iam_read_only"></a> [iam\_read\_only](#module\_iam\_read\_only) | ./modules/iam-read-only | n/a |
 | <a name="module_kinesis_firehose_datastream"></a> [kinesis\_firehose\_datastream](#module\_kinesis\_firehose\_datastream) | ./modules/kinesis-firehose-datastream | n/a |
-| <a name="module_newrelic_api_access_key"></a> [newrelic\_api\_access\_key](#module\_newrelic\_api\_access\_key) | ./modules/newrelic-api-access-key | n/a |
-| <a name="module_newrelic_aws_link_account"></a> [newrelic\_aws\_link\_account](#module\_newrelic\_aws\_link\_account) | ./modules/newrelic-aws-link-account | n/a |
 
 ## Resources
 
@@ -107,12 +104,14 @@ No resources.
 | <a name="input_content_encoding"></a> [content\_encoding](#input\_content\_encoding) | Kinesis Data Firehose uses the content encoding to compress the body of a request before sending the request to the destination - valid values are NONE and GZIP | `string` | `"GZIP"` | no |
 | <a name="input_destination"></a> [destination](#input\_destination) | the destination to where the data is delivered. The only options are 'extended\_s3', 'redshift', 'elasticsearch', and 'http\_endpoint' | `string` | `"http_endpoint"` | no |
 | <a name="input_force_detach_policies"></a> [force\_detach\_policies](#input\_force\_detach\_policies) | Set to true to automatically detach policies when deleting a role | `bool` | `false` | no |
+| <a name="input_http_endpoint_access_key"></a> [http\_endpoint\_access\_key](#input\_http\_endpoint\_access\_key) | The New Relic api key (of type User) | `string` | n/a | yes |
 | <a name="input_http_endpoint_name"></a> [http\_endpoint\_name](#input\_http\_endpoint\_name) | The HTTP endpoint name | `string` | `"New Relic"` | no |
 | <a name="input_http_endpoint_url"></a> [http\_endpoint\_url](#input\_http\_endpoint\_url) | The HTTP endpoint URL to which Kinesis Firehose sends your data | `string` | `"https://gov-metric-api.newrelic.com/metric/v1"` | no |
 | <a name="input_iam_prefix"></a> [iam\_prefix](#input\_iam\_prefix) | The string prefix for IAM resource name attributes | `string` | `"power-user"` | no |
 | <a name="input_include_filter"></a> [include\_filter](#input\_include\_filter) | Specify the service namespaces to include in metric stream in a list | `set(string)` | <pre>[<br>  "AWS/ES",<br>  "AWS/ApplicationELB"<br>]</pre> | no |
 | <a name="input_level"></a> [level](#input\_level) | The account level - either 'nonprod' or 'prod' are accepted | `string` | n/a | yes |
 | <a name="input_new_relic_account_id"></a> [new\_relic\_account\_id](#input\_new\_relic\_account\_id) | The account provided by New Relic during the account link registration process | `number` | n/a | yes |
+| <a name="input_new_relic_aws_account_id"></a> [new\_relic\_aws\_account\_id](#input\_new\_relic\_aws\_account\_id) | The standard New Relic AWS account identifier - nonsensitive | `string` | `"754728514883"` | no |
 | <a name="input_new_relic_ingest_type"></a> [new\_relic\_ingest\_type](#input\_new\_relic\_ingest\_type) | Valid options are BROWSER or LICENSE | `string` | `"LICENSE"` | no |
 | <a name="input_new_relic_key_type"></a> [new\_relic\_key\_type](#input\_new\_relic\_key\_type) | The type of API Key to create. Can be INGEST or USER | `string` | `"INGEST"` | no |
 | <a name="input_new_relic_metric_collection_mode"></a> [new\_relic\_metric\_collection\_mode](#input\_new\_relic\_metric\_collection\_mode) | How New Relic receives metrics from source - either PUSH or PULL | `string` | `"PUSH"` | no |
