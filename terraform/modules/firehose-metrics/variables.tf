@@ -24,7 +24,7 @@ variable "level" {
 
 variable "new_relic_account_id" {
   type        = number
-  description = "The account provided by New Relic during the account link registration process"
+  description = "The New Relic account ID"
   sensitive   = true
 }
 
