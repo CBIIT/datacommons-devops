@@ -12,11 +12,6 @@ variable "app" {
   description = "The name of the application (i.e. 'mtp')"
 }
 
-variable "http_endpoint_access_key" {
-  type        = string
-  description = "The access key required for Kinesis Firehose to authenticate with the HTTP endpoint selected as the destination"
-}
-
 variable "level" {
   type        = string
   description = "The account level - either 'nonprod' or 'prod' are accepted"
