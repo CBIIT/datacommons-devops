@@ -12,6 +12,11 @@ variable "app" {
   description = "The name of the application (i.e. 'mtp')"
 }
 
+variable "http_endpoint_access_key" {
+  type        = string
+  description = "The New Relic api key (of type User)"
+}
+
 variable "level" {
   type        = string
   description = "The account level - either 'nonprod' or 'prod' are accepted"
@@ -99,6 +104,12 @@ variable "include_filter" {
   type        = set(string)
   description = "Specify the service namespaces to include in metric stream in a list"
   default     = ["AWS/ES", "AWS/ApplicationELB"]
+}
+
+variable "new_relic_aws_account_id" {
+  type        = string
+  description = "The standard New Relic AWS account identifier - nonsensitive"
+  default     = "754728514883"
 }
 
 variable "new_relic_ingest_type" {
