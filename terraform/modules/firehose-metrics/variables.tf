@@ -23,14 +23,8 @@ variable "level" {
 }
 
 variable "new_relic_account_id" {
-  type        = string
+  type        = number
   description = "The account provided by New Relic during the account link registration process"
-  sensitive   = true
-}
-
-variable "new_relic_external_id" {
-  type        = string
-  description = "The external ID provided by New Relic during the account link registration process"
   sensitive   = true
 }
 
@@ -50,7 +44,7 @@ variable "s3_bucket_arn" {
 }
 
 variable "set_external_id_condition" {
-  type = bool 
+  type        = bool
   description = "Set to true to use New Relic's external ID as a condition in the assume role policy"
 }
 
@@ -110,6 +104,24 @@ variable "include_filter" {
   type        = set(string)
   description = "Specify the service namespaces to include in metric stream in a list"
   default     = ["AWS/ES", "AWS/ApplicationELB"]
+}
+
+variable "new_relic_ingest_type" {
+  type        = string
+  description = "Valid options are BROWSER or LICENSE"
+  default     = "LICENSE"
+}
+
+variable "new_relic_key_type" {
+  type        = string
+  description = "The type of API Key to create. Can be INGEST or USER"
+  default     = "INGEST"
+}
+
+variable "new_relic_metric_collection_mode" {
+  type        = string
+  description = "How New Relic receives metrics from source - either PUSH or PULL"
+  default     = "PUSH"
 }
 
 variable "output_format" {
