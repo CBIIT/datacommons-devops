@@ -1,13 +1,15 @@
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_newrelic"></a> [newrelic](#requirement\_newrelic) | ~> 3.5.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_newrelic"></a> [newrelic](#provider\_newrelic) | n/a |
+| <a name="provider_newrelic"></a> [newrelic](#provider\_newrelic) | ~> 3.5.1 |
 
 ## Modules
 
@@ -17,7 +19,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [newrelic_api_access_key.this](https://registry.terraform.io/providers/hashicorp/newrelic/latest/docs/resources/api_access_key) | resource |
+| [newrelic_api_access_key.this](https://registry.terraform.io/providers/newrelic/newrelic/latest/docs/resources/api_access_key) | resource |
 
 ## Inputs
 
