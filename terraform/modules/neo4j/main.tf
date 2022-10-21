@@ -4,19 +4,26 @@ resource "aws_instance" "db" {
   instance_type          = var.database_instance_type
   key_name               = var.ssh_key_name
   subnet_id              = var.db_subnet_id
-  iam_instance_profile   = var.iam_instance_profile_name
   source_dest_check      = false
-  vpc_security_group_ids = var.db_security_group_ids
+  vpc_security_group_ids =  [aws_security_group.database_sg.id ]
   user_data              = data.template_cloudinit_config.user_data.rendered
+  iam_instance_profile   = aws_iam_instance_profile.db_profile.name
   private_ip             = var.db_private_ip
   root_block_device {
     volume_type           = var.ebs_volume_type
     volume_size           = var.db_instance_volume_size
     delete_on_termination = true
+    encrypted             = true
   }
+
+  metadata_options {
+    http_tokens = var.require_http_tokens
+    http_endpoint = var.enable_http_endpoint
+  }
+
   tags = merge(
     {
-      "Name" = "${var.stack_name}-${var.env}-${var.database_name}-4",
+      "Name" = "${var.stack_name}-${var.env}-${var.database_name}",
     },
     var.tags,
   )
@@ -56,11 +63,37 @@ DOC
   )
 }
 
+#create database security group
+resource "aws_security_group" "database_sg" {
+  name = "${var.stack_name}-${var.env}-database-sg"
+  description = "${var.stack_name} ${var.env} database security group"
+  vpc_id = var.vpc_id
+  tags = merge(
+  {
+    "Name" = format("%s-%s-%s",var.stack_name,var.env,"database-sg")
+  },
+  var.tags,
+  )
+}
+
 resource "aws_ssm_association" "database" {
   name = aws_ssm_document.ssm_neo4j_boostrap.name
+
   targets {
     key    = "tag:Name"
     values = ["${var.stack_name}-${var.env}-${var.database_name}-4"]
   }
+
   depends_on = [aws_instance.db]
+}
+
+resource "aws_iam_role" "db_role" {
+  name = "${var.stack_name}-${var.env}-database-instance-role"
+  assume_role_policy = data.aws_iam_policy_document.sts_policy.json
+  managed_policy_arns = [data.aws_iam_policy.ssm_policy.arn]
+}
+
+resource "aws_iam_instance_profile" "db_profile" {
+  name = "${var.stack_name}-${var.env}-database-instance-profile"
+  role = aws_iam_role.db_role.name
 }

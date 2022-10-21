@@ -51,19 +51,11 @@ variable "stack_name" {
   type        = string
 }
 
-variable "iam_instance_profile_name" {
-  description = "name of iam_instance_profile to apply to this instance"
-  type        = string
-  default     = "bento-dev-ecs-instance-profile"
-}
 variable "db_subnet_id" {
   description = "subnet id to launch db"
   type        = string
 }
-variable "db_security_group_ids" {
-  description = "security group id for the db"
-  type        = list(string)
-}
+
 variable "env" {
   description = "name of the environment to provision"
   type        = string
@@ -72,4 +64,14 @@ variable "public_ssh_key_ssm_parameter_name" {
   description = "name of the ssm parameter holding ssh key content"
   default     = "ssh_public_key"
   type        = string
+}
+variable "require_http_tokens" {
+  type = string
+  description = "choose if http_tokens is required or optional"
+  default = "optional"
+}
+variable "enable_http_endpoint" {
+  type = string
+  description = "choose if http_endpoint is enabled or disabld"
+  default = "enabled"
 }

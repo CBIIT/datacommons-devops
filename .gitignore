@@ -41,3 +41,7 @@ override.tf.json
 /dataSources.local.xml
 
 .DS_Store
+.tflint.hcl
+.tflint.d/*
+.tflint.d
+

@@ -4,7 +4,7 @@
     containers:
       - name: sumologic-firelens
         essential: true
-        image: "906394416424.dkr.ecr.us-east-1.amazonaws.com/aws-for-fluent-bit:2.21.3"
+        image: "public.ecr.aws/aws-observability/aws-for-fluent-bit:latest"
         memory: 100
         logConfiguration:
           logDriver: awslogs
@@ -30,8 +30,8 @@
             awslogs-stream-prefix: "{{ container_name }}"
     launch_type: FARGATE
     network_mode: awsvpc
-    execution_role_arn: "arn:aws:iam::{{ account }}:role/{{ project_name }}-{{ tier }}-task-execution-role"
-    task_role_arn: "arn:aws:iam::{{ account }}:role/{{ project_name }}-{{ tier }}-task-role"
+    execution_role_arn: "arn:aws:iam::{{ account }}:role/{{ execution_role }}"
+    task_role_arn: "arn:aws:iam::{{ account }}:role/{{ task_role }}"
     family: "{{ project_name }}-{{ tier }}-{{ container_name }}"
     memory: "{{ container_memory }}"
     cpu: "{{ container_cpu }}"

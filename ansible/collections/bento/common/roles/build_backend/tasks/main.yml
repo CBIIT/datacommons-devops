@@ -24,8 +24,12 @@
 
 - name: copy schema from frontend to resources
   template:
-    src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ schema_file}}"
-    dest: "{{ workspace }}/src/main/resources/graphql/{{ schema_file}}"
+    remote_src: yes
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  loop:
+    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ schema_file}}"}
+    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ public_schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ public_schema_file}}"}
 
 - name: verify test queries file exists
   stat:
@@ -34,6 +38,7 @@
 
 - name: copy test queries from frontend to resources
   template:
+    remote_src: yes
     src: "{{ workspace }}/{{ project_name }}-frontend/yaml/{{ test_queries_file }}"
     dest: "{{ workspace }}/src/main/resources/yaml/{{ test_queries_file }}"
   when: test_queries.stat.exists
@@ -59,7 +64,7 @@
       pull: yes
       nocache: yes
     name: "{{ project_name }}-{{ container_name }}"
-    tag: "{{ image_version }}-{{ build_number }}"
+    tag: "{{ image_version }}.{{ build_number }}"
     push: no
     force_source: yes
     source: build
@@ -68,7 +73,7 @@
   block:
     - name: run trivy scanner on 
       #command: "trivy image --exit-code 1 --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}"
-      command: "trivy image --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}"
+      command: "trivy image --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
       register: vuln_results
   always:
     - name: echo vulnerability results
@@ -79,14 +84,14 @@
   docker_image:
     name: "{{ project_name }}-{{ container_name }}"
     repository: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}"
-    tag: "{{ image_version }}-{{ build_number }}"
+    tag: "{{ image_version }}.{{ build_number }}"
     force_tag: yes
     push: yes
     source: local
 
 - name: Add tag latest to {{ project_name }}-{{container_name}} image
   community.docker.docker_image:
-    name: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:{{ image_version }}-{{build_number}}"
+    name: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:{{ image_version }}.{{build_number}}"
     repository: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:latest"
     force_tag: yes
     push: yes

@@ -64,27 +64,32 @@ variable "multi_az_enabled" {
   type        = bool
 }
 
-variable "opensearch_log_type" {
-  description = "type of opensearch logs to send to cloudwatch (INDEX_SLOW_LOGS, SEARCH_SLOW_LOGS, AUDIT_LOGS, ES_APPLICATION_LOGS)"
+variable "opensearch_tls_policy" {
+  description = "Provide the TLS policy to associate with the OpenSearch domain to enforce HTTPS communications"
   type        = string
-  default     = "INDEX_SLOW_LOGS"
+  default     = "Policy-Min-TLS-1-2-2019-07"
 }
 
-variable "opensearch_logs_enabled" {
-  description = "set to true to enable OpenSearch to forward logs to CloudWatch"
-  type        = bool
-  default     = true
+variable "opensearch_log_types" {
+  description = "List of log types that OpenSearch forwards to CloudWatch. Options include INDEX_SLOW_LOGS, SEARCH_SLOW_LOGS, ES_APPLICATION_LOGS, AUDIT_LOGS"
+  type        = list(string)
+  default     = ["AUDIT_LOGS"]
 }
 
-variable "opensearch_autotune_desired_state" {
-  description = "Auto-Tune desired state for the domain - options are 'ENABLED' or 'DISABLED'"
-  type        = string
+variable "opensearch_autotune_state" {
+  description = "Tell OpenSearch to enable or disable autotuning. Options include ENABLED and DISABLED"
+  type       = string
   default     = "ENABLED"
 }
 
-variable "opensearch_rollback_on_autotune_disable" {
-  description = "Whether to roll back to default Auto-Tune settings when disabling Auto-Tune - options are 'DEFAULT_ROLLBACK' or 'NO_ROLLBACK'"
+variable "opensearch_autotune_rollback_type" {
+  description = "Tell OpenSearch how to respond to disabling AutoTune. Options include NO_ROLLBACK and DEFAULT_ROLLBACK"
   type        = string
   default     = "DEFAULT_ROLLBACK"
 }
 
+variable "create_cloudwatch_log_policy" {
+  description = "Due cloudwatch log policy limits, this should be option, we can use an existing policy"
+  default = false
+  type = bool
+}

@@ -1,0 +1,21 @@
+name: ScanLoadBalancer
+on:
+  - pull_request 
+jobs:
+  security:
+    name: 'Secure Load Balancer'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@master
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Scan Load Balancer
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+        with:
+          tfsec_version: latest
+          commenter_version: latest
+          soft_fail_commenter: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tfsec_args: --var-file="./.github/configs/scan-loadbalancer.tfvars"
+          working_directory: ./terraform/modules/loadbalancer

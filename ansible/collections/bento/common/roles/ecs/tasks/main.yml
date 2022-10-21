@@ -5,20 +5,10 @@
       - name: sumologic-firelens
         essential: true
         image: "public.ecr.aws/aws-observability/aws-for-fluent-bit:stable"
-#        environment:
-#          - name: FLB_LOG_LEVEL
-#            value: "debug"
         firelensConfiguration:
           type: fluentbit
           options:
             enable-ecs-log-metadata: "true"
-#        logConfiguration:
-#          logDriver: awslogs
-#          options:
-#            awslogs-group: "/ecs/{{ project_name }}/{{ tier }}-{{ container_name }}/sumologic/logs"
-#            awslogs-region: "{{ region }}"
-#            awslogs-create-group: "true"
-#            awslogs-stream-prefix: "{{ project_name }}-{{ container_name }}"
       - name: "{{ project_name }}-{{ container_name }}-newrelic-infra"
         essential: true
         image: "newrelic/nri-ecs:1.9.2"

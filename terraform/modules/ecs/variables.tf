@@ -7,6 +7,12 @@ variable "stack_name" {
   type        = string
 }
 
+variable "iam_prefix" {
+  description = "The string prefix for IAM roles and policies to conform to NCI power-user compliance"
+  type        = string
+  default     = "power-user"
+}
+
 variable "ecs_subnet_ids" {
   description = "Provide list private subnets to use in this VPC. Example 10.0.10.0/24,10.0.11.0/24"
   type        = list(string)
@@ -60,7 +66,7 @@ variable "microservices" {
     image_url                 = string
     cpu                       = number
     memory                    = number
-    path                      = string
+    path                      = list(string)
     number_container_replicas = number
   }))
 }
@@ -70,15 +76,36 @@ variable "alb_https_listener_arn" {
   type        = string
 }
 
-variable "ecs_security_group_ids" {
-  description = "list of security groups to apply to this ecs"
-  type        = list(string)
-}
-variable "ecs_task_role_arn" {
-  description = "ecs task iam role arn"
+variable "ecs_execute_command_logging" {
+  description = "The log setting to use for redirecting logs for ecs execute command results. Valid values are NONE, DEFAULT, and OVERRIDE."
   type        = string
+  default     = "OVERRIDE"
 }
-variable "ecs_execution_role_arn" {
-  description = "ecs execution iam role arn"
+
+variable "container_insights_setting" {
+  description = "Whether or not the ECS cluster enables CloudWatch Container Insights"
   type        = string
+  default     = "disabled"
+}
+
+variable "target_account_cloudone"{
+  description = "to add check conditions on whether the resources are brought up in cloudone or not"
+  type        = bool
+}
+
+variable "add_opensearch_permission" {
+  type = bool
+  default = false
+  description = "choose to create opensearch permission or not"
+}
+variable "allow_cloudwatch_stream" {
+  type = bool
+  default = false
+  description = "allow cloudwatch stream for the containers"
+
+}
+variable "domain_name" {
+  type = string
+  description = "domain name of this app"
+  default = "bento-tools.org"
 }

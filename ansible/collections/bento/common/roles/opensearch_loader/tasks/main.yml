@@ -4,7 +4,6 @@
     dest: "{{ workspace }}/config/es_indices_bento.yml"
     src: "{{ indices_file }}"
 
-
 - name: update server config file
   template:
     dest: "{{ workspace }}/config/es_loader.yml"
@@ -15,11 +14,10 @@
     requirements: "{{ workspace }}/requirements.txt"
     executable: pip3
 
-
 - name: load data
   shell:
     cmd: >
-      python3 es_loader.py {{ indices_file }} config/es_loader.yml
+      python3 es_loader.py {{ indices_file }} {{workspace}}/config/es_loader.yml
     chdir: "{{ workspace }}"
   register: data_loader
 

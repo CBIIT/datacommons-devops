@@ -1,4 +1,4 @@
-name: Comments
+name: ScanOpenSearch
 on:
   - pull_request 
 jobs:

@@ -21,6 +21,7 @@ No modules.
 | [aws_lb_listener.http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
 | [aws_lb_listener.https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
 | [aws_security_group.alb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_security_group_rule.all_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 
 ## Inputs
 
@@ -30,7 +31,7 @@ No modules.
 | <a name="input_alb_default_message"></a> [alb\_default\_message](#input\_alb\_default\_message) | default message response from alb when resource is not available | `string` | `"The requested resource is not found"` | no |
 | <a name="input_alb_internal"></a> [alb\_internal](#input\_alb\_internal) | is this alb internal? | `bool` | `false` | no |
 | <a name="input_alb_log_bucket_name"></a> [alb\_log\_bucket\_name](#input\_alb\_log\_bucket\_name) | s3 | `string` | n/a | yes |
-| <a name="input_alb_ssl_policy"></a> [alb\_ssl\_policy](#input\_alb\_ssl\_policy) | specify ssl policy to use | `string` | `"ELBSecurityPolicy-2016-08"` | no |
+| <a name="input_alb_ssl_policy"></a> [alb\_ssl\_policy](#input\_alb\_ssl\_policy) | specify ssl policy to use | `string` | `"ELBSecurityPolicy-TLS-1-2-Ext-2018-06"` | no |
 | <a name="input_alb_subnet_ids"></a> [alb\_subnet\_ids](#input\_alb\_subnet\_ids) | list of subnets to use for the alb | `list(string)` | n/a | yes |
 | <a name="input_alb_type"></a> [alb\_type](#input\_alb\_type) | Type of loadbalancer | `string` | `"application"` | no |
 | <a name="input_env"></a> [env](#input\_env) | name of the environment to provision | `string` | n/a | yes |
@@ -45,7 +46,7 @@ No modules.
 | <a name="output_alb_arn"></a> [alb\_arn](#output\_alb\_arn) | the arn for the alb |
 | <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | ALB dns name |
 | <a name="output_alb_https_listener_arn"></a> [alb\_https\_listener\_arn](#output\_alb\_https\_listener\_arn) | https listener arn |
-| <a name="output_alb_securitygroup-arn"></a> [alb\_securitygroup-arn](#output\_alb\_securitygroup-arn) | the arn for the security group associated with the alb |
-| <a name="output_alb_securitygroup-id"></a> [alb\_securitygroup-id](#output\_alb\_securitygroup-id) | the id for the security group associated with the alb |
+| <a name="output_alb_securitygroup_arn"></a> [alb\_securitygroup\_arn](#output\_alb\_securitygroup\_arn) | the arn for the security group associated with the alb |
+| <a name="output_alb_securitygroup_id"></a> [alb\_securitygroup\_id](#output\_alb\_securitygroup\_id) | the id for the security group associated with the alb |
 | <a name="output_alb_zone_id"></a> [alb\_zone\_id](#output\_alb\_zone\_id) | https listener arn |
 <!-- END_TF_DOCS -->
