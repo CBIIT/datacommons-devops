@@ -107,5 +107,7 @@ No resources.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_read_only_role_arn"></a> [read\_only\_role\_arn](#output\_read\_only\_role\_arn) | The ARN to copy/paste when creating a New Relic Linked Account |
 <!-- END_TF_DOCS -->
