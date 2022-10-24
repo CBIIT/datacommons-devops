@@ -34,7 +34,7 @@ variable "role_arn" {
 variable "include_filter" {
   type        = set(string)
   description = "Specify the service namespaces to include in metric stream in a list"
-  default     = ["AWS/ES", "AWS/ApplicationELB"]
+  default     = ["AWS/ES", "AWS/ApplicationELB", "AWS/ECS"]
 }
 
 variable "output_format" {
