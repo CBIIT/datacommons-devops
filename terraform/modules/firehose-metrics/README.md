@@ -2,26 +2,35 @@
 
 This module's purpose is to streamline the implementation of a metric delivery pipeline to support observability of AWS Managed Services that publish metric data to Amazon CloudWatch. The destination of the metric data collected is New Relic, FNL/CTOS' preferred metric observability platform. 
 
-## Resources Provided by the Module
-
-  - Amazon CloudWatch Metric Stream
-  - AWS Kinesis Data Firehose Delivery Stream
-  - Amazon Identity and Access Management Roles
-
-## Resources Not Provided by the Module
-
-  - Amazon Simple Storage Solution (S3 Bucket)
-  - Metric Data Producers
-
-## Requirements Prior to Implementation
-  - Access to the CTOS New Relic Instance
-  - New Relic permissions to register a new AWS account
-
 ## Solution Overview
 ![newrelic metric delivery pipeline diagram](./assets/diagram.png)
 
-## Usage Examples
+## Implementation Steps
 
+### 1. Create a New Relic API Key
+Log into https://one.newrelic.com/ and navigate to the API Keys page within the Administration module. Create a new API Key that is a "Ingest - License" type. Name the key with the following naming convention: program - account level - app (ie. ccdi-nonprod-mtp). Provide notes when creating the key as you see fit. Copy the key value to your clipboard. Please note, it's recommended that we have no more than one key that is used per account. 
+
+### 2. Retrieve the New Relic Account ID
+While logged into New Relic and within the Administration module, select the "Access Management" page and navigate to the "Accounts" tab. Copy the account ID for the account with the name "Leidos Biomedical Research_2". This, along with the New Relic API key, are the only New Relic-specific arguments to pass to the metric pipeline module. 
+
+### 3. Configure Terraform Configuration
+In your project repository, create the metric pipeline configuration that leverages this shared module. See the Usage Examples below for more details. Please note that two arguments (new_relic_account_id and http_endpoint_access_key) are not provided in the examples. To prevent storing sensitive information in GitHub repositories, it's recommended that those values are passed in during Terraform workflow operations, but can be configured to exist in a secret. 
+
+It is also recommended that the state for the metric pipeline is stored separate from the rest of the project's configuration. This is because we will deploy the metric pipeline stack once per account, rather than once per tier. You may opt to use conditionals and include the stack in the same state shared with the rest of the project's infrastructure. 
+
+### 4. Deploy the Stack
+After configuring your project for the metric pipeline implementation, run through the standard Terraform workflow and provide the http_endpoint_access_key and new_relic_account_id variable values. 
+
+### 5. Collect the Read-Only Role ARN
+After deploying the stack, you should see an output of the read only role ARN that is needed to complete the AWS Linked Account in the New Relic Console. Copy the ARN and return to the https://one.newrelic.com/ console. Navigate to the "Infrastructure" module and select the "AWS" tab. In the top right corner of the screen, select "+ Add an AWS Account" and choose the "Use metric streams" option. 
+
+Click the "Next" button at the bottom of the screen until you reach Step 5: Add Account Details. Provide an AWS Account Name that matches the same name (and naming standard) of the API Key you created. This should be: program - account level - app (i.e. ccdi-nonprod-mtp). Then, paste the IAM role arn copied to your clipboard (received from the terraform outputs) and paste it in the field labeled "Paste the ARN created in the previous step". 
+
+### 6. Confirm Metric Reception
+It may take up to 20 minutes for metrics to begin displaying in the New Relic platform. Return to the Infrastructure page and observe the summary metrics for the new account you just linked under the "AWS" tab. 
+
+
+## Usage Examples
 Please note that the following are just examples. The example values provided for the access keys, external IDs, etc. are fictitious. 
 
 ### Minimum Configuration 
@@ -29,41 +38,13 @@ Please note that the following are just examples. The example values provided fo
   source = "github.com/CBIIT/datacommons-devops/terraform/modules/firehose-metrics/"
 
   account_id                = data.aws_caller_identity.current.account_id
-  app                       = "icdc"
-  http_endpoint_access_key  = "KL3SDFJ6VX53QOROERTIBMCLPI2R39_" 
-  level                     = "non-prod"
-  new_relic_account_id      = 123456789101
-  new_relic_external_id     = 987654
+  app                       = var.app #i.e. "icdc"
+# http_endpoint_access_key  = var.http_endpoint_access_key (do not store this value in GitHub. Instead, pass this value in when running Terraform Apply operations)
+  level                     = var.level #i.e. "non-prod"
+# new_relic_account_id      = var.new_relic_account_id (do not store this value in GitHub. Instead, pass this value in when running Terraform Apply operations)
   permission_boundary_arn   = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
-  program                   = "crdc"
-  s3_bucket_arn             = "arn:aws:s3:::example-icdc-destination-bucket"
-}</code></pre>
-
-### Maximum Configuration
-<pre><code>module "new_relic_metric_pipeline" {
-  source = "github.com/CBIIT/datacommons-devops/terraform/modules/firehose-metrics/"
-
-  account_id                = data.aws_caller_identity.current.account_id
-  app                       = "icdc"
-  buffer_interval           = 60
-  buffer_size               = 1
-  content_encoding          = "GZIP"
-  destination               = "http_endpoint"
-  force_detach_policies     = false
-  http_endpoint_access_key  = "KL3SDFJ6VX53QOROERTIBMCLPI2R39_" 
-  iam_prefix                = "power-user"
-  include_filter            = [ "AWS/ES", "AWS/ApplicationELB" ]
-  level                     = "non-prod"
-  output_format             = "opentelemetry0.7
-  new_relic_account_id      = 123456789101
-  new_relic_external_id     = 987654
-  permission_boundary_arn   = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
-  program                   = "crdc"
-  s3_backup_mode            = "FailedDataOnly"
-  s3_bucket_arn             = "arn:aws:s3:::example-icdc-destination-bucket"
-  s3_compression_format     = "UNCOMPRESSED"
-  s3_error_output_prefix    = null 
-  s3_object_prefix          = null
+  program                   = var.program #i.e. "crdc"
+  s3_bucket_arn             = var.failed_metric_delivery_bucket #i.e "arn:aws:s3:::example-icdc-destination-bucket"
 }</code></pre>
 
 
@@ -126,5 +107,7 @@ No resources.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_read_only_role_arn"></a> [read\_only\_role\_arn](#output\_read\_only\_role\_arn) | The ARN to copy/paste when creating a New Relic Linked Account |
 <!-- END_TF_DOCS -->
