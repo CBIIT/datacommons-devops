@@ -2,26 +2,32 @@
 
 This module's purpose is to streamline the implementation of a metric delivery pipeline to support observability of AWS Managed Services that publish metric data to Amazon CloudWatch. The destination of the metric data collected is New Relic, FNL/CTOS' preferred metric observability platform. 
 
-## Resources Provided by the Module
-
-  - Amazon CloudWatch Metric Stream
-  - AWS Kinesis Data Firehose Delivery Stream
-  - Amazon Identity and Access Management Roles
-
-## Resources Not Provided by the Module
-
-  - Amazon Simple Storage Solution (S3 Bucket)
-  - Metric Data Producers
-
-## Requirements Prior to Implementation
-  - Access to the CTOS New Relic Instance
-  - New Relic permissions to register a new AWS account
-
 ## Solution Overview
 ![newrelic metric delivery pipeline diagram](./assets/diagram.png)
 
-## Usage Examples
+## Implementation Steps
 
+### 1. Create a New Relic API Key
+Log into https://one.newrelic.com/ and navigate to the API Keys page within the Administration module. Create a new API Key that is a "Ingest - License" type. Name the key with the following naming convention: program - account level - app (ie. ccdi-nonprod-mtp). Provide notes when creating the key as you see fit. Copy the key value to your clipboard. Please note, it's recommended that we have no more than one key that is used per account. 
+
+### 2. Retrieve the New Relic Account ID
+While logged into New Relic and within the Administration module, select the "Access Management" page and navigate to the "Accounts" tab. Copy the account ID for the account with the name "Leidos Biomedical Research_2". This, along with the New Relic API key, are the only New Relic-specific arguments to pass to the metric pipeline module. 
+
+### 3. Configure Terraform Configuration
+In your project repository, create the metric pipeline configuration that leverages this shared module. See the Usage Examples below for more details. Please note that two arguments (new_relic_account_id and http_endpoint_access_key) are not provided in the examples. To prevent storing sensitive information in GitHub repositories, it's recommended that those values are passed in during Terraform workflow operations, but can be configured to exist in a secret. 
+
+It is also recommended that the state for the metric pipeline is stored separate from the rest of the project's configuration. This is because we will deploy the metric pipeline stack once per account, rather than once per tier. You may opt to use conditionals and include the stack in the same state shared with the rest of the project's infrastructure. 
+
+### 4. Deploy the Stack
+After configuring your project for the metric pipeline implementation, run through the standard Terraform workflow and provide the http_endpoint_access_key and new_relic_account_id variable values. 
+
+### 5. Collect the Read-Only Role ARN
+Navigate to the AWS IAM service
+
+
+
+
+## Usage Examples
 Please note that the following are just examples. The example values provided for the access keys, external IDs, etc. are fictitious. 
 
 ### Minimum Configuration 
@@ -30,10 +36,10 @@ Please note that the following are just examples. The example values provided fo
 
   account_id                = data.aws_caller_identity.current.account_id
   app                       = "icdc"
-  http_endpoint_access_key  = "KL3SDFJ6VX53QOROERTIBMCLPI2R39_" 
+# http_endpoint_access_key  = (do not store this value in GitHub. Instead, pass this value in when running Terraform Apply operations)
   level                     = "non-prod"
   new_relic_account_id      = 123456789101
-  new_relic_external_id     = 987654
+# new_relic_external_id     = (do not store this value in GitHub. Instead, pass this value in when running Terraform Apply operations)
   permission_boundary_arn   = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
   program                   = "crdc"
   s3_bucket_arn             = "arn:aws:s3:::example-icdc-destination-bucket"
