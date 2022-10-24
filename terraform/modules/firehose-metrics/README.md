@@ -22,9 +22,12 @@ It is also recommended that the state for the metric pipeline is stored separate
 After configuring your project for the metric pipeline implementation, run through the standard Terraform workflow and provide the http_endpoint_access_key and new_relic_account_id variable values. 
 
 ### 5. Collect the Read-Only Role ARN
-Navigate to the AWS IAM service
+After deploying the stack, you should see an output of the read only role ARN that is needed to complete the AWS Linked Account in the New Relic Console. Copy the ARN and return to the https://one.newrelic.com/ console. Navigate to the "Infrastructure" module and select the "AWS" tab. In the top right corner of the screen, select "+ Add an AWS Account" and choose the "Use metric streams" option. 
 
+Click the "Next" button at the bottom of the screen until you reach Step 5: Add Account Details. Provide an AWS Account Name that matches the same name (and naming standard) of the API Key you created. This should be: program - account level - app (i.e. ccdi-nonprod-mtp). Then, paste the IAM role arn copied to your clipboard (received from the terraform outputs) and paste it in the field labeled "Paste the ARN created in the previous step". 
 
+### 6. Confirm Metric Reception
+It may take up to 20 minutes for metrics to begin displaying in the New Relic platform. Return to the Infrastructure page and observe the summary metrics for the new account you just linked under the "AWS" tab. 
 
 
 ## Usage Examples
@@ -35,41 +38,13 @@ Please note that the following are just examples. The example values provided fo
   source = "github.com/CBIIT/datacommons-devops/terraform/modules/firehose-metrics/"
 
   account_id                = data.aws_caller_identity.current.account_id
-  app                       = "icdc"
-# http_endpoint_access_key  = (do not store this value in GitHub. Instead, pass this value in when running Terraform Apply operations)
-  level                     = "non-prod"
-  new_relic_account_id      = 123456789101
-# new_relic_external_id     = (do not store this value in GitHub. Instead, pass this value in when running Terraform Apply operations)
+  app                       = var.app #i.e. "icdc"
+# http_endpoint_access_key  = var.http_endpoint_access_key (do not store this value in GitHub. Instead, pass this value in when running Terraform Apply operations)
+  level                     = var.level #i.e. "non-prod"
+# new_relic_account_id      = var.new_relic_account_id (do not store this value in GitHub. Instead, pass this value in when running Terraform Apply operations)
   permission_boundary_arn   = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
-  program                   = "crdc"
-  s3_bucket_arn             = "arn:aws:s3:::example-icdc-destination-bucket"
-}</code></pre>
-
-### Maximum Configuration
-<pre><code>module "new_relic_metric_pipeline" {
-  source = "github.com/CBIIT/datacommons-devops/terraform/modules/firehose-metrics/"
-
-  account_id                = data.aws_caller_identity.current.account_id
-  app                       = "icdc"
-  buffer_interval           = 60
-  buffer_size               = 1
-  content_encoding          = "GZIP"
-  destination               = "http_endpoint"
-  force_detach_policies     = false
-  http_endpoint_access_key  = "KL3SDFJ6VX53QOROERTIBMCLPI2R39_" 
-  iam_prefix                = "power-user"
-  include_filter            = [ "AWS/ES", "AWS/ApplicationELB" ]
-  level                     = "non-prod"
-  output_format             = "opentelemetry0.7
-  new_relic_account_id      = 123456789101
-  new_relic_external_id     = 987654
-  permission_boundary_arn   = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
-  program                   = "crdc"
-  s3_backup_mode            = "FailedDataOnly"
-  s3_bucket_arn             = "arn:aws:s3:::example-icdc-destination-bucket"
-  s3_compression_format     = "UNCOMPRESSED"
-  s3_error_output_prefix    = null 
-  s3_object_prefix          = null
+  program                   = var.program #i.e. "crdc"
+  s3_bucket_arn             = var.failed_metric_delivery_bucket #i.e "arn:aws:s3:::example-icdc-destination-bucket"
 }</code></pre>
 
 
