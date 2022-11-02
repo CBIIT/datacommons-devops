@@ -7,7 +7,7 @@
     - debug: var=ansible_python_version
     #install collections
     - name: install aws collection
-      command: ansible-galaxy collection install {{item}}
+      command: ansible-galaxy collection install {{ item }}
       loop:
         - community.docker
         - amazon.aws
@@ -20,10 +20,9 @@
         name: bento.common.ecr_login
       vars:
         region: us-east-1
-    - debug:
-        msg: "Here is the ECR repo {{ecr_repo}}"
+
     #build backend
-    - name: build {{project_name}} backend
+    - name: build {{ project_name }} backend
       include_role:
         name: bento.common.build_backend
       vars:
@@ -36,7 +35,7 @@
         tier: "{{ tier }}"
         bento_api_version: "{{ image_version }}"
         container_name: "backend"
-        dockerfile_path: "{{dockerfile_path }} | default('{{workspace}}/playbooks/docker/dockerfiles/backend-microservice-dockerfile')"
+        dockerfile_path: "{{ workspace }}/{{ dockerfile_path }} | default('{{ workspace }}/playbooks/docker/dockerfiles/backend-microservice-dockerfile')"
         container_image: "{{ ecr_repo }}/{{ project_name }}-{{ container_name }}:{{ image_version }}s"
         container_registry_url: "{{ ecr_repo }}"
         auth_enabled: "true"
