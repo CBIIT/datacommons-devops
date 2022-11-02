@@ -21,8 +21,6 @@
       vars:
         region: us-east-1
 
-
-
     #deploy files
     - name: deploy stage files
       include_role:
