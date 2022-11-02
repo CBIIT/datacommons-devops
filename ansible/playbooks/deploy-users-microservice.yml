@@ -1,8 +1,7 @@
 - name: deploy users microservice
   hosts: all
   connection: local
-  gather_facts: yes
-  become: yes
+  gather_facts: no
 
   tasks:
     #install collections

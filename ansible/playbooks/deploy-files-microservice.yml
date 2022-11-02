@@ -1,8 +1,7 @@
 - name: ctdc deploy pipeline
   hosts: bento
   connection: local
-  gather_facts: yes
-  become: yes
+  gather_facts: no
 
   tasks:
     #install collections
