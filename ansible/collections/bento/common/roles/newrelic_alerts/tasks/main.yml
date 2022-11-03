@@ -8,6 +8,3 @@
 
 - name: update monitors
   script: monitor_update.py -p {{ project_name }} -t {{ tier }} -k {{ newrelic_key }}
-
-- name: update dashboards
-  script: dashboards/add_tier_dashboards.py -p {{ project_name }} -t {{ tier }} -k {{ newrelic_key }}
