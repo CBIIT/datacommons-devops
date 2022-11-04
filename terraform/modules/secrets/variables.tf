@@ -33,5 +33,5 @@ variable "sumo_collector_token_files" {
 }
 variable "db_instance" {
   type        = string
-  description = "name of he db instance for this tier"
+  description = "name of the db instance for this tier"
 }
