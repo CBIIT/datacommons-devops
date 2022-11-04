@@ -1,9 +1,9 @@
-resource "aws_iam_service_linked_role" "os_role" {
+resource "aws_iam_service_linked_role" "os" {
   count            = var.create_os_service_role ? 1 : 0
   aws_service_name = "es.amazonaws.com"
 }
 
-resource "aws_opensearch_domain" "os_domain" {
+resource "aws_opensearch_domain" "os" {
   domain_name    = local.domain_name
   engine_version = var.opensearch_version
 
@@ -28,7 +28,7 @@ resource "aws_opensearch_domain" "os_domain" {
 
   vpc_options {
     subnet_ids         = local.subnets
-    security_group_ids = [aws_security_group.os_sg.id]
+    security_group_ids = [aws_security_group.os.id]
   }
 
   ebs_options {
@@ -42,7 +42,7 @@ resource "aws_opensearch_domain" "os_domain" {
 
     content {
       enabled                  = true
-      cloudwatch_log_group_arn = aws_cloudwatch_log_group.os_logs.arn
+      cloudwatch_log_group_arn = aws_cloudwatch_log_group.os.arn
       log_type                 = i.value
     }
   }
@@ -55,19 +55,19 @@ resource "aws_opensearch_domain" "os_domain" {
 
 }
 
-resource "aws_cloudwatch_log_group" "os_logs" {
+resource "aws_cloudwatch_log_group" "os" {
   name              = "${local.domain_name}-logs"
   retention_in_days = local.log_retention
   tags              = var.tags
 }
 
-resource "aws_cloudwatch_log_resource_policy" "os_log_policy" {
+resource "aws_cloudwatch_log_resource_policy" "os" {
   count = var.create_cloudwatch_log_policy ? 1: 0
   policy_name     = "${local.domain_name}-log-policy"
-  policy_document = data.aws_iam_policy_document.os_policy.json
+  policy_document = data.aws_iam_policy_document.os.json
 }
 
-resource "aws_security_group" "os_sg" {
+resource "aws_security_group" "os" {
   name                   = "${local.domain_name}-securitygroup"
   description            = local.sg_description
   revoke_rules_on_delete = true
