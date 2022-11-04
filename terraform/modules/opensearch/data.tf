@@ -2,7 +2,7 @@ data "aws_region" "region" {}
 
 data "aws_caller_identity" "caller" {}
 
-data "aws_iam_policy_document" "os" {
+data "aws_iam_policy_document" "os_policy" {
   statement {
     effect = "Allow"
     actions = [
