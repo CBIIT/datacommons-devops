@@ -18,7 +18,6 @@ variable "neo4j_password" {
 variable "indexd_url" {
   type        = string
   description = "indexd url"
-  default     = "https://nci-crdc.datacommons.io/user/data/download/dg.4DFC"
 }
 variable "sumo_collector_token_be" {
   type        = string
