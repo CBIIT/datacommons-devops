@@ -22,7 +22,7 @@ resource "aws_secretsmanager_secret_version" "secrets_values" {
 	  "sumo_collector_token_backend": "${var.sumo_collector_token_backend}",
 	  "sumo_collector_token_files": "${var.sumo_collector_token_files}",
 	  "sumo_collector_token_users": "${var.sumo_collector_token_users}",
-	  "sumo_collector_token_auth": "${var.sumo_collector_token_auth}",
+	  "sumo_collector_token_auth": "${var.sumo_collector_token_auth}"
 	}
 EOF
 }
