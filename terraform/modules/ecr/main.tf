@@ -37,7 +37,7 @@ resource "aws_ecr_lifecycle_policy" "ecr_life_cycle" {
 }
 
 resource "aws_ecr_registry_policy" "this" {
-  count = var.enable_ecr_replication ? 1: 0
+  count = var.allow_ecr_replication ? 1: 0
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -45,7 +45,7 @@ resource "aws_ecr_registry_policy" "this" {
         Sid    = "Replication",
         Effect = "Allow",
         Principal = {
-          "AWS" : "arn:aws:iam::${var.replication_destination_registry_id}:root"
+          "AWS" : "arn:aws:iam::${var.replication_source_registry_id}:root"
         },
         Action = [
           "ecr:CreateRepository",
