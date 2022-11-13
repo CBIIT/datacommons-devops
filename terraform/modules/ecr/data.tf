@@ -21,3 +21,20 @@ data "aws_iam_policy_document" "ecr_policy_doc" {
     ]
   }
 }
+data "aws_iam_policy_document" "replication" {
+  count = var.enable_ecr_replication ? 1 : 0
+  statement {
+    effect = "Allow"
+    principals {
+      identifiers = ["arn:aws:iam::${var.replication_destination_registry_id}:root"]
+      type        = "AWS"
+    }
+    actions = [
+      "ecr:CreateRepository",
+      "ecr:ReplicateImage"
+    ]
+    resources = [
+      "arn:aws:ecr:${data.aws_region.this.name}:${data.aws_caller_identity.current.account_id}:repository/*"
+    ]
+  }
+}

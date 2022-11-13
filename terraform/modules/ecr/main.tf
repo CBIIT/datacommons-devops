@@ -36,6 +36,11 @@ resource "aws_ecr_lifecycle_policy" "ecr_life_cycle" {
   })
 }
 
+resource "aws_ecr_registry_policy" "this" {
+  count = var.enable_ecr_replication ? 1: 0
+  policy = data.aws_iam_policy_document.replication[0].json
+}
+
 resource "aws_ecr_replication_configuration" "replication" {
   count = var.enable_ecr_replication ? 1: 0
   replication_configuration {
