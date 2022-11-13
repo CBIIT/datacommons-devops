@@ -38,7 +38,25 @@ resource "aws_ecr_lifecycle_policy" "ecr_life_cycle" {
 
 resource "aws_ecr_registry_policy" "this" {
   count = var.enable_ecr_replication ? 1: 0
-  policy = data.aws_iam_policy_document.replication[0].json
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid    = "Replication",
+        Effect = "Allow",
+        Principal = {
+          "AWS" : "arn:aws:iam::${var.replication_destination_registry_id}:root"
+        },
+        Action = [
+          "ecr:CreateRepository",
+          "ecr:ReplicateImage"
+        ],
+        Resource = [
+          "arn:aws:ecr:${data.aws_region.this.name}:${data.aws_caller_identity.current.account_id}:repository/*"
+        ]
+      }
+    ]
+  })
 }
 
 resource "aws_ecr_replication_configuration" "replication" {
