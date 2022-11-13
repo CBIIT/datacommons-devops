@@ -35,3 +35,15 @@ resource "aws_ecr_lifecycle_policy" "ecr_life_cycle" {
     }]
   })
 }
+
+resource "aws_ecr_replication_configuration" "replication" {
+  count = var.enable_ecr_replication ? 1: 0
+  replication_configuration {
+    rule {
+      destination {
+        region      = data.aws_region.this.name
+        registry_id = var.replication_destination_registry_id
+      }
+    }
+  }
+}

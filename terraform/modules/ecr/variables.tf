@@ -23,3 +23,13 @@ variable "create_env_specific_repo" {
   type = bool
   default = true
 }
+variable "replication_destination_registry_id" {
+  type = string
+  description = "registry id for destination image"
+  default = null
+}
+variable "enable_ecr_replication" {
+  description = "enable ecr replication"
+  type = bool
+  default = false
+}
