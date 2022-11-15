@@ -29,7 +29,33 @@
     dest: "{{item.dest}}"
   loop:
     - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ schema_file}}"}
-    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ public_schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ public_schema_file}}"}
+    #- { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ public_schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ public_schema_file}}"}
+
+##### Redis
+
+- name: verify redis schema file exists
+  stat:
+    path: "{{workspace}}/icdc-frontend/graphql/{{ redis_schema_file }}"
+  register: redis_schema
+
+- name: verify redis init queries file exists
+  stat:
+    path: "{{workspace}}/icdc-frontend/yaml/{{ redis_init_queries_file }}"
+  register: redis_queries
+
+- name: copy redis schema from frontend to resources
+  template:
+    src: "{{workspace}}/icdc-frontend/graphql/{{ redis_schema_file }}"
+    dest: "{{workspace}}/src/main/resources/graphql/{{ redis_schema_file }}"
+  when: redis_schema.stat.exists
+
+- name: copy redis init queries from frontend to resources
+  template:
+    src: "{{workspace}}/icdc-frontend/yaml/{{ redis_init_queries_file }}"
+    dest: "{{workspace}}/src/main/resources/yaml/{{ redis_init_queries_file }}"
+  when: redis_queries.stat.exists
+
+##### Redis
 
 - name: verify test queries file exists
   stat:
