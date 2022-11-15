@@ -1,10 +1,10 @@
-resource "aws_secretsmanager_secret" "bento_secrets" {
+resource "aws_secretsmanager_secret" "secrets" {
   name = "bento/${var.app}/${terraform.workspace}"
 
 }
 
-resource "aws_secretsmanager_secret_version" "bento_secrets_values" {
-  secret_id     = aws_secretsmanager_secret.bento_secrets.id
+resource "aws_secretsmanager_secret_version" "secrets_values" {
+  secret_id     = aws_secretsmanager_secret.secrets.id
   secret_string = <<EOF
     {
 	  "neo4j_user": "${var.neo4j_user}",
