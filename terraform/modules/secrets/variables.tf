@@ -85,3 +85,10 @@ variable "sumo_collector_token_auth" {
   description = "Sumo collector token for auth"
   default     = ""
 }
+
+variable "github_token" {
+  type        = string
+  description = "github token"
+  sensitive   = true
+  default     = ""
+}

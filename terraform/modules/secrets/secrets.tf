@@ -1,10 +1,10 @@
-resource "aws_secretsmanager_secret" "secrets" {
+resource "aws_secretsmanager_secret" "bento_secrets" {
   name = "bento/${var.app}/${terraform.workspace}"
 
 }
 
-resource "aws_secretsmanager_secret_version" "secrets_values" {
-  secret_id     = aws_secretsmanager_secret.secrets.id
+resource "aws_secretsmanager_secret_version" "bento_secrets_values" {
+  secret_id     = aws_secretsmanager_secret.bento_secrets.id
   secret_string = <<EOF
     {
 	  "neo4j_user": "${var.neo4j_user}",
@@ -23,6 +23,21 @@ resource "aws_secretsmanager_secret_version" "secrets_values" {
 	  "sumo_collector_token_files": "${var.sumo_collector_token_files}",
 	  "sumo_collector_token_users": "${var.sumo_collector_token_users}",
 	  "sumo_collector_token_auth": "${var.sumo_collector_token_auth}"
+	}
+EOF
+}
+
+
+resource "aws_secretsmanager_secret" "github_secrets" {
+  name = "github/pat"
+
+}
+
+resource "aws_secretsmanager_secret_version" "github_secrets_values" {
+  secret_id     = aws_secretsmanager_secret.github_secrets.id
+  secret_string = <<EOF
+    {
+	  "token": "${var.github_token}"
 	}
 EOF
 }
