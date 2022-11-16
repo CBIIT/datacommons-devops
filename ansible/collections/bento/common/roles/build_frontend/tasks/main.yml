@@ -1,18 +1,18 @@
 - name: create docker build directory
   file: 
-    path: "{{workspace}}/build"
+    path: "{{ workspace }}/build"
     state : directory
 
 - name: copy  nginx conf
   copy:
     remote_src: yes
-    src: '{{workspace}}/playbooks/docker/dockerfiles/nginx.conf'
-    dest: '{{workspace}}/build/nginx.conf'
+    src: '{{ workspace }}/playbooks/docker/dockerfiles/nginx.conf'
+    dest: '{{ workspace }}/build/nginx.conf'
 
 - name: copy entrypoint.sh to workspace
   copy:
     src: "nginx-entrypoint.sh"
-    dest: "{{workspace}}/build/nginx-entrypoint.sh"
+    dest: "{{ workspace }}/build/nginx-entrypoint.sh"
     mode: 0755
 
 
@@ -22,6 +22,7 @@
     chdir: "{{ container_build_path }}"
     warn: false
   loop:
+    - npm install npm@7.7.6 -g
     - npm set progress=false
     - npm install --silent
     - npm run build --silent
@@ -29,28 +30,28 @@
 - name: move dist from frontend to temp build
   copy: 
     src: "{{ container_build_path }}/dist" 
-    dest: "{{workspace}}/build" 
+    dest: "{{ workspace }}/build" 
     remote_src: yes 
     directory_mode: yes
 
 - name: copy env to dist
   copy:
     src: inject.template.js
-    dest: "{{workspace}}/build/dist/inject.template.js"
+    dest: "{{ workspace }}/build/dist/inject.template.js"
     mode: 0755
 
 - name: copy docker file to build path
   copy:
     remote_src: yes
     src: '{{ dockerfile_path }}'
-    dest: '{{workspace}}/build/Dockerfile'
+    dest: '{{ workspace }}/build/Dockerfile'
 
-- name: build {{ project_name }}-{{container_name}} image
+- name: build {{ project_name }}-{{ container_name }} image
   community.docker.docker_image:
     build:
       args:
         ECR_REPO: "{{ container_registry_url }}"
-      path: "{{workspace}}/build"
+      path: "{{ workspace }}/build"
       pull: yes
 #      nocache: yes
     name: "{{ project_name }}-{{ container_name }}"
