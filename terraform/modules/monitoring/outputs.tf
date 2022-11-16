@@ -1,5 +1,5 @@
 output "frontend_source_url" {
-  value       = regex("([^/]+)(?:[^/]+$)", sumologic_http_source.frontend_source.url)[0]
+  value       = regex(".*\/(.*)", sumologic_http_source.frontend_source.url)[0]
   description = "frontend source url"
 }
 output "backend_source_url" {
