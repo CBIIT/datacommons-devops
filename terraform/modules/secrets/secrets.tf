@@ -36,7 +36,7 @@ resource "aws_secretsmanager_secret" "github_secrets" {
 
 resource "aws_secretsmanager_secret_version" "github_secrets_values" {
   count = var.create_shared_secrets ? 1 : 0
-  secret_id     = aws_secretsmanager_secret.github_secrets.id
+  secret_id     = aws_secretsmanager_secret.github_secrets[0].id
   secret_string = <<EOF
     {
 	  "token": "${var.github_token}"
