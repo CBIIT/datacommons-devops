@@ -15,3 +15,17 @@ variable "sumologic_access_key" {
   description = "Sumo Logic Access Key"
   sensitive   = true
 }
+
+variable "microservices" {
+  type = map(object({
+    name                      = string
+    port                      = number
+    health_check_path         = string
+    priority_rule_number      = number
+    image_url                 = string
+    cpu                       = number
+    memory                    = number
+    path                      = list(string)
+    number_container_replicas = number
+  }))
+}
