@@ -29,11 +29,13 @@ EOF
 
 
 resource "aws_secretsmanager_secret" "github_secrets" {
-  name = "github/pat"
+  count = var.create_shared_secrets ? 1 : 0
+  name  = "github/pat"
 
 }
 
 resource "aws_secretsmanager_secret_version" "github_secrets_values" {
+  count = var.create_shared_secrets ? 1 : 0
   secret_id     = aws_secretsmanager_secret.github_secrets.id
   secret_string = <<EOF
     {

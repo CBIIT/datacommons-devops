@@ -8,6 +8,11 @@ variable "region" {
   default = "us-east-1"
 }
 
+variable "create_shared_secrets" {
+  type        = bool
+  description = "shared secrets are created in this tier"
+}
+
 variable "neo4j_user" {
   type        = string
   description = "neo4j user"
