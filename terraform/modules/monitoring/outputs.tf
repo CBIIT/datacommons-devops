@@ -12,6 +12,6 @@
 #}
 
 output "sumo_source_urls" {
-  value       = {for k, v in sumologic_http_source.sumo_source: k => regex(".*/(.*)", sumologic_http_source.backend_source.url)[0]}
+  value       = {for k, v in sumologic_http_source.sumo_source: k => regex(".*/(.*)", sumologic_http_source.sumo_source.url)[0]}
   description = "map of name, source url for sumo collectors"
 }
