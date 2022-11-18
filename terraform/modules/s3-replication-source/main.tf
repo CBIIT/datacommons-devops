@@ -1,6 +1,7 @@
 resource "aws_iam_role" "main" {
-  name               = local.role_name
-  assume_role_policy = data.aws_iam_policy_document.source.json
+  name                 = local.role_name
+  assume_role_policy   = data.aws_iam_policy_document.source.json
+  permissions_boundary = var.target_account_cloudone ? local.permission_boundary_arn : null
 }
 
 resource "aws_iam_policy" "main" {
@@ -26,13 +27,8 @@ resource "aws_s3_bucket" "source" {
   }
 }
 
-resource "aws_s3_bucket_acl" "source_bucket_acl" {
-  bucket = var.create_source_bucket ? aws_s3_bucket.source[0].id : data.aws_s3_bucket.source[0].id
-  acl    = "private"
-}
-
 resource "aws_s3_bucket_versioning" "source" {
-  bucket = var.create_source_bucket ? aws_s3_bucket.source[0].arn : data.aws_s3_bucket.source[0].arn
+  bucket = var.create_source_bucket ? aws_s3_bucket.source[0].id : data.aws_s3_bucket.source[0].id
   versioning_configuration {
     status = "Enabled"
   }
@@ -41,7 +37,7 @@ resource "aws_s3_bucket_versioning" "source" {
 resource "aws_s3_bucket_replication_configuration" "replication" {
   depends_on = [aws_s3_bucket_versioning.source]
   role   = aws_iam_role.main.arn
-  bucket = var.create_source_bucket ? aws_s3_bucket.source[0].arn : data.aws_s3_bucket.source[0].arn
+  bucket = var.create_source_bucket ? aws_s3_bucket.source[0].id : data.aws_s3_bucket.source[0].id
   rule {
     id = "data-loader"
     filter {

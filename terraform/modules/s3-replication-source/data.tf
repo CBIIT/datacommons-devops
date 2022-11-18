@@ -1,4 +1,5 @@
 
+data "aws_caller_identity" "current" {}
 data "aws_s3_bucket" "source" {
   count = var.create_source_bucket ? 0 : 1
   bucket = var.source_bucket_name
