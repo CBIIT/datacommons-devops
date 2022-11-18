@@ -22,7 +22,7 @@
     chdir: "{{ container_build_path }}"
     warn: false
   loop:
-    - npm install npm@7.7.8 -g
+    - npm install npm@7.7.6 -g
     - npm set progress=false
     - npm install --silent
     - npm run build --silent
