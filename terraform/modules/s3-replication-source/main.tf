@@ -43,6 +43,9 @@ resource "aws_s3_bucket_replication_configuration" "replication" {
     filter {
       prefix = "prod"
     }
+    delete_marker_replication {
+      status = "Enabled"
+    }
     status = "Enabled"
     destination {
       bucket        =  "arn:aws:s3:::${var.destination_bucket_name}"
