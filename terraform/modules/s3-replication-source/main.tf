@@ -1,7 +1,7 @@
 resource "aws_iam_role" "main" {
   name                 = local.role_name
   assume_role_policy   = data.aws_iam_policy_document.source.json
-  permissions_boundary = var.target_account_cloudone ? local.permission_boundary_arn : null
+  permissions_boundary =  local.permission_boundary_arn
 }
 
 resource "aws_iam_policy" "main" {
