@@ -11,7 +11,7 @@ data "aws_iam_policy_document" "dest" {
     principals {
       type = "AWS"
       identifiers = [
-
+        var.replication_role_arn
       ]
     }
     actions = [

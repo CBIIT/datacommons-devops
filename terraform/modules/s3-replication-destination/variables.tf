@@ -18,5 +18,4 @@ variable "create_destination_bucket" {
 variable "replication_role_arn" {
   description = "replication role arn"
   type = string
-  default = "*"
 }
