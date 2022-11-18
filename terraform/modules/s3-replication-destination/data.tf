@@ -3,6 +3,7 @@ data "aws_s3_bucket" "dest" {
   bucket = var.destination_bucket_name
 }
 
+data "aws_caller_identity" "current" {}
 data "aws_iam_policy_document" "dest" {
   version = "2012-10-17"
   statement {
@@ -56,5 +57,36 @@ data "aws_iam_policy_document" "dest" {
     ]
     resources = ["${local.destination_bucket_arn}/*"]
   }
-
+  statement {
+    sid = "AllowDataloaderAccess"
+    effect = "Allow"
+    not_principals {
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/power-user-integration-server-profile"]
+      type        = "AWS"
+    }
+    actions = [
+      "s3:GetBucketLocation",
+      "s3:ListBucket",
+      "s3:ListBucketVersions",
+    ]
+    resources = [local.destination_bucket_arn]
   }
+  statement {
+    sid = "AllowDataloaderOperation"
+    effect = "Allow"
+    not_principals {
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/power-user-integration-server-profile"]
+      type        = "AWS"
+    }
+    actions = [
+      "s3:PutObject",
+      "s3:PutObjectAcl",
+      "s3:GetObjectVersion",
+      "s3:GetObjectAttributes",
+      "s3:GetObject",
+      "s3:DeleteObject"
+    ]
+    resources = ["${local.destination_bucket_arn}/*"]
+  }
+
+}
