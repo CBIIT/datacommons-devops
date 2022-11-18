@@ -5,7 +5,7 @@ data "aws_s3_bucket" "source" {
 }
 
 data "aws_s3_bucket" "dest" {
-  count = var.create_destination_bucket && var.enable_replication ? 0 : 1
+  count = var.create_destination_bucket && var.enable_replication ? 1 : 0
   bucket = var.destination_bucket_name
 }
 
