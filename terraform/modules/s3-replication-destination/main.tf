@@ -20,5 +20,5 @@ resource "aws_s3_bucket_versioning" "dest" {
 
 resource "aws_s3_bucket_policy" "dest" {
   bucket   = var.create_destination_bucket ? aws_s3_bucket.dest[0].id : data.aws_s3_bucket.dest[0].id
-  policy   = data.aws_iam_policy_document.dest[0].json
+  policy   = data.aws_iam_policy_document.dest.json
 }
