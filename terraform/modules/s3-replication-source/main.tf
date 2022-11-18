@@ -1,6 +1,6 @@
 resource "aws_iam_role" "main" {
   name                 = local.role_name
-  assume_role_policy   = data.aws_iam_policy_document.source.json
+  assume_role_policy   = data.aws_iam_policy_document.main.json
   permissions_boundary =  local.permission_boundary_arn
 }
 

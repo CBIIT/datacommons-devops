@@ -1,7 +1,7 @@
 
 data "aws_caller_identity" "current" {}
 data "aws_s3_bucket" "source" {
-  count = var.create_source_bucket ? 0 : 1
+  count = var.create_source_bucket  ?  0 : 1
   bucket = var.source_bucket_name
 }
 
@@ -28,13 +28,9 @@ data "aws_iam_policy_document" "source" {
     effect = "Allow"
     actions = [
       "s3:GetReplicationConfiguration",
-      "s3:GetBucketAcl",
-      "s3:GetBucketPolicy",
       "s3:ListBucket"
     ]
-    resources = [
-     local.source_bucket_arn
-    ]
+    resources = [local.source_bucket_arn]
   }
   statement {
     effect = "Allow"
