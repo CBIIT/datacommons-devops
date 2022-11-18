@@ -36,18 +36,3 @@ variable "create_source_bucket" {
   default = false
   description = "choose to create source bucket"
 }
-variable "create_destination_bucket" {
-  type = bool
-  default = false
-  description = "choose to create destination bucket"
-}
-variable "replication_role_arn" {
-  description = "replication role arn"
-  type = string
-  default = "*"
-}
-variable "enable_replication" {
-  description = "enable replication"
-  type = bool
-  default = false
-}

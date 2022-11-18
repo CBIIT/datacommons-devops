@@ -3,7 +3,7 @@ resource "aws_iam_role" "main" {
   assume_role_policy = data.aws_iam_policy_document.source.json
 }
 
-resource "aws_iam_policy" "this" {
+resource "aws_iam_policy" "main" {
   name        = local.policy_name
   description = "Policy to allow s3 replication"
   policy      = data.aws_iam_policy_document.source.json
@@ -11,7 +11,7 @@ resource "aws_iam_policy" "this" {
 
 resource "aws_iam_role_policy_attachment" "attach" {
   role       = aws_iam_role.main.name
-  policy_arn = aws_iam_policy.this.arn
+  policy_arn = aws_iam_policy.main.arn
 }
 
 resource "aws_s3_bucket" "source" {
@@ -53,32 +53,4 @@ resource "aws_s3_bucket_replication_configuration" "replication" {
       storage_class = "STANDARD"
     }
   }
-}
-
-
-resource "aws_s3_bucket" "dest" {
-  count = var.create_destination_bucket && var.enable_replication ? 1 : 0
-  bucket = var.destination_bucket_name
-  tags = var.tags
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
-}
-
-resource "aws_s3_bucket_versioning" "dest" {
-  count =  var.enable_replication ? 1 : 0
-  bucket = var.create_destination_bucket ? aws_s3_bucket.dest[0].id : data.aws_s3_bucket.dest[0].id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_policy" "dest" {
-  count = var.enable_replication ? 1 : 0
-  bucket   = var.create_destination_bucket ? aws_s3_bucket.dest[0].id : data.aws_s3_bucket.dest[0].id
-  policy   = data.aws_iam_policy_document.dest[0].json
 }
