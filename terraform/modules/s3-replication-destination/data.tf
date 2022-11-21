@@ -60,7 +60,7 @@ data "aws_iam_policy_document" "dest" {
   statement {
     sid = "AllowDataloaderAccess"
     effect = "Allow"
-    not_principals {
+    principals {
       identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/power-user-integration-server-profile"]
       type        = "AWS"
     }
@@ -74,7 +74,7 @@ data "aws_iam_policy_document" "dest" {
   statement {
     sid = "AllowDataloaderOperation"
     effect = "Allow"
-    not_principals {
+    principals {
       identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/power-user-integration-server-profile"]
       type        = "AWS"
     }
