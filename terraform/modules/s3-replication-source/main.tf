@@ -50,6 +50,9 @@ resource "aws_s3_bucket_replication_configuration" "replication" {
     destination {
       bucket        =  "arn:aws:s3:::${var.destination_bucket_name}"
       storage_class = "STANDARD"
+      access_control_translation {
+        owner = "Destination"
+      }
     }
   }
 }
