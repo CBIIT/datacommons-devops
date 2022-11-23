@@ -36,3 +36,8 @@ variable "create_source_bucket" {
   default = false
   description = "choose to create source bucket"
 }
+variable "replication_destination_account_id" {
+  type = string
+  description = "replication account id"
+  default = ""
+}

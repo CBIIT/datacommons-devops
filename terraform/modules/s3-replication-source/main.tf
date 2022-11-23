@@ -48,6 +48,7 @@ resource "aws_s3_bucket_replication_configuration" "replication" {
     }
     status = "Enabled"
     destination {
+      account_id    =  var.replication_destination_account_id
       bucket        =  "arn:aws:s3:::${var.destination_bucket_name}"
       storage_class = "STANDARD"
       access_control_translation {
