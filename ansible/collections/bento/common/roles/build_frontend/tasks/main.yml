@@ -24,7 +24,7 @@
   loop:
     - npm install npm@7.7.6 -g
     - npm set progress=false
-    - npm install react-dev-utils
+    - npm cache clear --force
     - npm install --silent
     - npm run build --silent
 
