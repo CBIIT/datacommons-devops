@@ -25,6 +25,7 @@
     - npm install npm@7.7.6 -g
     - npm set progress=false
     - npm cache clear --force
+    - npm install --save-dev react-dev-utils
     - npm install --silent
     - npm run build --silent
 
