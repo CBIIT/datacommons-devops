@@ -26,8 +26,8 @@
     - npm set progress=false
     #- npm cache clear --force
     - npm install --silent
-    - npm install --save-dev react-dev-utils
-    - npm install --save-dev fs-extra
+    #- npm install --save-dev react-dev-utils
+    #- npm install --save-dev fs-extra
     - npm run build --silent
 
 - name: move dist from frontend to temp build
