@@ -27,8 +27,8 @@
     - npm install npm@7.7.6 -g
     - npm set progress=false
     - npm install --silent
-    #- npm install --save-dev react-dev-utils
-    #- npm install --save-dev fs-extra
+    - npm install --save-dev react-dev-utils
+    - npm install --save-dev fs-extra
     - npm run build --silent
 
 - name: move dist from frontend to temp build
