@@ -25,8 +25,10 @@
   args:
     chdir: "{{ container_build_path }}"
     warn: false
-#  environment:
+  environment:
 #    CI: false
+    HOME: "{{ workspace }}"
+    npm_config_cache: npm-cache
   loop:
     - npm install npm@7.7.6 -g
     - npm set progress=false
