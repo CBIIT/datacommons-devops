@@ -15,10 +15,10 @@
     dest: "{{ workspace }}/build/nginx-entrypoint.sh"
     mode: 0755
 
-- name: remove package-lock
-  file: 
-    path: "{{ container_build_path }}/package-lock.json"
-    state : absent
+#- name: remove package-lock
+#  file: 
+#    path: "{{ container_build_path }}/package-lock.json"
+#   state : absent
 
 - name: check npm scripts
   block:
