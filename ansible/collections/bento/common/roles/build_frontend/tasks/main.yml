@@ -15,11 +15,6 @@
     dest: "{{ workspace }}/build/nginx-entrypoint.sh"
     mode: 0755
 
-- name: remove package-lock
-  file: 
-    path: "{{ container_build_path }}/package-lock.json"
-    state : absent
-
 - name: check npm scripts
   block:
     - name: run npm install in {{ workspace }}/{{ project_name }}-frontend/
@@ -40,7 +35,7 @@
   always:
     - name: echo npm output
       debug:
-        msg: "{{ npm_out.stdout_lines }}"
+        msg: "{{ npm_out }}"
 
 - name: move dist from frontend to temp build
   copy: 
