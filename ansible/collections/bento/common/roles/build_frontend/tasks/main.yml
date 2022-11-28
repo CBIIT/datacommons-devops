@@ -28,9 +28,11 @@
     #    npm_config_cache: npm-cache
       loop:
         - npm install npm@7.7.6 -g
-        - npm set progress=false
-        - npm install --silent
-        - npm run build --silent
+        #- npm set progress=false
+        #- npm install --silent
+        - npm install
+        #- npm run build --silent
+        - npm run build
       register: npm_out
   always:
     - name: echo npm output
