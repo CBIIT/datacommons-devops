@@ -40,7 +40,7 @@
   always:
     - name: echo npm output
       debug:
-        msg: "{{ npm_out.stdout_lines }}"
+        msg: "{{ npm_out }}"
 
 - name: move dist from frontend to temp build
   copy: 
