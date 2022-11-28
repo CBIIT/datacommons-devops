@@ -20,20 +20,27 @@
     path: "{{ container_build_path }}/package-lock.json"
     state : absent
 
-- name: run npm install in {{ workspace }}/{{ project_name }}-frontend/
-  command: "{{ item }}"
-  args:
-    chdir: "{{ container_build_path }}"
-    warn: false
-  environment:
-#    CI: false
-    HOME: "{{ workspace }}"
-    npm_config_cache: npm-cache
-  loop:
-    - npm install npm@7.7.6 -g
-    - npm set progress=false
-    - npm install --silent
-    - npm run build --silent
+- name: check npm scripts
+  block:
+    - name: run npm install in {{ workspace }}/{{ project_name }}-frontend/
+      command: "{{ item }}"
+      args:
+        chdir: "{{ container_build_path }}"
+        warn: false
+    #  environment:
+    #    CI: false
+    #    HOME: "{{ workspace }}"
+    #    npm_config_cache: npm-cache
+      loop:
+        - npm install npm@7.7.6 -g
+        - npm set progress=false
+        - npm install --silent
+        - npm run build --silent
+      register: npm_out
+  always:
+    - name: echo npm output
+      debug:
+        msg: "{{ npm_out.stdout_lines }}"
 
 - name: move dist from frontend to temp build
   copy: 
@@ -84,6 +91,7 @@
 - name: debug
   debug:
     msg: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
+
 - name: Add {{ project_name }}-{{ container_name }} image to ECR
   community.docker.docker_image:
     name: "{{ project_name }}-{{ container_name }}"
@@ -92,7 +100,6 @@
     force_tag: yes
     push: yes
     source: local
-
 
 - name: Add tag latest to {{ project_name }}-{{container_name}} image
   community.docker.docker_image:
