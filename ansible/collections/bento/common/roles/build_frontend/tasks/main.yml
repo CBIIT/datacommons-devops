@@ -30,7 +30,7 @@
         - npm install npm@7.7.6 -g
         #- npm set progress=false
         #- npm install --silent
-        - npm install
+        - npm install -f
         #- npm run build --silent
         - npm run build
       register: npm_out
