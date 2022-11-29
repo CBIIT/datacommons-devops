@@ -15,11 +15,6 @@
     dest: "{{ workspace }}/build/nginx-entrypoint.sh"
     mode: 0755
 
-#- name: remove package-lock
-#  file: 
-#    path: "{{ container_build_path }}/package-lock.json"
-#   state : absent
-
 - name: check npm scripts
   block:
     - name: run npm install in {{ workspace }}/{{ project_name }}-frontend/
@@ -31,10 +26,8 @@
     #    CI: false
       loop:
         - npm install npm@7.7.6 -g
-        #- npm set progress=false
-        #- npm install --silent
-        - npm install
-        #- npm run build --silent
+        - npm set progress=false
+        - npm install --silent
         - npm run build
       register: npm_out
   always:
