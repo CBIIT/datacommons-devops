@@ -26,7 +26,6 @@
 #        CI: false
 #        NODE_OPTIONS: "--max-old-space-size=4096"
       loop:
-        - export NODE_OPTIONS=--max-old-space-size=4096
         - npm install npm@7.7.6 -g
         - npm set progress=false
         - npm install --silent
