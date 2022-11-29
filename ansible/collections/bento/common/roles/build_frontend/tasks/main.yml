@@ -15,6 +15,16 @@
     dest: "{{ workspace }}/build/nginx-entrypoint.sh"
     mode: 0755
 
+- name: check npm env var
+  block:
+    - name: echo NODE_OPTIONS
+      command: echo $NODE_OPTIONS
+      register: npm_opts
+  always:
+    - name: echo output
+      debug:
+        msg: "{{ npm_opts }}"
+
 - name: check npm scripts
   block:
     - name: run npm install in {{ workspace }}/{{ project_name }}-frontend/
