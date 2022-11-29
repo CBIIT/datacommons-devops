@@ -39,7 +39,7 @@
         - npm install npm@7.7.6 -g
         - npm set progress=false
         #- npm install --silent
-        - node --max-old-space-size=4096 $(which npm) install
+        - node --max-old-space-size=4096 /usr/local/bin/npm install
         - npm run build
       register: npm_out
   always:
