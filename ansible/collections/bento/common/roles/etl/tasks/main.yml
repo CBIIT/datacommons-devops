@@ -1,0 +1,42 @@
+---
+- name: Check if tmp directory exist
+  stat:
+    path: "{{ workspace }}/tmp"
+  register: stat_result
+
+- name: Check if tmp {{ s3_rawdata_subfolder }} exist
+  stat:
+    path: "{{ workspace }}/{{ s3_rawdata_subfolder }}"
+  register: s3folder_result
+
+- name: remove the tmp if exists
+  file:
+    path: "{{ workspace }}/tmp"
+    state: absent
+  when: stat_result.stat.exists
+
+- name: remove the {{s3_rawdata_subfolder }} if exists
+  file:
+    path: "{{ workspace }}/{{ s3_rawdata_subfolder }}"
+    state: absent
+  when: s3folder_result.stat.exists
+
+- name: pip install requirements
+  pip:
+    requirements: "{{ workspace }}/requirements.txt"
+    executable: pip3
+
+
+- name: run etl script
+  shell:
+    cmd: >
+      python3
+      1-Transformation-Scripts/cds-transformation_v{{version}}.py 
+      --config_file 2-Config-Files/cds_config_v{{version}}/cds_config_example_v{{version}}.yaml 
+      --upload_s3
+    chdir: "{{ workspace }}"
+  register: etl_loader
+
+- name: show etl output
+  debug:
+    msg: "{{ etl_loader }}"
