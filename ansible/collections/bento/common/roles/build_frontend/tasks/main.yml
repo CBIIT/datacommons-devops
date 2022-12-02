@@ -22,16 +22,16 @@
       args:
         chdir: "{{ container_build_path }}"
         warn: false
-      environment:
+#      environment:
 #        CI: false
-        NODE_OPTIONS: "--max-old-space-size=2048"
+#        NODE_OPTIONS: "--max-old-space-size=2048"
       loop:
         - npm install npm@7.7.6 -g
         - npm set progress=false
         #- /usr/local/bin/node --max-old-space-size=4096 /usr/local/bin/npm install
         - npm install --silent
-        #- /usr/local/bin/node --max-old-space-size=4096 /usr/local/bin/npm build
-        - npm run build
+        - /usr/local/bin/node --max-old-space-size=2048 /usr/local/bin/npm build
+        #- npm run build
       register: npm_out
   always:
     - name: echo npm output
