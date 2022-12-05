@@ -31,9 +31,9 @@
         #- /usr/local/bin/node --max-old-space-size=4096 /usr/local/bin/npm install
         - npm install --silent
         #- /usr/local/bin/node --max-old-space-size=2048 /usr/local/bin/npm run build
+        - export NODE_OPTIONS="--max-old-space-size=4096"
         - echo $NODE_OPTIONS
-        #- npm run build
-        - npm run build --node-flags --max-old-space-size=4096
+        - npm run build
       register: npm_out
   always:
     - name: echo npm output
