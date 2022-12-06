@@ -30,7 +30,7 @@
         #- npm set progress=false
         #- /usr/local/bin/node --max-old-space-size=4096 /usr/local/bin/npm install
         #- npm install --silent
-        - npm install
+        - npm install --verbose
         #- /usr/local/bin/node --max-old-space-size=2048 /usr/local/bin/npm run build
         - echo $NODE_OPTIONS
         - npm run build
