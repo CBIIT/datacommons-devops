@@ -27,9 +27,10 @@
 #        NODE_OPTIONS: "--max-old-space-size=2048"
       loop:
         #- npm install npm@7.7.6 -g
-        - npm set progress=false
+        #- npm set progress=false
         #- /usr/local/bin/node --max-old-space-size=4096 /usr/local/bin/npm install
-        - npm install --silent
+        #- npm install --silent
+        - npm install
         #- /usr/local/bin/node --max-old-space-size=2048 /usr/local/bin/npm run build
         - echo $NODE_OPTIONS
         - npm run build
