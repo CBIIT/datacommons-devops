@@ -31,7 +31,6 @@
         #- /usr/local/bin/node --max-old-space-size=4096 /usr/local/bin/npm install --force --verbose
         #- npm install --silent
         #- npm config ls -l
-        - mkdir /opt/node_modules
         - npm install --verbose
         #- npm install
         #- /usr/local/bin/node --max-old-space-size=2048 /usr/local/bin/npm run build
