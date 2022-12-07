@@ -29,7 +29,7 @@
         - pwd
         #- npm install npm@7.7.6 -g
         #- npm set progress=false
-        - /usr/local/bin/node --max-old-space-size=4096 /usr/local/bin/npm install --verbose
+        - /usr/local/bin/node --max-old-space-size=4096 /usr/local/bin/npm install --force --verbose
         #- npm install --silent
         #- npm install --verbose
         #- /usr/local/bin/node --max-old-space-size=2048 /usr/local/bin/npm run build
