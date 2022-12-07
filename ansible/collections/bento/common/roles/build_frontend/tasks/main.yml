@@ -26,7 +26,6 @@
 #        CI: false
 #        NODE_OPTIONS: "--max-old-space-size=2048"
       loop:
-        - pwd
         #- npm install npm@7.7.6 -g
         #- npm set progress=false
         #- /usr/local/bin/node --max-old-space-size=4096 /usr/local/bin/npm install --force --verbose
