@@ -11,11 +11,12 @@
 
 - name: echo fe branch
   debug: 
-    msg="{{ yaml_list.service.frontend.version }}"
+#    msg="{{ yaml_list.service.frontend.version }}"
+    msg="{{ yaml_list }}"
 
-- name: echo be branch
-  debug: 
-    msg="{{ yaml_list.service.backend.version }}"
+#- name: echo be branch
+#  debug: 
+#    msg="{{ yaml_list.service.backend.version }}"
 
 #- name: get indices file
 #  get_url:
