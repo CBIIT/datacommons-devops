@@ -11,7 +11,9 @@
 
 - name: echo fe branch
   debug: 
-    msg="{{ yaml_list.services.frontend.version }}"
+    msg="{{ yaml_list.services.frontend.version | regex_search(_regex) | first }} }}"
+  vars:
+    _regex: '.*(?=\.)'
 
 #- name: echo be branch
 #  debug: 
