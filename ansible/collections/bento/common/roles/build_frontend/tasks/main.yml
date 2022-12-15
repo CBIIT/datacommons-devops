@@ -15,25 +15,16 @@
     dest: "{{ workspace }}/build/nginx-entrypoint.sh"
     mode: 0755
 
-- name: check npm scripts
-  block:
-    - name: run npm install in {{ workspace }}/{{ project_name }}-frontend/
-      command: "{{ item }}"
-      args:
-        chdir: "{{ container_build_path }}"
-        warn: false
-      loop:
-        - npm install npm@7.7.6 -g
-        - npm set progress=false
-        - npm install --silent
-        #- npm install --verbose
-        #- npm install
-        - npm run build --verbose
-      register: npm_out
-  always:
-    - name: echo npm output
-      debug:
-        msg: "{{ npm_out }}"
+- name: run npm install in {{ workspace }}/{{ project_name }}-frontend/
+  command: "{{ item }}"
+  args:
+    chdir: "{{ container_build_path }}"
+    warn: false
+  loop:
+    - npm install npm@7.7.6 -g
+    - npm set progress=false
+    - npm install --silent
+    - npm run build --verbose
 
 - name: move dist from frontend to temp build
   copy: 
