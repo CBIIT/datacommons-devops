@@ -24,9 +24,9 @@
         warn: false
       loop:
         - npm install npm@7.7.6 -g
-        #- npm set progress=false
-        #- npm install --silent
-        - npm install --verbose
+        - npm set progress=false
+        - npm install --silent
+        #- npm install --verbose
         #- npm install
         - npm run build --verbose
       register: npm_out
