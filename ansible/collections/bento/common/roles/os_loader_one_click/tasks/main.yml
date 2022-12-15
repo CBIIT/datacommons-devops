@@ -3,7 +3,7 @@
   uri:
     url: "https://raw.githubusercontent.com/CBIIT/icdc-deployments/{{ tier }}/deployments.yaml"
     return_content: yes
-  register: deployments_yml
+  register: deployments_yaml
 
 - name: decode yaml
   set_fact:
