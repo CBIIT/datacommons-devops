@@ -1,0 +1,44 @@
+---
+- name: read in deployments file
+  uri:
+    url: "https://raw.githubusercontent.com/CBIIT/icdc-deployments/{{ tier }}/deployments.yaml"
+    return_content: yes
+  register: deployments_yml
+
+- name: decode yaml
+  set_fact:
+    yaml_list: "{{ deployments_yaml.content | from_yaml }}"
+
+- name: echo fe branch
+  debug: 
+    msg="{{ yaml_list.service.frontend.version }}"
+
+- name: echo be branch
+  debug: 
+    msg="{{ yaml_list.service.backend.version }}"
+
+#- name: get indices file
+#  get_url:
+#    url: "{{ backendRepo }}/src/main/resources/yaml/{{ indices_file_name }}"
+#    dest: "{{ indices_file }}"
+
+#- name: update server config file
+#  template:
+#    dest: "{{ workspace }}/config/es_loader.yml"
+#    src: "{{ workspace }}/config/es_loader.yml.j2"
+
+#- name: pip install requirements
+#  pip:
+#    requirements: "{{ workspace }}/requirements.txt"
+#    executable: pip3
+
+#- name: load data
+#  shell:
+#    cmd: >
+#      python3 es_loader.py {{ indices_file }} {{workspace}}/config/es_loader.yml
+#    chdir: "{{ workspace }}"
+#  register: data_loader
+
+#- name: show dataloader output
+#  debug:
+#    msg: "{{ data_loader }}"
