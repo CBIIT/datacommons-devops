@@ -9,11 +9,25 @@
   set_fact:
     yaml_list: "{{ deployments_yaml.content | from_yaml }}"
 
-- name: echo fe branch
-  debug: 
-    msg="{{ yaml_list.services.frontend.version | regex_search(_regex) }} }}"
+- name: set fe_branch
+  set_fact:
+    fe_branch: "{{ yaml_list.services.frontend.version | regex_search(_regex) }}"
   vars:
     _regex: '.*(?=\.)'
+
+- name: echo fe branch
+  debug: 
+    msg="{{ fe_branch }}"
+
+- name: set be_branch
+  set_fact:
+    be_branch: "{{ yaml_list.services.backend.version | regex_search(_regex) }}"
+  vars:
+    _regex: '.*(?=\.)'
+
+- name: echo be branch
+  debug: 
+    msg="{{ be_branch }}"
 
 #- name: echo be branch
 #  debug: 
