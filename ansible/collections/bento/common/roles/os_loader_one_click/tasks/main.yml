@@ -11,8 +11,7 @@
 
 - name: echo fe branch
   debug: 
-#    msg="{{ yaml_list.service.frontend.version }}"
-    msg="{{ yaml_list }}"
+    msg="{{ yaml_list.services.frontend.version }}"
 
 #- name: echo be branch
 #  debug: 
