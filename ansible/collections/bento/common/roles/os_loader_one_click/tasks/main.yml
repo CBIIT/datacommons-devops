@@ -9,52 +9,50 @@
   set_fact:
     yaml_list: "{{ deployments_yaml.content | from_yaml }}"
 
-- name: set fe_branch
-  set_fact:
-    fe_branch: "{{ yaml_list.services.frontend.version | regex_search(_regex) }}"
-  vars:
-    _regex: '.*(?=\.)'
-
-- name: echo fe branch
-  debug: 
-    msg="{{ fe_branch }}"
-
 - name: set be_branch
   set_fact:
     be_branch: "{{ yaml_list.services.backend.version | regex_search(_regex) }}"
   vars:
     _regex: '.*(?=\.)'
 
-- name: echo be branch
-  debug: 
-    msg="{{ be_branch }}"
+- name: get model file1
+  get_url:
+    url: "{{ modelRepo }}/blob/master/model-desc/{{ model_file1_name }}"
+    dest: "{{ model_file1 }}"
 
-#- name: echo be branch
-#  debug: 
-#    msg="{{ yaml_list.service.backend.version }}"
+- name: get model file2
+  get_url:
+    url: "{{ modelRepo }}/blob/master/model-desc/{{ model_file2_name }}"
+    dest: "{{ model_file2 }}"
 
-#- name: get indices file
-#  get_url:
-#    url: "{{ backendRepo }}/src/main/resources/yaml/{{ indices_file_name }}"
-#    dest: "{{ indices_file }}"
+- name: get about file
+  get_url:
+    url: "{{ about_file_url[tier] }}"
+    dest: "{{ about_file }}"
 
-#- name: update server config file
-#  template:
-#    dest: "{{ workspace }}/config/es_loader.yml"
-#    src: "{{ workspace }}/config/es_loader.yml.j2"
+- name: get indices file
+  get_url:
+    url: "{{ backendRepo }}/blob/{{ be_branch }}/src/main/resources/yaml/{{ indices_file_name }}"
+    #https://raw.githubusercontent.com/CBIIT/bento-backend/master/src/main/resources/yaml/es_indices_icdc.yml
+    dest: "{{ indices_file }}"
 
-#- name: pip install requirements
-#  pip:
-#    requirements: "{{ workspace }}/requirements.txt"
-#    executable: pip3
+- name: update server config file
+  template:
+    dest: "{{ workspace }}/config/es_loader.yml"
+    src: "{{ workspace }}/config/es_loader.yml.j2"
 
-#- name: load data
-#  shell:
-#    cmd: >
-#      python3 es_loader.py {{ indices_file }} {{workspace}}/config/es_loader.yml
-#    chdir: "{{ workspace }}"
-#  register: data_loader
+- name: pip install requirements
+  pip:
+    requirements: "{{ workspace }}/requirements.txt"
+    executable: pip3
 
-#- name: show dataloader output
-#  debug:
-#    msg: "{{ data_loader }}"
+- name: load data
+  shell:
+    cmd: >
+      python3 es_loader.py {{ indices_file }} {{workspace}}/config/es_loader.yml
+    chdir: "{{ workspace }}"
+  register: data_loader
+
+- name: show dataloader output
+  debug:
+    msg: "{{ data_loader }}"
