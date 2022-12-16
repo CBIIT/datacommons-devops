@@ -34,7 +34,7 @@
   get_url:
     url: "{{ backendRepo }}/blob/{{ be_branch }}/src/main/resources/yaml/{{ indices_file_name }}"
     #https://raw.githubusercontent.com/CBIIT/bento-backend/master/src/main/resources/yaml/es_indices_icdc.yml
-    dest: "{{ indices_file }}"
+    dest: "{{ workspace }}/{{ indices_file }}"
 
 - name: update server config file
   template:
