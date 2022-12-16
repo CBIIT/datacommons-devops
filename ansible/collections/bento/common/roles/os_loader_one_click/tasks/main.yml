@@ -42,12 +42,12 @@
     src: "{{ workspace }}/config/es_loader.yml.j2"
 
 - name: get contents of config file
-  cmd: "cat {{ workspace }}/config/es_loader.yml"
+  command: "cat {{ workspace }}/config/es_loader.yml"
   register: config_file
   
 - name: echo config file
   debug:
-    msg="{{ config_file }}"
+    msg: "{{ config_file }}"
 
 - name: pip install requirements
   pip:
