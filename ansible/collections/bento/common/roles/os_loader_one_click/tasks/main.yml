@@ -17,12 +17,14 @@
 
 - name: get model file1
   get_url:
-    url: "{{ modelRepo }}/blob/master/model-desc/{{ model_file1_name }}"
+    #url: "{{ modelRepo }}/blob/master/model-desc/{{ model_file1_name }}"
+    url: "{{ modelRepo }}/master/model-desc/{{ model_file1_name }}"
     dest: "{{ workspace }}/{{ model_file1 }}"
 
 - name: get model file2
   get_url:
-    url: "{{ modelRepo }}/blob/master/model-desc/{{ model_file2_name }}"
+    #url: "{{ modelRepo }}/blob/master/model-desc/{{ model_file2_name }}"
+    url: "{{ modelRepo }}/master/model-desc/{{ model_file2_name }}"
     dest: "{{ workspace }}/{{ model_file2 }}"
 
 - name: get about file
@@ -32,7 +34,8 @@
 
 - name: get indices file
   get_url:
-    url: "{{ backendRepo }}/blob/{{ be_branch }}/src/main/resources/yaml/{{ indices_file_name }}"
+    #url: "{{ backendRepo }}/blob/{{ be_branch }}/src/main/resources/yaml/{{ indices_file_name }}"
+    url: "{{ backendRepo }}/{{ be_branch }}/src/main/resources/yaml/{{ indices_file_name }}"
     #https://raw.githubusercontent.com/CBIIT/bento-backend/master/src/main/resources/yaml/es_indices_icdc.yml
     dest: "{{ workspace }}/{{ indices_file }}"
 
