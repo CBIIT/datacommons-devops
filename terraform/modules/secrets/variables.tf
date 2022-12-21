@@ -16,50 +16,50 @@ variable "secret_values" {
   }))
 }
 
-variable "create_shared_secrets" {
-  type        = bool
-  description = "shared secrets are created in this tier"
-}
+#variable "create_shared_secrets" {
+#  type        = bool
+#  description = "shared secrets are created in this tier"
+#}
 
-variable "neo4j_user" {
-  type        = string
-  description = "neo4j user"
-  default     = "neo4j"
-}
-variable "neo4j_password" {
-  type        = string
-  description = "neo4j password"
-}
-variable "neo4j_ip" {
-  type        = string
-  description = "name or IP address of the db instance for this tier"
-}
+#variable "neo4j_user" {
+#  type        = string
+#  description = "neo4j user"
+#  default     = "neo4j"
+#}
+#variable "neo4j_password" {
+#  type        = string
+#  description = "neo4j password"
+#}
+#variable "neo4j_ip" {
+#  type        = string
+#  description = "name or IP address of the db instance for this tier"
+#}
 
-variable "mysql_user" {
-  type        = string
-  description = "mysql user"
-  default     = ""
-}
-variable "mysql_password" {
-  type        = string
-  description = "mysql password"
-  default     = ""
-}
-variable "mysql_database" {
-  type        = string
-  description = "mysql database"
-  default     = ""
-}
-variable "mysql_host" {
-  type        = string
-  description = "mysql host"
-  default     = ""
-}
-variable "cookie_secret" {
-  type        = string
-  description = "cookie secret"
-  default     = ""
-}
+#variable "mysql_user" {
+#  type        = string
+#  description = "mysql user"
+#  default     = ""
+#}
+#variable "mysql_password" {
+#  type        = string
+#  description = "mysql password"
+#  default     = ""
+#}
+#variable "mysql_database" {
+#  type        = string
+#  description = "mysql database"
+#  default     = ""
+#}
+#variable "mysql_host" {
+#  type        = string
+#  description = "mysql host"
+#  default     = ""
+#}
+#variable "cookie_secret" {
+#  type        = string
+#  description = "cookie secret"
+#  default     = ""
+#}
 
 variable "es_host" {
   type        = string
@@ -99,9 +99,9 @@ variable "sumo_collector_token_auth" {
   default     = ""
 }
 
-variable "github_token" {
-  type        = string
-  description = "github token"
-  sensitive   = true
-  default     = ""
-}
+#variable "github_token" {
+#  type        = string
+#  description = "github token"
+#  sensitive   = true
+#  default     = ""
+#}
