@@ -40,14 +40,6 @@
     dest: "{{ workspace }}/config/es_loader.yml"
     src: "{{ workspace }}/config/es_loader.yml.j2"
 
-- name: get contents of indices file
-  command: "cat {{ workspace }}/{{ indices_file }}"
-  register: indices_file
-  
-- name: echo indices file
-  debug:
-    msg: "{{ indices_file }}"
-
 - name: pip install requirements
   pip:
     requirements: "{{ workspace }}/requirements.txt"
