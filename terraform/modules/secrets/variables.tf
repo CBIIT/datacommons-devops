@@ -65,10 +65,10 @@ variable "es_host" {
   type        = string
   description = "opensearch enpoint for this tier"
 }
-variable "indexd_url" {
-  type        = string
-  description = "indexd url"
-}
+#variable "indexd_url" {
+#  type        = string
+#  description = "indexd url"
+#}
 
 variable "sumo_collector_endpoint" {
   type        = string
