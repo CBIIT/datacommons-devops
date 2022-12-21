@@ -8,6 +8,14 @@ variable "region" {
   default = "us-east-1"
 }
 
+variable "secret_values" {
+  type = map(object({
+    secretKey = string
+    secretValue = map(string)
+    description = string
+  }))
+}
+
 variable "create_shared_secrets" {
   type        = bool
   description = "shared secrets are created in this tier"
