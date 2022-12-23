@@ -23,7 +23,8 @@
   loop:
     - npm install npm@7.7.6 -g
     - npm set progress=false
-    - npm install --silent
+    #- npm install --silent
+    - npm ci
     - npm run build --verbose
 
 - name: move dist from frontend to temp build
