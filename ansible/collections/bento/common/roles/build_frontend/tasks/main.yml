@@ -6,7 +6,7 @@
 - name: copy  nginx conf
   copy:
     remote_src: yes
-    src: '{{workspace}}/icdc-devops/docker/dockerfiles/nginx.conf'
+    src: '{{workspace}}/playbooks/docker/dockerfiles/nginx.conf'
     dest: '{{workspace}}/build/nginx.conf'
 
 - name: copy entrypoint.sh to workspace
@@ -25,7 +25,8 @@
     CI: false
   loop:
     - npm set progress=false
-    - npm install --silent
+    #- npm install --silent
+    - npm ci
     - npm run build --silent
 
 - name: move dist from frontend to temp build
