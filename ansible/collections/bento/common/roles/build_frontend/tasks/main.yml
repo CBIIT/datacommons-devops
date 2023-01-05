@@ -55,7 +55,7 @@
         ECR_REPO: "{{ container_registry_url }}"
       path: "{{workspace}}/build"
       pull: yes
-#      nocache: yes
+      nocache: yes
     name: "{{ project_name }}-{{ container_name }}"
     tag: "{{ image_version }}.{{ build_number }}"
     push: no
