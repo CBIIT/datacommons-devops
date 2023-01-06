@@ -1,7 +1,7 @@
 - name: check workspace
   block:
     - name: run ls 
-      command: "ls -la"
+      command: "pwd && ls -la"
       register: ls_results
   always:
     - name: echo results
@@ -11,7 +11,7 @@
 - name: check code folder
   block:
     - name: run ls 
-      command: "cd {{ container_build_path }} && ls -la"
+      command: "ls -la {{ container_build_path }}"
       register: ls_results
   always:
     - name: echo results
