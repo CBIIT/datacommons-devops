@@ -1,7 +1,17 @@
 - name: check workspace
   block:
     - name: run ls 
-      command: "pwd && ls -la"
+      command: "pwd"
+      register: ls_results
+  always:
+    - name: echo results
+      debug:
+        msg: "{{ ls_results.stdout_lines }}"
+
+- name: check workspace
+  block:
+    - name: run ls 
+      command: "ls -la"
       register: ls_results
   always:
     - name: echo results
