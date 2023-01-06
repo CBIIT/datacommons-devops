@@ -1,3 +1,23 @@
+- name: check workspace
+  block:
+    - name: run ls 
+      command: "ls -la"
+      register: ls_results
+  always:
+    - name: echo results
+      debug:
+        msg: "{{ ls_results.stdout_lines }}"
+
+- name: check code folder
+  block:
+    - name: run ls 
+      command: "cd {{ container_build_path }} && ls -la"
+      register: ls_results
+  always:
+    - name: echo results
+      debug:
+        msg: "{{ ls_results.stdout_lines }}"
+
 - name: build {{ project_name }}-{{ container_name }} image
   community.docker.docker_image:
     build:
