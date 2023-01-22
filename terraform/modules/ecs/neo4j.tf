@@ -40,7 +40,7 @@ resource "aws_ecs_service" "neo4j" {
   count = var.create_neo4j_db ? 1 : 0
   name                               = "${var.stack_name}-${var.env}-neo4j"
   cluster                            = aws_ecs_cluster.ecs_cluster.id
-  task_definition                    = aws_ecs_task_definition.neo4j.arn
+  task_definition                    = aws_ecs_task_definition.neo4j[0].arn
   desired_count                      = 1
   launch_type                        = var.ecs_launch_type
   scheduling_strategy                = var.ecs_scheduling_strategy
@@ -70,7 +70,7 @@ resource "aws_appautoscaling_target" "neo4j_autoscaling_target" {
   count = var.create_neo4j_db ? 1 : 0
   max_capacity       = 5
   min_capacity       = 1
-  resource_id        = "service/${aws_ecs_cluster.ecs_cluster.name}/${aws_ecs_service.neo4j.name}"
+  resource_id        = "service/${aws_ecs_cluster.ecs_cluster.name}/${aws_ecs_service.neo4j[0].name}"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
 }
@@ -79,9 +79,9 @@ resource "aws_appautoscaling_policy" "neo4j_autoscaling_cpu" {
   count = var.create_neo4j_db ? 1 : 0
   name               = "cpu-autoscaling"
   policy_type        = "TargetTrackingScaling"
-  resource_id        = aws_appautoscaling_target.neo4j_autoscaling_target.resource_id
-  scalable_dimension = aws_appautoscaling_target.neo4j_autoscaling_target.scalable_dimension
-  service_namespace  = aws_appautoscaling_target.neo4j_autoscaling_target.service_namespace
+  resource_id        = aws_appautoscaling_target.neo4j_autoscaling_target[0].resource_id
+  scalable_dimension = aws_appautoscaling_target.neo4j_autoscaling_target[0].scalable_dimension
+  service_namespace  = aws_appautoscaling_target.neo4j_autoscaling_target[0].service_namespace
 
   target_tracking_scaling_policy_configuration {
     predefined_metric_specification {
