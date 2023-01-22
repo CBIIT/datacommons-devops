@@ -109,3 +109,10 @@ variable "domain_name" {
   description = "domain name of this app"
   default = "bento-tools.org"
 }
+
+variable "create_neo4j_db" {
+  type = bool
+  default = false
+  description = "choose to add neo4j container or not"
+
+}
