@@ -4,8 +4,8 @@ resource "aws_ecs_task_definition" "neo4j" {
   family                   = "${var.stack_name}-${var.env}-neo4j-db"
   network_mode             = var.ecs_network_mode
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
+  cpu                      = 256
+  memory                   = 512
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
 
@@ -17,11 +17,11 @@ resource "aws_ecs_task_definition" "neo4j" {
       portMappings = [
         {
           protocol      = "tcp"
-          containerPort = "7474"
+          containerPort = 7474
         },
         {
           protocol      = "tcp"
-          containerPort = "7687"
+          containerPort = 7687
         }
       ]
     }
