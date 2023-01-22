@@ -33,7 +33,7 @@
             value: "{{ newrelic_license_key }}"
       - name: "{{ container_name }}"
         essential: true
-        image: "neo4j:{{ image_version }}"
+        image: "{{ container_image_url }}:{{ image_version }}"
         environment: "{{ container_env }}"
         entryPoint: "{% if container_entrypoint is defined %}{{ container_entrypoint }}{% else %}[]{% endif %}"
         mountPoints:
