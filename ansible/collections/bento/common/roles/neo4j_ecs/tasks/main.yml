@@ -2,13 +2,13 @@
 - name: create task definition for {{ project_name }}-{{ container_name }}
   community.aws.ecs_taskdefinition:
     containers:
-      - name: sumologic-firelens
-        essential: true
-        image: "public.ecr.aws/aws-observability/aws-for-fluent-bit:stable"
-        firelensConfiguration:
-          type: fluentbit
-          options:
-            enable-ecs-log-metadata: "true"
+#      - name: sumologic-firelens
+#        essential: true
+#        image: "public.ecr.aws/aws-observability/aws-for-fluent-bit:stable"
+#        firelensConfiguration:
+#          type: fluentbit
+#          options:
+#            enable-ecs-log-metadata: "true"
       - name: "{{ project_name }}-{{ container_name }}-newrelic-infra"
         essential: true
         image: "newrelic/nri-ecs:1.9.2"
@@ -47,16 +47,23 @@
           - containerPort: "{{ container_port_bolt }}"
             hostPort: "{{ container_port_bolt }}"
         logConfiguration:
-          logDriver: awsfirelens
+          logDriver: awslogs
           options:
-            Name: "http"
-            Host: "{{ sumo_collector_endpoint }}"
-            URI: "/receiver/v1/http/{{ sumo_collector_token }}"
-            Port: "443"
-            tls: "on"
-            tls.verify: "off"
-            Format: "json_lines"
-            Retry_Limit: "2"
+            awslogs-group: "/ecs/{{ project_name }}/{{ tier }}/logs"
+            awslogs-region: "{{ region }}"
+            awslogs-create-group: "true"
+            awslogs-stream-prefix: "{{ container_name }}"
+#        logConfiguration:
+#          logDriver: awsfirelens
+#          options:
+#            Name: "http"
+#            Host: "{{ sumo_collector_endpoint }}"
+#            URI: "/receiver/v1/http/{{ sumo_collector_token }}"
+#            Port: "443"
+#            tls: "on"
+#            tls.verify: "off"
+#            Format: "json_lines"
+#            Retry_Limit: "2"
     volumes:
       - name: data
       - name: logs
