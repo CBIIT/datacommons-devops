@@ -100,7 +100,7 @@
   block:
     - name: run trivy scanner on 
       #command: "trivy image --exit-code 1 --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}"
-      command: "trivy image --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
+      command: "trivy image --timeout 15m --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
       register: vuln_results
   always:
     - name: echo vulnerability results
