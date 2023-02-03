@@ -24,10 +24,14 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_appautoscaling_policy.microservice_autoscaling_cpu](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
+| [aws_appautoscaling_policy.neo4j_autoscaling_cpu](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy) | resource |
 | [aws_appautoscaling_target.microservice_autoscaling_target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target) | resource |
+| [aws_appautoscaling_target.neo4j_autoscaling_target](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target) | resource |
 | [aws_cloudwatch_log_group.ecs_execute_command_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_ecs_cluster.ecs_cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster) | resource |
+| [aws_ecs_service.neo4j](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service) | resource |
 | [aws_ecs_service.service](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service) | resource |
+| [aws_ecs_task_definition.neo4j](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition) | resource |
 | [aws_ecs_task_definition.task](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition) | resource |
 | [aws_iam_policy.ecs_task_execution_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.ecs_task_role_exec_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
@@ -69,6 +73,7 @@ No modules.
 | <a name="input_allow_cloudwatch_stream"></a> [allow\_cloudwatch\_stream](#input\_allow\_cloudwatch\_stream) | allow cloudwatch stream for the containers | `bool` | `false` | no |
 | <a name="input_application_url"></a> [application\_url](#input\_application\_url) | url of the application | `string` | n/a | yes |
 | <a name="input_container_insights_setting"></a> [container\_insights\_setting](#input\_container\_insights\_setting) | Whether or not the ECS cluster enables CloudWatch Container Insights | `string` | `"disabled"` | no |
+| <a name="input_create_neo4j_db"></a> [create\_neo4j\_db](#input\_create\_neo4j\_db) | choose to add neo4j container or not | `bool` | `false` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | domain name of this app | `string` | `"bento-tools.org"` | no |
 | <a name="input_ecs_execute_command_logging"></a> [ecs\_execute\_command\_logging](#input\_ecs\_execute\_command\_logging) | The log setting to use for redirecting logs for ecs execute command results. Valid values are NONE, DEFAULT, and OVERRIDE. | `string` | `"OVERRIDE"` | no |
 | <a name="input_ecs_launch_type"></a> [ecs\_launch\_type](#input\_ecs\_launch\_type) | ecs launch type - FARGATE or EC2 | `string` | `"FARGATE"` | no |
