@@ -18,7 +18,6 @@ resource "aws_ecs_task_definition" "task" {
         {
           protocol      = "tcp"
           containerPort = each.value.port
-          #          hostPort      = var.microservice_port
         }
       ]
     }

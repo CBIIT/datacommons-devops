@@ -1,0 +1,120 @@
+---
+- name: create task definition for {{ project_name }}-{{ container_name }}
+  community.aws.ecs_taskdefinition:
+    containers:
+      - name: sumologic-firelens
+        essential: true
+        image: "public.ecr.aws/aws-observability/aws-for-fluent-bit:stable"
+        firelensConfiguration:
+          type: fluentbit
+          options:
+            enable-ecs-log-metadata: "true"
+      - name: "{{ project_name }}-{{ container_name }}-newrelic-infra"
+        essential: true
+        image: "newrelic/nri-ecs:1.9.2"
+        environment:
+          - name: NRIA_OVERRIDE_HOST_ROOT
+            value: ""
+          - name: NRIA_IS_FORWARD_ONLY
+            value: "true"
+          - name: NEW_RELIC_APP_NAME
+            value: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+          - name: NEW_RELIC_DISTRIBUTED_TRACING_ENABLED
+            value: "true"
+          - name: NEW_RELIC_HOST
+            value: "gov-collector.newrelic.com"
+          - name: FARGATE
+            value: "true"
+          - name: NRIA_PASSTHROUGH_ENVIRONMENT
+            value: "ECS_CONTAINER_METADATA_URI,ECS_CONTAINER_METADATA_URI_V4,FARGATE"
+          - name: NRIA_CUSTOM_ATTRIBUTES
+            value: "{\"nrDeployMethod\":\"downloadPage\"}"
+          - name: NRIA_LICENSE_KEY
+            value: "{{ newrelic_license_key }}"
+      - name: "{{ container_name }}"
+        essential: true
+        image: "{{ container_image_url }}:{{ image_version }}"
+        environment: "{{ container_env }}"
+        entryPoint: "{% if container_entrypoint is defined %}{{ container_entrypoint }}{% else %}[]{% endif %}"
+        portMappings:
+          - containerPort: "{{ neo4j_port }}"
+            hostPort: "{{ neo4j_port }}"
+          - containerPort: "{{ bolt_port }}"
+            hostPort: "{{ bolt_port }}"
+        mountPoints:
+          - containerPath: /usr/local/apache2/htdocs
+            sourceVolume: my-vol
+          portMappings:
+            - containerPort: 80
+              hostPort: 80
+        logConfiguration:
+          logDriver: awsfirelens
+          options:
+            Name: "http"
+            Host: "{{ sumo_collector_endpoint }}"
+            URI: "/receiver/v1/http/{{ sumo_collector_token }}"
+            Port: "443"
+            tls: "on"
+            tls.verify: "off"
+            Format: "json_lines"
+            Retry_Limit: "2"
+    launch_type: FARGATE
+    network_mode: awsvpc
+    execution_role_arn: "arn:aws:iam::{{ account }}:role/{{ execution_role }}"
+    task_role_arn: "arn:aws:iam::{{ account }}:role/{{ task_role }}"
+    family: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    memory: "{{ container_memory }}"
+    cpu: "{{ container_cpu }}"
+    state: present
+    force_create: true
+    region: "{{ region }}"
+  register: task_output
+
+############################################################################################################################
+#     Task Definition Queries
+############################################################################################################################
+- name: query task definition - {{ container_name }}
+  ecs_taskdefinition_info:
+    task_definition: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    region: "{{ region }}"
+  register: task
+
+############################################################################################################################
+#     Service Queries
+############################################################################################################################
+- name: query {{ container_name }} service
+  ecs_service_info:
+    cluster: "{{ ecs_cluster_name }}"
+    service: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    details: true
+    region: "{{ region }}"
+  register: service
+
+- name: set facts
+  set_fact:
+    task_revision: "{{ task.revision }}"
+    task_name: "{{ task.family }}"
+    lb: "{{ service.services[0].loadBalancers }}"
+    role_arn: "{{ service.services[0].roleArn }}"
+
+###########################################################################################################################
+#Update Services
+############################################################################################################################
+- name: update {{ container_name }} service
+  ecs_service:
+    state: present
+    name: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    cluster: "{{ ecs_cluster_name }}"
+    task_definition: "{{ task_name }}:{{ task_revision }}"
+    role: "{{ role_arn }}"
+    force_new_deployment: yes
+    deployment_configuration:
+      minimum_healthy_percent: 50
+      maximum_percent: 200
+      deployment_circuit_breaker:
+        enable: true
+        rollback: false
+    desired_count: 1
+    load_balancers: "{{ lb }}"
+    region: "{{ region }}"
+  register: output
