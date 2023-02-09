@@ -82,7 +82,7 @@ variable "db_engine_type" {
 variable "db_engine_version" {
   description = "aurora database engine version."
   type        = string
-  default     = "5.7.12"
+  default     = "5.6.10a"
 }
 variable "lifecycle_policy_name" {
   description = "name of resource lifecycle policy"
