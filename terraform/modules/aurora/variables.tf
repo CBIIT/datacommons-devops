@@ -82,7 +82,7 @@ variable "db_engine_type" {
 variable "db_engine_version" {
   description = "aurora database engine version."
   type        = string
-  default     = "5.6.10a"
+  default     = "5.7.12"
 }
 variable "lifecycle_policy_name" {
   description = "name of resource lifecycle policy"
@@ -125,7 +125,7 @@ variable "storage_encrypted" {
 variable "allow_major_version_upgrade" {
   description = "Enable to allow major engine version upgrades when changing engine versions"
   type        = bool
-  default     = false
+  default     = true
 }
 variable "max_capacity" {
   description = "The maximum capacity."
