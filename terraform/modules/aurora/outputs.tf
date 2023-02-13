@@ -1,9 +1,16 @@
 
-output "cluster_endpoint" {
+#output "cluster_endpoint" {
+#  value = aws_rds_cluster.rds.endpoint
+#}
+#output "db_password" {
+#  value = random_password.master_password.result
+ # sensitive = false
+#}
+
+output "mysql_host" {
   value = aws_rds_cluster.rds.endpoint
 }
-output "db_password" {
+output "mysql_password" {
   value = random_password.master_password.result
   sensitive = false
-
 }
