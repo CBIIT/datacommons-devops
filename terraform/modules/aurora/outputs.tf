@@ -6,3 +6,4 @@ output "db_password" {
   value = random_password.master_password.result
   sensitive = false
 }
+
