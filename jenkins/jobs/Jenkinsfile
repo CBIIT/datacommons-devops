@@ -1,0 +1,65 @@
+//load shared library for slack notification
+@Library('datacommons-jenkins-shared-library') _
+
+pipeline {
+
+  agent {
+    node {
+      label 'ctdc-docker-maven'
+    }
+  }
+  parameters {
+   
+  }
+   triggers { 
+    //  pollSCM('H/15 * * * 1-5') 
+  }
+  options {
+    timestamps()
+  }
+  tools { 
+    // maven 'Default' 
+    // jdk 'Default' 
+  }
+  stages {
+    stage('checkout'){
+    }
+    
+    stage('Build') {
+      
+    }
+    // stage('unit-test'){
+
+    // }
+    stage('Deploy') {
+   }
+//    stage('PostDeploy-Test'){
+
+//    }
+    stage("tag repo"){
+            // tagRepo gitTag: params["backendTag"], gitUrl: "https://github.com/CBIIT/bento-backend", checkoutDirectory: "cds-backend"
+    }
+    stage("update-deployment"){
+        when {
+          expression {
+            params["UpdateDeploymentVersion"] == true
+        }
+        writeDeployment(
+            version: env[config.appVersionName],
+            image: env[config.appVersionName],
+            service: config.service,
+            deploymentFile: config.deploymentFile,
+            deploymentRepoUrl: config.deploymentRepoUrl,
+            deploymentCheckoutDirectory: config.deploymentCheckoutDirectory
+        )
+    }
+  }
+  post {
+    always {
+      notify secretPath: "notification/slack", secretName: "cds_slack_url"
+    }
+    cleanup {
+		cleanWs()
+	}
+  }
+}
