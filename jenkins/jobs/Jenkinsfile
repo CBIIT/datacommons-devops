@@ -9,7 +9,7 @@ pipeline {
     }
   }
   parameters {
-   
+    booleanParam(name: "UpdateDeploymentVersion", defaultValue: false)
   }
    triggers { 
     //  pollSCM('H/15 * * * 1-5') 
@@ -42,7 +42,7 @@ pipeline {
     stage("update-deployment"){
         when {
           expression {
-            params["UpdateDeploymentVersion"] == true
+            params.UpdateDeploymentVersion
         }
         writeDeployment(
             version: env[config.appVersionName],
