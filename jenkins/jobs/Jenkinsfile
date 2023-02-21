@@ -39,6 +39,9 @@ pipeline {
     stage("tag repo"){
             // tagRepo gitTag: params["backendTag"], gitUrl: "https://github.com/CBIIT/bento-backend", checkoutDirectory: "cds-backend"
     }
+    stage("api_testing"){
+
+    }
     stage("update-deployment"){
         when {
           expression {
