@@ -108,6 +108,7 @@ pipeline {
         when {
           expression {
             params.UpdateDeploymentVersion == true
+          }
         }
         steps {
           writeDeployment(
@@ -117,10 +118,9 @@ pipeline {
             deploymentFile: "bento-deployments/deployment.yaml", //deployment.yaml location
             deploymentRepoUrl: "https://github.com/CBIIT/bento-deployments", // deployments repo
             deploymentCheckoutDirectory: "bento-deployments" //checkout directory specified in the checkout stage
-        )
+          )
         }
     }
-  }
   }
   post {
     always {
