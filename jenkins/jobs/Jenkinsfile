@@ -75,30 +75,41 @@ pipeline {
         }
     }
     stage('unit-test'){
-       sh "echo In Unitest Stage"  // per your project
+       steps{
+           sh "echo In Unitest Stage"  // per your project
+       }
     }
     stage('Deploy') {
-      sh "echo Deploying App"
+      steps {
+        sh "echo Deploying App" //per your app
+      }
    }
    stage('PostDeploy-Test'){
-      sh "echo Doing post deploy checks"
+    steps {
+      sh "echo Doing post deploy checks" // per your app
+    }  
    }
     stage("tag repo"){
-            tagRepo ( 
+        steps {
+          tagRepo ( 
               gitTag: "${params.FrontendTag}", // your git version or tag
               gitUrl: "https://github.com/CBIIT/bento-frontend",  // your git url 
               checkoutDirectory: "bento-frontend" // checkout directory as in the checkout stage above
             )
+        }
    }
     stage("api_testing"){
-
+      steps {
+        sh "echo Api testing stage" // per your app
+      }
     }
     stage("update-deployment"){ // only if using oneclick deployment
         when {
           expression {
             params.UpdateDeploymentVersion
         }
-        writeDeployment(
+        steps {
+          writeDeployment(
             version: ${params.FrontendTag}.${BUILD_NUMBER}, // build number
             image:  ${params.FrontendTag}.${BUILD_NUMBER}, // image tag
             service: "frontend", //microservice name
@@ -106,7 +117,9 @@ pipeline {
             deploymentRepoUrl: "https://github.com/CBIIT/bento-deployments", // deployments repo
             deploymentCheckoutDirectory: "bento-deployments" //checkout directory specified in the checkout stage
         )
+        }
     }
+  }
   }
   post {
     always {
