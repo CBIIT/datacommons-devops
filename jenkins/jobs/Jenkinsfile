@@ -85,7 +85,7 @@ pipeline {
    }
     stage("tag repo"){
             tagRepo ( 
-              gitTag: "${params.FrontendTag}"  // your git version or tag
+              gitTag: "${params.FrontendTag}", // your git version or tag
               gitUrl: "https://github.com/CBIIT/bento-frontend",  // your git url 
               checkoutDirectory: "bento-frontend" // checkout directory as in the checkout stage above
             )
@@ -102,8 +102,8 @@ pipeline {
             version: ${params.FrontendTag}.${BUILD_NUMBER}, // build number
             image:  ${params.FrontendTag}.${BUILD_NUMBER}, // image tag
             service: "frontend", //microservice name
-            deploymentFile: "bento-deployments/deployment.yaml" //deployment.yaml location
-            deploymentRepoUrl: "https://github.com/CBIIT/bento-deployments" // deployments repo
+            deploymentFile: "bento-deployments/deployment.yaml", //deployment.yaml location
+            deploymentRepoUrl: "https://github.com/CBIIT/bento-deployments", // deployments repo
             deploymentCheckoutDirectory: "bento-deployments" //checkout directory specified in the checkout stage
         )
     }
