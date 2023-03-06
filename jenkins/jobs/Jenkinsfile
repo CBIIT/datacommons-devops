@@ -33,17 +33,18 @@ pipeline {
 
     booleanParam(name: "UpdateDeploymentVersion", defaultValue: false) // required if you intend to use Oneclick deployment
   }
-   triggers { 
-    //  pollSCM('H/15 * * * 1-5')  optional
-  }
+
+  //  triggers { 
+  //    pollSCM('H/15 * * * 1-5')  // per your project - optional
+  // }
   options {
     timestamps() // recommended
   }
-  tools { 
-    // depends on your project
-    // maven 'Default' 
-    // jdk 'Default' 
-  }
+  // tools { 
+  //   // depends on your project
+  //   // maven 'Default' 
+  //   // jdk 'Default' 
+  // }
   stages {
     stage('checkout'){ // needed
       steps {
@@ -106,12 +107,12 @@ pipeline {
     stage("update-deployment"){ // only if using oneclick deployment
         when {
           expression {
-            params.UpdateDeploymentVersion
+            params.UpdateDeploymentVersion == true
         }
         steps {
           writeDeployment(
-            version: ${params.FrontendTag}.${BUILD_NUMBER}, // build number
-            image:  ${params.FrontendTag}.${BUILD_NUMBER}, // image tag
+            version: "${params.FrontendTag}.${BUILD_NUMBER}", // build number
+            image:  "${params.FrontendTag}.${BUILD_NUMBER}", // image tag
             service: "frontend", //microservice name
             deploymentFile: "bento-deployments/deployment.yaml", //deployment.yaml location
             deploymentRepoUrl: "https://github.com/CBIIT/bento-deployments", // deployments repo
