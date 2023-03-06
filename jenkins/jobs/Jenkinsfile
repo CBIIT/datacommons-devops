@@ -5,64 +5,119 @@ pipeline {
 
   agent {
     node {
-      label 'ctdc-docker-maven'
+      label 'ccdi-deploy-agent' // specific to your project
     }
   }
   parameters {
-    booleanParam(name: "UpdateDeploymentVersion", defaultValue: false)
+    extendedChoice( 
+        name: 'Environment', 
+        defaultValue: 'dev', 
+        description: 'Choose the environment to build', 
+        type: 'PT_SINGLE_SELECT',
+        value: 'sandbox,dev,qa,stage,prod')
+     extendedChoice( 
+        name: 'ProjectName', 
+        defaultValue: 'your-project', 
+        description: 'Select Project', 
+        type: 'PT_SINGLE_SELECT',
+        value: 'your-project')
+	  gitParameter(branchFilter: 'origin/(.*)', 
+        defaultValue: 'master', 
+        name: 'FrontendTag', 
+        type: 'PT_BRANCH_TAG',
+        quickFilterEnabled: false, 
+        selectedValue: 'DEFAULT', 
+        sortMode: 'ASCENDING_SMART', 
+        tagFilter: '*', 
+        useRepository: 'https://github.com/CBIIT/bento-frontend')
+
+    booleanParam(name: "UpdateDeploymentVersion", defaultValue: false) // required if you intend to use Oneclick deployment
   }
    triggers { 
-    //  pollSCM('H/15 * * * 1-5') 
+    //  pollSCM('H/15 * * * 1-5')  optional
   }
   options {
-    timestamps()
+    timestamps() // recommended
   }
   tools { 
+    // depends on your project
     // maven 'Default' 
     // jdk 'Default' 
   }
   stages {
-    stage('checkout'){
+    stage('checkout'){ // needed
+      steps {
+
+        checkout([$class: 'GitSCM',
+				branches: [[name: "${params.FrontendTag}"]],
+				doGenerateSubmoduleConfigurations: false,
+				extensions: [[$class: 'RelativeTargetDirectory',
+				relativeTargetDir: 'bento-frontend']],
+				submoduleCfg: [],
+				userRemoteConfigs:
+				[[url: 'https://github.com/CBIIT/bento-frontend']]])
+        
+        //checkout deployment repo only if you using one click
+        checkout([$class: 'GitSCM',
+				branches: [[name: "${params.Environment}"]],
+				doGenerateSubmoduleConfigurations: false,
+				extensions: [[$class: 'RelativeTargetDirectory',
+				relativeTargetDir: 'deployments']],
+				submoduleCfg: [],
+				userRemoteConfigs:
+				[[url: 'https://github.com/CBIIT/bento-deployments']]])
+      }
     }
     
     stage('Build') {
-      
+        steps {
+          sh "echo Building"
+        }
     }
-    // stage('unit-test'){
-
-    // }
+    stage('unit-test'){
+       sh "echo In Unitest Stage"  // per your project
+    }
     stage('Deploy') {
+      sh "echo Deploying App"
    }
-//    stage('PostDeploy-Test'){
-
-//    }
+   stage('PostDeploy-Test'){
+      sh "echo Doing post deploy checks"
+   }
     stage("tag repo"){
-            // tagRepo gitTag: params["backendTag"], gitUrl: "https://github.com/CBIIT/bento-backend", checkoutDirectory: "cds-backend"
-    }
+            tagRepo ( 
+              gitTag: "${params.FrontendTag}"  // your git version or tag
+              gitUrl: "https://github.com/CBIIT/bento-frontend",  // your git url 
+              checkoutDirectory: "bento-frontend" // checkout directory as in the checkout stage above
+            )
+   }
     stage("api_testing"){
 
     }
-    stage("update-deployment"){
+    stage("update-deployment"){ // only if using oneclick deployment
         when {
           expression {
             params.UpdateDeploymentVersion
         }
         writeDeployment(
-            version: env[config.appVersionName],
-            image: env[config.appVersionName],
-            service: config.service,
-            deploymentFile: config.deploymentFile,
-            deploymentRepoUrl: config.deploymentRepoUrl,
-            deploymentCheckoutDirectory: config.deploymentCheckoutDirectory
+            version: ${params.FrontendTag}.${BUILD_NUMBER}, // build number
+            image:  ${params.FrontendTag}.${BUILD_NUMBER}, // image tag
+            service: "frontend", //microservice name
+            deploymentFile: "bento-deployments/deployment.yaml" //deployment.yaml location
+            deploymentRepoUrl: "https://github.com/CBIIT/bento-deployments" // deployments repo
+            deploymentCheckoutDirectory: "bento-deployments" //checkout directory specified in the checkout stage
         )
     }
   }
   post {
     always {
-      notify secretPath: "notification/slack", secretName: "cds_slack_url"
+      // secretPath, 
+      notify(
+        secretPath: "notification/slack", // name of your secret in AWS Secret Manager
+        secretName: "cds_slack_url" //value of your secret in AWS Secret Manager
+      ) 
     }
     cleanup {
-		cleanWs()
-	}
+		  cleanWs()
+	  }
   }
 }
