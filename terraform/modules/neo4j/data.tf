@@ -51,7 +51,7 @@ data "aws_iam_policy" "ssm_policy" {
 
 data "aws_security_group" "sg" {
   count = var.create_security_group ? 1 : 0
-  id = var.db_security_group_id
+  name = var.db_security_group_name
 }
 
 data "aws_iam_instance_profile" "profile" {

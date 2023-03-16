@@ -29,7 +29,7 @@ resource "aws_instance" "db" {
     var.tags,
   )
   lifecycle {
-    ignore_changes = all 
+    ignore_changes = all
   }
 }
 
