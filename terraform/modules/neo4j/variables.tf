@@ -76,7 +76,7 @@ variable "enable_http_endpoint" {
   default = "enabled"
 }
 
-variable "security_group_id" {
+variable "db_security_group_id" {
   type = string
   description = "provide existing security group"
   default = null
