@@ -75,3 +75,24 @@ variable "enable_http_endpoint" {
   description = "choose if http_endpoint is enabled or disabld"
   default = "enabled"
 }
+
+variable "security_group_id" {
+  type = string
+  description = "provide existing security group"
+  default = null
+}
+variable "create_security_group" {
+  type = bool
+  default = false
+  description = "create security group or not"
+}
+variable "create_instance_profile" {
+  type = bool
+  default = false
+  description = "create instance profile or not"
+}
+variable "db_iam_profile_name" {
+  type = string
+  description = "name of iam profile to apply"
+  default = null
+}
