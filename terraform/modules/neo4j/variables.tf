@@ -83,12 +83,12 @@ variable "db_security_group_id" {
 }
 variable "create_security_group" {
   type = bool
-  default = false
+  default = true
   description = "create security group or not"
 }
 variable "create_instance_profile" {
   type = bool
-  default = false
+  default = true
   description = "create instance profile or not"
 }
 variable "db_iam_profile_name" {

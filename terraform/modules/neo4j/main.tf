@@ -14,6 +14,9 @@ resource "aws_instance" "db" {
     volume_size           = var.db_instance_volume_size
     delete_on_termination = true
     encrypted             = true
+    lifecycle {
+      ignore_changes = "all"
+    }
   }
 
   metadata_options {
