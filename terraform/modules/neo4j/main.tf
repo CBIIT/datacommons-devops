@@ -14,9 +14,7 @@ resource "aws_instance" "db" {
     volume_size           = var.db_instance_volume_size
     delete_on_termination = true
     encrypted             = true
-    lifecycle {
-      ignore_changes = "all"
-    }
+
   }
 
   metadata_options {
@@ -30,6 +28,9 @@ resource "aws_instance" "db" {
     },
     var.tags,
   )
+  lifecycle {
+    ignore_changes = "all"
+  }
 }
 
 #create boostrap script to hook up the node to ecs cluster
