@@ -35,6 +35,7 @@ resource "aws_instance" "db" {
 
 #create boostrap script to hook up the node to ecs cluster
 resource "aws_ssm_document" "ssm_neo4j_boostrap" {
+  count   = var.create_bootstrap_script ? 1 : 0
   name            = "${var.stack_name}-${var.env}-setup-database"
   document_type   = "Command"
   document_format = "YAML"
@@ -82,10 +83,10 @@ resource "aws_security_group" "database_sg" {
 }
 
 resource "aws_ssm_association" "database" {
-  name = aws_ssm_document.ssm_neo4j_boostrap.name
+  name = var.create_bootstrap_script ? aws_ssm_document.ssm_neo4j_boostrap[0].name : data.aws_ssm_document.ssm[0].name
   targets {
     key    = "tag:Name"
-    values = ["${var.stack_name}-${var.env}-${var.database_name}-4"]
+    values = ["${var.stack_name}-${var.env}-${var.database_name}"]
   }
 
   depends_on = [aws_instance.db]

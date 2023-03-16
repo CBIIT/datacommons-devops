@@ -96,3 +96,15 @@ variable "db_iam_profile_name" {
   description = "name of iam profile to apply"
   default = null
 }
+
+variable "create_bootstrap_script" {
+  type = bool
+  default = true
+  description = "choose to create bootstrap script or not"
+}
+
+variable "db_boostrap_ssm_document" {
+  type = string
+  default = null
+  description = "ssm document for db boostrap"
+}
