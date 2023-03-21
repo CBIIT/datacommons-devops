@@ -4,23 +4,23 @@
 
 - name: remove the application_example.properties file
   file:
-    path: "{{ workspace }}/src/main/resources/application_example.properties"
+    path: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/application_example.properties"
     state: absent
 
 - name: copy application.properties file to /src/main/resources/
   template:
-    src: "{{ workspace }}/src/main/resources/application.properties.j2"
-    dest: "{{ workspace }}/src/main/resources/application.properties"
+    src: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/application.properties.j2"
+    dest: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/application.properties"
 
 - name: create graphql directory in backend
   file:
     state: directory
-    path: "{{ workspace }}/src/main/resources/graphql"
+    path: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/graphql"
 
 - name: create yaml directory in backend
   file:
     state: directory
-    path: "{{ workspace }}/src/main/resources/yaml"
+    path: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/yaml"
 
 - name: copy schema from frontend to resources
   template:
@@ -28,7 +28,7 @@
     src: "{{item.src}}"
     dest: "{{item.dest}}"
   loop:
-    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ schema_file}}"}
+    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ schema_file}}",dest: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/graphql/{{ schema_file}}"}
     #- { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ public_schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ public_schema_file}}"}
 
 - name: verify test queries file exists
@@ -40,19 +40,19 @@
   template:
     remote_src: yes
     src: "{{ workspace }}/{{ project_name }}-frontend/yaml/{{ test_queries_file }}"
-    dest: "{{ workspace }}/src/main/resources/yaml/{{ test_queries_file }}"
+    dest: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/yaml/{{ test_queries_file }}"
   when: test_queries.stat.exists
 
 - name: build springboot code
   command: mvn package -DskipTests
   args:
-    chdir: "{{ workspace }}"
+    chdir: "{{ workspace }}/{{ project_name }}-backend"
 
 - name: copy Bento-0.0.1.war to ROOT.war
   copy:
     remote_src: yes
-    src: "{{ workspace }}/target/Bento-0.0.1.war"
-    dest: "{{ workspace }}/target/ROOT.war"
+    src: "{{ workspace }}/{{ project_name }}-backend/target/Bento-0.0.1.war"
+    dest: "{{ workspace }}/{{ project_name }}-backend/target/ROOT.war"
 
 - name: build {{ project_name }}-{{ container_name }} image
   community.docker.docker_image:
@@ -60,7 +60,7 @@
       args:
         ECR_REPO: "{{ container_registry_url }}"
         PROJECT: "{{ project_name }}"
-      path: "{{ workspace }}"
+      path: "{{ workspace }}/{{ project_name }}-backend"
       dockerfile: "{{ dockerfile_path }}"
       pull: yes
       nocache: yes
@@ -72,7 +72,7 @@
 
 - name: test image for vulnerabilities
   block:
-    - name: run trivy scanner on 
+    - name: run trivy scanner on {{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}
       #command: "trivy image --exit-code 1 --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}"
       command: "trivy image --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
       register: vuln_results
