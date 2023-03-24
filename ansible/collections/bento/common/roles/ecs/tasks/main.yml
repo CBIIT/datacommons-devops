@@ -88,7 +88,7 @@
     details: true
     region: "{{ region }}"
   register: service
-  
+
 - name: set facts
   set_fact:
     task_revision: "{{ task.revision }}"
@@ -99,10 +99,28 @@
 ###########################################################################################################################
 #Update Services
 ############################################################################################################################
+# - name: update {{ container_name }} service
+#   ecs_service:
+#     state: present
+#     name: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+#     cluster: "{{ ecs_cluster_name }}"
+#     task_definition: "{{ task_name }}:{{ task_revision }}"
+#     role: "{{ role_arn }}"
+#     force_new_deployment: yes
+#     deployment_configuration:
+#       minimum_healthy_percent: 50
+#       maximum_percent: 200
+#       deployment_circuit_breaker:
+#         enable: true
+#         rollback: false
+#     desired_count: 1
+#     load_balancers: "{{ lb }}"
+#     region: "{{ region }}"
+#   register: output
 - name: update {{ container_name }} service
   ecs_service:
     state: present
-    name: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    name: "{{ service_name }}"
     cluster: "{{ ecs_cluster_name }}"
     task_definition: "{{ task_name }}:{{ task_revision }}"
     role: "{{ role_arn }}"
