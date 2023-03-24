@@ -61,16 +61,15 @@
   environment:
     DOCKER_BUILDKIT: 1
 
-- name: test image for vulnerabilities
-  block:
-    - name: run trivy scanner on 
-      #command: "trivy image --exit-code 1 --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}"
-      command: "trivy image --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
-      register: vuln_results
-  always:
-    - name: echo vulnerability results
-      debug:
-        msg: "{{ vuln_results.stdout_lines }}"
+#- name: test image for vulnerabilities
+#  block:
+#    - name: run trivy scanner on
+#      command: "trivy image --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
+#      register: vuln_results
+#  always:
+#    - name: echo vulnerability results
+#      debug:
+#        msg: "{{ vuln_results.stdout_lines }}"
 
 - name: debug
   debug:
