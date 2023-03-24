@@ -74,14 +74,21 @@
 ############################################################################################################################
 #     Service Queries
 ############################################################################################################################
+# - name: query {{ container_name }} service
+#   ecs_service_info:
+#     cluster: "{{ ecs_cluster_name }}"
+#     service: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+#     details: true
+#     region: "{{ region }}"
+#   register: service
 - name: query {{ container_name }} service
   ecs_service_info:
     cluster: "{{ ecs_cluster_name }}"
-    service: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    service: "{{ service_name }}"
     details: true
     region: "{{ region }}"
   register: service
-
+  
 - name: set facts
   set_fact:
     task_revision: "{{ task.revision }}"
