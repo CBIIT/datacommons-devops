@@ -4,8 +4,8 @@
 
 - name: set ECR registry name
   set_fact:
-    ecr_repo: "{{ caller_info.account }}.dkr.ecr.{{ region }}.amazonaws.com"
-    account: "986019062625"
+    ecr_repo: "986019062625.dkr.ecr.{{ region }}.amazonaws.com"
+    account: "{{ caller_info.account }}"
 
 - name: login into ecr
   shell: "docker login -u AWS -p $(aws ecr get-login-password --region {{ region }}) {{ ecr_repo }}"
