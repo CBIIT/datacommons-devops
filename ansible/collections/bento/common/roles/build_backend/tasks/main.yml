@@ -12,7 +12,7 @@
     build:
       args:
         ECR_REPO: "{{ container_registry_url }}"
-      path: "{{ workspace }}/{{ project_name }}-{{ container_name }}"
+      path: "{{ workspace }}"
       pull: yes
       nocache: yes
     name: "{{ project_name }}-{{ container_name }}"
@@ -23,8 +23,7 @@
 
 - name: test image for vulnerabilities
   block:
-    - name: run trivy scanner on 
-      #command: "trivy image --exit-code 1 --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}"
+    - name: run trivy scanner on
       command: "trivy image --timeout 15m --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
       register: vuln_results
   always:
