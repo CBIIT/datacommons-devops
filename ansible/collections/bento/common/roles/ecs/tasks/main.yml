@@ -54,6 +54,9 @@
             Retry_Limit: "2"
     launch_type: FARGATE
     network_mode: awsvpc
+    network_configuration:
+      awsvpc_configuration:
+        enable_exec: true
     execution_role_arn: "arn:aws:iam::{{ account }}:role/{{ execution_role }}"
     task_role_arn: "arn:aws:iam::{{ account }}:role/{{ task_role }}"
     family: "{{ project_name }}-{{ tier }}-{{ container_name }}"
