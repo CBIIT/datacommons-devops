@@ -42,7 +42,7 @@ resource "aws_ecs_service" "service" {
   scheduling_strategy                = var.ecs_scheduling_strategy
   deployment_minimum_healthy_percent = 50
   deployment_maximum_percent         = 200
-
+  enable_execute_command             = true
   deployment_circuit_breaker {
     enable   = true
     rollback = true
