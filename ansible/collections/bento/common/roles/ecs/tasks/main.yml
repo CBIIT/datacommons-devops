@@ -34,10 +34,18 @@
       - name: "{{ container_name }}"
         essential: true
         linuxParameters:
-          initProcessEnabled: "true"
+          initProcessEnabled: true
         image: "{{ container_image_url }}:{{ image_version }}"
         environment: "{{ container_env }}"
         entryPoint: "{% if container_entrypoint is defined %}{{ container_entrypoint }}{% else %}[]{% endif %}"
+        overrides:
+          containerOverrides:
+            - name: my-container
+              command:
+                - /bin/sh
+                - -c
+                - 'echo "Hello world!"'
+              enable_execute_command: true
         portMappings:
           - containerPort: "{{ container_port }}"
             hostPort: "{{ container_port }}"
