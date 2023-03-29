@@ -31,13 +31,13 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_allow_ecr_replication"></a> [allow\_ecr\_replication](#input\_allow\_ecr\_replication) | allow ecr replication | `bool` | `false` | no |
-| <a name="input_create_env_specific_repo"></a> [create\_env\_specific\_repo](#input\_create\_env\_specific\_repo) | choose to create environment specific repo. Example bento-dev-frontend | `bool` | `true` | no |
+| <a name="input_resource_prefix"></a> [create\_env\_specific\_repo](#input\_resource\_prefix) | the prefix to add when creating resources | `string` | n/a | yes |
 | <a name="input_ecr_repo_names"></a> [ecr\_repo\_names](#input\_ecr\_repo\_names) | list of repo names | `list(string)` | n/a | yes |
 | <a name="input_enable_ecr_replication"></a> [enable\_ecr\_replication](#input\_enable\_ecr\_replication) | enable ecr replication | `bool` | `false` | no |
 | <a name="input_env"></a> [env](#input\_env) | name of the environment to provision | `string` | n/a | yes |
 | <a name="input_replication_destination_registry_id"></a> [replication\_destination\_registry\_id](#input\_replication\_destination\_registry\_id) | registry id for destination image | `string` | `""` | no |
 | <a name="input_replication_source_registry_id"></a> [replication\_source\_registry\_id](#input\_replication\_source\_registry\_id) | registry id for source image | `string` | `""` | no |
-| <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |
+| <a name="input_project"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | tags to associate with this instance | `map(string)` | n/a | yes |
 
 ## Outputs
