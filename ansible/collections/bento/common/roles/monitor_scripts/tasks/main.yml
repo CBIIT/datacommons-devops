@@ -1,8 +1,7 @@
 
 - name: Install specified python requirements
-#  ansible.builtin.pip:
-#    requirements: requirements.txt
-  script: pip3 install -r requirements.txt
+  ansible.builtin.pip:
+    requirements: files/requirements.txt
 
 - name: update monitors
   script: monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
