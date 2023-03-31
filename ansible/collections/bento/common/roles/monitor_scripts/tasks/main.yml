@@ -1,7 +1,7 @@
-- name: copy all files
-  copy:
-    src: .
-    dest: /scripts/
+#- name: copy all files
+#  copy:
+#    src: .
+#    dest: /scripts/
 
 - name: show directory
   command: "ls"
