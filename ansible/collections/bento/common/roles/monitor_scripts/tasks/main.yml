@@ -9,7 +9,7 @@
     dest: /scripts/
 
 - name: show directory
-  command: "ls"
+  command: "ls scripts"
   register: dir_out
 
 - name: show output
