@@ -1,3 +1,15 @@
+- name: copy all files
+  copy:
+    src: .
+    dest: /scripts/
+
+- name: show scripts directory
+  command: "ls scripts"
+  register: dir_out
+
+- name: show output
+  debug: var={{item}}
+  with_items: dir_out.stdout_lines
 
 - name: Install specified python requirements
   ansible.builtin.pip:
