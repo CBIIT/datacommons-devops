@@ -3,8 +3,8 @@
     src: .
     dest: /scripts/
 
-- name: show scripts directory
-  command: "ls scripts"
+- name: show directory
+  command: "ls"
   register: dir_out
 
 - name: show output
