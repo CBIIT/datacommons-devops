@@ -3,11 +3,8 @@
   ansible.builtin.pip:
     requirements: requirements.txt
 
-- name: set APM release
-  script: releases/add_apm_release.py -p {{ project_name }} -t {{ tier }} -v {{ frontend_version }}/{{ backend_version }} -k {{ newrelic_key }}
-
 - name: update monitors
-  script: monitor_update.py -p {{ project_name }} -t {{ tier }} -k {{ newrelic_key }}
+  script: monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }}
 
 - name: update dashboards
-  script: dashboards/add_tier_dashboards.py -p {{ project_name }} -t {{ tier }} -k {{ newrelic_key }}
+  script: dashboards/add_tier_dashboards.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }}
