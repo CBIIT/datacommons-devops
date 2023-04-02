@@ -9,19 +9,7 @@ resource "aws_ecs_task_definition" "task" {
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
 
-  container_definitions = jsonencode([
-    {
-      name      = each.value.name
-      image     = each.value.image_url
-      essential = true
-      portMappings = [
-        {
-          protocol      = "tcp"
-          containerPort = each.value.port
-        }
-      ]
-    }
-  ])
+  container_definitions    = each.value.task_definition
 
   tags = merge(
     {
@@ -33,7 +21,7 @@ resource "aws_ecs_task_definition" "task" {
 
 #ecs service
 resource "aws_ecs_service" "service" {
-  for_each                           = var.microservices
+  for_each                           = var.microservice.use_service ? var.microservice : {}
   name                               = "${var.stack_name}-${var.env}-${each.value.name}"
   cluster                            = aws_ecs_cluster.ecs_cluster.id
   task_definition                    = aws_ecs_task_definition.task[each.key].arn

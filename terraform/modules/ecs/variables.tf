@@ -68,6 +68,8 @@ variable "microservices" {
     memory                    = number
     path                      = list(string)
     number_container_replicas = number
+    task_definiton            = string
+    use_service               = bool
   }))
 }
 
