@@ -1,6 +1,6 @@
-- name: copy all files
+- name: copy requirements file
   copy:
-    src: ./
+    src: ./requirements.txt
     dest: ./
 
 - name: show directory
@@ -11,12 +11,15 @@
   debug: var={{item}}
   with_items: dir_out.stdout_lines
 
-- name: Install specified python requirements
-  ansible.builtin.pip:
-    requirements: ./requirements.txt
+#- name: Install specified python requirements
+#  ansible.builtin.pip:
+#    requirements: ./requirements.txt
 
 - name: update monitors
-  script: ./monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
+  command: "pip install -r requirements.txt"
+
+- name: update monitors
+  script: monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
 
 - name: update dashboards
-  script: ./dashboards/add_tier_dashboards.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }}
+  script: dashboards/add_tier_dashboards.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }}
