@@ -1,11 +1,11 @@
-- name: Creates directory
-  file:
-    path: /scripts/
-    state: directory
+#- name: Creates directory
+#  file:
+#    path: /scripts/
+#    state: directory
 
 - name: copy all files
   copy:
-    src: .
+    src: ./
     dest: /scripts/
 
 - name: show directory
