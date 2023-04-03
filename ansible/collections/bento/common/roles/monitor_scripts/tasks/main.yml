@@ -6,10 +6,10 @@
 - name: copy all files
   copy:
     src: ./
-    dest: /scripts/
+    dest: ./
 
 - name: show directory
-  command: "ls scripts"
+  command: "ls"
   register: dir_out
 
 - name: show output
