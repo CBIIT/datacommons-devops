@@ -1,32 +1,13 @@
-- name: copy requirements file
+- name: copy script files
   copy:
     src: ./
     dest: ./scripts/
     directory_mode:
 
-- name: show directory
-  command: "ls"
-  register: dir_out
-
-- name: show output
-  debug: var={{item}}
-  with_items: dir_out.stdout_lines
-
-#- name: Install specified python requirements
-#  ansible.builtin.pip:
-#    requirements: ./requirements.txt
-
 - name: update requirements
   command: "pip install -r scripts/requirements.txt"
 
 - name: update monitors
-#  ansible.builtin.script: scripts/monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
-#  args:
-#    executable: python3
-#  script: ./monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
-#  shell:
-#    cmd: python3 monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
-#    chdir: scripts/
   command: "python3 scripts/monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}"
 
 - name: update dashboards
