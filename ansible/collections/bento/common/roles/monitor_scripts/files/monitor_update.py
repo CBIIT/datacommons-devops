@@ -19,7 +19,7 @@ def main(argv):
    global auth
    auth = ''
    try:
-      opts, args = getopt.getopt(argv,"hp:t:k:a:",["project=","tier=","key=","location="])
+      opts, args = getopt.getopt(argv,"hp:t:k:l:",["project=","tier=","key=","location="])
    except getopt.GetoptError:
       print('monitor_query.py -p <project> -t <tier> -k <newrelic api key> -l <newrelic location id>')
       sys.exit(2)
