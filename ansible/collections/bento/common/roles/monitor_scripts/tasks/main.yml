@@ -9,6 +9,16 @@
 
 - name: update monitors
   command: "python3 scripts/monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}"
+  register: monitor_out
+
+- name: show output
+  debug: var={{item}}
+  with_items: monitor_out.stdout_lines
 
 - name: update dashboards
-  script: dashboards/add_tier_dashboards.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }}
+  command: "python3 scripts/dashboards/add_tier_dashboards.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }}"
+  register: dashboard_out
+
+- name: show output
+  debug: var={{item}}
+  with_items: dashboard_out.stdout_lines
