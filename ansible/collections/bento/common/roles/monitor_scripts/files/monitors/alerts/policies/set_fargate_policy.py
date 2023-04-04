@@ -5,7 +5,7 @@ import json
 import requests
 from monitors.alerts.conditions.fargate import set_fargate_nrql_cpu_condition, set_fargate_nrql_mem_condition, set_fargate_nrql_restarts_condition
 
-def setfargatealertpolicy(project, tier, key):
+def setpolicy(project, tier, key):
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_policies.json'
 
    policy_name = '{}-{} Fargate Policy'.format(project.title(), tier.title())
@@ -61,12 +61,12 @@ def setfargatealertpolicy(project, tier, key):
        raise SystemExit(e)
      
    # add fargate CPU condition
-   set_fargate_nrql_cpu_condition.setfargatecpucondition(key, project, tier, policy_id)
+   set_fargate_nrql_cpu_condition.setcondition(key, project, tier, policy_id)
 
    # add fargate Memory condition
-   set_fargate_nrql_mem_condition.setfargatememcondition(key, project, tier, policy_id)
+   set_fargate_nrql_mem_condition.setcondition(key, project, tier, policy_id)
 
    # add fargate Restarts condition
-   set_fargate_nrql_restarts_condition.setfargaterestartscondition(key, project, tier, policy_id)
+   set_fargate_nrql_restarts_condition.setcondition(key, project, tier, policy_id)
    
    return(policy_id)

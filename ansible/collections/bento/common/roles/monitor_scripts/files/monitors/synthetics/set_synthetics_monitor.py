@@ -84,7 +84,5 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
    # set tags on the monitor
    set_tags_nrql.settagsnrql(project, tier, current_monitor.get('name'), key)
 
-   #return(current_monitor.get('id'))
-   
    # add synthetics condition
-   set_synthetics_condition.setsyntheticscondition(project, tier, key, api['name'].lower(), current_monitor.get('id'), policy_id)
+   set_synthetics_condition.setcondition(project, tier, key, api['name'].lower(), current_monitor.get('id'), policy_id)

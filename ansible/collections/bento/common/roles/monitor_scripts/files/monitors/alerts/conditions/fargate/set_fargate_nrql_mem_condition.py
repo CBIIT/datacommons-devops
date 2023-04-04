@@ -83,4 +83,4 @@ def setcondition(key, project, tier, policy_id):
        raise SystemExit(e)
 
    # set tags on the monitor
-   set_tags_nrql.settagsnrql(project, tier, condition_name, key)
+   #set_tags_nrql.settagsnrql(project, tier, condition_name, key)

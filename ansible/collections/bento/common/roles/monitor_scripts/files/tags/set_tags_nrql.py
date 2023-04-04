@@ -13,12 +13,12 @@ def settagsnrql(project, tier, entity, key):
 
    # set tags
    data = {"query":"{\n  actor {\n    entitySearch(query: \"name = \'" + entity + "\'\") {\n      query\n      results {\n        entities {\n          guid\n        }\n      }\n    }\n  }\n}\n", "variables":""}
-   
+
    try:
      response = requests.post(API_ENDPOINT, headers=headers, data=json.dumps(data), allow_redirects=False)
    except requests.exceptions.RequestException as e:
      raise SystemExit(e)
-         
+
    guid = re.findall(r'^.*?\bguid\b\":\"([^$]*?)\"',response.text)[0]
    
    tagdefs = {

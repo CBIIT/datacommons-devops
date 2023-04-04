@@ -46,7 +46,7 @@ def setcondition(key, project, tier, policy_id):
          "operator" : "above",
          "threshold" : "90",
          "time_function" : "all",
-         "priority" : "warn"
+         "priority" : "warning"
        } ],
        "value_function" : "single_value",
        "nrql" : {
