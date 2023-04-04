@@ -19,7 +19,7 @@
   command: "pip install -r requirements.txt"
 
 - name: update monitors
-  script: monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
+  script: ./monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
 #  command: "./monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}"
 
 - name: update dashboards
