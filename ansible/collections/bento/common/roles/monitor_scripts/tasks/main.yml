@@ -24,7 +24,10 @@
 #  args:
 #    executable: python3
 #  script: ./monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
-  command: "python3 scripts/monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}"
+  shell:
+    cmd: python3 monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
+    chdir: scripts/
+  #command: "python3 scripts/monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}"
 
 - name: update dashboards
   script: dashboards/add_tier_dashboards.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }}
