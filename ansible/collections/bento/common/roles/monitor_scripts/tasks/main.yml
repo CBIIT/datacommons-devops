@@ -1,7 +1,8 @@
 - name: copy requirements file
   copy:
-    src: ./scripts
+    src: ./
     dest: /scripts/
+    directory_mode:
 
 - name: show directory
   command: "ls"
