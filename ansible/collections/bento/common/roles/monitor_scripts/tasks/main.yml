@@ -1,6 +1,6 @@
 - name: copy requirements file
   copy:
-    src: scripts
+    src: ./scripts
     dest: /scripts/
 
 - name: show directory
