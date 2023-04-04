@@ -4,7 +4,7 @@
     dest: /scripts/
 
 - name: show directory
-  command: "ls scripts"
+  command: "ls"
   register: dir_out
 
 - name: show output
