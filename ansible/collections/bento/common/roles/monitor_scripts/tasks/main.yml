@@ -20,11 +20,11 @@
   command: "pip install -r scripts/requirements.txt"
 
 - name: update monitors
-  ansible.builtin.script: scripts/monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
-  args:
-    executable: python3
+#  ansible.builtin.script: scripts/monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
+#  args:
+#    executable: python3
 #  script: ./monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}
-#  command: "./monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}"
+  command: "python3 scripts/monitor_update.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }} -l {{ private_location_id }}"
 
 - name: update dashboards
   script: dashboards/add_tier_dashboards.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }}
