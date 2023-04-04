@@ -15,10 +15,10 @@
   debug: var={{item}}
   with_items: monitor_out.stdout_lines
 
-- name: update dashboards
-  command: "python3 scripts/dashboards/add_tier_dashboards.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }}"
-  register: dashboard_out
-
-- name: show output
-  debug: var={{item}}
-  with_items: dashboard_out.stdout_lines
+#- name: update dashboards
+#  command: "python3 scripts/dashboards/add_tier_dashboards.py -p {{ project }} -t {{ tier }} -k {{ newrelic_key }}"
+#  register: dashboard_out
+#
+#- name: show output
+#  debug: var={{item}}
+#  with_items: dashboard_out.stdout_lines
