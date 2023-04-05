@@ -7,6 +7,10 @@
 - name: update requirements
   command: "pip install -r scripts/requirements.txt"
 
+- name: echo service config
+  debug: var={{item}}
+  with_items: services
+
 - name: update monitors
   command: "python3 scripts/monitor_update.py -p {{ project }} -t {{ tier }} -s {{ services }} -k {{ newrelic_key }} -l {{ private_location_id }}"
   register: monitor_out
