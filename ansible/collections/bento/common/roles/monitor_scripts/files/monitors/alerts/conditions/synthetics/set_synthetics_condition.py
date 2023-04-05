@@ -6,7 +6,7 @@ import requests
 def setcondition(project, tier, key, api_name, synthetics_id, policy_id):
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_synthetics_conditions.json'
 
-   condition_name = '{}-{} {} Condition'.format(project.title(), tier.title(), api_name.title())
+   condition_name = '{}-{} {} Condition'.format(project, tier, api_name.title())
    condition_found = False
    headers = {'Api-Key': key}
    data = {'policy_id': policy_id}

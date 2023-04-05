@@ -30,9 +30,9 @@ def main(argv):
          print('monitor_query.py -p <project> -t <tier> -s <collection of service configurations> -k <newrelic api key> -l <newrelic location id>')
          sys.exit()
       elif opt in ("-p", "--project"):
-         project = arg
+         project = arg.upper()
       elif opt in ("-t", "--tier"):
-         tier = arg
+         tier = arg.capitalize()
       elif opt in ("-s", "--services"):
          services = arg.split('|')
       elif opt in ("-k", "--key"):
@@ -42,6 +42,9 @@ def main(argv):
 
 if __name__ == "__main__":
    main(sys.argv[1:])
+
+   if tier == 'Qa':
+     tier = 'QA'
 
    print()
    print('Adding Monitor Configuration For: {} {}'.format(project, tier))

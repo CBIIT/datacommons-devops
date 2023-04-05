@@ -8,7 +8,7 @@ from monitors.alerts.conditions.fargate import set_fargate_nrql_cpu_condition, s
 def setpolicy(project, tier, key):
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_policies.json'
 
-   policy_name = '{}-{} Fargate Policy'.format(project.title(), tier.title())
+   policy_name = '{}-{} Fargate Policy'.format(project, tier)
    policy_found = False
    headers = {'Api-Key': key}
    

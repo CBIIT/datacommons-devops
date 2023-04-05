@@ -8,7 +8,7 @@ def setcondition(key, project, tier, policy_id):
 
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_nrql_conditions.json'
 
-   condition_name = '{}-{} Opensearch Cluster Yellow'.format(project.title(), tier.title())
+   condition_name = '{}-{} Opensearch Cluster Yellow'.format(project, tier)
    condition_found = False
    headers = {'Api-Key': key}
    data = {'policy_id': policy_id}

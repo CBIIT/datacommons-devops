@@ -57,7 +57,7 @@ def setalertworkflow(workflow_name, email_id, slack_id, project, tier, key):
        workflow_id = x.get('id')
 
        data = {"query":"mutation {"
-         #"aiWorkflowsUpdateWorkflow(accountId: " + NR_ACCT_ID + ", updateWorkflowData: {name: \"" + workflow_name + "\", issuesFilter: {name: \"" + workflow_name + "\", predicates: [{ attribute: \"policyName\", operator: CONTAINS, values:[\"" + project.capitalize() + "-" + tier.capitalize() + "\"]}], type: FILTER}, destinationConfigurations: [{channelId: \"" + email_id + "\"},{channelId: \"" + slack_id + "\"}], id: \"" + workflow_id + "\"}) {"
+         #"aiWorkflowsUpdateWorkflow(accountId: " + NR_ACCT_ID + ", updateWorkflowData: {name: \"" + workflow_name + "\", issuesFilter: {name: \"" + workflow_name + "\", predicates: [{ attribute: \"accumulations.policyName\", operator: CONTAINS, values:[\"" + project.capitalize() + "-" + tier.capitalize() + "\"]}], type: FILTER}, destinationConfigurations: [{channelId: \"" + email_id + "\"},{channelId: \"" + slack_id + "\"}], id: \"" + workflow_id + "\"}) {"
          "aiWorkflowsUpdateWorkflow(accountId: " + NR_ACCT_ID + ", updateWorkflowData: {name: \"" + workflow_name + "\", destinationConfigurations: [{channelId: \"" + email_id + "\"},{channelId: \"" + slack_id + "\"}], id: \"" + workflow_id + "\"}) {"
            "workflow {"
              "id\n"
@@ -98,7 +98,7 @@ def setalertworkflow(workflow_name, email_id, slack_id, project, tier, key):
 
    if not workflow_found:
      data = {"query":"mutation {"
-       "aiWorkflowsCreateWorkflow(accountId: " + NR_ACCT_ID + ", createWorkflowData: {destinationsEnabled: true, workflowEnabled: true, name: \"" + workflow_name + "\", issuesFilter: {name: \"" + workflow_name + "\", predicates: [{ attribute: \"policyName\", operator: CONTAINS, values:[\"" + project.capitalize() + "-" + tier.capitalize() + "\"]}], type: FILTER}, destinationConfigurations: [{channelId: \"" + email_id + "\"},{channelId: \"" + slack_id + "\"}], enrichmentsEnabled: true, enrichments: {nrql: []}, , mutingRulesHandling: DONT_NOTIFY_FULLY_MUTED_ISSUES}) {"
+       "aiWorkflowsCreateWorkflow(accountId: " + NR_ACCT_ID + ", createWorkflowData: {destinationsEnabled: true, workflowEnabled: true, name: \"" + workflow_name + "\", issuesFilter: {name: \"" + workflow_name + "\", predicates: [{ attribute: \"accumulations.policyName\", operator: CONTAINS, values:[\"" + project.capitalize() + "-" + tier.capitalize() + "\"]}], type: FILTER}, destinationConfigurations: [{channelId: \"" + email_id + "\"},{channelId: \"" + slack_id + "\"}], enrichmentsEnabled: true, enrichments: {nrql: []}, , mutingRulesHandling: DONT_NOTIFY_FULLY_MUTED_ISSUES}) {"
          "workflow {"
            "id\n"
            "name\n"
