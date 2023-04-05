@@ -61,9 +61,6 @@ if __name__ == "__main__":
      syn_location = 'AWS_US_EAST_1'
 
    for service_config in services:
-     print('Service:     {}'.format(service_config))
      api = json.loads(service_config)
-     print('Configuring API:     {}'.format(api))
      api.update({"location": syn_location})
-     print('Configuring API:     {}'.format(api))
      set_synthetics_monitor.setsyntheticsmonitor(project, tier, key, api, fargate_policy_id)
