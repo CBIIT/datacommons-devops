@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys, getopt
+import sys, getopt, json
 from monitors.alerts.policies import set_fargate_policy, set_alb_policy, set_opensearch_policy
 from monitors.synthetics import set_synthetics_monitor
 from monitors.alerts.destinations import set_email_destination, set_slack_destination
@@ -12,6 +12,8 @@ def main(argv):
    project = ''
    global tier
    tier = ''
+   global services
+   services = []
    global key
    key = ''
    global location
@@ -19,18 +21,20 @@ def main(argv):
    global auth
    auth = ''
    try:
-      opts, args = getopt.getopt(argv,"hp:t:k:l:",["project=","tier=","key=","location="])
+      opts, args = getopt.getopt(argv,"hp:t:s:k:l:",["project=","tier=","services=","key=","location="])
    except getopt.GetoptError:
-      print('monitor_query.py -p <project> -t <tier> -k <newrelic api key> -l <newrelic location id>')
+      print('monitor_query.py -p <project> -t <tier> -s <collection of service configurations> -k <newrelic api key> -l <newrelic location id>')
       sys.exit(2)
    for opt, arg in opts:
       if opt == '-h':
-         print('monitor_query.py -p <project> -t <tier> -k <newrelic api key> -l <newrelic location id>')
+         print('monitor_query.py -p <project> -t <tier> -s <collection of service configurations> -k <newrelic api key> -l <newrelic location id>')
          sys.exit()
       elif opt in ("-p", "--project"):
          project = arg
       elif opt in ("-t", "--tier"):
          tier = arg
+      elif opt in ("-s", "--services"):
+         services = arg.split('|')
       elif opt in ("-k", "--key"):
          key = arg
       elif opt in ("-l", "--location"):
@@ -50,17 +54,13 @@ if __name__ == "__main__":
    os_policy_id = set_opensearch_policy.setpolicy(project, tier, key)
    alb_policy_id = set_alb_policy.setpolicy(project, tier, key)
    fargate_policy_id = set_fargate_policy.setpolicy(project, tier, key)
-   
+
    if location:
      syn_location = location
    else:
      syn_location = 'AWS_US_EAST_1'
-   
-   apiList = [
-     {'name':'url','endpoint':'','location':syn_location},
-     {'name':'files','endpoint':'/api/files','location':syn_location},
-     {'name':'auth','endpoint':'/api/auth','location':syn_location}
-   ]
-   
-   for api in apiList:
+
+   for service_config in services:
+     api = json.loads(service_config)
+     api.update({"location": syn_location})
      set_synthetics_monitor.setsyntheticsmonitor(project, tier, key, api, fargate_policy_id)
