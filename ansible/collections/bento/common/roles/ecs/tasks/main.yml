@@ -31,7 +31,7 @@
             value: "{\"nrDeployMethod\":\"downloadPage\"}"
           - name: NRIA_LICENSE_KEY
             value: "{{ newrelic_license_key }}"
-      - name: {{ program }}-{{ tier }}-{{ project_name }}-{{ microservice }}
+      - name: "{{ program }}-{{ tier }}-{{ project_name }}-{{ microservice }}"
       # - name: "{{ container_name }}"
         essential: true
         image: "{{ container_image_url }}:{{ image_version }}"
@@ -68,7 +68,7 @@
 ############################################################################################################################
 - name: query task definition - {{ container_name }}
   ecs_taskdefinition_info:
-    task_definition: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    task_definition: "{{ program }}-{{ tier }}-{{ project_name }}-{{ microservice }}"
     region: "{{ region }}"
   register: task
 
