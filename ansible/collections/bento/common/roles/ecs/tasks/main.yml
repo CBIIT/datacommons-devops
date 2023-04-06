@@ -132,7 +132,7 @@
       deployment_circuit_breaker:
         enable: true
         rollback: false
-    desired_count: 1
+    desired_count: 2
     load_balancers: "{{ lb }}"
     region: "{{ region }}"
   register: output
