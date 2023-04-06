@@ -77,7 +77,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
 #create waf
 resource "aws_wafv2_web_acl" "waf" {
-  name        = "${var.stack_name}-ip-limiting-waf-rule"
+  name        = "${var.stack_name}-qa-ip-limiting-waf-rule"
   description = "This rule limit number of request per ip"
   scope       = "CLOUDFRONT"
 
