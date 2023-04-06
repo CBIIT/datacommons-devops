@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
    email_id = set_email_destination.setalertemail("DevOps-FNL", project, tier, key)
    slack_id = set_slack_destination.setalertslack("Expand Data Commons", project, tier, key)
-   workflow_id = set_workflow.setalertworkflow(project.capitalize() + "-" + tier.capitalize() + " Notifications", email_id, slack_id, project, tier, key)
+   workflow_id = set_workflow.setalertworkflow(project + "-" + tier + " Notifications", email_id, slack_id, project, tier, key)
 
    os_policy_id = set_opensearch_policy.setpolicy(project, tier, key)
    alb_policy_id = set_alb_policy.setpolicy(project, tier, key)
