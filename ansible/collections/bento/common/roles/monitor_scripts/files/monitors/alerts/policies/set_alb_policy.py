@@ -8,7 +8,7 @@ from monitors.alerts.conditions.alb import set_alb_nrql_elb_4xx_condition, set_a
 def setpolicy(project, tier, key):
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_policies.json'
 
-   policy_name = '{}-{} ALB Policy'.format(project, tier)
+   policy_name = '{} {} ALB Policy'.format(project, tier)
    policy_found = False
    headers = {'Api-Key': key}
    

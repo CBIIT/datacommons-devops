@@ -8,7 +8,7 @@ from monitors.alerts.conditions.os import set_os_nrql_5xx_condition, set_os_nrql
 def setpolicy(project, tier, key):
    API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_policies.json'
 
-   policy_name = '{}-{} Opensearch Policy'.format(project, tier)
+   policy_name = '{} {} Opensearch Policy'.format(project, tier)
    policy_found = False
    headers = {'Api-Key': key}
    

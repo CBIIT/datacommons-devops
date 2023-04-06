@@ -11,16 +11,17 @@ from monitors.alerts.conditions.synthetics import set_synthetics_condition
 def setsyntheticsmonitor(project, tier, key, api, policy_id):
    API_ENDPOINT = 'https://synthetics.newrelic.com/synthetics/api/v3/monitors'
    DOMAIN = os.getenv('URL_DOMAIN')
+   SUB_DOMAIN = os.getenv('URL_SUB_DOMAIN')
 
    if tier.lower() == 'prod':
      freq = 10
      monitor_uri = 'https://{}'.format(DOMAIN)
    else:
      freq = 30
-     monitor_uri = 'https://{}-{}.{}{}'.format(project, tier, DOMAIN, api['endpoint'].lower())
+     monitor_uri = 'https://{}-{}.{}{}'.format(SUB_DOMAIN, tier.lower(), DOMAIN, api['endpoint'].lower())
 
    # set monitor configuration
-   monitor_name = '{}-{}-{}-monitor'.format(project.lower(), tier.lower(), api['name'].lower())
+   monitor_name = '{} {} {} Monitor'.format(project, tier, api['name'])
    data = {
        "name": monitor_name,
        "type": "BROWSER",
@@ -78,7 +79,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
      raise SystemExit(e)
 
    for x in response.json()['monitors']:
-     if monitor_name in x.get("name", "none").lower():
+     if monitor_name in x.get("name", "none"):
        current_monitor = x
 
    # set tags on the monitor
