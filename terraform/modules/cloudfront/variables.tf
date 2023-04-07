@@ -1,4 +1,7 @@
-
+variable "resource_prefix" {
+  description = "the prefix to add when creating resources"
+  type        = string
+}
 variable "tags" {
   description = "tags to associate with this instance"
   type = map(string)

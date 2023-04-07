@@ -45,7 +45,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   logging_config {
     include_cookies = false
     bucket          = aws_s3_bucket.access_logs.bucket_domain_name
-    prefix          = "${var.stack_name}/cloudfront/logs"
+    prefix          = "${var.resource_prefix}/cloudfront/logs"
   }
 
 
@@ -77,7 +77,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
 #create waf
 resource "aws_wafv2_web_acl" "waf" {
-  name        = "${var.stack_name}-ip-limiting-waf-rule"
+  name        = "${var.resource_prefix}-ip-limiting-waf-rule"
   description = "This rule limit number of request per ip"
   scope       = "CLOUDFRONT"
 
@@ -86,7 +86,7 @@ resource "aws_wafv2_web_acl" "waf" {
   }
 
   rule {
-    name     = "${var.stack_name}-${var.env}-ip-rate-rule"
+    name     = "${var.resource_prefix}-ip-rate-rule"
     priority = 1
 
     action {
@@ -102,7 +102,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "${var.stack_name}-${var.env}-ip-rate-metrics"
+      metric_name                = "${var.resource_prefix}-ip-rate-metrics"
       sampled_requests_enabled   = true
     }
   }
@@ -111,7 +111,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
   visibility_config {
     cloudwatch_metrics_enabled = true
-    metric_name                = "${var.stack_name}-${var.env}files-request-ip"
+    metric_name                = "${var.resource_prefix}-files-request-ip"
     sampled_requests_enabled   = true
   }
 
@@ -119,7 +119,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
 
 resource "aws_wafv2_regex_pattern_set" "api_files_pattern" {
-  name        =  "${var.stack_name}-${var.env}-api-files-pattern"
+  name        =  "${var.resource_prefix}-api-files-pattern"
   scope       = "CLOUDFRONT"
 
   regular_expression {
@@ -133,13 +133,13 @@ resource "aws_wafv2_regex_pattern_set" "api_files_pattern" {
 resource "aws_cloudfront_public_key" "public_key" {
   comment     = "files public key"
   encoded_key = var.public_key_path
-  name        = "${var.stack_name}-${var.env}-pub-key"
+  name        = "${var.resource_prefix}-pub-key"
 }
 
 resource "aws_cloudfront_key_group" "key_group" {
   comment = "files key group"
   items   = [aws_cloudfront_public_key.public_key.id]
-  name    = "${var.stack_name}-${var.env}-key-group"
+  name    = "${var.resource_prefix}-key-group"
 }
 
 resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
@@ -168,7 +168,7 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
 }
 
 resource "aws_wafv2_ip_set" "ip_sets" {
-  name               = "${var.stack_name}-${var.env}-ips-blocked-cloudfront"
+  name               = "${var.resource_prefix}-ips-blocked-cloudfront"
   description        = "ips to blocked as result of violation of cloudfront waf rule"
   scope              = "CLOUDFRONT"
   ip_address_version = "IPV4"
