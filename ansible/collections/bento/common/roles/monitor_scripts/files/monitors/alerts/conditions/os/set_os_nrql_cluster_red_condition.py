@@ -6,9 +6,16 @@ from tags import set_tags_nrql
 
 def setcondition(key, project, tier, policy_id):
 
-   API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_nrql_conditions.json'
+   ####################     Condition Specific Variables          ####################
 
    condition_name = '{} {} Opensearch Cluster Red'.format(project, tier)
+   query = "FROM  Metric SELECT min(`aws.es.ClusterStatus.red`) WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND entity.name = '{}-{}-opensearch'"
+   critical_duration = "1"
+   critical_threshold = "0"
+
+   ###################################################################################
+
+   API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_nrql_conditions.json'
    condition_found = False
    headers = {'Api-Key': key}
    data = {'policy_id': policy_id}
@@ -36,15 +43,15 @@ def setcondition(key, project, tier, policy_id):
        "name" : "{}".format(condition_name),
        "enabled" : True,
        "terms" : [ {
-         "duration" : "1",
+         "duration" : critical_duration,
          "operator" : "above",
-         "threshold" : "0",
+         "threshold" : critical_threshold,
          "time_function" : "all",
          "priority" : "critical"
        } ],
        "value_function" : "single_value",
        "nrql" : {
-         "query" : "FROM  Metric SELECT min(`aws.es.ClusterStatus.red`) WHERE collector.name='cloudwatch-metric-streams' AND aws.Namespace='AWS/ES' AND entity.name = '{}-{}-opensearch'".format(project.lower(), tier.lower())
+         "query" : query.format(project.lower(), tier.lower())
        },
        "signal" : {
          "aggregation_window" : "60",

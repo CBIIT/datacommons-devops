@@ -6,9 +6,18 @@ from tags import set_tags_nrql
 
 def setcondition(key, project, tier, policy_id):
 
-   API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_nrql_conditions.json'
+   ####################     Condition Specific Variables          ####################
 
    condition_name = '{} {} Fargate CPU Usage'.format(project, tier)
+   query = "FROM Metric SELECT average(`docker.container.cpuUsedCoresPercent`) as 'CPU cores (%)' WHERE docker.ecsClusterName LIKE '{}-{}-%'"
+   critical_duration = "5"
+   critical_threshold = "90.0"
+   warning_duration = "2"
+   warning_threshold = "90.0"
+
+   ###################################################################################
+
+   API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_nrql_conditions.json'
    condition_found = False
    headers = {'Api-Key': key}
    data = {'policy_id': policy_id}
@@ -36,21 +45,21 @@ def setcondition(key, project, tier, policy_id):
        "name" : "{}".format(condition_name),
        "enabled" : True,
        "terms" : [ {
-         "duration" : "5",
+         "duration" : critical_duration,
          "operator" : "above",
-         "threshold" : "90.0",
+         "threshold" : critical_threshold,
          "time_function" : "all",
          "priority" : "critical"
        }, {
-         "duration" : "2",
+         "duration" : warning_duration,
          "operator" : "above",
-         "threshold" : "90.0",
+         "threshold" : warning_threshold,
          "time_function" : "all",
          "priority" : "warning"
        } ],
        "value_function" : "single_value",
        "nrql" : {
-         "query" : "FROM Metric SELECT average(`docker.container.cpuUsedCoresPercent`) as 'CPU cores (%)' WHERE docker.ecsClusterName LIKE '{}-{}-%'".format(project.lower(), tier.lower())
+         "query" : query.format(project.lower(), tier.lower())
        },
        "signal" : {
          "aggregation_window" : "60",
