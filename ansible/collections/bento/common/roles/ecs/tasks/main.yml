@@ -18,7 +18,7 @@
           - name: NRIA_IS_FORWARD_ONLY
             value: "true"
           - name: NEW_RELIC_APP_NAME
-            value: "{{ project_name }}-{{tier}}-{{ container_name }}"
+            value: "{{ program }}-{{ tier }}-{{ project_name }}-{{ microservice }}"
           - name: NEW_RELIC_DISTRIBUTED_TRACING_ENABLED
             value: "true"
           - name: NEW_RELIC_HOST
@@ -54,7 +54,7 @@
     network_mode: awsvpc
     execution_role_arn: "arn:aws:iam::{{ account }}:role/{{ execution_role }}"
     task_role_arn: "arn:aws:iam::{{ account }}:role/{{ task_role }}"
-    family: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    family: "{{ program }}-{{ tier }}-{{ project_name }}-{{ microservice }}"
     memory: "{{ container_memory }}"
     cpu: "{{ container_cpu }}"
     state: present
@@ -74,13 +74,7 @@
 ############################################################################################################################
 #     Service Queries
 ############################################################################################################################
-# - name: query {{ container_name }} service
-#   ecs_service_info:
-#     cluster: "{{ ecs_cluster_name }}"
-#     service: "{{ project_name }}-{{ tier }}-{{ container_name }}"
-#     details: true
-#     region: "{{ region }}"
-#   register: service
+
 - name: query {{ service_name }} service
   ecs_service_info:
     cluster: "{{ ecs_cluster_name }}"
@@ -96,27 +90,10 @@
     lb: "{{ service.services[0].loadBalancers }}"
     role_arn: "{{ service.services[0].roleArn }}"
 
-###########################################################################################################################
-#Update Services
 ############################################################################################################################
-# - name: update {{ container_name }} service
-#   ecs_service:
-#     state: present
-#     name: "{{ project_name }}-{{ tier }}-{{ container_name }}"
-#     cluster: "{{ ecs_cluster_name }}"
-#     task_definition: "{{ task_name }}:{{ task_revision }}"
-#     role: "{{ role_arn }}"
-#     force_new_deployment: yes
-#     deployment_configuration:
-#       minimum_healthy_percent: 50
-#       maximum_percent: 200
-#       deployment_circuit_breaker:
-#         enable: true
-#         rollback: false
-#     desired_count: 1
-#     load_balancers: "{{ lb }}"
-#     region: "{{ region }}"
-#   register: output
+#     Update Services
+############################################################################################################################
+
 - name: update {{ service_name }} service
   ecs_service:
     state: present
