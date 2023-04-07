@@ -6,11 +6,11 @@ locals {
   rds_master_password = {
     password = random_password.master_password.result
   }
-  snapshot_name = "${var.stack_name}-${var.env}-${random_id.snapshot.hex}"
+  snapshot_name = "${var.resource_prefix}-${random_id.snapshot.hex}"
 }
 
 resource "aws_rds_cluster" "rds" {
-  cluster_identifier = "${var.stack_name}-aurora-${var.env}"
+  cluster_identifier = "${var.resource_prefix}-aurora"
   engine                              =  var.db_engine_type
   engine_version                      =  var.db_engine_version
   engine_mode                         =  var.db_engine_mode
@@ -62,13 +62,13 @@ resource "random_password" "master_password" {
 }
 
 resource "aws_db_subnet_group" "subnet_group" {
-  name       = "${var.stack_name}-${var.env}-rds-aurora-subnet-group"
+  name       = "${var.resource_prefix}-rds-aurora-subnet-group"
   subnet_ids = var.db_subnet_ids
   tags = var.tags
 }
 
 resource "aws_security_group" "rds" {
-  name  =  "${var.stack_name}-${var.env}-rds-aurora-sg"
+  name  =  "${var.resource_prefix}-rds-aurora-sg"
   vpc_id      = var.vpc_id
   description = "Allow traffic to/from RDS Aurora"
   tags = var.tags
