@@ -1,5 +1,5 @@
 resource "aws_iam_role" "read_only" {
-  name                  = "${var.iam_prefix}-${var.program}-${var.level}-${var.app}-newrelic-read-only"
+  name                  = "${var.iam_prefix}-${var.resource_prefix}-newrelic-read-only"
   description           = "Allow config details to be collected to enrich metric observability"
   force_detach_policies = var.force_detach_policies
   assume_role_policy    = data.aws_iam_policy_document.assume_role.json
