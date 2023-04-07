@@ -1,3 +1,8 @@
+variable "resource_prefix" {
+  description = "the prefix to add when creating resources"
+  type        = string
+}
+
 variable "ebs_volume_type" {
   description = "EVS volume type"
   default     = "standard"
