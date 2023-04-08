@@ -4,13 +4,16 @@ import os
 import json
 import requests
 
-def setalertslackchannel(channel_name, destination_id, tier, key):
+def setsyntheticsmonitor(project, tier, key, api, policy_id):
    API_ENDPOINT = 'https://api.newrelic.com/graphql'
    NR_ACCT_ID = os.getenv('NR_ACCT_ID')
-   SLACK_CHANNEL = os.getenv('SLACK_CHANNEL')
 
-   channel_found = False
-
+   if tier.lower() == 'prod':
+     freq = 10
+   else:
+     freq = 30
+   
+   monitor_found = False
    headers = {
        "Api-Key": key,
        "Content-Type": "application/json"
@@ -52,18 +55,12 @@ def setalertslackchannel(channel_name, destination_id, tier, key):
 
    for x in entities:
      if channel_name in x.get("name", "none"):
-       channel_found = True
+       monitor_found = True
        channel_id = x.get('id')
 
        data = {"query":"mutation {"
-           "aiNotificationsUpdateChannel(accountId: " + NR_ACCT_ID + ", channelId: \"" + channel_id + "\", channel: {"
-             "name: \"" + channel_name + "\",\n"
-             "properties: ["
-               "{"
-                 "key: \"channelId\",\n"
-                 "value: \"" + SLACK_CHANNEL + "\""
-               "}"
-             "]"
+           "aiNotificationsUpdateDestination(accountId: " + NR_ACCT_ID + ", destinationId: \"" + destination_id + "\", destination: {"
+             "name: \"" + channel_name + "\""
            "}) {"
              "destination {"
                "id\n"
@@ -77,19 +74,14 @@ def setalertslackchannel(channel_name, destination_id, tier, key):
        except requests.exceptions.RequestException as e:
          raise SystemExit(e)
 
-   if not channel_found:
+   if not monitor_found:
      data = {"query":"mutation {"
          "aiNotificationsCreateChannel(accountId: " + NR_ACCT_ID + ", channel: {"
-           "type: SLACK,"
+           "type: EMAIL,"
            "name: \"" + channel_name + "\","
            "destinationId: \"" + destination_id + "\","
            "product: IINT,"
-           "properties: ["
-             "{"
-               "key: \"channelId\",\n"
-               "value: \"" + SLACK_CHANNEL + "\""
-             "}"
-           "]"
+           "properties: []"
          "}) {"
            "channel {"
              "id\n"
@@ -102,7 +94,7 @@ def setalertslackchannel(channel_name, destination_id, tier, key):
        response = requests.post('{}'.format(API_ENDPOINT), headers=headers, data=json.dumps(data), allow_redirects=False)
      except requests.exceptions.RequestException as e:
        raise SystemExit(e)
-     print("Channel {} created".format(channel_name))
+     print("Channel {} was created".format(channel_name))
      channel_id = response.json()['data']['aiNotificationsCreateChannel']['channel']['id']
    else:
      print("Channel {} was found".format(channel_name))

@@ -10,15 +10,11 @@ from monitors.alerts.conditions.synthetics import set_synthetics_condition
 
 def setsyntheticsmonitor(project, tier, key, api, policy_id):
    API_ENDPOINT = 'https://synthetics.newrelic.com/synthetics/api/v3/monitors'
-   DOMAIN = os.getenv('URL_DOMAIN')
-   SUB_DOMAIN = os.getenv('URL_SUB_DOMAIN')
 
    if tier.lower() == 'prod':
      freq = 10
-     monitor_uri = 'https://{}'.format(DOMAIN)
    else:
      freq = 30
-     monitor_uri = 'https://{}-{}.{}{}'.format(SUB_DOMAIN, tier.lower(), DOMAIN, api['endpoint'].lower())
 
    # set monitor configuration
    monitor_name = '{} {} {} Monitor'.format(project, tier, api['name'])
@@ -26,7 +22,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
        "name": monitor_name,
        "type": "BROWSER",
        "frequency": freq,
-       "uri": monitor_uri,
+       "uri": api['url'],
        "locations": [ api['location'] ],
        "status": "ENABLED",
        "slaThreshold": 7.0,
