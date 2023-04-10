@@ -75,6 +75,7 @@ No modules.
 | <a name="input_env"></a> [env](#input\_env) | environment | `string` | n/a | yes |
 | <a name="input_iam_prefix"></a> [iam\_prefix](#input\_iam\_prefix) | The string prefix for IAM roles and policies to conform to NCI power-user compliance | `string` | `"power-user"` | no |
 | <a name="input_public_key_path"></a> [public\_key\_path](#input\_public\_key\_path) | path of public key | `any` | `null` | no |
+| <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | the prefix to add when creating resources | `string` | n/a | yes |
 | <a name="input_slack_secret_name"></a> [slack\_secret\_name](#input\_slack\_secret\_name) | name of cloudfront slack secret | `string` | n/a | yes |
 | <a name="input_slack_url_secret_key"></a> [slack\_url\_secret\_key](#input\_slack\_url\_secret\_key) | secret key name for the slack url | `string` | `"cloud-front-slack-url"` | no |
 | <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |
