@@ -39,23 +39,6 @@ resource "aws_s3_bucket_versioning" "s3" {
   }
 }
 
-resource "aws_s3_bucket_lifecycle_configuration" "s3_lifecycle" {
-  rule {
-    id      = "tmp-files-rule"
-    status = "Enabled"
-
-    filter {
-      prefix = "tmp/"
-    }
-
-    expiration {
-      days = 2
-    }
-  }
-
-  bucket = aws_s3_bucket.s3.id
-}
-
 resource "aws_s3_bucket_intelligent_tiering_configuration" "s3" {
   bucket = aws_s3_bucket.s3.bucket
   name = "${local.bucket_name}-intelligent-tiering"
