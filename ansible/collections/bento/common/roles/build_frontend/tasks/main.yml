@@ -55,7 +55,7 @@
       path: "{{workspace}}/build"
       pull: yes
 #      nocache: yes
-    name: "{{ project_name }}-{{ container_name }}"
+    name: "{{ program }}-{{ project_name }}-{{ container_name }}"
     tag: "{{ image_version }}.{{ build_number }}"
     push: no
     force_source: yes
@@ -76,12 +76,12 @@
 
 - name: debug
   debug:
-    msg: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
+    msg: "{{ container_registry_url }}/{{ program }}-{{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
 
 - name: Add {{ project_name }}-{{ container_name }} image to ECR
   community.docker.docker_image:
-    name: "{{ project_name }}-{{ container_name }}"
-    repository: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}"
+    name: "{{ program }}-{{ project_name }}-{{ container_name }}"
+    repository: "{{ container_registry_url }}/{{ program }}-{{ project_name }}-{{ container_name }}"
     tag: "{{ image_version }}.{{ build_number }}"
     force_tag: yes
     push: yes
@@ -90,8 +90,8 @@
 
 - name: Add tag latest to {{ project_name }}-{{container_name}} image
   community.docker.docker_image:
-    name: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:{{ image_version }}.{{build_number}}"
-    repository: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:latest"
+    name: "{{ container_registry_url }}/{{ program }}-{{ project_name }}-{{ container_name }}:{{ image_version }}.{{build_number}}"
+    repository: "{{ container_registry_url }}/{{ program }}-{{ project_name }}-{{ container_name }}:latest"
     force_tag: yes
     push: yes
     source: local
