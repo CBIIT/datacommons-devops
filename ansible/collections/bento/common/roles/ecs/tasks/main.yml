@@ -11,7 +11,7 @@
             enable-ecs-log-metadata: "true"
       - name: "{{ project_name }}-{{ tier }}-fargate-infra"
         essential: true
-        image: "newrelic/nri-ecs:1.9.2"
+        image: "newrelic/nri-ecs:1.9.9"
         environment:
           - name: NRIA_OVERRIDE_HOST_ROOT
             value: ""
