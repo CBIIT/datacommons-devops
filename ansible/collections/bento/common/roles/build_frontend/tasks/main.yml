@@ -22,7 +22,7 @@
     chdir: "{{ container_build_path }}"
     warn: false
   environment:
-    NODE_OPTIONS: --max-old-space-size=2048
+    NODE_OPTIONS: --max-old-space-size=4096
   loop:
     - npm set progress=false
     - npm install --silent
