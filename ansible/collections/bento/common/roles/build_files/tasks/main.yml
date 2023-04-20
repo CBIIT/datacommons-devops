@@ -1,3 +1,8 @@
+- name: ensure we have all the submodules
+  shell: git submodule update --init --recursive
+  args:
+    chdir: "{{ container_build_path }}"
+
 - name: build {{ project_name }}-{{ container_name }} image
   community.docker.docker_image:
     build:
