@@ -89,8 +89,8 @@ variable "max_ttl" {
   default = 86400
 }
 
-variable "create_kenesis" {
-  description = "choose to create kenesis or not"
+variable "create_kinesis" {
+  description = "choose to create kinesis or not"
   type = bool
   default = true
 }
