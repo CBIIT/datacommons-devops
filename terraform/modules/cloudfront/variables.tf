@@ -88,3 +88,9 @@ variable "max_ttl" {
   description = "maximum time to live"
   default = 86400
 }
+
+variable "create_kenesis" {
+  description = "choose to create kenesis or not"
+  type = bool
+  default = true
+}
