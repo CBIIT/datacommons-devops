@@ -40,6 +40,7 @@ data "aws_iam_policy_document" "kinesis_assume_role_policy" {
 }
 
 data "aws_iam_policy_document" "firehose_policy" {
+  count  = var.create_kinesis ? 1:0
   statement {
     sid = ""
     effect = "Allow"
@@ -53,7 +54,7 @@ data "aws_iam_policy_document" "firehose_policy" {
     ]
     resources = [
       aws_s3_bucket.kinesis_log.arn,
-      "${aws_s3_bucket.kinesis_log.arn}/*"
+      "${aws_s3_bucket.kinesis_log[0].arn}/*"
     ]
   }
   statement {
