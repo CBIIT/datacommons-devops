@@ -10,9 +10,9 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
    monitor_name = '{} {} {} Monitor'.format(project, tier, api['name'])
 
    if tier.lower() == 'prod':
-     freq = 'EVERY_30_MINUTES'
-   else:
      freq = 'EVERY_10_MINUTES'
+   else:
+     freq = 'EVERY_30_MINUTES'
    
    monitor_found = False
    headers = {
@@ -81,6 +81,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
                  "key: \"Tier\","
                  "values: [\"" + tier + "\"]"
                "},"
+             "]"
          "} ) {"
          "errors {"
            "description\n"
@@ -97,29 +98,30 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
    if not monitor_found:
      data = {"query":"mutation {"
        "syntheticsCreateSimpleBrowserMonitor ("
-         "accountId: " +  + ","
+         "accountId: " + NR_ACCT_ID + ","
          "monitor: {"
            "locations: {"
-               "private: [\"" + api['location'] + "\"]"
+             "private: [\"" + api['location'] + "\"]"
+           "},"
+           "name: \"" + monitor_name + "\","
+           "period: " + freq + ","
+           "runtime: {"
+             "runtimeType: \"CHROME_BROWSER\","
+             "runtimeTypeVersion: \"100\","
+             "scriptLanguage: \"JAVASCRIPT\""
+           "}"
+           "status: ENABLED,"
+           "uri: \"" + api['url'] + "\","
+           "tags: ["
+             "{"
+               "key: \"Project\","
+               "values: [\"" + project + "\"]"
              "},"
-             "name: \"" + monitor_name + "\","
-             "period: " + freq + ","
-             "runtime: {"
-               "runtimeType: \"CHROME_BROWSER\","
-               "runtimeTypeVersion: \"100\","
-               "scriptLanguage: \"JAVASCRIPT\""
-             "}"
-             "status: ENABLED,"
-             "uri: \"" + api['url'] + "\","
-             "tags: ["
-               "{"
-                 "key: \"Project\","
-                 "values: [\"" + project + "\"]"
-               "},"
-               "{"
-                 "key: \"Tier\","
-                 "values: [\"" + tier + "\"]"
-               "},"
+             "{"
+               "key: \"Tier\","
+               "values: [\"" + tier + "\"]"
+             "},"
+           "]"
          "} ) {"
          "errors {"
            "description\n"
