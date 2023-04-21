@@ -30,7 +30,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   enabled             = true
   is_ipv6_enabled     = true
   wait_for_deployment = false
-  price_class         = "PriceClass_100"
+  price_class         = var.price_class
 
   web_acl_id = aws_wafv2_web_acl.waf.arn
 
@@ -57,9 +57,9 @@ resource "aws_cloudfront_distribution" "distribution" {
 
     trusted_key_groups = [aws_cloudfront_key_group.key_group.id]
     viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
+    min_ttl                = var.min_ttl
+    default_ttl            = var.default_ttl
+    max_ttl                = var.max_ttl
 
   }
 
@@ -77,7 +77,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
 #create waf
 resource "aws_wafv2_web_acl" "waf" {
-  name        = "${var.stack_name}-ip-limiting-waf-rule"
+  name        = "${var.stack_name}-${var.env}-ip-limiting-waf-rule"
   description = "This rule limit number of request per ip"
   scope       = "CLOUDFRONT"
 
