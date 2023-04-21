@@ -1,20 +1,32 @@
 #!/usr/bin/python
 
-import sys, getopt, json, os, csv
+import sys, getopt, json, os, csv, codecs, requests, contextlib
 from monitors.alerts.policies import set_fargate_policy, set_alb_policy, set_opensearch_policy, set_synthetics_policy
 from monitors.synthetics import set_synthetics_monitor_nrql
 from monitors.alerts.destinations import set_email_destination, set_slack_destination
 from monitors.alerts.workflows import set_workflow
 
-def main(input_file):
+def main(argv):
 
-   #result = setMonitors(input_file)
-   result = setSynthetics(input_file)
+   try:
+      opts, args = getopt.getopt(argv,"hf:",["file="])
+   except getopt.GetoptError:
+      print('File URL Required:   monitor_update_csv.py -f <file>')
+      sys.exit(2)
+   for opt, arg in opts:
+      if opt == '-h':
+         print('monitor_update_csv.py -f <file>')
+         sys.exit()
+      elif opt in ("-f", "--file"):
+         input_url = arg
 
-def setMonitors(input_file):
+   result = setMonitors(input_url)
+   result = setSynthetics(input_url)
 
-   with open(input_file, newline='') as csvfile:
-     data = csv.DictReader(csvfile)
+def setMonitors(input_url):
+
+   with contextlib.closing(requests.get(input_url, stream=True)) as csvfile:
+     data = csv.DictReader(codecs.iterdecode(csvfile.iter_lines(), 'utf-8'))
 
      tiersSet = []
      for row in data:
@@ -42,9 +54,10 @@ def setMonitors(input_file):
 
    #return(data)
 
-def setSynthetics(input_file):
-   with open(input_file, newline='') as csvfile:
-     data = csv.DictReader(csvfile)
+def setSynthetics(input_url):
+
+   with contextlib.closing(requests.get(input_url, stream=True)) as csvfile:
+     data = csv.DictReader(codecs.iterdecode(csvfile.iter_lines(), 'utf-8'))
 
      tiersSet = []
      for row in data:
@@ -77,10 +90,9 @@ def setSynthetics(input_file):
        api_data['url'] = monitor_url
        api = json.loads(json.dumps(api_data))
        api.update({"location": location})
-       print('Synthetics Policy:   {}     API:   {}'.format(synthetics_policy_id, api))
        set_synthetics_monitor_nrql.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
 
    #return(data)
 
 if __name__ == "__main__":
-   result = main('FNL-Monitoring-List.csv')
+   result = main(sys.argv[1:])
