@@ -54,7 +54,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
      if monitor_name in x.get("name", "none"):
        monitor_found = True
        monitor_id = x.get('guid')
-       print('Monitor {} already exists, updating with teh latest configuration.'.format(monitor_name))
+       print('Monitor {} already exists, updating with the latest configuration.'.format(monitor_name))
 
        data = {"query":"mutation {"
          "syntheticsUpdateSimpleBrowserMonitor ("
