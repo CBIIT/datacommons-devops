@@ -7,11 +7,12 @@ import requests
 def setsyntheticsmonitor(project, tier, key, api, policy_id):
    API_ENDPOINT = 'https://api.newrelic.com/graphql'
    NR_ACCT_ID = os.getenv('NR_ACCT_ID')
+   monitor_name = '{} {} {} Monitor'.format(project, tier, api['name'])
 
    if tier.lower() == 'prod':
-     freq = 10
+     freq = 'EVERY_30_MINUTES'
    else:
-     freq = 30
+     freq = 'EVERY_10_MINUTES'
    
    monitor_found = False
    headers = {
@@ -21,16 +22,12 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
 
    data = {"query":"{"
      "actor {"
-       "account(id: " + NR_ACCT_ID + ") {"
-         "aiNotifications {"
-           "channels {"
-             "entities {"
-               "id\n"
+       "entitySearch(query: \"domain = 'SYNTH' AND type = 'MONITOR'\") {"
+         "results {"
+           "entities {"
+             "... on SyntheticMonitorEntityOutline {"
                "name\n"
-               "product"
-             "}"
-             "error {"
-               "details"
+               "guid"
              "}"
            "}"
          "}"
@@ -54,19 +51,42 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
      entities = x
 
    for x in entities:
-     if channel_name in x.get("name", "none"):
+     if monitor_name in x.get("name", "none"):
        monitor_found = True
-       channel_id = x.get('id')
+       monitor_id = x.get('guid')
+       print('Monitor {} already exists, updating with teh latest configuration.'.format(monitor_name))
 
        data = {"query":"mutation {"
-           "aiNotificationsUpdateDestination(accountId: " + NR_ACCT_ID + ", destinationId: \"" + destination_id + "\", destination: {"
-             "name: \"" + channel_name + "\""
-           "}) {"
-             "destination {"
-               "id\n"
-               "name"
+         "syntheticsUpdateSimpleBrowserMonitor ("
+           "guid: \"" + monitor_id + "\","
+           "monitor: {"
+             "locations: {"
+               "private: [\"" + api['location'] + "\"]"
+             "},"
+             "name: \"" + monitor_name + "\","
+             "period: " + freq + ","
+             "runtime: {"
+               "runtimeType: \"CHROME_BROWSER\","
+               "runtimeTypeVersion: \"100\","
+               "scriptLanguage: \"JAVASCRIPT\""
              "}"
-           "}"
+             "status: ENABLED,"
+             "uri: \"" + api['url'] + "\","
+             "tags: ["
+               "{"
+                 "key: \"Project\","
+                 "values: [\"" + project + "\"]"
+               "},"
+               "{"
+                 "key: \"Tier\","
+                 "values: [\"" + tier + "\"]"
+               "},"
+         "} ) {"
+         "errors {"
+           "description\n"
+           "type"
+         "}"
+         "}"
        "}", "variables":""}
 
        try:
@@ -76,27 +96,40 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
 
    if not monitor_found:
      data = {"query":"mutation {"
-         "aiNotificationsCreateChannel(accountId: " + NR_ACCT_ID + ", channel: {"
-           "type: EMAIL,"
-           "name: \"" + channel_name + "\","
-           "destinationId: \"" + destination_id + "\","
-           "product: IINT,"
-           "properties: []"
-         "}) {"
-           "channel {"
-             "id\n"
-             "name"
-           "}"
+       "syntheticsCreateSimpleBrowserMonitor ("
+         "accountId: " +  + ","
+         "monitor: {"
+           "locations: {"
+               "private: [\"" + api['location'] + "\"]"
+             "},"
+             "name: \"" + monitor_name + "\","
+             "period: " + freq + ","
+             "runtime: {"
+               "runtimeType: \"CHROME_BROWSER\","
+               "runtimeTypeVersion: \"100\","
+               "scriptLanguage: \"JAVASCRIPT\""
+             "}"
+             "status: ENABLED,"
+             "uri: \"" + api['url'] + "\","
+             "tags: ["
+               "{"
+                 "key: \"Project\","
+                 "values: [\"" + project + "\"]"
+               "},"
+               "{"
+                 "key: \"Tier\","
+                 "values: [\"" + tier + "\"]"
+               "},"
+         "} ) {"
+         "errors {"
+           "description\n"
+           "type"
          "}"
-     "}", "variables":""}
+         "}"
+       "}", "variables":""}
 
      try:
        response = requests.post('{}'.format(API_ENDPOINT), headers=headers, data=json.dumps(data), allow_redirects=False)
      except requests.exceptions.RequestException as e:
        raise SystemExit(e)
-     print("Channel {} was created".format(channel_name))
-     channel_id = response.json()['data']['aiNotificationsCreateChannel']['channel']['id']
-   else:
-     print("Channel {} was found".format(channel_name))
-
-   return(channel_id)
+     print("Monitor {} was created".format(monitor_name))
