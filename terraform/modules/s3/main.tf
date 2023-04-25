@@ -22,8 +22,8 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
         Action = "s3:*"
         Effect = "Allow"
         Resource = [
-          "${aws_s3_bucket.your_bucket.arn}",
-          "${aws_s3_bucket.your_bucket.arn}/*",
+          "${aws_s3_bucket.s3.arn}",
+          "${aws_s3_bucket.s3.arn}/*",
         ]
         Principal = "*"
       }
