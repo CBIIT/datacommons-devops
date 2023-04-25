@@ -12,25 +12,6 @@ resource "aws_s3_bucket_acl" "s3" {
   acl    = "private"
 }
 
-resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = aws_s3_bucket.s3.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "s3:*"
-        Effect = "Allow"
-        Resource = [
-          "${aws_s3_bucket.s3.arn}",
-          "${aws_s3_bucket.s3.arn}/*",
-        ]
-        Principal = "*"
-      }
-    ]
-  })
-}
-
 resource "aws_s3_bucket_public_access_block" "s3" {
   bucket                  = aws_s3_bucket.s3.id
   block_public_acls       = true
