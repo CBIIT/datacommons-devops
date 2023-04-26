@@ -9,8 +9,8 @@
 
 - name: copy application.properties file to /src/main/resources/
   template:
-    src: "{{ workspace }}/gmb-backend/src/main/resources/application.properties.j2"
-    dest: "{{ workspace }}/gmb-backend/src/main/resources/application.properties"
+    src: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/application.properties.j2"
+    dest: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/application.properties"
 
 - name: create graphql directory in backend
   file:
