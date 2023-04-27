@@ -16,7 +16,7 @@
     mode: 0755
 
 
-- name: run npm install in {{ workspace }}/{{ project_name }}-frontend/
+- name: run npm install in {{ workspace }}/bento-{{ project_name }}-frontend/
   command: "{{ item }}"
   args:
     chdir: "{{ container_build_path }}"
