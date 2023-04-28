@@ -2,7 +2,7 @@
 Clinical Trial Data Commons,ctdc,CRDC,Dev,Portal,https://trialcommons-dev.cancer.gov,,TRUE
 Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://trialcommons-dev.cancer.gov/v1/graphql,"var assert = require('assert');
 
-$http.post('https://trialcommons-dev.cancer.gov/v1/graphql',
+$http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
   {
     json: {
     query: '{ schemaVersion }'
@@ -21,7 +21,7 @@ Clinical Trial Data Commons,ctdc,CRDC,Dev,Files,https://trialcommons-dev.cancer.
 Clinical Trial Data Commons,ctdc,CRDC,QA,Portal,https://trialcommons-qa.cancer.gov,,TRUE
 Clinical Trial Data Commons,ctdc,CRDC,QA,API,https://trialcommons-qa.cancer.gov/v1/graphql,"var assert = require('assert');
 
-$http.post('https://trialcommons-qa.cancer.gov/v1/graphql',
+$http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
   {
     json: {
     query: '{ schemaVersion }'
