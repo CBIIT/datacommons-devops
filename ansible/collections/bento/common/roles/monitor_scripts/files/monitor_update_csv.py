@@ -2,7 +2,7 @@
 
 import sys, getopt, json, os, csv, codecs, requests, contextlib
 from monitors.alerts.policies import set_fargate_policy, set_alb_policy, set_opensearch_policy, set_synthetics_policy
-from monitors.synthetics import set_synthetics_monitor_nrql
+from monitors.synthetics import set_synthetics_monitor_simple_browser, set_synthetics_monitor_scripted_api
 from monitors.alerts.destinations import set_email_destination, set_slack_destination
 from monitors.alerts.workflows import set_workflow
 
@@ -79,18 +79,18 @@ def setSynthetics(input_url):
          synthetics_policy_id = set_synthetics_policy.setpolicy(project, tier, key)
          tiersSet.append(project + '-' + tier)
          #print(tiersSet)
-         
-       if row["Private_Location"] and tier.lower() != 'prod':
-         location = os.getenv('LOCATION')
-       else:
-         location = 'AWS_US_EAST_1'
 
        api_data = {}
        api_data['name'] = endpoint_name
        api_data['url'] = monitor_url
        api = json.loads(json.dumps(api_data))
-       api.update({"location": location})
-       set_synthetics_monitor_nrql.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
+       api.update({"location": row["Private_Location"]})
+       api.update({"query": row["Endpoint_Query"]})
+
+       if api['query']:
+         set_synthetics_monitor_scripted_api.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
+       else:
+         set_synthetics_monitor_simple_browser.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
 
    #return(data)
 

@@ -14,6 +14,11 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
    else:
      freq = 'EVERY_30_MINUTES'
    
+   if api['location'] and tier.lower() != 'prod':
+     location = "private: [\"" + os.getenv('LOCATION') + "\"]"
+   else:
+     location = "public: [\"AWS_US_EAST_1\"]"
+
    monitor_found = False
    headers = {
        "Api-Key": key,
@@ -37,7 +42,8 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
 
    try:
      response = requests.post(API_ENDPOINT, headers=headers, data=json.dumps(data), allow_redirects=False)
-   except requests.exceptions.RequestException as e:
+     if 'errors' in response.json(): raise ValueError('{} Script Error:   {}'.format(monitor_name, response.json()['errors']))
+   except (requests.exceptions.RequestException, ValueError) as e:
      raise SystemExit(e)
 
    def find_by_key(data, target):
@@ -61,7 +67,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
            "guid: \"" + monitor_id + "\","
            "monitor: {"
              "locations: {"
-               "private: [\"" + api['location'] + "\"]"
+               "" + location + ""
              "},"
              "name: \"" + monitor_name + "\","
              "period: " + freq + ","
@@ -92,7 +98,8 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
 
        try:
          response = requests.post(API_ENDPOINT, headers=headers, data=json.dumps(data), allow_redirects=False)
-       except requests.exceptions.RequestException as e:
+         if 'errors' in response.json(): raise ValueError('{} Script Error:   {}'.format(monitor_name, response.json()['errors']))
+       except (requests.exceptions.RequestException, ValueError) as e:
          raise SystemExit(e)
 
    if not monitor_found:
@@ -101,7 +108,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
          "accountId: " + NR_ACCT_ID + ","
          "monitor: {"
            "locations: {"
-             "private: [\"" + api['location'] + "\"]"
+             "" + location + ""
            "},"
            "name: \"" + monitor_name + "\","
            "period: " + freq + ","
@@ -132,6 +139,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
 
      try:
        response = requests.post('{}'.format(API_ENDPOINT), headers=headers, data=json.dumps(data), allow_redirects=False)
-     except requests.exceptions.RequestException as e:
+       if 'errors' in response.json(): raise ValueError('{} Script Error:   {}'.format(monitor_name, response.json()['errors']))
+     except (requests.exceptions.RequestException, ValueError) as e:
        raise SystemExit(e)
      print("Monitor {} was created".format(monitor_name))
