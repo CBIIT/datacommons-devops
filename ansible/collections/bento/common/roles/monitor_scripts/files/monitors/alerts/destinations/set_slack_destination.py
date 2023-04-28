@@ -5,7 +5,7 @@ import json
 import requests
 from monitors.alerts.channels import set_slack_channel
 
-def setalertslack(dest_name, project, tier, key):
+def setalertslack(dest_name, project, tier, key, slack_channel):
    API_ENDPOINT = 'https://api.newrelic.com/graphql'
    NR_ACCT_ID = os.getenv('NR_ACCT_ID')
 
@@ -53,7 +53,7 @@ def setalertslack(dest_name, project, tier, key):
        
    if dest_found:
      print("Destination {} was found".format(dest_name))
-     channel_id = set_slack_channel.setalertslackchannel(dest_name + "-" + project + "-" + tier, dest_id, tier, key)
+     channel_id = set_slack_channel.setalertslackchannel(dest_name + "-" + project + "-" + tier, dest_id, tier, key, slack_channel)
      return(channel_id)
    else:
      raise SystemExit("Destination " + dest_name + " not found - this destination must be created in the New Relic UI.")
