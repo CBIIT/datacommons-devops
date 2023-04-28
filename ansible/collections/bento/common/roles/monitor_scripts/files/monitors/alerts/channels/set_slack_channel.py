@@ -4,10 +4,9 @@ import os
 import json
 import requests
 
-def setalertslackchannel(channel_name, destination_id, tier, key):
+def setalertslackchannel(channel_name, destination_id, tier, key, slack_channel):
    API_ENDPOINT = 'https://api.newrelic.com/graphql'
    NR_ACCT_ID = os.getenv('NR_ACCT_ID')
-   SLACK_CHANNEL = os.getenv('SLACK_CHANNEL')
 
    channel_found = False
 
@@ -40,11 +39,6 @@ def setalertslackchannel(channel_name, destination_id, tier, key):
    except requests.exceptions.RequestException as e:
      raise SystemExit(e)
 
-   try:
-     response = requests.post(API_ENDPOINT, headers=headers, data=json.dumps(data), allow_redirects=False)
-   except requests.exceptions.RequestException as e:
-     raise SystemExit(e)
-
    def find_by_key(data, target):
     for key, value in data.items():
         if isinstance(value, dict):
@@ -66,7 +60,7 @@ def setalertslackchannel(channel_name, destination_id, tier, key):
              "properties: ["
                "{"
                  "key: \"channelId\",\n"
-                 "value: \"" + SLACK_CHANNEL + "\""
+                 "value: \"" + slack_channel + "\""
                "}"
              "]"
            "}) {"
@@ -92,7 +86,7 @@ def setalertslackchannel(channel_name, destination_id, tier, key):
            "properties: ["
              "{"
                "key: \"channelId\",\n"
-               "value: \"" + SLACK_CHANNEL + "\""
+               "value: \"" + slack_channel + "\""
              "}"
            "]"
          "}) {"

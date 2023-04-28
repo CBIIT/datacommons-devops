@@ -1,0 +1,39 @@
+﻿Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Private_Location,Slack_Channel
+Clinical Trial Data Commons,ctdc,CRDC,Dev,Portal,https://trialcommons-dev.cancer.gov,,TRUE,C051XGDRQG6
+Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://trialcommons-dev.cancer.gov/v1/graphql,"var assert = require('assert');
+
+$http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: '{ schemaVersion }'
+    }
+  },
+
+  function (err, response, body) {
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    assert.ok('schemaVersion' in body.data);
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+  }
+);",TRUE,C051XGDRQG6
+Clinical Trial Data Commons,ctdc,CRDC,Dev,Files,https://trialcommons-dev.cancer.gov/api/files,,TRUE,C051XGDRQG6
+Clinical Trial Data Commons,ctdc,CRDC,QA,Portal,https://trialcommons-qa.cancer.gov,,TRUE,C051XGDRQG6
+Clinical Trial Data Commons,ctdc,CRDC,QA,API,https://trialcommons-qa.cancer.gov/v1/graphql,"var assert = require('assert');
+
+$http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: '{ schemaVersion }'
+    }
+  },
+
+  function (err, response, body) {
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    assert.ok('schemaVersion' in body.data);
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+  }
+);",TRUE,C051XGDRQG6
+Clinical Trial Data Commons,ctdc,CRDC,QA,Files,https://trialcommons-qa.cancer.gov/api/files,,TRUE,C051XGDRQG6

@@ -1,0 +1,16 @@
+- name: copy script files
+  copy:
+    src: ./
+    dest: ./scripts/
+    directory_mode:
+
+- name: update requirements
+  command: "pip install -r scripts/requirements.txt"
+
+- name: update monitors
+  command: "python3 scripts/monitor_update_csv.py -f {{ input_file }}"
+  register: monitor_out
+
+- name: show output
+  debug: var={{item}}
+  with_items: monitor_out.stdout_lines

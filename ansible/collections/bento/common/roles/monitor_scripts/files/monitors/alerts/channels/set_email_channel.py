@@ -38,11 +38,6 @@ def setalertemailchannel(channel_name, destination_id, key):
    except requests.exceptions.RequestException as e:
      raise SystemExit(e)
 
-   try:
-     response = requests.post(API_ENDPOINT, headers=headers, data=json.dumps(data), allow_redirects=False)
-   except requests.exceptions.RequestException as e:
-     raise SystemExit(e)
-
    def find_by_key(data, target):
     for key, value in data.items():
         if isinstance(value, dict):
