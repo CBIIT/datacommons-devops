@@ -36,6 +36,7 @@ def setMonitors(input_url):
        tier = row["Tier"]
        global key
        key = os.getenv('KEY')
+       slack_channel = row["Slack_Channel"]
 
        if project + '-' + tier not in tiersSet:
          print()
@@ -43,7 +44,7 @@ def setMonitors(input_url):
          print()
 
          email_id = set_email_destination.setalertemail("DevOps-FNL", project, tier, key)
-         slack_id = set_slack_destination.setalertslack("Expand Data Commons", project, tier, key)
+         slack_id = set_slack_destination.setalertslack("Expand Data Commons", project, tier, key, slack_channel)
          workflow_id = set_workflow.setalertworkflow(project + "-" + tier + " Notifications", email_id, slack_id, project, tier, key)
 
          os_policy_id = set_opensearch_policy.setpolicy(project, tier, key)
