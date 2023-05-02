@@ -5,13 +5,17 @@ Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://trialcommons-dev.cancer.go
 $http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ schemaVersion }'
+    query: '{ idsLists { case_ids } }'
     }
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    assert.ok('schemaVersion' in body.data);
+    // Verify 200 response code
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    // Verify correct data in response body
+    assert.ok('case_ids' in body.data.idsLists);
+    // Verify text in response
+    assert.match(body.data.idsLists.case_ids[0], /CTDC-/);
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
@@ -24,13 +28,17 @@ Clinical Trial Data Commons,ctdc,CRDC,QA,API,https://trialcommons-qa.cancer.gov/
 $http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ schemaVersion }'
+    query: '{ idsLists { case_ids } }'
     }
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    assert.ok('schemaVersion' in body.data);
+    // Verify 200 response code
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    // Verify correct data in response body
+    assert.ok('case_ids' in body.data.idsLists);
+    // Verify text in response
+    assert.match(body.data.idsLists.case_ids[0], /CTDC-/);
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
