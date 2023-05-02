@@ -10,11 +10,8 @@ $http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    // Verify 200 response code
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    // Verify correct data in response body
     assert.ok('case_ids' in body.data.idsLists);
-    // Verify text in response
     assert.match(body.data.idsLists.case_ids[0], /CTDC-/);
 
     console.log('Response:', body);
@@ -33,11 +30,8 @@ $http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    // Verify 200 response code
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    // Verify correct data in response body
     assert.ok('case_ids' in body.data.idsLists);
-    // Verify text in response
     assert.match(body.data.idsLists.case_ids[0], /CTDC-/);
 
     console.log('Response:', body);
