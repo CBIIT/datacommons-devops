@@ -22,13 +22,13 @@
     state: directory
     path: "{{ workspace }}/src/main/resources/yaml"
 
-- name: copy schema from frontend to resources
-  template:
-    remote_src: yes
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-  loop:
-    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ public_schema_file }}",dest: "{{ workspace }}/src/main/resources/graphql/{{ public_schema_file }}"}
+#- name: copy schema from frontend to resources
+  #template:
+  #  remote_src: yes
+   # src: "{{ item.src }}"
+    #dest: "{{ item.dest }}"
+  #loop:
+   # - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ public_schema_file }}",dest: "{{ workspace }}/src/main/resources/graphql/{{ public_schema_file }}"}
 
 ##### Redis
 
