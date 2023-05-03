@@ -44,7 +44,7 @@
 
 - name: copy redis schema from frontend to resources
   template:
-    src: "{{ workspace }}/bento-frontend/graphql/{{ redis_schema_file }}"
+    src: "{{ workspace }}/bento-icdc-frontend/graphql/{{ redis_schema_file }}"
     dest: "{{ workspace }}/src/main/resources/graphql/{{ redis_schema_file }}"
   when: redis_schema.stat.exists
 
