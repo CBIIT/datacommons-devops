@@ -41,7 +41,7 @@
 - name: verify redis init queries file exists
   stat:
     path: "{{ workspace }}/icdc-frontend/yaml/{{ redis_init_queries_file }}"
-    register: redis_queries
+  register: redis_queries
 
 #- name: copy redis schema from frontend to resources
  # template:
