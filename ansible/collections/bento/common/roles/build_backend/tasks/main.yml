@@ -40,12 +40,12 @@
 
 - name: verify redis init queries file exists
   stat:
-    path: "{{ workspace }}/icdc-frontend/yaml/{{ redis_init_queries_file }}"
+    path: "{{ workspace }}/bento-icdc-frontend/yaml/{{ redis_init_queries_file }}"
   register: redis_queries
 
 #- name: copy redis schema from frontend to resources
  # template:
-  #  src: "{{ workspace }}/icdc-frontend/graphql/{{ redis_schema_file }}"
+  #  src: "{{ workspace }}/bento-icdc-frontend/graphql/{{ redis_schema_file }}"
    # dest: "{{ workspace }}/src/main/resources/graphql/{{ redis_schema_file }}"
  # when: redis_schema.stat.exists
 
@@ -59,13 +59,13 @@
 
 - name: verify test queries file exists
   stat:
-    path: "{{ workspace }}/{{ project_name }}-frontend/yaml/{{ test_queries_file }}"
+    path: "{{ workspace }}/bento-{{ project_name }}-frontend/yaml/{{ test_queries_file }}"
   register: test_queries
 
 - name: copy test queries from frontend to resources
   template:
     remote_src: yes
-    src: "{{ workspace }}/{{ project_name }}-frontend/yaml/{{ test_queries_file }}"
+    src: "{{ workspace }}/bento-{{ project_name }}-frontend/yaml/{{ test_queries_file }}"
     dest: "{{ workspace }}/src/main/resources/yaml/{{ test_queries_file }}"
   when: test_queries.stat.exists
 
