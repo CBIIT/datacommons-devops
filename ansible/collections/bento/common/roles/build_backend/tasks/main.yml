@@ -12,15 +12,15 @@
     src: "{{ workspace }}/src/main/resources/application.properties.j2"
     dest: "{{ workspace }}/src/main/resources/application.properties"
 
-- name: create graphql directory in backend
-  file:
-    state: directory
-    path: "{{ workspace }}/src/main/resources/graphql"
+#- name: create graphql directory in backend
+ # file:
+  #  state: directory
+   # path: "{{ workspace }}/src/main/resources/graphql"
 
-- name: create yaml directory in backend
-  file:
-    state: directory
-    path: "{{ workspace }}/src/main/resources/yaml"
+#- name: create yaml directory in backend
+ # file:
+  #  state: directory
+   # path: "{{ workspace }}/src/main/resources/yaml"
 
 #- name: copy schema from frontend to resources
   #template:
