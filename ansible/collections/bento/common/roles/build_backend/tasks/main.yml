@@ -51,7 +51,7 @@
 - name: copy redis init queries from frontend to resources
   template:
     src: "{{ workspace }}/{{ project_name }}-frontend/yaml/{{ redis_init_queries_file }}"
-    dest: "{{ workspace }}/src/main/resources/yaml/{{ redis_init_queries_file }}"
+    dest: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/yaml/{{ redis_init_queries_file }}"
   when: redis_queries.stat.exists
 
 ##### Redis
@@ -65,7 +65,7 @@
   template:
     remote_src: yes
     src: "{{ workspace }}/{{ project_name }}-frontend/yaml/{{ test_queries_file }}"
-    dest: "{{ workspace }}/src/main/resources/yaml/{{ test_queries_file }}"
+    dest: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/yaml/{{ test_queries_file }}"
   when: test_queries.stat.exists
 
 - name: build springboot code
