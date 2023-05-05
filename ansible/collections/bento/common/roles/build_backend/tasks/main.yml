@@ -45,7 +45,7 @@
 - name: copy redis schema from frontend to resources
   template:
     src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ redis_schema_file }}"
-    dest: "{{ workspace }}/src/main/resources/graphql/{{ redis_schema_file }}"
+    dest: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/graphql/{{ redis_schema_file }}"
   when: redis_schema.stat.exists
 
 - name: copy redis init queries from frontend to resources
