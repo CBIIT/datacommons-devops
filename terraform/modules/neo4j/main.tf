@@ -1,6 +1,6 @@
 
 resource "aws_instance" "db" {
-  ami                    = data.aws_ssm_parameter.amz_linux.value
+  ami                    = var.ami ? var.ami : data.aws_ssm_parameter.amz_linux.value
   instance_type          = var.database_instance_type
   key_name               = var.ssh_key_name
   subnet_id              = var.db_subnet_id

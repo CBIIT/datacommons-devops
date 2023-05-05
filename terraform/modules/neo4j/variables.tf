@@ -75,3 +75,8 @@ variable "enable_http_endpoint" {
   description = "choose if http_endpoint is enabled or disabld"
   default = "enabled"
 }
+variable "ami" {
+  type = string
+  description = "ami for the instance"
+  default = null
+}
