@@ -77,7 +77,7 @@
   copy:
     remote_src: yes
     src: "{{ workspace }}/{{ project_name }}-backend/target/Bento-0.0.1.war"
-    dest: "{{ workspace }}/target/ROOT.war"
+    dest: "{{ workspace }}/{{ project_name }}-backend/target/ROOT.war"
 
 - name: build {{ project_name }}-{{ container_name }} image
   community.docker.docker_image:
