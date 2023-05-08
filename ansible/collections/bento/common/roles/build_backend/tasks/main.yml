@@ -71,12 +71,12 @@
 - name: build springboot code
   command: mvn package -DskipTests
   args:
-    chdir: "{{ workspace }}"
+    chdir: "{{ workspace }}/{{ project_name }}-backend"
 
 - name: copy Bento-0.0.1.war to ROOT.war
   copy:
     remote_src: yes
-    src: "{{ workspace }}/target/Bento-0.0.1.war"
+    src: "{{ workspace }}/{{ project_name }}-backend/target/Bento-0.0.1.war"
     dest: "{{ workspace }}/target/ROOT.war"
 
 - name: build {{ project_name }}-{{ container_name }} image
@@ -84,7 +84,7 @@
     build:
       args:
         ECR_REPO: "{{ container_registry_url }}"
-      path: "{{ workspace }}"
+      path: "{{ workspace }}/{{ project_name }}-backend"
       dockerfile: "{{ dockerfile_path }}"
       pull: yes
       nocache: yes
