@@ -30,5 +30,6 @@ resource "aws_kinesis_firehose_delivery_stream" "firehose_stream" {
 }
 
 resource "aws_s3_bucket_acl" "acl" {
-  bucket = aws_s3_bucket.kinesis_log.bucket
+  bucket = aws_s3_bucket.kinesis_log.id
+  acl    = "private"
 }
