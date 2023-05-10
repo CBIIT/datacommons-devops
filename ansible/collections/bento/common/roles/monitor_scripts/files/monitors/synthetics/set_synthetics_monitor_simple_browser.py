@@ -139,6 +139,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
 
      try:
        response = requests.post('{}'.format(API_ENDPOINT), headers=headers, data=json.dumps(data), allow_redirects=False)
+       print(response.json())
        if 'errors' in response.json(): raise ValueError('{} Script Error:   {}'.format(monitor_name, response.json()['errors']))
      except (requests.exceptions.RequestException, ValueError) as e:
        raise SystemExit(e)
