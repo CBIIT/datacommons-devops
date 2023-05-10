@@ -22,24 +22,6 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
    else:
      location = "public: [\"AWS_US_EAST_1\"]"
 
-   # SCRIPT_CONTENT = '''var assert = require('assert');
-
-# $http.post('{url}',
-  # {{
-    # json: {{
-    # query: '{{ schemaVersion }}'
-    # }}
-  # }},
-
-  # function (err, response, body) {{
-    # assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    # assert.ok('schemaVersion' in body.data);
-
-    # console.log('Response:', body);
-    # console.log('Response:', response.statusCode);
-  # }}
-# );'''.format(url=api['url'])
-
    monitor_found = False
    headers = {
        "Api-Key": key,
@@ -97,7 +79,6 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
                "runtimeTypeVersion: \"16.10\","
                "scriptLanguage: \"JAVASCRIPT\""
              "}"
-             #"script: " + repr(SCRIPT_CONTENT) + ","
              "script: " + repr(api['query']) + ","
              "status: ENABLED,"
              "tags: ["
@@ -139,7 +120,6 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
                "runtimeTypeVersion: \"16.10\","
                "scriptLanguage: \"JAVASCRIPT\""
            "}"
-           #"script: " + repr(SCRIPT_CONTENT) + ","
            "script: " + repr(api['query']) + ","
            "status: ENABLED,"
            "tags: ["
@@ -162,6 +142,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
 
      try:
        response = requests.post('{}'.format(API_ENDPOINT), headers=headers, data=json.dumps(data), allow_redirects=False)
+       print(response.json())
        if 'errors' in response.json(): raise ValueError('{} Script Error:   {}'.format(monitor_name, response.json()['errors']))
      except (requests.exceptions.RequestException, ValueError) as e:
        raise SystemExit(e)
