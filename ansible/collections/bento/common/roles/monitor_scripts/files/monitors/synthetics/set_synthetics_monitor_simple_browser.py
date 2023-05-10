@@ -15,7 +15,10 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
      freq = 'EVERY_30_MINUTES'
    
    if api['location'] and tier.lower() != 'prod':
-     location = "private: [\"" + os.getenv('LOCATION') + "\"]"
+     location = '''private: {{
+       guid: "{guid}",
+       vsePassword: "{password}"
+       }}'''.format(guid=os.getenv('LOCATION'), password=os.getenv('LOCATION_KEY'))
    else:
      location = "public: [\"AWS_US_EAST_1\"]"
 
