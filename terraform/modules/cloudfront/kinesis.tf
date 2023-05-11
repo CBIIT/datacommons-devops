@@ -1,7 +1,6 @@
 #create s3 bucket to store the logs
 resource "aws_s3_bucket" "kinesis_log" {
   bucket = local.kenesis_bucket_name
-  acl    = "private"
 }
 resource "aws_iam_role" "firehose_role" {
   name = local.kenesis_role_name
