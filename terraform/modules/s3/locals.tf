@@ -1,3 +1,3 @@
 locals {
-  bucket_name = "${var.stack_name}-${var.env}-${var.bucket_name}"
+  bucket_name = "${var.resource_prefix}-${var.bucket_name}"
 }
