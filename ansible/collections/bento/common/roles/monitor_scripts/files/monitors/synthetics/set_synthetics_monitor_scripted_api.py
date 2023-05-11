@@ -3,6 +3,8 @@
 import os
 import json
 import requests
+import time
+from monitors.alerts.conditions.synthetics import set_synthetics_condition
 
 def setsyntheticsmonitor(project, tier, key, api, policy_id):
    API_ENDPOINT = 'https://api.newrelic.com/graphql'
@@ -28,14 +30,15 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
        "Content-Type": "application/json"
    }
 
-   data = {"query":"{"
+   entityQuery = {"query":"{"
      "actor {"
        "entitySearch(query: \"domain = 'SYNTH' AND type = 'MONITOR'\") {"
          "results {"
            "entities {"
              "... on SyntheticMonitorEntityOutline {"
                "name\n"
-               "guid"
+               "guid\n"
+               "monitorID"
              "}"
            "}"
          "}"
@@ -44,7 +47,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
    "}", "variables":""}
 
    try:
-     response = requests.post(API_ENDPOINT, headers=headers, data=json.dumps(data), allow_redirects=False)
+     response = requests.post(API_ENDPOINT, headers=headers, data=json.dumps(entityQuery), allow_redirects=False)
      if 'errors' in response.json(): raise ValueError('{} Script Error:   {}'.format(monitor_name, response.json()['errors']))
    except (requests.exceptions.RequestException, ValueError) as e:
      raise SystemExit(e)
@@ -62,12 +65,13 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
    for x in entities:
      if monitor_name in x.get("name", "none"):
        monitor_found = True
-       monitor_id = x.get('guid')
+       monitor_guid = x.get('guid')
+       monitor_id = x.get('monitorID')
        print('Monitor {} already exists, updating with the latest configuration.'.format(monitor_name))
 
        data = {"query":"mutation {"
          "syntheticsUpdateScriptApiMonitor ("
-           "guid: \"" + monitor_id + "\","
+           "guid: \"" + monitor_guid + "\","
            "monitor: {"
              "locations: {"
                "" + location + ""
@@ -147,3 +151,22 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
      except (requests.exceptions.RequestException, ValueError) as e:
        raise SystemExit(e)
      print("Monitor {} was created".format(monitor_name))
+
+     # get the newly created monitor
+     # pause to allow it to be created
+     time.sleep(15)
+     try:
+       response = requests.post(API_ENDPOINT, headers=headers, data=json.dumps(entityQuery), allow_redirects=False)
+       if 'errors' in response.json(): raise ValueError('{} Script Error:   {}'.format(monitor_name, response.json()['errors']))
+     except (requests.exceptions.RequestException, ValueError) as e:
+       raise SystemExit(e)
+   
+     for x in find_by_key(response.json(), 'entities'):
+       entities = x
+
+     for x in entities:
+       if monitor_name in x.get("name", "none"):
+         monitor_id = x.get('monitorID')
+     
+   # add synthetics condition
+   set_synthetics_condition.setcondition(project, tier, key, api['name'], monitor_id, policy_id)
