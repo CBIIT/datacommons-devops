@@ -57,6 +57,7 @@ No modules.
 | <a name="input_max_capacity"></a> [max\_capacity](#input\_max\_capacity) | The maximum capacity. | `number` | `2` | no |
 | <a name="input_min_capacity"></a> [min\_capacity](#input\_min\_capacity) | The minimum capacity. | `number` | `1` | no |
 | <a name="input_minor_version_upgrade"></a> [minor\_version\_upgrade](#input\_minor\_version\_upgrade) | allow minor version upgrade | `bool` | `true` | no |
+| <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | the prefix to add when creating resources | `string` | n/a | yes |
 | <a name="input_secret_recovery_window_in_days"></a> [secret\_recovery\_window\_in\_days](#input\_secret\_recovery\_window\_in\_days) | number of days to keep secret after deletion | `number` | `0` | no |
 | <a name="input_skip_final_snapshot"></a> [skip\_final\_snapshot](#input\_skip\_final\_snapshot) | specify snapshot if snapshot should be created on cluster destroy. | `bool` | `false` | no |
 | <a name="input_snapshot_identifier_prefix"></a> [snapshot\_identifier\_prefix](#input\_snapshot\_identifier\_prefix) | final snapshot | `string` | `"bento"` | no |

@@ -5,6 +5,7 @@ locals {
   kenesis_policy_name     = var.target_account_cloudone ? "${var.iam_prefix}-${var.resource_prefix}-firehose-policy" : "${var.resource_prefix}-firehose-policy"
   kenesis_bucket_name     = var.target_account_cloudone ? "cloudone-${var.resource_prefix}-kinesis-firehose-stream" : "${var.resource_prefix}-kinesis-firehose-stream"
   files_bucket_name       = var.target_account_cloudone ? "cloudone-${var.resource_prefix}-files" : "${var.resource_prefix}-files"
+  files_bucket_tag        = var.target_account_cloudone ? "cloudone-${var.stack_name}-${local.env_type}-files" : "${var.stack_name}-${var.env}-files"
   lambda_role_name        = var.target_account_cloudone ? "${var.iam_prefix}-${var.resource_prefix}-lambda-role" : "${var.resource_prefix}-lambda-role"
   lambda_policy_name      = var.target_account_cloudone ? "${var.iam_prefix}-${var.resource_prefix}-lambda-policy" : "${var.resource_prefix}-lambda-policy"
   cloudwatch_policy_name  = var.target_account_cloudone ? "${var.iam_prefix}-${var.resource_prefix}-cloudwatch-log-policy" : "${var.resource_prefix}-cloudwatch-log-policy"
