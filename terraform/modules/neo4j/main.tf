@@ -23,7 +23,7 @@ resource "aws_instance" "db" {
 
   tags = merge(
     {
-      "Name" = "${var.stack_name}-${var.env}-${var.database_name}",
+      "Name" = "${var.resource_prefix}-${var.database_name}",
     },
     var.tags,
   )
@@ -31,7 +31,7 @@ resource "aws_instance" "db" {
 
 #create boostrap script to hook up the node to ecs cluster
 resource "aws_ssm_document" "ssm_neo4j_boostrap" {
-  name            = "${var.stack_name}-${var.env}-setup-database"
+  name            = "${var.resource_prefix}-setup-database"
   document_type   = "Command"
   document_format = "YAML"
   content         = <<DOC
@@ -57,7 +57,7 @@ mainSteps:
 DOC
   tags = merge(
     {
-      "Name" = format("%s-%s", var.stack_name, "ssm-document")
+      "Name" = format("%s-%s", var.resource_prefix, "ssm-document")
     },
     var.tags,
   )
@@ -65,8 +65,8 @@ DOC
 
 #create database security group
 resource "aws_security_group" "database_sg" {
-  name = "${var.stack_name}-${var.env}-database-sg"
-  description = "${var.stack_name} ${var.env} database security group"
+  name = "${var.resource_prefix}-database-sg"
+  description = "${var.resource_prefix} database security group"
   vpc_id = var.vpc_id
   tags = merge(
   {
@@ -81,19 +81,19 @@ resource "aws_ssm_association" "database" {
 
   targets {
     key    = "tag:Name"
-    values = ["${var.stack_name}-${var.env}-${var.database_name}-4"]
+    values = ["${var.resource_prefix}-${var.database_name}-4"]
   }
 
   depends_on = [aws_instance.db]
 }
 
 resource "aws_iam_role" "db_role" {
-  name = "${var.stack_name}-${var.env}-database-instance-role"
+  name = "${var.resource_prefix}-database-instance-role"
   assume_role_policy = data.aws_iam_policy_document.sts_policy.json
   managed_policy_arns = [data.aws_iam_policy.ssm_policy.arn]
 }
 
 resource "aws_iam_instance_profile" "db_profile" {
-  name = "${var.stack_name}-${var.env}-database-instance-profile"
+  name = "${var.resource_prefix}-database-instance-profile"
   role = aws_iam_role.db_role.name
 }

@@ -28,6 +28,11 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_app"></a> [app](#input\_app) | name of the app | `string` | n/a | yes |
 | <a name="input_microservices"></a> [microservices](#input\_microservices) | n/a | <pre>map(object({<br>    name                      = string<br>    port                      = number<br>    health_check_path         = string<br>    priority_rule_number      = number<br>    image_url                 = string<br>    cpu                       = number<br>    memory                    = number<br>    path                      = list(string)<br>    number_container_replicas = number<br>  }))</pre> | n/a | yes |
+| <a name="input_newrelic_account_id"></a> [newrelic\_account\_id](#input\_newrelic\_account\_id) | New Relic Account ID | `string` | n/a | yes |
+| <a name="input_newrelic_api_key"></a> [newrelic\_api\_key](#input\_newrelic\_api\_key) | New Relic API Key | `string` | n/a | yes |
+| <a name="input_program"></a> [program](#input\_program) | Name of the program where the application is running. example ccdi or crdc etc | `string` | n/a | yes |
+| <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | the prefix to add when creating resources | `string` | n/a | yes |
+| <a name="input_service"></a> [service](#input\_service) | Name of the service where the monitoring is configured. example ecs, database etc | `string` | n/a | yes |
 | <a name="input_sumologic_access_id"></a> [sumologic\_access\_id](#input\_sumologic\_access\_id) | Sumo Logic Access ID | `string` | n/a | yes |
 | <a name="input_sumologic_access_key"></a> [sumologic\_access\_key](#input\_sumologic\_access\_key) | Sumo Logic Access Key | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | tags to associate with this instance | `map(string)` | n/a | yes |

@@ -1,5 +1,5 @@
 resource "aws_kinesis_firehose_delivery_stream" "kinesis" {
-  name        = "${var.program}-${var.app}-${var.level}-kinesis-firehose-stream"
+  name        = "${var.resource_prefix}-kinesis-firehose-stream"
   destination = var.destination
 
   http_endpoint_configuration {

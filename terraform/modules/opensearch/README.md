@@ -57,6 +57,7 @@ No modules.
 | <a name="input_opensearch_subnet_ids"></a> [opensearch\_subnet\_ids](#input\_opensearch\_subnet\_ids) | list of subnet ids to use | `list(string)` | n/a | yes |
 | <a name="input_opensearch_tls_policy"></a> [opensearch\_tls\_policy](#input\_opensearch\_tls\_policy) | Provide the TLS policy to associate with the OpenSearch domain to enforce HTTPS communications | `string` | `"Policy-Min-TLS-1-2-2019-07"` | no |
 | <a name="input_opensearch_version"></a> [opensearch\_version](#input\_opensearch\_version) | specify es version | `string` | `"OpenSearch_1.2"` | no |
+| <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | the prefix to add when creating resources | `string` | n/a | yes |
 | <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | tags to associate with this instance | `map(string)` | n/a | yes |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | the ID of the VPC the OpenSearch cluster is being deployed into | `string` | n/a | yes |
