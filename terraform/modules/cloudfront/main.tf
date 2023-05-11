@@ -8,15 +8,23 @@ resource "aws_cloudfront_origin_access_identity" "origin_access" {
 resource "aws_s3_bucket" "files" {
   count = var.create_files_bucket ? 1 : 0
   bucket =  local.files_bucket_name
-  acl    = "private"
   tags = var.tags
+}
+
+resource "aws_s3_bucket_acl" "files_acl" {
+  bucket = aws_s3_bucket.files[0].id
+  acl = "private"
 }
 
 #create bucket for logs
 resource "aws_s3_bucket" "access_logs" {
   bucket =  local.files_log_bucket_name
-  acl    = "private"
   tags = var.tags
+}
+
+resource "aws_s3_bucket_acl" "access_log_acl" {
+  bucket = aws_s3_bucket.access_logs.id
+  acl = "private"
 }
 
 #create s3 bucket policy
@@ -174,4 +182,20 @@ resource "aws_wafv2_ip_set" "ip_sets" {
   ip_address_version = "IPV4"
   addresses          = ["127.0.0.1/32"]
   tags = var.tags
+}
+
+resource "aws_s3_bucket_public_access_block" "files_public_access" {
+  bucket                  = aws_s3_bucket.files[0].id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_public_access_block" "files_public_access" {
+  bucket                  = aws_s3_bucket.access_logs.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
