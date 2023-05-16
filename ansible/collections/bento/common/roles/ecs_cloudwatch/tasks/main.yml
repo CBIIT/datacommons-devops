@@ -13,7 +13,7 @@
             awslogs-region: "{{ region }}"
             awslogs-create-group: "true"
             awslogs-stream-prefix: "{{ project_name }}-{{ container_name }}"
-      - name: "{{ container_name }}"
+      - name: "{{ program }}-{{ project_name }}-{{ microservice }}"
         essential: true
         image: "{{ container_image_url }}:{{ image_version }}"
         environment: "{{ container_env }}"
@@ -32,7 +32,7 @@
     network_mode: awsvpc
     execution_role_arn: "arn:aws:iam::{{ account }}:role/{{ execution_role }}"
     task_role_arn: "arn:aws:iam::{{ account }}:role/{{ task_role }}"
-    family: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    family: "{{ program }}-{{ tier }}-{{ project_name }}-{{ microservice }}"
     memory: "{{ container_memory }}"
     cpu: "{{ container_cpu }}"
     state: present
@@ -45,7 +45,7 @@
 ############################################################################################################################
 - name: query task definition - {{ container_name }}
   ecs_taskdefinition_info:
-    task_definition: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    task_definition: "{{ program }}-{{ tier }}-{{ project_name }}-{{ microservice }}"
     region: "{{ region }}"
   register: task
 
@@ -55,7 +55,7 @@
 - name: query {{ container_name }} service
   ecs_service_info:
     cluster: "{{ ecs_cluster_name }}"
-    service: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    service: "{{ service_name }}"
     details: true
     region: "{{ region }}"
   register: service
@@ -73,7 +73,7 @@
 - name: update {{ container_name }} service
   ecs_service:
     state: present
-    name: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    name: "{{ service_name }}"
     cluster: "{{ ecs_cluster_name }}"
     task_definition: "{{ task_name }}:{{ task_revision }}"
     role: "{{ role_arn }}"
