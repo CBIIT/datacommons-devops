@@ -1,6 +1,10 @@
 ##########################################################################################
 ######  Required Variables ###############################################################
 ##########################################################################################
+variable "resource_prefix" {
+  description = "the prefix to add when creating resources"
+  type        = string
+}
 
 variable "account_id" {
   type        = string
