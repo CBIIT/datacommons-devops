@@ -39,3 +39,6 @@ This repository serves as a centralized registry for reusable infrastructure and
 |   |   |   |-- variables.tf
 |   |   |   |-- README.md
 </code></pre>
+
+## Releases (By Tag Name)
+ - v1.5:  update to the ecs terraform module to fix an error with setting the permissions boundary ARN in upper tier environments

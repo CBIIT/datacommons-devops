@@ -1,4 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
+## Releases
+v1.5:  update to the ecs terraform module to fix an error with setting the permissions boundary ARN in upper tier environments
+
 ## Requirements
 
 No requirements.
