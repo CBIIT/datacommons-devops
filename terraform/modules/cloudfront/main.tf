@@ -50,11 +50,11 @@ resource "aws_cloudfront_distribution" "distribution" {
     }
   }
 
-  logging_config {
-    include_cookies = false
-    bucket          = aws_s3_bucket.access_logs.bucket_domain_name
-    prefix          = "${var.stack_name}/cloudfront/logs"
-  }
+  # logging_config {
+  #   include_cookies = false
+  #   bucket          = aws_s3_bucket.access_logs.bucket_domain_name
+  #   prefix          = "${var.stack_name}/cloudfront/logs"
+  # }
 
 
   default_cache_behavior {
