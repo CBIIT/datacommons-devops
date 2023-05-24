@@ -41,4 +41,7 @@ This repository serves as a centralized registry for reusable infrastructure and
 </code></pre>
 
 ## Releases (By Tag Name)
- - v1.5:  update to the ecs terraform module to fix an error with setting the permissions boundary ARN in upper tier environments
+ - v1.5:  
+      1. update to the ecs terraform module to fix an error with setting the permissions boundary ARN in upper tier environments.
+      2. updated naming as "${var.resource_prefix}-<resource_name/description>" which allows us to provide the resource_prefix at the project level.
+ 
