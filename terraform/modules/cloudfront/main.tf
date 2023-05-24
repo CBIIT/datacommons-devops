@@ -22,10 +22,10 @@ resource "aws_s3_bucket" "access_logs" {
   tags   = var.tags
 }
 
-resource "aws_s3_bucket_acl" "access_log_acl" {
-  bucket = aws_s3_bucket.access_logs.id
-  acl    = "private"
-}
+# resource "aws_s3_bucket_acl" "access_log_acl" {
+#   bucket = aws_s3_bucket.access_logs.id
+#   acl    = "private"
+# }
 
 #create s3 bucket policy
 resource "aws_s3_bucket_policy" "bucket_policy" {
