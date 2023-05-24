@@ -45,6 +45,7 @@ No modules.
 | <a name="input_env"></a> [env](#input\_env) | name of the environment to provision | `string` | n/a | yes |
 | <a name="input_public_ssh_key_ssm_parameter_name"></a> [public\_ssh\_key\_ssm\_parameter\_name](#input\_public\_ssh\_key\_ssm\_parameter\_name) | name of the ssm parameter holding ssh key content | `string` | `"ssh_public_key"` | no |
 | <a name="input_require_http_tokens"></a> [require\_http\_tokens](#input\_require\_http\_tokens) | choose if http\_tokens is required or optional | `string` | `"optional"` | no |
+| <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | the prefix to add when creating resources | `string` | n/a | yes |
 | <a name="input_ssh_key_name"></a> [ssh\_key\_name](#input\_ssh\_key\_name) | name of the ssh key to manage the instances | `string` | `"devops"` | no |
 | <a name="input_ssh_user"></a> [ssh\_user](#input\_ssh\_user) | name of the ec2 user | `string` | `"bento"` | no |
 | <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |

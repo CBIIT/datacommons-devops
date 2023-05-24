@@ -1,0 +1,7 @@
+
+- name: Install specified python requirements
+  ansible.builtin.pip:
+    requirements: requirements.txt
+
+- name: set APM release
+  script: releases/add_apm_release.py -p {{ project }} -t {{ tier }} -v {{ frontend_version }}/{{ backend_version }} -k {{ newrelic_key }}

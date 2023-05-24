@@ -1,0 +1,19 @@
+[Unit]
+Description=New Relic Private Location
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=30
+Type=exec
+Restart=always
+EnvironmentFile=/etc/systemd/system/newrelic.private
+ExecStartPre=-/bin/docker stop %n
+ExecStartPre=-/bin/docker rm %n
+ExecStartPre=/bin/docker pull newrelic/synthetics-job-manager
+ExecStartPre=/bin/docker run -d -e PRIVATE_LOCATION_KEY=${PRIVATE_LOCATION_KEY} -d --restart unless-stopped -v /var/run/docker.sock:/var/run/docker.sock:rw --name %n newrelic/synthetics-job-manager:${AGENT_VERSION}
+ExecStart=/bin/docker start -a %n
+ExecStop=/bin/docker stop %n
+
+[Install]
+WantedBy=multi-user.target
