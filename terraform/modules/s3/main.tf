@@ -8,6 +8,7 @@ resource "aws_s3_bucket" "s3" {
 }
 
 resource "aws_s3_bucket_acl" "s3" {
+count = var.create_bucket_acl ? 1: 0
   bucket = aws_s3_bucket.s3.id
   acl    = "private"
 }
