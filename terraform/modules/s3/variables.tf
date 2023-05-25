@@ -1,8 +1,3 @@
-variable "resource_prefix" {
-  description = "the prefix to add when creating resources"
-  type        = string
-}
-
 variable "bucket_name" {
   description = "name of the s3 bucket"
   type        = string
