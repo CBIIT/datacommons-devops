@@ -167,5 +167,5 @@ data "aws_iam_policy_document" "os_policy" {
 
 data "aws_lb_target_group" "frontend" {
   count = var.stack_name == "bento" && var.env == "prod" ? 1 : 0
-  name =  "${var.resource_prefix}-frontend"
+  name =  "${var.stack_name}-${var.env}-frontend"
 }
