@@ -95,7 +95,7 @@ resource "aws_appautoscaling_policy" "microservice_autoscaling_cpu" {
 }
 
 resource "aws_ecs_cluster" "ecs_cluster" {
-  name = "${var.resource_prefix}-ecs"
+  name =  "${var.stack_name}-${var.env}-ecs"
 
   setting {
     name  = "containerInsights"
