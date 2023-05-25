@@ -1,7 +1,7 @@
 #task definition
 resource "aws_ecs_task_definition" "task" {
   for_each                 = var.microservices
-  family                   = "${var.resource_prefix}-${each.value.name}"
+  family                   = "${var.stack_name}-${var.env}-${each.value.name}"
   network_mode             = var.ecs_network_mode
   requires_compatibilities = ["FARGATE"]
   cpu                      = each.value.cpu
