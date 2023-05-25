@@ -34,7 +34,7 @@ resource "aws_ecs_task_definition" "task" {
 #ecs service
 resource "aws_ecs_service" "service" {
   for_each                           = var.microservices
-  name                               = "${var.resource_prefix}-${each.value.name}"
+  name                               = "${var.stack_name}-${var.env}-${each.value.name}"
   cluster                            = aws_ecs_cluster.ecs_cluster.id
   task_definition                    = aws_ecs_task_definition.task[each.key].arn
   desired_count                      = each.value.number_container_replicas
