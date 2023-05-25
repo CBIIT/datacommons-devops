@@ -2,6 +2,13 @@ variable "bucket_name" {
   description = "name of the s3 bucket"
   type        = string
 }
+
+variable "create_bucket_acl" {
+  description = "create bucket acl or not"
+  type = bool
+  default = false
+}
+
 variable "s3_force_destroy" {
   description = "force destroy s3 bucket"
   type        = string
