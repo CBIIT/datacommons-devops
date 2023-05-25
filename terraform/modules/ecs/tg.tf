@@ -1,7 +1,7 @@
 #create alb target group
 resource "aws_lb_target_group" "target_group" {
   for_each    = var.microservices
-  name        = "${var.resource_prefix}-${each.value.name}"
+  name        = "${var.stack_name}-${var.env}-${each.value.name}"
   port        = each.value.port
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
