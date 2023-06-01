@@ -7,6 +7,12 @@ variable "s3_force_destroy" {
   type        = string
 }
 
+variable "create_bucket_acl" {
+  description = "create bucket acl or not"
+  type = bool
+  default = false
+}
+
 variable "tags" {
   description = "tags to associate with this resource"
   type        = map(string)
