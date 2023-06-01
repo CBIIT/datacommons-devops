@@ -115,3 +115,87 @@ $http.post('https://caninecommons.cancer.gov/v1/graphql/',
   }
 );",FALSE,C04E1C69JBE
 Canine Data Commons,icdc,CRDC,Prod,Files,https://caninecommons.cancer.gov/api/files,,FALSE,C04E1C69JBE
+Molecular Targets Platform,mtp,CCDI,Dev,Portal,https://moleculartargets-dev.ccdi.cancer.gov,,TRUE,C049VAHBKDL
+Molecular Targets Platform,mtp,CCDI,QA,Portal,https://moleculartargets-qa.ccdi.cancer.gov,,TRUE,C049VAHBKDL
+Molecular Targets Platform,mtp,CCDI,Stage,Portal,https://moleculartargets-stage.ccdi.cancer.gov,,TRUE,C049Z0RVCCD
+Molecular Targets Platform,mtp,CCDI,Prod,Portal,https://moleculartargets.ccdi.cancer.gov,,TRUE,C049Z0RVCCD
+Index of NCI Studies,ins,CCDI,Dev,Portal,https://studycatalog-dev.cancer.gov,,TRUE,C04693BUC9M
+Index of NCI Studies,ins,CCDI,Dev,API,https://studycatalog-dev.cancer.gov/v1/graphql,"var assert = require('assert');
+
+$http.post('https://studycatalog-dev.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: '{ idsLists { case_ids } }'
+    }
+  },
+
+  function (err, response, body) {
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('case_ids' in body.data.idsLists);
+    assert.match(body.data.idsLists.case_ids[0], /INS-/);
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+  }
+);",TRUE,C04693BUC9M
+Index of NCI Studies,ins,CCDI,QA,Portal,https://studycatalog-qa.cancer.gov,,TRUE,C04693BUC9M
+Index of NCI Studies,ins,CCDI,QA,API,https://studycatalog-qa.cancer.gov/v1/graphql,"var assert = require('assert');
+
+$http.post('https://studycatalog-qa.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: '{ idsLists { case_ids } }'
+    }
+  },
+
+  function (err, response, body) {
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('case_ids' in body.data.idsLists);
+    assert.match(body.data.idsLists.case_ids[0], /INS-/);
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+  }
+);",TRUE,C04693BUC9M
+Index of NCI Studies,ins,CCDI,Stage,Portal,https://studycatalog-stage.cancer.gov,,TRUE,C04693BUC9M
+Index of NCI Studies,ins,CCDI,Stage,API,https://studycatalog-stage.cancer.gov/v1/graphql,"var assert = require('assert');
+
+$http.post('https://studycatalog-stage.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: '{ idsLists { case_ids } }'
+    }
+  },
+
+  function (err, response, body) {
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('case_ids' in body.data.idsLists);
+    assert.match(body.data.idsLists.case_ids[0], /INS-/);
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+  }
+);",TRUE,C04693BUC9M
+Index of NCI Studies,ins,CCDI,Prod,Portal,https://studycatalog.cancer.gov,,TRUE,C04693BUC9M
+Index of NCI Studies,ins,CCDI,Prod,API,https://studycatalog.cancer.gov/v1/graphql,"var assert = require('assert');
+
+$http.post('https://studycatalog.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: '{ idsLists { case_ids } }'
+    }
+  },
+
+  function (err, response, body) {
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('case_ids' in body.data.idsLists);
+    assert.match(body.data.idsLists.case_ids[0], /INS-/);
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+  }
+);",TRUE,C04693BUC9M
+Childhood Cancer Data Catalog,ccdc,CCDI,Dev,Portal,https://datacatalog-dev.ccdi.cancer.gov,,TRUE,C049VAP8DEJ
+Childhood Cancer Data Catalog,ccdc,CCDI,QA,Portal,https://datacatalog-qa.ccdi.cancer.gov,,TRUE,C049VAP8DEJ
+Childhood Cancer Data Catalog,ccdc,CCDI,Stage,Portal,https://datacatalog-stage.ccdi.cancer.gov,,TRUE,C049VAP8DEJ
+Childhood Cancer Data Catalog,ccdc,CCDI,Prod,Portal,https://datacatalog.ccdi.cancer.gov,,TRUE,C049VAP8DEJ
