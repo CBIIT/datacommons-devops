@@ -10,5 +10,5 @@ locals {
   lambda_policy_name      = var.target_account_cloudone ? "${var.iam_prefix}-${var.resource_prefix}-lambda-policy" : "${var.resource_prefix}-lambda-policy"
   cloudwatch_policy_name  = var.target_account_cloudone ? "${var.iam_prefix}-${var.resource_prefix}-cloudwatch-log-policy" : "${var.resource_prefix}-cloudwatch-log-policy"
   files_log_bucket_name   = var.create_files_bucket ? "${local.files_bucket_name}-cloudfront-logs" : "${data.aws_s3_bucket.files_bucket[0].bucket}-cloudfront-logs"
-  permission_boundary_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
+  permission_boundary_arn = = var.env == "prod" || var.env == "stage" ? null : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
 }
