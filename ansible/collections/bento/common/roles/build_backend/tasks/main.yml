@@ -54,7 +54,7 @@
     src: "{{ workspace }}/{{ project_name }}-backend/target/Bento-0.0.1.war"
     dest: "{{ workspace }}/{{ project_name }}-backend/target/ROOT.war"
 
-- name: build {{ project_name }}-{{ container_name }} image
+- name: build {{program}}-{{ project_name }}-{{ container_name }} image
   community.docker.docker_image:
     build:
       args:
@@ -64,7 +64,7 @@
       dockerfile: "{{ dockerfile_path }}"
       pull: yes
       nocache: yes
-    name: "{{ project_name }}-{{ container_name }}"
+    name: "{{program}}-{{ project_name }}-{{ container_name }}"
     tag: "{{ image_version }}.{{ build_number }}"
     push: no
     force_source: yes
@@ -72,28 +72,28 @@
 
 - name: test image for vulnerabilities
   block:
-    - name: run trivy scanner on {{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}
+    - name: run trivy scanner on {{program}}-{{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}
       #command: "trivy image --exit-code 1 --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}"
-      command: "trivy image --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
+      command: "trivy image --severity HIGH,CRITICAL {{program}}-{{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
       register: vuln_results
   always:
     - name: echo vulnerability results
       debug:
         msg: "{{ vuln_results.stdout_lines }}"
 
-- name: Add {{ project_name }}-{{ container_name }} image to ECR
+- name: Add {{program}}-{{ project_name }}-{{ container_name }} image to ECR
   docker_image:
-    name: "{{ project_name }}-{{ container_name }}"
-    repository: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}"
+    name: "{{program}}-{{ project_name }}-{{ container_name }}"
+    repository: "{{ container_registry_url }}/{{program}}-{{ project_name }}-{{ container_name }}"
     tag: "{{ image_version }}.{{ build_number }}"
     force_tag: yes
     push: yes
     source: local
 
-- name: Add tag latest to {{ project_name }}-{{container_name}} image
+- name: Add tag latest to {{program}}-{{ project_name }}-{{ container_name }} image
   community.docker.docker_image:
-    name: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:{{ image_version }}.{{build_number}}"
-    repository: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:latest"
+    name: "{{ container_registry_url }}/{{program}}-{{ project_name }}-{{ container_name }}:{{ image_version }}.{{build_number}}"
+    repository: "{{ container_registry_url }}/{{program}}-{{ project_name }}-{{ container_name }}:latest"
     force_tag: yes
     push: yes
     source: local

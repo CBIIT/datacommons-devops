@@ -54,7 +54,7 @@
     network_mode: awsvpc
     execution_role_arn: "arn:aws:iam::{{ account }}:role/{{ execution_role }}"
     task_role_arn: "arn:aws:iam::{{ account }}:role/{{ task_role }}"
-    family: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    family: "{{ program }}-{{ project_name }}-{{ tier }}-{{ container_name }}"
     memory: "{{ container_memory }}"
     cpu: "{{ container_cpu }}"
     state: present
@@ -67,7 +67,7 @@
 ############################################################################################################################
 - name: query task definition - {{ container_name }}
   ecs_taskdefinition_info:
-    task_definition: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    task_definition: "{{ program }}-{{ project_name }}-{{ tier }}-{{ container_name }}"
     region: "{{ region }}"
   register: task
 
@@ -77,7 +77,7 @@
 - name: query {{ container_name }} service
   ecs_service_info:
     cluster: "{{ ecs_cluster_name }}"
-    service: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    service: "{{ program }}-{{ project_name }}-{{ tier }}-{{ container_name }}"
     details: true
     region: "{{ region }}"
   register: service
@@ -95,7 +95,7 @@
 - name: update {{ container_name }} service
   ecs_service:
     state: present
-    name: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    name: "{{ program }}-{{ project_name }}-{{ tier }}-{{ container_name }}"
     cluster: "{{ ecs_cluster_name }}"
     task_definition: "{{ task_name }}:{{ task_revision }}"
     role: "{{ role_arn }}"
