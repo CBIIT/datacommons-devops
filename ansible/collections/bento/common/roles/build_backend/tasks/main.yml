@@ -49,7 +49,7 @@
   environment:
     JAVA_HOME: /usr/lib/jvm/jre-11-openjdk
   args:
-    chdir: "{{ workspace }/{{ project_name }}-backend"
+    chdir: "{{ workspace }}/{{ project_name }}-backend"
 
 - name: copy Bento-0.0.1.war to ROOT.war
   copy:
