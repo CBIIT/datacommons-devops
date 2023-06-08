@@ -1,7 +1,7 @@
 ---
 - name: update indices file
   template:
-    dest: "{{ workspace }}/config/es_indices_bento.yml"
+    dest: "{{ workspace }}/gmb-backend/config/es_indices_bento.yml"
     src: "{{ indices_file }}"
 
 - name: update server config file
