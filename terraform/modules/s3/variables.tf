@@ -10,7 +10,7 @@ variable "s3_force_destroy" {
 variable "create_bucket_acl" {
   description = "create bucket acl or not"
   type = bool
-  default = false
+  default = yes
 }
 
 variable "tags" {
