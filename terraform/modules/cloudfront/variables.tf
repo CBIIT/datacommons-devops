@@ -92,5 +92,5 @@ variable "max_ttl" {
 variable "create_kinesis" {
   description = "choose to create kinesis or not"
   type = bool
-  default = true
+  default = false
 }
