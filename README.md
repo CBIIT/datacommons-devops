@@ -1,3 +1,5 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2517c2b5f986415b86aa59e2414f4e30)](https://app.codacy.com/gh/CBIIT/datacommons-devops/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 ## About
 This repository serves as a centralized registry for reusable infrastructure and configuration management definitions to be used across FNL projects. 
 
