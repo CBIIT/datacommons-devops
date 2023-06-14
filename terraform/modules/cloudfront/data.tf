@@ -52,10 +52,10 @@ data "aws_iam_policy_document" "firehose_policy" {
       "s3:ListBucketMultipartUploads",
       "s3:PutObject"
     ]
-    resources = [
-      aws_s3_bucket.kinesis_log.arn,
-      "${aws_s3_bucket.kinesis_log[0].arn}/*"
-    ]
+    #resources = [
+      #aws_s3_bucket.kinesis_log.arn,
+      #"${aws_s3_bucket.kinesis_log[0].arn}/*"
+    #]
   }
   statement {
     effect = "Allow"
