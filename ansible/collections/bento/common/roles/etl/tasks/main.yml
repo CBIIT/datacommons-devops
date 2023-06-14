@@ -38,9 +38,19 @@
       1-Transformation-Scripts/cds-transformation_v{{version}}.py 
       --config_file 2-Config-Files/cds_config_v{{version}}/cds_config_jenkins_v{{version}}.yaml 
       --upload_s3 
+      --download_s3
     chdir: "{{ workspace }}"
   register: etl_loader
 
+- name: show cmd
+  debug:
+    msg: >
+      python3
+      1-Transformation-Scripts/cds-transformation_v{{version}}.py 
+      --config_file 2-Config-Files/cds_config_v{{version}}/cds_config_jenkins_v{{version}}.yaml 
+      --upload_s3 
+      --download_s3
+      
 - name: show etl output
   debug:
     msg: "{{ etl_loader }}"
