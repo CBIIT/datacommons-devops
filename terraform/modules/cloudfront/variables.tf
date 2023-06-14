@@ -45,12 +45,6 @@ variable "iam_prefix" {
   default     = "power-user"
 }
 
-variable "create_kinesis "{
-  description = "create kenesis or not"
-  type        = bool
-  default     =  false
-}
-
 variable "target_account_cloudone"{
   description = "to add check conditions on whether the resources are brought up in cloudone or not"
   type        = bool
