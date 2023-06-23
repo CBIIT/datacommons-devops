@@ -71,10 +71,15 @@ No modules.
 | <a name="input_cloudfront_distribution_bucket_name"></a> [cloudfront\_distribution\_bucket\_name](#input\_cloudfront\_distribution\_bucket\_name) | specify the name of s3 bucket for cloudfront | `string` | n/a | yes |
 | <a name="input_cloudfront_slack_channel_name"></a> [cloudfront\_slack\_channel\_name](#input\_cloudfront\_slack\_channel\_name) | cloudfront slack name | `string` | n/a | yes |
 | <a name="input_create_files_bucket"></a> [create\_files\_bucket](#input\_create\_files\_bucket) | indicate if you want to create files bucket or use existing one | `bool` | `false` | no |
+| <a name="input_default_ttl"></a> [default\_ttl](#input\_default\_ttl) | default time to live | `number` | `3600` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | domain name for the application | `string` | n/a | yes |
 | <a name="input_env"></a> [env](#input\_env) | environment | `string` | n/a | yes |
 | <a name="input_iam_prefix"></a> [iam\_prefix](#input\_iam\_prefix) | The string prefix for IAM roles and policies to conform to NCI power-user compliance | `string` | `"power-user"` | no |
+| <a name="input_max_ttl"></a> [max\_ttl](#input\_max\_ttl) | maximum time to live | `number` | `86400` | no |
+| <a name="input_min_ttl"></a> [min\_ttl](#input\_min\_ttl) | minimum time to live | `number` | `0` | no |
+| <a name="input_price_class"></a> [price\_class](#input\_price\_class) | price class of cloudfront distribution | `string` | `"PriceClass_100"` | no |
 | <a name="input_public_key_path"></a> [public\_key\_path](#input\_public\_key\_path) | path of public key | `any` | `null` | no |
+| <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | the prefix to add when creating resources | `string` | n/a | yes |
 | <a name="input_slack_secret_name"></a> [slack\_secret\_name](#input\_slack\_secret\_name) | name of cloudfront slack secret | `string` | n/a | yes |
 | <a name="input_slack_url_secret_key"></a> [slack\_url\_secret\_key](#input\_slack\_url\_secret\_key) | secret key name for the slack url | `string` | `"cloud-front-slack-url"` | no |
 | <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |

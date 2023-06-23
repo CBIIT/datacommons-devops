@@ -1,3 +1,18 @@
+variable "resource_prefix" {
+  description = "the prefix to add when creating resources"
+  type = string
+}
+
+variable "service" {
+  type = string
+  description = "Name of the service where the monitoring is configured. example ecs, database etc"
+}
+
+variable "program" {
+  type = string
+  description = "Name of the program where the application is running. example ccdi or crdc etc"
+}
+
 variable "tags" {
   description = "tags to associate with this instance"
   type        = map(string)
@@ -13,6 +28,16 @@ variable "sumologic_access_id" {
 variable "sumologic_access_key" {
   type        = string
   description = "Sumo Logic Access Key"
+  sensitive   = true
+}
+
+variable "newrelic_account_id" {
+  type        = string
+  description = "New Relic Account ID"
+}
+variable "newrelic_api_key" {
+  type        = string
+  description = "New Relic API Key"
   sensitive   = true
 }
 

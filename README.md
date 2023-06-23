@@ -1,3 +1,5 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2517c2b5f986415b86aa59e2414f4e30)](https://app.codacy.com/gh/CBIIT/datacommons-devops/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 ## About
 This repository serves as a centralized registry for reusable infrastructure and configuration management definitions to be used across FNL projects. 
 
@@ -39,3 +41,9 @@ This repository serves as a centralized registry for reusable infrastructure and
 |   |   |   |-- variables.tf
 |   |   |   |-- README.md
 </code></pre>
+
+## Releases (By Tag Name)
+ - v1.5:  
+      1. update to the ecs terraform module to fix an error with setting the permissions boundary ARN in upper tier environments.
+      2. updated naming as "${var.resource_prefix}-<resource_name/description>" which allows us to provide the resource_prefix at the project level.
+ 

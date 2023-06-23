@@ -1,5 +1,5 @@
 resource "aws_iam_role" "kinesis" {
-  name                  = "${var.iam_prefix}-${var.program}-${var.app}-${var.level}-kinesis-delivery"
+  name                  = "${var.iam_prefix}-${var.resource_prefix}-kinesis-delivery"
   description           = "Allows kenisis delivery streams to delivery failed messages to S3"
   force_detach_policies = var.force_detach_policies
   assume_role_policy    = data.aws_iam_policy_document.kinesis_assume_role.json
@@ -7,7 +7,7 @@ resource "aws_iam_role" "kinesis" {
 }
 
 resource "aws_iam_policy" "kinesis" {
-  name        = "${var.iam_prefix}-${var.program}-${var.app}-${var.level}-kinesis-delivery"
+  name        = "${var.iam_prefix}-${var.resource_prefix}-kinesis-delivery"
   description = "Allows kenisis delivery streams to delivery failed messages to S3"
   policy      = data.aws_iam_policy_document.kenisis.json
 }
