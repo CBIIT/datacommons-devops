@@ -3,7 +3,6 @@
 pipeline {
 	agent {
 		node {
-			//label 'cicd_microservice'
 			label 'cicd_ansible_4.0'
 		}
 	}
@@ -33,7 +32,7 @@ pipeline {
   		steps {
 
   		checkout([$class: 'GitSCM',
-			branches: [[name: '*/monitoring_test']],
+			branches: [[name: '*/main']],
 			userRemoteConfigs:
 			[[url: 'https://github.com/CBIIT/datacommons-devops']]])
 
@@ -87,7 +86,7 @@ pipeline {
 
         notify(
             secretPath: "notification/slack",
-            secretName: "ctdc_slack_url"
+            secretName: "bento_slack_url"
         ) 
 
     }
