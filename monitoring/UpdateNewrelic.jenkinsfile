@@ -1,0 +1,103 @@
+@Library('datacommons-jenkins-shared-library@v1.1') _
+
+pipeline {
+	agent {
+		node {
+			//label 'cicd_microservice'
+			label 'cicd_ansible_4.0'
+		}
+	}
+
+	parameters {
+
+        string(
+	        defaultValue: 'https://raw.githubusercontent.com/CBIIT/datacommons-devops/main/monitoring/FNL-Monitoring-List.csv',
+		    description: 'The file to read monitoring configurations from',
+		    name: 'Input_File')
+
+  }
+
+  options {
+	timestamps()
+  }
+
+  environment {
+
+	REGION     = "us-east-1"
+	INPUT_FILE = "${params.Input_File}"
+
+  }
+
+  stages{
+  	stage('checkout'){
+  		steps {
+
+  		checkout([$class: 'GitSCM',
+			branches: [[name: '*/monitoring_test']],
+			userRemoteConfigs:
+			[[url: 'https://github.com/CBIIT/datacommons-devops']]])
+
+        }
+
+  	}
+
+  	stage('Set Environment Variables'){
+
+ 		steps {
+
+ 			script {
+
+			    // set vars
+				env.NR_ACCT_ID = sh(label: 'Get Newrelic Account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id monitoring/newrelic --query SecretString --output text | jq -r '.account_id'").trim()
+				env.EMAIL = sh(label: 'Get Email', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id monitoring/newrelic --query SecretString --output text | jq -r '.alert_email'").trim()
+				env.KEY = sh(label: 'Get Newrelic Key', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id monitoring/newrelic --query SecretString --output text | jq -r '.user_key'").trim()
+				env.LOCATION = sh(label: 'Get Newrelic Private Location ID', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id monitoring/newrelic --query SecretString --output text | jq -r '.private_location_id'").trim()
+				env.LOCATION_KEY = sh(label: 'Get Newrelic Private Location Key', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id monitoring/newrelic --query SecretString --output text | jq -r '.private_location_key'").trim()
+
+			}
+
+ 		}
+
+  	}
+	
+	stage('Update Newrelic Monitors'){
+
+ 		steps {
+
+			script {
+
+                sh label: 'Env-Updates', script: '''#!/bin/bash
+
+					pip install -r monitoriing/scripts/requirements.txt
+					#python3 monitoring/scripts/monitor_update_csv.py -f $INPUT_FILE
+
+                '''
+
+            }
+
+ 		}
+
+  	}
+
+  }
+
+  post {
+
+    always {
+
+        notify(
+            secretPath: "notification/slack",
+            secretName: "ctdc_slack_url"
+        ) 
+
+    }
+
+    cleanup {
+
+        cleanWs()
+
+    }
+
+  }
+
+}
