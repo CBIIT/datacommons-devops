@@ -21,7 +21,7 @@ def main(argv):
          input_url = arg
 
    result = setMonitors(input_url)
-   result = setSynthetics(input_url)
+   #result = setSynthetics(input_url)
 
 def setMonitors(input_url):
 
@@ -37,6 +37,7 @@ def setMonitors(input_url):
        global key
        key = os.getenv('KEY')
        slack_channel = row["Slack_Channel"]
+       resources = row["Monitored_Resources"].split(",")
 
        if project + '-' + tier not in tiersSet:
          print()
@@ -47,9 +48,12 @@ def setMonitors(input_url):
          slack_id = set_slack_destination.setalertslack("Expand Data Commons", project, tier, key, slack_channel)
          workflow_id = set_workflow.setalertworkflow(project + "-" + tier + " Notifications", email_id, slack_id, project, tier, key)
 
-         os_policy_id = set_opensearch_policy.setpolicy(project, tier, key)
-         alb_policy_id = set_alb_policy.setpolicy(project, tier, key)
-         fargate_policy_id = set_fargate_policy.setpolicy(project, tier, key)
+         if 'opensearch' in resources:
+           os_policy_id = set_opensearch_policy.setpolicy(project, tier, key)
+         if 'alb' in resources:
+           alb_policy_id = set_alb_policy.setpolicy(project, tier, key)
+         if 'fargate' in resources:
+           fargate_policy_id = set_fargate_policy.setpolicy(project, tier, key)
          tiersSet.append(project + '-' + tier)
          #print(tiersSet)
 
