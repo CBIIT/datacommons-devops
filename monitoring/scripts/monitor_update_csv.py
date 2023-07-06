@@ -21,7 +21,7 @@ def main(argv):
          input_url = arg
 
    result = setMonitors(input_url)
-   #result = setSynthetics(input_url)
+   result = setSynthetics(input_url)
 
 def setMonitors(input_url):
 
