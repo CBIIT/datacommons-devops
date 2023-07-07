@@ -172,11 +172,11 @@ data "aws_lb_target_group" "frontend" {
 }
 
 data "aws_iam_policy_document" "task_execution_sqs" {
-    statement {
-      effect = "Allow"
-      actions = [
-        "sqs:*"
-      ]
-      resources = ["arn:aws:sqs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
-    }
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:*"
+    ]
+    resources = ["arn:aws:sqs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
   }
+}
