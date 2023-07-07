@@ -32,8 +32,7 @@ pipeline {
   		steps {
 
   		checkout([$class: 'GitSCM',
-			//branches: [[name: '*/main']],
-			branches: [[name: '*/monitoring_updates']],
+			branches: [[name: '*/main']],
 			userRemoteConfigs:
 			[[url: 'https://github.com/CBIIT/datacommons-devops']]])
 
