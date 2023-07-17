@@ -26,7 +26,8 @@ data "aws_iam_policy_document" "ecs_task_execution_role_policy_doc" {
     data.aws_iam_policy_document.task_execution_secrets.json,
     data.aws_iam_policy_document.task_execution_kms.json,
     data.aws_iam_policy_document.ecs_exec_cloudwatch.json,
-    data.aws_iam_policy_document.task_execution_sqs.json
+    data.aws_iam_policy_document.task_execution_sqs.json,
+    data.aws_iam_policy_document.task_execution_s3.json
   ]
 }
 
@@ -179,4 +180,24 @@ data "aws_iam_policy_document" "task_execution_sqs" {
       ]
       resources = ["arn:aws:sqs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
     }
+}
+
+data "aws_iam_policy_document" "task_execution_s3" {
+  statement {
+    sid = "AllowS3Access"
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket"
+    ]
+    resources = ["arn:aws:s3:::*"]
   }
+  statement {
+    sid = "AllowObjectAccess"
+    effect = "Allow"
+    actions  = [
+      "s3:*Object"
+    ]
+    resources = ["arn:aws:s3:::*/*"]
+  }
+}
+
