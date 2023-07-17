@@ -47,7 +47,7 @@
     src: '{{ dockerfile_path }}'
     dest: '{{workspace}}/build/Dockerfile'
 
-- name: build {{ project_name }}-{{container_name}} image
+- name: build {{ program }}-{{ project_name }}-{{container_name}} image
   community.docker.docker_image:
     build:
       args:
@@ -88,7 +88,7 @@
     source: local
 
 
-- name: Add tag latest to {{ project_name }}-{{container_name}} image
+- name: Add tag latest to {{ program }}-{{ project_name }}-{{container_name}} image
   community.docker.docker_image:
     name: "{{ container_registry_url }}/{{ program }}-{{ project_name }}-{{ container_name }}:{{ image_version }}.{{build_number}}"
     repository: "{{ container_registry_url }}/{{ program }}-{{ project_name }}-{{ container_name }}:latest"
