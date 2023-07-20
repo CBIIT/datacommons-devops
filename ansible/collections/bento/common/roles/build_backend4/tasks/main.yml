@@ -2,46 +2,10 @@
 #     Backend Build
 ############################################################################################################################
 
-- name: remove the application_example.properties file
-  file:
-    path: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/application_example.properties"
-    state: absent
-
 - name: copy application.properties file to /src/main/resources/
   template:
-    src: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/application_local.properties"
+    src: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/application.properties.j2"
     dest: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/application.properties"
-
-- name: create graphql directory in backend
-  file:
-    state: directory
-    path: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/graphql"
-
-- name: create yaml directory in backend
-  file:
-    state: directory
-    path: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/yaml"
-
-- name: copy schema from frontend to resources
-  template:
-    remote_src: yes
-    src: "{{item.src}}"
-    dest: "{{item.dest}}"
-  loop:
-    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ schema_file}}",dest: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/graphql/{{ schema_file}}"}
-    - { src: "{{ workspace }}/{{ project_name }}-frontend/graphql/{{ public_schema_file}}",dest: "{{ workspace }}/src/main/resources/graphql/{{ public_schema_file}}"}
-
-- name: verify test queries file exists
-  stat:
-    path: "{{ workspace }}/{{ project_name }}-frontend/yaml/{{ test_queries_file }}"
-  register: test_queries
-
-- name: copy test queries from frontend to resources
-  template:
-    remote_src: yes
-    src: "{{ workspace }}/{{ project_name }}-frontend/yaml/{{ test_queries_file }}"
-    dest: "{{ workspace }}/{{ project_name }}-backend/src/main/resources/yaml/{{ test_queries_file }}"
-  when: test_queries.stat.exists
 
 - name: build springboot code
   #command: /usr/local/maven/bin/mvn package -DskipTests
@@ -72,17 +36,6 @@
     push: no
     force_source: yes
     source: build
-
-- name: test image for vulnerabilities
-  block:
-    - name: run trivy scanner on {{program}}-{{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}
-      #command: "trivy image --exit-code 1 --severity HIGH,CRITICAL {{ project_name }}-{{ container_name }}:{{ image_version }}-{{ build_number }}"
-      command: "trivy image --severity HIGH,CRITICAL {{program}}-{{ project_name }}-{{ container_name }}:{{ image_version }}.{{ build_number }}"
-      register: vuln_results
-  always:
-    - name: echo vulnerability results
-      debug:
-        msg: "{{ vuln_results.stdout_lines }}"
 
 - name: Add {{program}}-{{ project_name }}-{{ container_name }} image to ECR
   docker_image:
