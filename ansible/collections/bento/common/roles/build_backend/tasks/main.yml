@@ -47,7 +47,7 @@
   #command: /usr/local/maven/bin/mvn package -DskipTests
   command: mvn package -DskipTests
   environment:
-    JAVA_HOME: /usr/lib/jvm/jre-11-openjdk
+    JAVA_HOME: /usr/lib/jvm/jdk-17-oracle-x64
   args:
     chdir: "{{ workspace }}/{{ project_name }}-backend"
 
