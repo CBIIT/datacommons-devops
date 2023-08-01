@@ -199,3 +199,7 @@ Childhood Cancer Data Catalog,ccdc,CCDI,Dev,Portal,https://datacatalog-dev.ccdi.
 Childhood Cancer Data Catalog,ccdc,CCDI,QA,Portal,https://datacatalog-qa.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,"alb,fargate,opensearch"
 Childhood Cancer Data Catalog,ccdc,CCDI,Stage,Portal,https://datacatalog-stage.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,"alb,fargate,opensearch"
 Childhood Cancer Data Catalog,ccdc,CCDI,Prod,Portal,https://datacatalog.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,"alb,fargate,opensearch"
+Cancer Research Data Commons Hub,crdc-hub,CRDC-HUB,Dev,Portal,https://hub-dev.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate,ec2"
+Cancer Research Data Commons Hub,crdc-hub,CRDC-HUB,QA,Portal,https://hub-qa.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate,ec2"
+Cancer Research Data Commons Hub,crdc-hub,CRDC-HUB,Stage,Portal,https://hub-stage.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate,ec2"
+Cancer Research Data Commons Hub,crdc-hub,CRDC-HUB,Prod,Portal,https://hub.datacommons.cancer.gov,,TRUE,C05LJ3E72V6,,"alb,fargate,ec2"
