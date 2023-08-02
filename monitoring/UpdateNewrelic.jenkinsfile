@@ -68,7 +68,8 @@ pipeline {
                 sh label: 'Monitor-Updates', script: """#!/bin/bash
 
 					pip install -r monitoring/scripts/requirements.txt
-					python3 monitoring/scripts/monitor_update_csv.py -f $INPUT_FILE
+					python3 monitoring/scripts/monitor_update_csv.py -f $INPUT_FILE -t synthetics
+					#python3 monitoring/scripts/monitor_update_csv.py -f $INPUT_FILE -t services
 
                 """
 
