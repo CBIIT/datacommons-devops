@@ -9,7 +9,7 @@ from monitors.alerts.workflows import set_workflow
 def main(argv):
 
    try:
-      opts, args = getopt.getopt(argv,"hf:",["file="])
+      opts, args = getopt.getopt(argv,"hf:t:",["file=","type="])
    except getopt.GetoptError:
       print('File URL Required:   monitor_update_csv.py -f <file>')
       sys.exit(2)
@@ -19,9 +19,13 @@ def main(argv):
          sys.exit()
       elif opt in ("-f", "--file"):
          input_url = arg
+      elif opt in ("-t", "--type"):
+         monitor_type = arg
 
-   result = setMonitors(input_url)
-   result = setSynthetics(input_url)
+   if monitor_type == 'services':
+      result = setMonitors(input_url)
+   elif monitor_type == 'synthetics':
+      result = setSynthetics(input_url)
 
 def setMonitors(input_url):
 
