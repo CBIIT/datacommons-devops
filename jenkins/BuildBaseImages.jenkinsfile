@@ -19,6 +19,19 @@ pipeline {
             tagFilter: '*',
             useRepository: 'https://github.com/CBIIT/datacommons-devops.git')
     
+		[[$class: 'CascadeChoiceParameter',
+			choiceType: 'PT_MULTI_SELECT',
+			filterLength: 1,
+			filterable: true,
+			name: 'Dockerfiles',
+			randomName: 'choice-parameter-35096721380675484',
+			referencedParameters: 'Branch',
+			script: [$class: 'GroovyScript', fallbackScript: [classpath: [], oldScript: '', sandbox: true, script: 'return ["ERROR"]'], script: [classpath: [], oldScript: '', sandbox: true, script: '''def fileList = [\'/bin/bash\', \'-c\', "git clone --single-branch --branch " + Branch + " https://github.com/CBIIT/datacommons-devops.git > /dev/null 2>&1 ; cd repo ; git ls-tree -r origin/" + Branch + " --name-only"].execute()
+			
+			fileList.waitFor()
+			
+			return fileList.text.readLines()''']]]]
+		
 		// activeChoiceReactiveParam('Dockerfiles') {
 	    //     description('Select a Dockerfile')
     	//     filterable()
