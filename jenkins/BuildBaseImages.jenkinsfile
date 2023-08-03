@@ -19,19 +19,19 @@ pipeline {
             tagFilter: '*',
             useRepository: 'https://github.com/CBIIT/datacommons-devops.git')
     
-		activeChoiceReactiveParam('Dockerfiles') {
-	        description('Select a Dockerfile')
-    	    filterable()
-        	choiceType('SINGLE_SELECT')
-        	groovyScript {
-            	script("""
-	                |def fileList = ['/bin/bash', '-c', "git clone --single-branch --branch " + Branch + " https://github.com/CBIIT/datacommons-devops.git > /dev/null 2>&1 ; cd repo ; git ls-tree -r origin/" + Branch + " --name-only"].execute()
-    	            |fileList.waitFor()
-        	        |return fileList.text.readLines() }
-            	    """.stripMargin())
-            	fallbackScript('return ["ERROR"]')
-        	}
-        	referencedParameter('Branch')}
+		// activeChoiceReactiveParam('Dockerfiles') {
+	    //     description('Select a Dockerfile')
+    	//     filterable()
+        // 	choiceType('SINGLE_SELECT')
+        // 	groovyScript {
+        //     	script("""
+	    //             |def fileList = ['/bin/bash', '-c', "git clone --single-branch --branch " + Branch + " https://github.com/CBIIT/datacommons-devops.git > /dev/null 2>&1 ; cd repo ; git ls-tree -r origin/" + Branch + " --name-only"].execute()
+    	//             |fileList.waitFor()
+        // 	        |return fileList.text.readLines() }
+        //     	    """.stripMargin())
+        //     	fallbackScript('return ["ERROR"]')
+        // 	}
+        // 	referencedParameter('Branch')}
 
 //         extendedChoice(
 //             name: 'Environment',
