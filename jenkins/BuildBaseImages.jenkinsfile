@@ -3,7 +3,7 @@
 pipeline {
 	agent {
 		node {
-			label ''   // Set to use a Jenkins agent in your desired account
+			label 'cicd_microservice'
 		}
 	}
 
@@ -123,14 +123,7 @@ pipeline {
 
  			script {
 
-                import groovy.io.FileType
-
-                def list = []
-
-                def dir = new File("$WORKSPACE/docker/base_images")
-                dir.eachFileRecurse (FileType.FILES) { file ->
-                  list << file
-                }
+                list = findFiles(glob: 'docker/base_images/*')
 
                 list.each {
                   println it.path
