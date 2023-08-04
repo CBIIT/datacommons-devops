@@ -148,23 +148,14 @@ pipeline {
 
 			}
 
-			script {
-
-				  println env.FILE_LIST
-
-                }
-
-				
-
-
-			// input message: 'Select Images To Build', 
-			//     parameters: [extendedChoice(multiSelectDelimiter: ',', 
-			// 	name: 'Images_to_Build', 
-			// 	quoteValue: false, 
-			// 	saveJSONParameterToFile: false, 
-			// 	type: 'PT_MULTI_SELECT', 
-			// 	value: 'list', 
-			// 	visibleItemCount: 5)]
+			input message: 'Select Images To Build', 
+			    parameters: [extendedChoice(multiSelectDelimiter: ',', 
+				name: 'Images_to_Build', 
+				quoteValue: false, 
+				saveJSONParameterToFile: false, 
+				type: 'PT_MULTI_SELECT', 
+				value: env.FILE_LIST, 
+				visibleItemCount: 5)]
 
  		}
 
