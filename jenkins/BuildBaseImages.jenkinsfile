@@ -112,25 +112,7 @@ pipeline {
 
   	}
 
-  	// stage('Set Environment Variables'){
-
- 	// 	steps {
-
- 	// 		script {
-
-    //             // set ECR account number
-	// 			env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
-
-	// 			// set repo URL
-	// 			env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
-
-	// 		}
-
- 	// 	}
-
-  	// }
-
-	stage('List Dockerfiles'){
+	stage('Get Dockerfiles To Build'){
 
  		steps {
 
@@ -162,26 +144,32 @@ pipeline {
 
   	}
 	
-	// stage('Build'){
+	stage('Build'){
 
- 	// 	steps {
+ 		steps {
 
- 	// 		script {
+			script {
 
-	// 		    sh label: 'Docker-Build', script: '''#!/bin/bash
+				println params.Images_to_Build
 
-	// 			# build CTDC Docker container
-	// 			echo "Building: $ECR_REPO:$CODE_BRANCH.$BUILD_NUMBER"
+			}
 
-	// 			cd $WORKSPACE/$CODE_FOLDER && DOCKER_BUILDKIT=1 docker build --no-cache -t $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER .
+ 			// script {
 
-	// 			'''
+			//     sh label: 'Docker-Build', script: '''#!/bin/bash
 
-	// 		}
+			// 	# build CTDC Docker container
+			// 	echo "Building: $ECR_REPO:$CODE_BRANCH.$BUILD_NUMBER"
 
- 	// 	}
+			// 	cd $WORKSPACE/$CODE_FOLDER && DOCKER_BUILDKIT=1 docker build --no-cache -t $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER .
 
-  	// }
+			// 	'''
+
+			// }
+
+ 		}
+
+  	}
 
   	// stage('Test'){
 
