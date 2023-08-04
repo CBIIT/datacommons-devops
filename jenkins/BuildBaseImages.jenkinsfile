@@ -152,11 +152,12 @@ pipeline {
 
 			script {
 
-				dockerfiles = env.FILE_LIST.split(',').collect{it}
-				println dockerfiles
-				dockerfiles.each {
-				 	println "BUILDING CONTAINER:" + it
-					println it
+				//dockerfiles = env.FILE_LIST.split(',').collect{it}
+				//println dockerfiles
+				
+				//dockerfiles.each {
+				env.FILE_LIST.split(',').collect{it}.each {
+				 	println "BUILDING CONTAINER: " + it
 				 }
 
 			}
