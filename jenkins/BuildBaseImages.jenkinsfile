@@ -156,7 +156,6 @@ pipeline {
 
 				
 
-			}
 
 			// input message: 'Select Images To Build', 
 			//     parameters: [extendedChoice(multiSelectDelimiter: ',', 
