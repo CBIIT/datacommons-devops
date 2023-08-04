@@ -138,13 +138,14 @@ pipeline {
 
                 files = findFiles(glob: 'docker/base_images/*')
 
-				fileList = []
+				//fileList = []
 				files.each {
 				  println it.getName()
 				  fileList.add(it.getName())
                 }
 
 				env.FILE_LIST = fileList
+				println env.FILE_LIST
 
 			}
 
