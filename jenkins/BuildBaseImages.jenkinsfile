@@ -44,7 +44,7 @@ pipeline {
   		    script {
 
                 Date date = new Date()
-				env.DATE_STRING = date.format("dd/MM/yyyy")
+				env.DATE_STRING = date.format("yyyyMMddHHmm")
 
 				println env.DATE_STRING
 
