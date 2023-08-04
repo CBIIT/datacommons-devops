@@ -7,17 +7,17 @@ pipeline {
 		}
 	}
 
- 	parameters {
+ 	// parameters {
 
-        gitParameter(branchFilter: 'origin/(.*)',
-            defaultValue: 'main',
-            name: 'Branch',
-            type: 'GitParameterDefinition',
-            quickFilterEnabled: true,
-            selectedValue: 'DEFAULT',
-            sortMode: 'ASCENDING_SMART',
-            tagFilter: '*',
-            useRepository: 'https://github.com/CBIIT/datacommons-devops.git')
+    //     gitParameter(branchFilter: 'origin/(.*)',
+    //         defaultValue: 'main',
+    //         name: 'Branch',
+    //         type: 'GitParameterDefinition',
+    //         quickFilterEnabled: true,
+    //         selectedValue: 'DEFAULT',
+    //         sortMode: 'ASCENDING_SMART',
+    //         tagFilter: '*',
+    //         useRepository: 'https://github.com/CBIIT/datacommons-devops.git')
     
 		// [[$class: 'CascadeChoiceParameter',
 		// 	choiceType: 'PT_MULTI_SELECT',
@@ -71,7 +71,7 @@ pipeline {
 //             defaultValue: true,
 //             name: 'RunDeployStage')
 
-   }
+//    }
 
   options {
 	timestamps()
@@ -143,6 +143,15 @@ pipeline {
                 }
 
 			}
+
+			input message: 'Select Images To Build', 
+			    parameters: [extendedChoice(multiSelectDelimiter: ',', 
+				name: 'Images_to_Build', 
+				quoteValue: false, 
+				saveJSONParameterToFile: false, 
+				type: 'PT_MULTI_SELECT', 
+				value: 'test,test1,test2', 
+				visibleItemCount: 5)]
 
  		}
 
