@@ -144,9 +144,8 @@ pipeline {
 				  fileList.add(it.getName())
                 }
 
-				env.FILE_LIST = fileList
+				env.FILE_LIST = fileList.join(',')
 				println env.FILE_LIST
-				println env.FILE_LIST.text()
 
 			}
 
