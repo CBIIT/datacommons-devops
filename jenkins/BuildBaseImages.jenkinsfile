@@ -139,8 +139,7 @@ pipeline {
                 list = findFiles(glob: 'docker/base_images/*')
 
 				list.each {
-                  println it.path
-				  println it
+                  println it.pathlastIndexOf('/')
                 }
 
 			}
