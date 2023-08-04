@@ -154,9 +154,10 @@ pipeline {
 
 				dockerfiles = env.FILE_LIST.split(',').collect{it}
 				println dockerfiles
-				// env.FILE_LIST.each {
-				// 	println it
-				// }
+				dockerfiles.each {
+				 	println "BUILDING CONTAINER:" + it
+					println it
+				 }
 
 			}
 
