@@ -138,21 +138,21 @@ pipeline {
 
                 list = findFiles(glob: 'docker/base_images/*')
 
-                println list
 				list.each {
                   println it.path
+				  println it
                 }
 
 			}
 
-			input message: 'Select Images To Build', 
-			    parameters: [extendedChoice(multiSelectDelimiter: ',', 
-				name: 'Images_to_Build', 
-				quoteValue: false, 
-				saveJSONParameterToFile: false, 
-				type: 'PT_MULTI_SELECT', 
-				value: list, 
-				visibleItemCount: 5)]
+			// input message: 'Select Images To Build', 
+			//     parameters: [extendedChoice(multiSelectDelimiter: ',', 
+			// 	name: 'Images_to_Build', 
+			// 	quoteValue: false, 
+			// 	saveJSONParameterToFile: false, 
+			// 	type: 'PT_MULTI_SELECT', 
+			// 	value: 'list', 
+			// 	visibleItemCount: 5)]
 
  		}
 
