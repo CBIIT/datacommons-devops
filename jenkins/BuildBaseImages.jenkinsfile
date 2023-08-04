@@ -74,8 +74,6 @@ pipeline {
 				 	println "BUILDING CONTAINER: " + it
 
 					sh label: 'Docker-Build', script: """#!/bin/bash
-					
-					    #echo "Building: $ECR_REPO:$CODE_BRANCH.$BUILD_NUMBER"
 
 						echo "Building: $it"
 					
