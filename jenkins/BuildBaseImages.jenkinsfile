@@ -13,7 +13,7 @@ pipeline {
 
   environment {
 
-	ECR_REPO    = "TEST"
+	ECR_REPO    = "test"
 	CODE_REPO   = "datacommons-devops"
 	CODE_BRANCH = "base_image_pipeline"
     CODE_FOLDER = "datacommons-devops"
