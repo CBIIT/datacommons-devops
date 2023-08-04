@@ -152,7 +152,9 @@ pipeline {
 
 			script {
 
-				println env.FILE_LIST
+				env.FILE_LIST.each {
+					println it
+				}
 
 			}
 
