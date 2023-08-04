@@ -140,6 +140,14 @@ pipeline {
 				value: env.FILE_LIST, 
 				visibleItemCount: 5)]
 
+			script {
+
+				params.Images_to_Build.each {
+					println it
+				}
+
+			}
+
  		}
 
   	}
