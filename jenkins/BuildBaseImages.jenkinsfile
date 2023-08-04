@@ -13,9 +13,10 @@ pipeline {
 
   environment {
 
-	CODE_REPO    = "datacommons-devops"
-	CODE_BRANCH  = "base_image_pipeline"
-    CODE_FOLDER  = "datacommons-devops"
+	ECR_REPO    = "TEST"
+	CODE_REPO   = "datacommons-devops"
+	CODE_BRANCH = "base_image_pipeline"
+    CODE_FOLDER = "datacommons-devops"
 
   }
 
@@ -71,32 +72,18 @@ pipeline {
 			script {
 
 				env.FILE_LIST.split(',').collect{it}.each {
-				 	println "BUILDING CONTAINER: " + it
 
 					sh label: 'Docker-Build', script: """#!/bin/bash
 
 						echo "Building: $it"
+						
+						cd $WORKSPACE/$CODE_FOLDER/docker/base_iamges && DOCKER_BUILDKIT=1 docker build --no-cache -t $ECR_REPO:$it -f $it .
 					
 					    """
-
-
 
 				 }
 
 			}
-
- 			// script {
-
-			//     sh label: 'Docker-Build', script: '''#!/bin/bash
-
-			// 	# build CTDC Docker container
-			// 	echo "Building: $ECR_REPO:$CODE_BRANCH.$BUILD_NUMBER"
-
-			// 	cd $WORKSPACE/$CODE_FOLDER && DOCKER_BUILDKIT=1 docker build --no-cache -t $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER .
-
-			// 	'''
-
-			// }
 
  		}
 
