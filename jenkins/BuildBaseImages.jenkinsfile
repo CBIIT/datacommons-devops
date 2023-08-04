@@ -3,7 +3,8 @@
 pipeline {
 	agent {
 		node {
-			label 'cicd_microservice'
+			//label 'cicd_microservice'
+			label 'slave-ccdc-nciws-d2425-c'
 		}
 	}
 
@@ -17,6 +18,7 @@ pipeline {
 	CODE_REPO   = "datacommons-devops"
 	CODE_BRANCH = "base_image_pipeline"
     CODE_FOLDER = "datacommons-devops"
+	REGION      = "us-east-1"
 
   }
 
@@ -43,10 +45,16 @@ pipeline {
 
   		    script {
 
-                Date date = new Date()
+                // set date string to use for tag
+				Date date = new Date()
 				env.DATE_STRING = date.format("yyyyMMddHHmm")
 
-				println env.DATE_STRING
+				// set ECR account number
+				//env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
+
+				// set repo URL
+				//env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
+
 
 			}
 
@@ -94,7 +102,7 @@ pipeline {
 
 						echo "Building: $it"
 						
-						cd $WORKSPACE/$CODE_FOLDER/docker/base_images && DOCKER_BUILDKIT=1 docker build --no-cache -t $ECR_REPO:$it -f $it .
+						cd $WORKSPACE/$CODE_FOLDER/docker/base_images && DOCKER_BUILDKIT=1 docker build --no-cache -t $ECR_REPO:$it.$DATE_STRING -f $it .
 					
 					    """
 
@@ -114,7 +122,7 @@ pipeline {
 
 	// 		    sh label: 'Docker-Push', script: '''#!/bin/bash
 
-	// 			# push CTDC Docker container to ECR
+	// 			# push Docker container to ECR
 	// 			echo "Pushing: $ECR_REPO:$CODE_BRANCH.$BUILD_NUMBER"
 
 	// 			# login and push to ECR
