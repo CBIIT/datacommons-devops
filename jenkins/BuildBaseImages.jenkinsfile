@@ -37,6 +37,23 @@ pipeline {
 
   	}
 
+	stage('set variables'){
+
+        steps {
+
+  		    script {
+
+                Date date = new Date()
+				env.DATE_STRING = date.format("dd/MM/yyyy")
+
+				println env.DATE_STRING
+
+			}
+
+        }
+
+  	}
+	
 	stage('Get Dockerfiles To Build'){
 
  		steps {
