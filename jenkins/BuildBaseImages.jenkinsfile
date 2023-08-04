@@ -77,7 +77,7 @@ pipeline {
 
 						echo "Building: $it"
 						
-						cd $WORKSPACE/$CODE_FOLDER/docker/base_iamges && DOCKER_BUILDKIT=1 docker build --no-cache -t $ECR_REPO:$it -f $it .
+						cd $WORKSPACE/$CODE_FOLDER/docker/base_images && DOCKER_BUILDKIT=1 docker build --no-cache -t $ECR_REPO:$it -f $it .
 					
 					    """
 
