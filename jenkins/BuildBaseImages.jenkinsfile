@@ -150,7 +150,9 @@ pipeline {
 
 			script {
 
-				println params.Images_to_Build
+				params.Images_to_Build.each {
+					println it
+				}
 
 			}
 
