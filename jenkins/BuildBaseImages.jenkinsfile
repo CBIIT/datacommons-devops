@@ -126,25 +126,19 @@ pipeline {
 				  fileList.add(it.getName())
                 }
 
-				env.FILE_LIST = fileList.join(',')
+				//env.FILE_LIST = fileList.join(',')
+				//println env.FILE_LIST
+
+			    env.FILE_LIST = input message: 'Select Images To Build', 
+			        parameters: [extendedChoice(multiSelectDelimiter: ',', 
+				    name: 'Images_to_Build', 
+				    quoteValue: false, 
+				    saveJSONParameterToFile: false, 
+				    type: 'PT_MULTI_SELECT', 
+				    value: fileList.join(','), 
+				    visibleItemCount: 5)]
+
 				println env.FILE_LIST
-
-			}
-
-			input message: 'Select Images To Build', 
-			    parameters: [extendedChoice(multiSelectDelimiter: ',', 
-				name: 'Images_to_Build', 
-				quoteValue: false, 
-				saveJSONParameterToFile: false, 
-				type: 'PT_MULTI_SELECT', 
-				value: env.FILE_LIST, 
-				visibleItemCount: 5)]
-
-			script {
-
-				params.Images_to_Build.each {
-					println it
-				}
 
 			}
 
@@ -158,9 +152,7 @@ pipeline {
 
 			script {
 
-				params.Images_to_Build.each {
-					println it
-				}
+				println env.FILE_LIST
 
 			}
 
