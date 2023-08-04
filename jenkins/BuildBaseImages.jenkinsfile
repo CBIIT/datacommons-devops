@@ -140,7 +140,7 @@ pipeline {
 
 				list.each {
                   println it
-				  println it.getFileName()
+				  println it.getName()
 				  println it.path
                 }
 
