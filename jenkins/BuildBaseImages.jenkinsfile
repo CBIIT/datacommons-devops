@@ -14,10 +14,10 @@ pipeline {
 
   environment {
 
-	ECR_REPO    = "test"
+	ECR_REPO    = "base_images"
 	CODE_REPO   = "datacommons-devops"
-	CODE_BRANCH = "base_image_pipeline"
     CODE_FOLDER = "datacommons-devops"
+	CODE_BRANCH = "base_image_pipeline"
 	REGION      = "us-east-1"
 
   }
@@ -51,9 +51,10 @@ pipeline {
 
 				// set ECR account number
 				//env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
+				env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws sts get-caller-identity --query "Account" --output text").trim()
 
 				// set repo URL
-				//env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
+				env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
 
 
 			}
@@ -102,7 +103,7 @@ pipeline {
 
 						echo "Building: $it"
 						
-						cd $WORKSPACE/$CODE_FOLDER/docker/base_images && DOCKER_BUILDKIT=1 docker build --no-cache -t $ECR_REPO:$it.$DATE_STRING -f $it .
+						cd $WORKSPACE/$CODE_FOLDER/docker/base_images && DOCKER_BUILDKIT=1 docker build --no-cache -t $REPO_URL:$it.$DATE_STRING -f $it .
 					
 					    """
 
