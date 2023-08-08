@@ -102,10 +102,6 @@ pipeline {
 
 						echo "Building: $it"
 
-						# Set ECR Repo URL
-						#aws_account=$(aws sts get-caller-identity --query "Account" --output text)
-						#REPO_URL='$aws_account.dkr.ecr.$REGION.amazonaws.com/$ECR_REPO'
-						
 						cd $WORKSPACE/$CODE_FOLDER/docker/base_images && DOCKER_BUILDKIT=1 docker build --no-cache -t $REPO_URL:$it.$DATE_STRING -f $it .
 					
 					    """
