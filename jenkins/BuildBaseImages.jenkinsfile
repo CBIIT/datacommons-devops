@@ -51,10 +51,10 @@ pipeline {
 
 				// set ECR account number
 				//env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
-				env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: 'aws sts get-caller-identity --query "Account" --output text').trim()
+				//env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: 'aws sts get-caller-identity --query "Account" --output text').trim()
 
 				// set repo URL
-				env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
+				//env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
 
 			}
 
@@ -98,13 +98,17 @@ pipeline {
 
 				env.FILE_LIST.split(',').collect{it}.each {
 
-					sh label: 'Docker-Build', script: """#!/bin/bash
+					sh label: 'Docker-Build', script: '''#!/bin/bash
 
 						echo "Building: $it"
+
+						# Set ECR Repo URL
+						aws_account=$(aws sts get-caller-identity --query "Account" --output text)
+						REPO_URL="$aws_account.dkr.ecr.$REGION.amazonaws.com/$ECR_REPO"
 						
 						cd $WORKSPACE/$CODE_FOLDER/docker/base_images && DOCKER_BUILDKIT=1 docker build --no-cache -t $REPO_URL:$it.$DATE_STRING -f $it .
 					
-					    """
+					    '''
 
 				 }
 
