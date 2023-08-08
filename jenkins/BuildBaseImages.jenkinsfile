@@ -51,7 +51,7 @@ pipeline {
 
 				// set ECR account number
 				//env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
-				env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws sts get-caller-identity --query "Account" --output text").trim()
+				env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws sts get-caller-identity --query 'Account' --output text").trim()
 
 				// set repo URL
 				env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
