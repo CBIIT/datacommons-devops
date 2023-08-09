@@ -122,7 +122,7 @@ pipeline {
 
 			    env.FILE_LIST.split(',').collect{it}.each {
 
-					sh label: 'Docker-Push', script: """#!/bin/bash
+					sh label: 'Docker-Push', script: '''#!/bin/bash
 
 						echo "Pushing: $REPO_URL:$it.$DATE_STRING"
 
@@ -130,7 +130,7 @@ pipeline {
 						docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $REPO_URL
 						docker push $REPO_URL:$it.$DATE_STRING
 
-					    """
+					    '''
 
 				 }
 
