@@ -14,7 +14,7 @@ pipeline {
 
   environment {
 
-	ECR_REPO    = "base_images"
+	ECR_REPO    = "bento-cicd-build"
 	CODE_REPO   = "datacommons-devops"
     CODE_FOLDER = "datacommons-devops"
 	CODE_BRANCH = "base_image_pipeline"
