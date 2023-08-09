@@ -3,7 +3,6 @@
 pipeline {
 	agent {
 		node {
-			//label 'cicd_microservice'
 			label 'slave-ccdc-nciws-d2425-c'
 		}
 	}
@@ -14,11 +13,9 @@ pipeline {
 
   environment {
 
-// 	ECR_REPO    = "cbiit-base-docker-images"
  	CODE_REPO   = "datacommons-devops"
     CODE_FOLDER = "datacommons-devops"
  	CODE_BRANCH = "base_image_pipeline"
-// 	REGION      = "us-east-1"
 
   }
 
@@ -39,81 +36,6 @@ pipeline {
 
   	}
 
-	// stage('set variables'){
-
-    //     steps {
-
-  	// 	    script {
-
-    //             // set date string to use for tag
-	// 			Date date = new Date()
-	// 			env.DATE_STRING = date.format("yyyyMMddHHmm")
-
-	// 			// set ECR account number
-	// 			//env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
-	// 			env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws sts get-caller-identity --query \"Account\" --output text").trim()
-
-	// 			// set repo URL
-	// 			env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
-
-	// 		}
-
-    //     }
-
-  	// }
-	
-	// stage('Get Dockerfiles To Build'){
-
- 	// 	steps {
-
- 	// 		script {
-
-    //             files = findFiles(glob: 'docker/base_images/*')
-
-	// 			fileList = []
-	// 			files.each {
-	// 			  fileList.add(it.getName())
-    //             }
-
-	// 		    env.FILE_LIST = input message: 'Select Images To Build', 
-	// 		        parameters: [extendedChoice(multiSelectDelimiter: ',', 
-	// 			    name: 'Images_to_Build', 
-	// 			    quoteValue: false, 
-	// 			    saveJSONParameterToFile: false, 
-	// 			    type: 'PT_MULTI_SELECT', 
-	// 			    value: fileList.join(','), 
-	// 			    visibleItemCount: 5)]
-
-	// 		}
-
- 	// 	}
-
-  	// }
-	
-	// stage('Build'){
-
- 	// 	steps {
-
-	// 		script {
-
-	// 			env.FILE_LIST.split(',').collect{it}.each {
-
-	// 				sh label: 'Docker-Build', script: """#!/bin/bash
-
-	// 					echo "Building: $it"
-
-	// 					cd $WORKSPACE/$CODE_FOLDER/docker/base_images && DOCKER_BUILDKIT=1 docker build --no-cache -t $REPO_URL:$it.$DATE_STRING -f $it .
-					
-	// 				    """
-
-	// 			 }
-
-	// 		}
-
- 	// 	}
-
-  	// }
-
   	stage('Image Scans'){
 
  		steps {
@@ -122,44 +44,17 @@ pipeline {
 			
 			script {
 
-			    //ECR_LOGIN = sh(label: 'ECR Login', returnStdout: true, script: "docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $REPO_URL").trim()
-				
-				//env.FILE_LIST.split(',').collect{it}.each {
-
 				def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_images/base_image_list").readLines()
 
 				image_list.each { String image ->
 
 					println image
 
-					//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker scout quickview $image").trim()
-
-					//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker --version").trim()
 					SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli quickview $image").trim()
-					//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker login -u=\"$DOCKER_USER\" -p=\"$DOCKER_PASSWORD\" && docker run docker/scout-cli quickview $image").trim()
 
 					println SCAN_RESULT
 
 				}
-
-					// sh label: 'Docker-Scan', script: '''#!/bin/bash
-
-					// 	images=$(cat $WORKSPACE/$CODE_FOLDER/docker/base_images/base_image_list)
-						
-					// 	for i in $images
-					// 	do 
-						
-					// 	    echo "Scanning: $i"
-
-					// 	done
-
-					// 	# login and push to ECR
-					// 	#docker login -u AWS -p \$(aws ecr get-login-password --region $REGION) $REPO_URL
-					// 	#docker push $REPO_URL:$it.$DATE_STRING
-
-					//     '''
-
-				 //}
 
 			}
 
