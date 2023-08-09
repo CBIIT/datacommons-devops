@@ -7,9 +7,9 @@ pipeline {
 		}
 	}
 
-  options {
-	timestamps()
-  }
+//   options {
+// 	timestamps()
+//   }
 
   environment {
 
