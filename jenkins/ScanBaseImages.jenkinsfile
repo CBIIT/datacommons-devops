@@ -130,7 +130,9 @@ pipeline {
 
 					println image
 
-					SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker scout quickview $image").trim()
+					//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker scout quickview $image").trim()
+
+					SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker --version").trim()
 
 					println SCAN_RESULT
 
