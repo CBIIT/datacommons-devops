@@ -121,3 +121,15 @@ variable "create_neo4j_db" {
   description = "choose to add neo4j container or not"
 
 }
+
+variable "use_local_account_id" {
+  description = "use local account for ecr"
+  type = bool
+  default = true
+}
+
+variable "central_ecr_account_id" {
+  type = string
+  description = "central ecr account number"
+  default = null
+}
