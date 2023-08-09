@@ -114,32 +114,31 @@ pipeline {
 
   	}
 
-  	// stage('push to ECR'){
+  	stage('push to ECR'){
 
- 	// 	steps {
+ 		steps {
 
- 	// 		script {
+ 			script {
 
-	// 		    sh label: 'Docker-Push', script: '''#!/bin/bash
+			    env.FILE_LIST.split(',').collect{it}.each {
 
-	// 			# push Docker container to ECR
-	// 			echo "Pushing: $ECR_REPO:$CODE_BRANCH.$BUILD_NUMBER"
+					sh label: 'Docker-Push', script: """#!/bin/bash
 
-	// 			# login and push to ECR
-	// 			docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $REPO_URL
-	// 			docker push $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER
+						echo "Pushing: $REPO_URL:$it.$DATE_STRING"
 
-    //             # tag as latest and push to ECR
-	// 			docker tag $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER $REPO_URL:latest
-    //             docker push $REPO_URL:latest
+						# login and push to ECR
+						docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $REPO_URL
+						docker push $REPO_URL:$it.$DATE_STRING
 
-	// 			'''
+					    """
 
-	// 		}
+				 }
 
- 	// 	}
+			}
 
-  	// }
+ 		}
+
+  	}
 
   }
 
