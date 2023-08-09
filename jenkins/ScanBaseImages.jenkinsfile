@@ -118,7 +118,9 @@ pipeline {
 
  		steps {
 
- 			script {
+ 			withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USER')]){
+			
+			script {
 
 			    //ECR_LOGIN = sh(label: 'ECR Login', returnStdout: true, script: "docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $REPO_URL").trim()
 				
@@ -132,7 +134,8 @@ pipeline {
 
 					//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker scout quickview $image").trim()
 
-					SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker --version").trim()
+					//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker --version").trim()
+					SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker docker run -it -e DOCKER_SCOUT_HUB_USER=DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=DOCKER_PASSWORD docker/scout-cli quickview $image").trim()
 
 					println SCAN_RESULT
 
@@ -156,6 +159,8 @@ pipeline {
 					//     '''
 
 				 //}
+
+			}
 
 			}
 
