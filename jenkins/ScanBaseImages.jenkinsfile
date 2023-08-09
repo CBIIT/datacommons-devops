@@ -114,7 +114,7 @@ pipeline {
 
   	// }
 
-  	stage('push to ECR'){
+  	stage('Image Scans'){
 
  		steps {
 
@@ -124,22 +124,30 @@ pipeline {
 				
 				//env.FILE_LIST.split(',').collect{it}.each {
 
-					sh label: 'Docker-Scan', script: '''#!/bin/bash
+				def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_images/base_image_list").readLines()
 
-						images=$(cat $WORKSPACE/$CODE_FOLDER/docker/base_images/base_image_list)
+				image_list.each { String image ->
+
+					println image
+
+				}
+
+					// sh label: 'Docker-Scan', script: '''#!/bin/bash
+
+					// 	images=$(cat $WORKSPACE/$CODE_FOLDER/docker/base_images/base_image_list)
 						
-						for i in $images
-						do 
+					// 	for i in $images
+					// 	do 
 						
-						    echo "Scanning: $i"
+					// 	    echo "Scanning: $i"
 
-						done
+					// 	done
 
-						# login and push to ECR
-						#docker login -u AWS -p \$(aws ecr get-login-password --region $REGION) $REPO_URL
-						#docker push $REPO_URL:$it.$DATE_STRING
+					// 	# login and push to ECR
+					// 	#docker login -u AWS -p \$(aws ecr get-login-password --region $REGION) $REPO_URL
+					// 	#docker push $REPO_URL:$it.$DATE_STRING
 
-					    '''
+					//     '''
 
 				 //}
 
