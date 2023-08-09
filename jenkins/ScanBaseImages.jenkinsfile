@@ -128,7 +128,7 @@ pipeline {
 
 						images=\$(cat $WORKSPACE/$CODE_FOLDER/docker/base_images/base_image_list)
 						
-						for i in images
+						for i in $images
 						do 
 						
 						    echo "Scanning: $i"
