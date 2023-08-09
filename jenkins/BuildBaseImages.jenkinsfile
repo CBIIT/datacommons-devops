@@ -120,17 +120,19 @@ pipeline {
 
  			script {
 
-			    env.FILE_LIST.split(',').collect{it}.each {
+			    //ECR_LOGIN = sh(label: 'ECR Login', returnStdout: true, script: "docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $REPO_URL").trim()
+				
+				env.FILE_LIST.split(',').collect{it}.each {
 
-					sh label: 'Docker-Push', script: '''#!/bin/bash
+					sh label: 'Docker-Push', script: """#!/bin/bash
 
 						echo "Pushing: $REPO_URL:$it.$DATE_STRING"
 
 						# login and push to ECR
-						docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $REPO_URL
+						docker login -u AWS -p \$(aws ecr get-login-password --region $REGION) $REPO_URL
 						docker push $REPO_URL:$it.$DATE_STRING
 
-					    '''
+					    """
 
 				 }
 
