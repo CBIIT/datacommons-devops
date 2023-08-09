@@ -12,7 +12,7 @@ pipeline {
 	timestamps()
   }
 
-//   environment {
+  environment {
 
 // 	ECR_REPO    = "cbiit-base-docker-images"
  	CODE_REPO   = "datacommons-devops"
@@ -20,7 +20,7 @@ pipeline {
  	CODE_BRANCH = "base_image_pipeline"
 // 	REGION      = "us-east-1"
 
-//   }
+  }
 
   stages{
   	stage('checkout'){
