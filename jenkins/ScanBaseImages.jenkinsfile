@@ -15,9 +15,9 @@ pipeline {
 //   environment {
 
 // 	ECR_REPO    = "cbiit-base-docker-images"
-// 	CODE_REPO   = "datacommons-devops"
-//     CODE_FOLDER = "datacommons-devops"
-// 	CODE_BRANCH = "base_image_pipeline"
+ 	CODE_REPO   = "datacommons-devops"
+    CODE_FOLDER = "datacommons-devops"
+ 	CODE_BRANCH = "base_image_pipeline"
 // 	REGION      = "us-east-1"
 
 //   }
