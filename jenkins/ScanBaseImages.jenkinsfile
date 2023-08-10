@@ -17,6 +17,9 @@ pipeline {
     CODE_FOLDER = "datacommons-devops"
  	CODE_BRANCH = "base_image_pipeline"
 
+	ECR_REPO    = "cbiit-base-docker-images"
+	REGION      = "us-east-1"
+
   }
 
   stages{
@@ -36,7 +39,26 @@ pipeline {
 
   	}
 
-  	stage('Image Scans'){
+  	stage('set variables'){
+
+        steps {
+
+  		    script {
+
+				// set ECR account number
+				//env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
+				env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws sts get-caller-identity --query \"Account\" --output text").trim()
+
+				// set repo URL
+				env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
+
+			}
+
+        }
+
+  	}
+	
+	stage('Image Scans'){
 
  		steps {
 
@@ -44,6 +66,8 @@ pipeline {
 			
 			script {
 
+				sh(label: 'Log into ECR', returnStdout: true, script: "docker login -u AWS -p \$(aws ecr get-login-password --region $REGION) $REPO_URL")
+				
 				def SCANNED_IMAGES = []
 				def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_images/base_image_list").readLines()
 
