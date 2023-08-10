@@ -39,24 +39,24 @@ pipeline {
 
   	}
 
-  	// stage('set variables'){
+  	stage('set variables'){
 
-    //     steps {
+        steps {
 
-  	// 	    script {
+  		    script {
 
-	// 			// set ECR account number
-	// 			//env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
-	// 			env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws sts get-caller-identity --query \"Account\" --output text").trim()
+				// set ECR account number
+				//env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
+				env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws sts get-caller-identity --query \"Account\" --output text").trim()
 
-	// 			// set repo URL
-	// 			env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
+				// set repo URL
+				env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
 
-	// 		}
+			}
 
-    //     }
+        }
 
-  	// }
+  	}
 	
 	stage('Image Scans'){
 
@@ -66,7 +66,7 @@ pipeline {
 			
 			script {
 
-				//sh(label: 'Log into ECR', returnStdout: true, script: "docker login -u AWS -p \$(aws ecr get-login-password --region $REGION) $REPO_URL")
+				sh(label: 'Log into ECR', returnStdout: true, script: "docker login -u AWS -p \$(aws ecr get-login-password --region $REGION) $REPO_URL")
 				
 				def SCANNED_IMAGES = []
 				def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_images/base_image_list").readLines()
@@ -75,6 +75,7 @@ pipeline {
 
 					println image
 
+					sh(label: 'Pull Image', returnStdout: true, script: "docker pull $image")
 					SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli quickview $image").trim()
 					SCANNED_IMAGES.add(SCAN_RESULT)
 
