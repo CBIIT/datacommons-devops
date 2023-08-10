@@ -44,17 +44,20 @@ pipeline {
 			
 			script {
 
+				def SCAN_RESULT = ''
 				def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_images/base_image_list").readLines()
 
 				image_list.each { String image ->
 
 					println image
 
-					SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli quickview $image").trim()
+					SCAN_RESULT = SCAN_RESULT + sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli quickview $image").trim()
 
-					println SCAN_RESULT
+					//println SCAN_RESULT
 
 				}
+
+				println SCAN_RESULT
 
 			}
 
