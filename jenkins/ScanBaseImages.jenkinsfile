@@ -57,7 +57,7 @@ pipeline {
 
 				}
 
-				println SCAN_RESULT
+				println "RESULTS:    " + SCAN_RESULT
 
 			}
 
