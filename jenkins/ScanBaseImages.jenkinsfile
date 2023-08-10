@@ -58,7 +58,13 @@ pipeline {
 
 				}
 
-				println "RESULTS:    " + SCANNED_IMAGES
+				println "RESULTS:    "
+				
+				SCANNED_IMAGES.each { String results ->
+
+				    println results
+
+				}
 
 			}
 
