@@ -11,6 +11,14 @@ pipeline {
 // 	timestamps()
 //   }
 
+  parameters {
+
+  string(defaultValue: "", 
+        description: 'Enter a list of email addresses to notify with results:', 
+        name: 'EmailRecipients')
+
+  }
+  
   environment {
 
  	CODE_REPO   = "datacommons-devops"
@@ -39,24 +47,25 @@ pipeline {
 
   	}
 
-  	stage('set variables'){
+  	// NOTE:  These lines are required for accessing ECR - they are commented but not removed so we can test scanning from ECR when docker scout supports this
+	// stage('set variables'){
 
-        steps {
+    //     steps {
 
-  		    script {
+  	// 	    script {
 
-				// set ECR account number
-				//env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
-				env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws sts get-caller-identity --query \"Account\" --output text").trim()
+	// 			// set ECR account number
+	// 			//env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
+	// 			env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws sts get-caller-identity --query \"Account\" --output text").trim()
 
-				// set repo URL
-				env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
+	// 			// set repo URL
+	// 			env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
 
-			}
+	// 		}
 
-        }
+    //     }
 
-  	}
+  	// }
 	
 	stage('Image Scans'){
 
@@ -66,7 +75,7 @@ pipeline {
 			
 			script {
 
-				sh(label: 'Log into ECR', returnStdout: true, script: "docker login -u AWS -p \$(aws ecr get-login-password --region $REGION) $REPO_URL")
+				//sh(label: 'Log into ECR', returnStdout: true, script: "docker login -u AWS -p \$(aws ecr get-login-password --region $REGION) $REPO_URL")
 				
 				def SCANNED_IMAGES = []
 				def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
@@ -79,8 +88,6 @@ pipeline {
 					//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli quickview $image").trim()
 					SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli cves $image").trim()
 					SCANNED_IMAGES.add(SCAN_RESULT)
-
-					//println SCAN_RESULT
 
 				}
 
@@ -104,14 +111,34 @@ pipeline {
 
   post {
 
-    // always {
+    always {
 
-    //     notify(
+        script {
+			EMAIL_BODY = sh (label: 'Get-Email-Body', script: '''#!/bin/bash
+
+				emailBody=''' + SCANNED_IMAGES + '''
+				emailBody="<b> $emailBody"
+				#emailBody=${emailBody/\\\\n\\\\n/</b><br><br>}
+
+				echo $emailBody
+
+				''',
+				returnStdout: true).trim()
+
+			}
+
+			emailext(mimeType: 'text/html',
+				body: "${EMAIL_BODY}",
+				subject: 'Base Image Scans: results attached',
+				to: "${EmailRecipients}")
+	
+	
+	//     notify(
     //         secretPath: "notification/slack",
     //         secretName: "${env.SLACK_SECRET}"
     //     ) 
 
-    // }
+    }
 
     cleanup {
 
