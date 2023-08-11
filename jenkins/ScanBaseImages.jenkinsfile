@@ -99,15 +99,15 @@ pipeline {
 
 				}
 
-				EMAIL_BODY = sh (label: 'Get-Email-Body', script: """#!/bin/bash
+				EMAIL_BODY = sh (label: 'Get-Email-Body', script: '''#!/bin/bash
 
-					emailBody=''' + ${SCANNED_IMAGES} + '''
+					emailBody=''' + SCANNED_IMAGES + '''
 					emailBody="<b> $emailBody"
 					#emailBody=\${emailBody/\\\\n\\\\n/</b><br><br>}
 
 					echo $emailBody
 
-					""",
+					''',
 					returnStdout: true).trim()
 
 				emailext(mimeType: 'text/html',
