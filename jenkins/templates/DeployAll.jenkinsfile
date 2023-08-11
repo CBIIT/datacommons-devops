@@ -27,7 +27,7 @@ pipeline {
   environment {
 
 	PROJECT      = ""     // set to your project name
-    JOB_PATH     = ""   // set to the base path of the build/deploy jobs you are using
+    JOB_PATH     = ""   // set to the base path of the build/deploy jobs you are using - NOTE: relative paths should be used here
 	SLACK_SECRET = ""     // set to your slack secret name
 
   }

@@ -41,7 +41,7 @@ pipeline {
 	IMAGE_TAG    = "${params.ImageTag}"
 	ENV          = "${params.Environment}"
 	CLUSTER      = "${env.PROJECT}-${env.ENV}-ecs"
-	SERVICE = "${env.PROJECT}-${env.ENV}-${env.APP}"
+	SERVICE      = "${env.PROJECT}-${env.ENV}-${env.APP}"
 
   }
 
@@ -121,6 +121,25 @@ pipeline {
 						],
                     colorized: true)
  			}
+ 		}
+
+  	}
+
+	stage('verify deployment'){
+
+		steps {
+
+ 			script {
+
+			    sh label: 'Verify-Deploy', script: '''#!/bin/bash
+
+                # wait untiil the service is stable
+				aws ecs wait services-stable --cluster $CLUSTER --region $REGION --service $SERVICE
+
+				'''
+
+			}
+
  		}
 
   	}
