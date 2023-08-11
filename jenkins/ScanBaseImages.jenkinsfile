@@ -101,8 +101,6 @@ pipeline {
 
 			}
 
-			}
-
 			script {
 				EMAIL_BODY = sh (label: 'Get-Email-Body', script: """#!/bin/bash
 
@@ -123,7 +121,8 @@ pipeline {
 				to: "${EmailRecipients}")
 	
 
- 		}
+			}
+		}
 
   	}
 
