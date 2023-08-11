@@ -69,14 +69,15 @@ pipeline {
 				sh(label: 'Log into ECR', returnStdout: true, script: "docker login -u AWS -p \$(aws ecr get-login-password --region $REGION) $REPO_URL")
 				
 				def SCANNED_IMAGES = []
-				def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_images/base_image_list").readLines()
+				def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
 
 				image_list.each { String image ->
 
 					println image
 
 					sh(label: 'Pull Image', returnStdout: true, script: "docker pull $image")
-					SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli quickview $image").trim()
+					//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli quickview $image").trim()
+					SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli cves $image").trim()
 					SCANNED_IMAGES.add(SCAN_RESULT)
 
 					//println SCAN_RESULT
