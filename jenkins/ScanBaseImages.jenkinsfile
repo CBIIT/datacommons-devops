@@ -104,7 +104,7 @@ pipeline {
 			script {
 				EMAIL_BODY = sh (label: 'Get-Email-Body', script: """#!/bin/bash
 
-					emailBody=''' + $SCANNED_IMAGES + '''
+					emailBody=''' + ${SCANNED_IMAGES} + '''
 					emailBody="<b> $emailBody"
 					#emailBody=\${emailBody/\\\\n\\\\n/</b><br><br>}
 
@@ -118,7 +118,7 @@ pipeline {
 			emailext(mimeType: 'text/html',
 				body: "${EMAIL_BODY}",
 				subject: 'Base Image Scans: results attached',
-				to: "${EmailRecipients}")
+				to: "${params.EmailRecipients}")
 	
 
 			}
