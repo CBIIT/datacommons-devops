@@ -73,6 +73,7 @@ No modules.
 | <a name="input_alb_target_type"></a> [alb\_target\_type](#input\_alb\_target\_type) | type of alb target - ip , instance, lambda | `string` | `"ip"` | no |
 | <a name="input_allow_cloudwatch_stream"></a> [allow\_cloudwatch\_stream](#input\_allow\_cloudwatch\_stream) | allow cloudwatch stream for the containers | `bool` | `false` | no |
 | <a name="input_application_url"></a> [application\_url](#input\_application\_url) | url of the application | `string` | n/a | yes |
+| <a name="input_central_ecr_account_id"></a> [central\_ecr\_account\_id](#input\_central\_ecr\_account\_id) | central ecr account number | `string` | n/a | yes |
 | <a name="input_container_insights_setting"></a> [container\_insights\_setting](#input\_container\_insights\_setting) | Whether or not the ECS cluster enables CloudWatch Container Insights | `string` | `"disabled"` | no |
 | <a name="input_create_neo4j_db"></a> [create\_neo4j\_db](#input\_create\_neo4j\_db) | choose to add neo4j container or not | `bool` | `false` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | domain name of this app | `string` | `"bento-tools.org"` | no |
