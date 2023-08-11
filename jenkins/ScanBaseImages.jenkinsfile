@@ -110,10 +110,10 @@ pipeline {
 				// 	''',
 				// 	returnStdout: true).trim()
 
-				//emailext(mimeType: 'text/html',
-				emailext(mimeType: 'HTML/text',
+				emailext(mimeType: 'text/html',
+				//emailext(mimeType: 'HTML/text',
 					//body: "${EMAIL_BODY}",
-					body: "${SCANNED_IMAGES}",
+					body: "<body>${SCANNED_IMAGES}</body>",
 					subject: 'Base Image Scans: results attached',
 					to: "${params.EmailRecipients}")
 	
