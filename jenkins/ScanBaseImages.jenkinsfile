@@ -103,27 +103,17 @@ pipeline {
 
 			}
 
- 		}
+			script {
+				EMAIL_BODY = sh (label: 'Get-Email-Body', script: '''#!/bin/bash
 
-  	}
+					emailBody=''' + env.SCANNED_IMAGES + '''
+					emailBody="<b> $emailBody"
+					#emailBody=${emailBody/\\\\n\\\\n/</b><br><br>}
 
-  }
+					echo $emailBody
 
-  post {
-
-    always {
-
-        script {
-			EMAIL_BODY = sh (label: 'Get-Email-Body', script: '''#!/bin/bash
-
-				emailBody=''' + env.SCANNED_IMAGES + '''
-				emailBody="<b> $emailBody"
-				#emailBody=${emailBody/\\\\n\\\\n/</b><br><br>}
-
-				echo $emailBody
-
-				''',
-				returnStdout: true).trim()
+					''',
+					returnStdout: true).trim()
 
 			}
 
@@ -132,13 +122,23 @@ pipeline {
 				subject: 'Base Image Scans: results attached',
 				to: "${EmailRecipients}")
 	
+
+ 		}
+
+  	}
+
+  }
+
+  post {
+
+    // always {
 	
 	//     notify(
     //         secretPath: "notification/slack",
     //         secretName: "${env.SLACK_SECRET}"
     //     ) 
 
-    }
+    // }
 
     cleanup {
 
