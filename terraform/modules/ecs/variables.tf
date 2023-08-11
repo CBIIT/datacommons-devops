@@ -122,14 +122,7 @@ variable "create_neo4j_db" {
 
 }
 
-variable "use_local_account_id" {
-  description = "use local account for ecr"
-  type = bool
-  default = false
-}
-
 variable "central_ecr_account_id" {
   type = string
   description = "central ecr account number"
-  default = null
 }
