@@ -93,9 +93,11 @@ pipeline {
 
 				println "RESULTS:    "
 				
+				EMAIL_BODY = ''
 				SCANNED_IMAGES.each { String results ->
 
 				    println results
+					EMAIL_BODY.concat(results).concat('\n\n\n\n')
 
 				}
 
@@ -109,12 +111,12 @@ pipeline {
 
 				// 	''',
 				// 	returnStdout: true).trim()
-
+				
 				emailext(mimeType: 'text/plain',
 				//emailext(mimeType: 'text/html',
 				//emailext(mimeType: 'HTML/text',
-					//body: "${EMAIL_BODY}",
-					body: "${SCANNED_IMAGES}",
+					body: "${EMAIL_BODY}",
+					//body: "${SCANNED_IMAGES}",
 					subject: 'Base Image Scans: results attached',
 					to: "${params.EmailRecipients}")
 	
