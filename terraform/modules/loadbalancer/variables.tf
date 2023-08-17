@@ -70,5 +70,6 @@ variable "alb_subnet_ids" {
 variable "alb_log_bucket_name" {
   description = "s3"
   type        = string
+  default     = "ctos-nonprod-manager-alb-logs"
 }
 
