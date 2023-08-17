@@ -11,7 +11,7 @@ resource "aws_lb" "alb" {
 
   access_logs {
     enabled = true
-    bucket  = "ctos-nonprod-manager-alb-logs"
+    bucket  = var.alb_log_bucket_name
     prefix  = "${var.program}/${var.env}/${var.stack_name}/alb-access-logs"
   }
 
