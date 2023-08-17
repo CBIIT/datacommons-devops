@@ -38,7 +38,7 @@ variable "alb_internal" {
 
 variable "alb_ssl_policy" {
   description = "specify ssl policy to use"
-  default     = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
+  default     = "ELBSecurityPolicy-TLS13-1-2-2021-06"
   type        = string
 }
 
