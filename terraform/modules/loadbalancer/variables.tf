@@ -13,6 +13,17 @@ variable "stack_name" {
   type        = string
 }
 
+variable "program" {
+  type        = string
+  description = "the program associated with the application"
+  sensitive   = false
+
+  validation {
+    condition     = contains(["crdc", "ccdi", "ctos", "fnl"], var.program)
+    error_message = "valid values for program are 'crdc', 'ccdi', 'fnl' and 'ctos'"
+  }
+}
+
 variable "alb_type" {
   description = "Type of loadbalancer"
   type        = string
