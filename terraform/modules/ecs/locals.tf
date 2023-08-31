@@ -9,4 +9,5 @@ locals {
   vpc_cidr                        = data.aws_vpc.current.cidr_block
   os_domain_name                  = var.add_opensearch_permission ? "${var.stack_name}-${var.env}-opensearch" : "*"
   permission_boundary_arn         = var.env != "stage" || var.env != "prod" ? "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser" : null
+  ecr_account                     =  var.central_ecr_account_id
 }
