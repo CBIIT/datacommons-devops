@@ -88,7 +88,7 @@ pipeline {
 					sh(label: 'Pull Image', returnStdout: true, script: "docker pull $image")
 					//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli quickview $image").trim()
 					SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli cves --only-severity critical,high,medium $image").trim()
-					SCANNED_IMAGES.add("\n\n\n##########   SCANNING:   $image   ##########\n\n\n")
+					SCANNED_IMAGES.add("\n\n\n##########   SCANNING IMAGE:   $image   ##########\n\n\n")
 					SCANNED_IMAGES.add(SCAN_RESULT)
 
 				}
