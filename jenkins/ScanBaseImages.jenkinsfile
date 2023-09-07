@@ -3,7 +3,8 @@
 pipeline {
 	agent {
 		node {
-			label 'slave-ccdc-nciws-d2425-c'
+			label 'cicd_microservice'
+			//label 'slave-ccdc-nciws-d2425-c'
 		}
 	}
 

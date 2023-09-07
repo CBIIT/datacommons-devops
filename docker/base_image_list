@@ -1,2 +1,4 @@
-nginx:1.21.6-alpine
-node:16.17.0-alpine3.16
+nginx:1.25.2
+nginx:1.25.2-alpine3.18
+node:18.17.1-alpine3.18
+tomcat:9.0.79-jdk11
