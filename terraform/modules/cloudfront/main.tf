@@ -31,6 +31,7 @@ resource "aws_s3_bucket" "access_logs" {
 resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = local.files_bucket_name
   policy = data.aws_iam_policy_document.s3_policy.json
+  depends_on = [aws_s3_bucket.access_logs]
 }
 
 #create cloudfront distribution
@@ -85,7 +86,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
 #create waf
 resource "aws_wafv2_web_acl" "waf" {
-  name        = "${var.stack_name}-ip-limiting-waf-rule"
+  name        = "${var.stack_name}-${terraform.workspace}-ip-limiting-waf-rule"
   description = "This rule limit number of request per ip"
   scope       = "CLOUDFRONT"
 
