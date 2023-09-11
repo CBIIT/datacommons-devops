@@ -4,17 +4,18 @@ resource "aws_cloudfront_origin_access_identity" "origin_access" {
 }
 
 
-#create bucket for logs
+#create bucket for files
 resource "aws_s3_bucket" "files" {
   count  = var.create_files_bucket ? 1 : 0
   bucket = local.files_bucket_name
   tags   = var.tags
 }
 
-# resource "aws_s3_bucket_acl" "files_acl" {
-#   bucket = aws_s3_bucket.files[0].id
-#   acl = "private"
-# }
+ resource "aws_s3_bucket_acl" "files_acl" {
+   count  = var.create_files_bucket ? 1 : 0
+   bucket = aws_s3_bucket.files[0].id
+   acl = "private"
+ }
 
 #create bucket for logs
 resource "aws_s3_bucket" "access_logs" {
@@ -22,16 +23,16 @@ resource "aws_s3_bucket" "access_logs" {
   tags   = var.tags
 }
 
-# resource "aws_s3_bucket_acl" "access_log_acl" {
-#   bucket = aws_s3_bucket.access_logs.id
-#   acl    = "private"
-# }
+ resource "aws_s3_bucket_acl" "access_log_acl" {
+   bucket = aws_s3_bucket.access_logs.id
+   acl    = "private"
+ }
 
 #create s3 bucket policy
 resource "aws_s3_bucket_policy" "bucket_policy" {
+  count  = var.create_files_bucket ? 1 : 0
   bucket = local.files_bucket_name
   policy = data.aws_iam_policy_document.s3_policy.json
-  depends_on = [aws_s3_bucket.access_logs]
 }
 
 #create cloudfront distribution
