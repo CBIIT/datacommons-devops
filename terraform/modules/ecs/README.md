@@ -75,6 +75,7 @@ No modules.
 | <a name="input_container_insights_setting"></a> [container\_insights\_setting](#input\_container\_insights\_setting) | Whether or not the ECS cluster enables CloudWatch Container Insights | `string` | `"disabled"` | no |
 | <a name="input_create_neo4j_db"></a> [create\_neo4j\_db](#input\_create\_neo4j\_db) | choose to add neo4j container or not | `bool` | `false` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | domain name of this app | `string` | `"bento-tools.org"` | no |
+| <a name="input_ecr_repo_arns"></a> [ecr\_repo\_arns](#input\_ecr\_repo\_arns) | provide a list of arns for ecr repos to allow access to | `list(string)` | n/a | yes |
 | <a name="input_ecs_execute_command_logging"></a> [ecs\_execute\_command\_logging](#input\_ecs\_execute\_command\_logging) | The log setting to use for redirecting logs for ecs execute command results. Valid values are NONE, DEFAULT, and OVERRIDE. | `string` | `"OVERRIDE"` | no |
 | <a name="input_ecs_launch_type"></a> [ecs\_launch\_type](#input\_ecs\_launch\_type) | ecs launch type - FARGATE or EC2 | `string` | `"FARGATE"` | no |
 | <a name="input_ecs_network_mode"></a> [ecs\_network\_mode](#input\_ecs\_network\_mode) | ecs network mode - bridge,host,awsvpc | `string` | `"awsvpc"` | no |
