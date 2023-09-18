@@ -61,16 +61,12 @@ data "aws_iam_policy_document" "task_execution_ecr" {
       "ecr:BatchGetImage",
       "ecr:GetDownloadUrlForLayer",
       "ecr:BatchCheckLayerAvailability",
-      "ecr:PutImage",
-      "ecr:CompleteLayerUpload",
       "ecr:DescribeRepositories",
-      "ecr:GetLifecyclePolicy",
-      "ecr:GetRepositoryPolicy",
-      "ecr:InitiateLayerUpload",
       "ecr:ListTagsForResource",
-      "ecr:UploadLayerPart",
+      "ecr:DescribeImages",
+      "ecr:ListImages"
     ]
-    resources = ["arn:aws:ecr:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:repository/*"]
+    resources = var.ecr_repo_arns
   }
   statement {
     effect = "Allow"

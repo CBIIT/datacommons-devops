@@ -30,6 +30,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_bucket_name"></a> [bucket\_name](#input\_bucket\_name) | name of the s3 bucket | `string` | n/a | yes |
+| <a name="input_create_bucket_acl"></a> [create\_bucket\_acl](#input\_create\_bucket\_acl) | create bucket acl or not | `bool` | `false` | no |
 | <a name="input_days_for_archive_tiering"></a> [days\_for\_archive\_tiering](#input\_days\_for\_archive\_tiering) | Number of days of consecutive lack of access for an object before it is archived | `number` | n/a | yes |
 | <a name="input_days_for_deep_archive_tiering"></a> [days\_for\_deep\_archive\_tiering](#input\_days\_for\_deep\_archive\_tiering) | Number of days of consecutive lack of access for an object before it is archived deeply | `number` | n/a | yes |
 | <a name="input_env"></a> [env](#input\_env) | name of the environment to provision | `string` | n/a | yes |

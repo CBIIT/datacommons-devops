@@ -114,5 +114,9 @@ variable "create_neo4j_db" {
   type = bool
   default = false
   description = "choose to add neo4j container or not"
+}
 
+variable "ecr_repo_arns" {
+  type = list(string)
+  description = "provide a list of arns for ecr repos to allow access to"
 }
