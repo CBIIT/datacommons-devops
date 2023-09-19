@@ -10,12 +10,18 @@ $http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
     assert.ok('case_ids' in body.data.idsLists);
     assert.match(body.data.idsLists.case_ids[0], /CTDC-/);
 
-    console.log('Response:', body);
-    console.log('Response:', response.statusCode);
   }
 );",TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
 Clinical Trial Data Commons,ctdc,CRDC,Dev,Files,https://trialcommons-dev.cancer.gov/api/files,,TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
@@ -30,12 +36,18 @@ $http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
+    
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
     assert.ok('case_ids' in body.data.idsLists);
     assert.match(body.data.idsLists.case_ids[0], /CTDC-/);
 
-    console.log('Response:', body);
-    console.log('Response:', response.statusCode);
   }
 );",TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
 Clinical Trial Data Commons,ctdc,CRDC,QA,Files,https://trialcommons-qa.cancer.gov/api/files,,TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
@@ -50,11 +62,17 @@ $http.post('https://caninecommons-dev.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('numberOfStudies' in body.data);
+    
+    if (err) {
+        throw new Error(err);
+    }
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfStudies' in body.data);
+
   }
 );",TRUE,C04DYU071MG,,"alb,fargate,opensearch"
 Canine Data Commons,icdc,CRDC,Dev,Files,https://caninecommons-dev.cancer.gov/api/files,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
@@ -69,11 +87,17 @@ $http.post('https://caninecommons-qa.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('numberOfStudies' in body.data);
+    
+    if (err) {
+        throw new Error(err);
+    }
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfStudies' in body.data);
+
   }
 );",TRUE,C04DYU071MG,,"alb,fargate,opensearch"
 Canine Data Commons,icdc,CRDC,QA,Files,https://caninecommons-qa.cancer.gov/api/files,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
@@ -88,11 +112,17 @@ $http.post('https://caninecommons-stage.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('numberOfStudies' in body.data);
+    
+    if (err) {
+        throw new Error(err);
+    }
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfStudies' in body.data);
+
   }
 );",TRUE,C04DYU071MG,,"alb,fargate,opensearch"
 Canine Data Commons,icdc,CRDC,Stage,Files,https://caninecommons-stage.cancer.gov/api/files,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
@@ -107,11 +137,17 @@ $http.post('https://caninecommons.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('numberOfStudies' in body.data);
+    
+    if (err) {
+        throw new Error(err);
+    }
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfStudies' in body.data);
+
   }
 );",FALSE,C04E1C69JBE,,"alb,fargate,opensearch"
 Canine Data Commons,icdc,CRDC,Prod,Files,https://caninecommons.cancer.gov/api/files,,FALSE,C04E1C69JBE,,"alb,fargate,opensearch"
