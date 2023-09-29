@@ -4,13 +4,8 @@ pipeline {
 	agent {
 		node {
 			label 'cicd_microservice'
-			//label 'slave-ccdc-nciws-d2425-c'
 		}
 	}
-
-//   options {
-// 	timestamps()
-//   }
 
   parameters {
 
@@ -48,26 +43,6 @@ pipeline {
 
   	}
 
-  	// NOTE:  These lines are required for accessing ECR - they are commented but not removed so we can test scanning from ECR when docker scout supports this
-	// stage('set variables'){
-
-    //     steps {
-
-  	// 	    script {
-
-	// 			// set ECR account number
-	// 			//env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
-	// 			env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws sts get-caller-identity --query \"Account\" --output text").trim()
-
-	// 			// set repo URL
-	// 			env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
-
-	// 		}
-
-    //     }
-
-  	// }
-	
 	stage('Image Scans'){
 
  		steps {
@@ -76,8 +51,6 @@ pipeline {
 			
 			script {
 
-				//sh(label: 'Log into ECR', returnStdout: true, script: "docker login -u AWS -p \$(aws ecr get-login-password --region $REGION) $REPO_URL")
-				
 				def SCANNED_IMAGES = []
 				def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
 
@@ -86,7 +59,7 @@ pipeline {
 					println image
 
 					sh(label: 'Pull Image', returnStdout: true, script: "docker pull $image")
-					//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli quickview $image").trim()
+
 					SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli cves --only-severity critical,high,medium $image").trim()
 					SCANNED_IMAGES.add("\n\n\n##########   SCANNING IMAGE:   $image   ##########\n\n\n")
 					SCANNED_IMAGES.add(SCAN_RESULT)
@@ -101,21 +74,7 @@ pipeline {
 
 				}
 
-				// EMAIL_BODY = sh (label: 'Get-Email-Body', script: '''#!/bin/bash
-
-				// 	emailBody=''' + SCANNED_IMAGES + '''
-				// 	emailBody="<b> $emailBody"
-				// 	#emailBody=\${emailBody/\\\\n\\\\n/</b><br><br>}
-
-				// 	echo $emailBody
-
-				// 	''',
-				// 	returnStdout: true).trim()
-				
 				emailext(mimeType: 'text/plain',
-				//emailext(mimeType: 'text/html',
-				//emailext(mimeType: 'HTML/text',
-					//body: "${EMAIL_BODY}",
 					body: "${SCANNED_IMAGES}",
 					subject: 'Base Image Scans: results attached',
 					to: "${params.EmailRecipients}")
