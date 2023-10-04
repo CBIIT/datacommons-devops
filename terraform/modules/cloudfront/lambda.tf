@@ -2,7 +2,7 @@ resource "aws_iam_role" "lambda_role" {
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_policy.json
   name =  local.lambda_role_name
   tags =  var.tags
-  permissions_boundary = var.target_account_cloudone && terraform.workspace == "dev" || terraform.workspace =="qa" || terraform.workspace =="qa2" ? local.permission_boundary_arn: null
+  permissions_boundary = local.permissions_boundary
 }
 
 resource "aws_iam_policy" "lambda_iam_policy" {

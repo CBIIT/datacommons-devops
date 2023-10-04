@@ -10,4 +10,5 @@ locals {
   cloudwatch_policy_name  = var.target_account_cloudone ? "${var.iam_prefix}-${var.stack_name}-${var.env}-cloudwatch-log-policy" : "${var.stack_name}-${var.env}-cloudwatch-log-policy"
   files_log_bucket_name   = var.create_files_bucket ? "${local.files_bucket_name}-cloudfront-logs" : "${data.aws_s3_bucket.files_bucket[0].bucket}-cloudfront-logs"
   permission_boundary_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
+  permissions_boundary = var.target_account_cloudone && terraform.workspace == "dev2" || terraform.workspace == "dev" || terraform.workspace =="qa" || terraform.workspace =="qa2" ? local.permission_boundary_arn: null
 }
