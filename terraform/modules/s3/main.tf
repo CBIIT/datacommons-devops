@@ -17,7 +17,7 @@ resource "aws_s3_bucket" "s3" {
 
 resource "aws_s3_bucket_policy" "policy" {
   bucket = aws_s3_bucket.s3.id
-  policy = data.aws_iam_policy_document.allow_access_from_another_account.json
+  policy = data.aws_iam_policy_document.s3_bucket_lb_write.json
 }
 
 resource "aws_s3_bucket_public_access_block" "s3" {
