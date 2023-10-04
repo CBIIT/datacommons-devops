@@ -7,17 +7,17 @@ resource "aws_s3_bucket" "s3" {
 
 }
 
-#resource "aws_s3_bucket_acl" "s3" {
+
+#resource "aws_s3_bucket_ownership_controls" "s3_bucket_acl_ownership" {
 #  bucket = aws_s3_bucket.s3.id
-#  acl    = "private"
-#  depends_on = [aws_s3_bucket_ownership_controls.s3_bucket_acl_ownership]
+#  rule {
+#    object_ownership = "ObjectWriter"
+#  }
 #}
 
-resource "aws_s3_bucket_ownership_controls" "s3_bucket_acl_ownership" {
+resource "aws_s3_bucket_policy" "policy" {
   bucket = aws_s3_bucket.s3.id
-  rule {
-    object_ownership = "ObjectWriter"
-  }
+  policy = data.aws_iam_policy_document.allow_access_from_another_account.json
 }
 
 resource "aws_s3_bucket_public_access_block" "s3" {

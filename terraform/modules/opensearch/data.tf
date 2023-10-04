@@ -20,3 +20,4 @@ data "aws_iam_policy_document" "os" {
     ]
   }
 }
+"arn:aws:logs:*:*:*"
