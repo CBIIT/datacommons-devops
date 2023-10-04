@@ -7,7 +7,10 @@ data "aws_s3_bucket" "files_bucket" {
 
 data "aws_iam_policy_document" "s3_policy" {
   statement {
-    actions   = ["s3:GetObject"]
+    actions   = [
+      "s3:GetObject",
+      "s3:GetBucketAcl"
+    ]
     resources = [var.create_files_bucket ?  "arn:aws:s3:::${local.files_bucket_name}/*" : "${data.aws_s3_bucket.files_bucket[0].arn}/*"]
 
     principals {
