@@ -51,6 +51,7 @@ pipeline {
 	  CODE_REPO    = ""   // set to your code repo name - NOTE: this is just the name of the repo and not the full URL
 	  JOB_PATH     = ""   // set to the base path of the build/deploy jobs you are using
 	  REGION       = "us-east-1"
+	  ENV          = "${params.Environment}"
 	  DEPLOY_REPO  = "${env.PROJECT}-deployments"
       CODE_BRANCH  = "${params.CodeBranch}"
       CODE_FOLDER  = "${env.PROJECT}-${env.SERVICE}"
