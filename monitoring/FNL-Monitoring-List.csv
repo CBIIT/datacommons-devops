@@ -1,4 +1,4 @@
-﻿Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Private_Location,Slack_Channel,,Monitored_Resources
+Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Private_Location,Slack_Channel,,Monitored_Resources
 Clinical Trial Data Commons,ctdc,CRDC,Dev,Portal,https://trialcommons-dev.cancer.gov,,TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
 Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://trialcommons-dev.cancer.gov/v1/graphql,"var assert = require('assert');
 
@@ -199,7 +199,13 @@ Childhood Cancer Data Catalog,ccdc,CCDI,Dev,Portal,https://datacatalog-dev.ccdi.
 Childhood Cancer Data Catalog,ccdc,CCDI,QA,Portal,https://datacatalog-qa.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,"alb,fargate,opensearch"
 Childhood Cancer Data Catalog,ccdc,CCDI,Stage,Portal,https://datacatalog-stage.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,"alb,fargate,opensearch"
 Childhood Cancer Data Catalog,ccdc,CCDI,Prod,Portal,https://datacatalog.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,"alb,fargate,opensearch"
-Cancer Research Data Commons Hub,crdc-hub,CRDC-HUB,Dev,Portal,https://hub-dev.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate,ec2"
-Cancer Research Data Commons Hub,crdc-hub,CRDC-HUB,QA,Portal,https://hub-qa.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate,ec2"
-Cancer Research Data Commons Hub,crdc-hub,CRDC-HUB,Stage,Portal,https://hub-stage.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate,ec2"
-Cancer Research Data Commons Hub,crdc-hub,CRDC-HUB,Prod,Portal,https://hub.datacommons.cancer.gov,,TRUE,C05LJ3E72V6,,"alb,fargate,ec2"
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,Portal,https://hub-dev.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate"
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,API,https://hub-dev.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://hub-dev.datacommons.cancer.gov/version',
+  function (err, response, body)
+    { console.log('Response:', body); console.log('Response:', response.statusCode); assert.equal(response.statusCode, 200, 'Expected a 200 OK response'); dateObject = new Date(body.date); assert.ok(dateObject.getTime() === dateObject.getTime()); }
+);",TRUE,C05KUCFPV50,,"alb,fargate"
+Cancer Research Data Commons Hub,crdc-hub,CRDC,QA,Portal,https://hub-qa.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate"
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,Portal,https://hub-stage.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate"
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,Portal,https://hub.datacommons.cancer.gov,,FALSE,C05LJ3E72V6,,"alb,fargate"
