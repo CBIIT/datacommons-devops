@@ -119,10 +119,9 @@ variable "create_neo4j_db" {
   type = bool
   default = false
   description = "choose to add neo4j container or not"
-
 }
-
 variable "central_ecr_account_id" {
   type = string
   description = "central ecr account number"
+  default = null
 }
