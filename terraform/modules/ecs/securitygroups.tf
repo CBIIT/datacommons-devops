@@ -1,5 +1,5 @@
 resource "aws_security_group" "ecs" {
-  name        = "${var.stack_name}-${var.env}-ecs-sg"
+  name        = "${var.resource_prefix}-ecs-sg"
   description = "The security group controlling access to Fargate/ECS resources"
   vpc_id      = var.vpc_id
 
@@ -23,7 +23,7 @@ resource "aws_security_group_rule" "all_egress" {
 
 #create app security group
 resource "aws_security_group" "app" {
-  name = "${var.stack_name}-${var.env}-app-sg"
+  name = "${var.resource_prefix}-app-sg"
   description       = "Allow application to communicate with other aws resources"
   vpc_id = var.vpc_id
   tags = merge(

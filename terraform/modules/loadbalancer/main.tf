@@ -10,9 +10,9 @@ resource "aws_lb" "alb" {
   desync_mitigation_mode     = "strictest"
 
   access_logs {
-    bucket  = var.alb_log_bucket_name
-    prefix  = "alb-logs"
     enabled = true
+    bucket  = var.alb_log_bucket_name
+    prefix  = "${var.program}/${var.env}/${var.stack_name}/alb-access-logs"
   }
 
   timeouts {

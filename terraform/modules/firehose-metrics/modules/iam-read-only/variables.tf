@@ -1,3 +1,8 @@
+variable "resource_prefix" {
+  description = "the prefix to add when creating resources"
+  type        = string
+}
+
 variable "app" {
   type        = string
   description = "The name of the application (i.e. 'mtp')"

@@ -1,0 +1,204 @@
+@Library('datacommons-jenkins-shared-library@v1.1') _
+
+pipeline {
+	agent {
+		node {
+			label ''   // Set to use a Jenkins agent in your desired account
+		}
+	}
+
+	parameters {
+
+        string(
+            defaultValue: '',
+            description: 'The Image to Deploy',
+            name: 'ImageTag')
+
+        extendedChoice(
+            name: 'Environment',
+            defaultValue: 'dev',
+            description: 'Choose the environment to deploy to',
+            type: 'PT_SINGLE_SELECT',
+            value: 'dev,qa,stage,prod')
+
+  }
+
+  options {
+
+	timestamps()
+
+  }
+
+  environment {
+
+	PROGRAM      = ""     // set to your program name (crdc, ccdi)
+	PROJECT      = ""     // set to your project name
+	APP          = ""     // set to the name of the service you are deploying
+	SLACK_SECRET = ""     // set to your slack secret name
+	REGION       = "us-east-1"
+	DEPLOY_REPO  = "${env.PROJECT}-deployments"
+	ECR_REPO     = "${env.PROGRAM}-${env.PROJECT}-${env.APP}"
+	IMAGE_TAG    = "${params.ImageTag}"
+	ENV          = "${params.Environment}"
+	CLUSTER      = "${env.PROJECT}-${env.ENV}-ecs"
+	SERVICE      = "${env.PROJECT}-${env.ENV}-${env.APP}"
+
+  }
+
+  stages{
+
+  	stage('checkout'){
+
+  		steps {
+
+  		checkout([$class: 'GitSCM',
+			branches: [[name: '*/main']],
+			extensions: [[$class: 'SubmoduleOption', 
+			recursiveSubmodules: true],
+			[$class: 'RelativeTargetDirectory',
+			relativeTargetDir: "playbooks"]],
+			userRemoteConfigs:
+			[[url: "https://github.com/CBIIT/${env.DEPLOY_REPO}"]]])
+
+		checkout([$class: 'GitSCM',
+			branches: [[name: "${params.Environment}"]],
+			extensions: [[$class: 'SubmoduleOption', 
+			recursiveSubmodules: true],
+			[$class: 'RelativeTargetDirectory',
+			relativeTargetDir: "${env.PROJECT}-deployments"]],
+			userRemoteConfigs:
+			[[url: "https://github.com/CBIIT/${env.DEPLOY_REPO}"]]])
+
+        }
+
+  	}
+
+    stage('Set Environment Variables'){
+
+ 		steps {
+
+ 			script {
+
+			    // set ECR account number
+				env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.ecr_account'").trim()
+
+				// set repo URL
+				env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
+
+			}
+
+ 		}
+
+  	}
+
+  	stage('Deploy'){
+
+        agent {
+            docker {
+                image 'cbiitssrepo/cicd-ansible_4.0'
+                args '--net=host -u root -v /var/run/docker.sock:/var/run/docker.sock'
+                reuseNode true
+            }
+        }
+
+	    environment {
+            BE_VERSION = "${params.ImageTag}"
+        }
+
+ 		steps {
+
+			wrap([$class: 'AnsiColorBuildWrapper', colorMapName: "xterm"]) {
+                ansiblePlaybook(
+					playbook: "${WORKSPACE}/playbooks/ansible/playbooks/deploy-backend-microservice.yml", 
+            		inventory: "${WORKSPACE}/playbooks/ansible/playbooks/hosts",
+                    extraVars: [
+                        tier: "${params.Environment}",
+						project_name: "${PROJECT}",
+						iam_prefix: "power-user",
+						subdomain: "trialcommons",
+						domain_name: "cancer.gov",
+						auth_enabled: false
+						],
+                    colorized: true)
+ 			}
+ 		}
+
+  	}
+
+	stage('verify deployment'){
+
+		steps {
+
+ 			script {
+
+			    sh label: 'Verify-Deploy', script: '''#!/bin/bash
+
+                # wait untiil the service is stable
+				aws ecs wait services-stable --cluster $CLUSTER --region $REGION --service $SERVICE
+
+				'''
+
+			}
+
+ 		}
+
+  	}
+
+	stage('Add Production Tag'){
+
+ 		when {
+
+	        expression { 
+
+                ENV == 'prod'
+
+            }
+
+        }
+
+		steps {
+
+ 			script {
+
+			    sh label: 'Docker-Tag', script: '''#!/bin/bash
+
+				# Tag image as production if deploying to prod tier
+				echo "Tagging Image as Production: $ECR_REPO:$IMAGE_TAG"
+
+				# login and get manifest
+				docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $REPO_URL
+				MANIFEST=$(aws ecr batch-get-image --repository-name $ECR_REPO --image-ids imageTag=$IMAGE_TAG --output json | jq --raw-output --join-output '.images[0].imageManifest')
+
+                # tag as latest and push to ECR
+				aws ecr put-image --repository-name $ECR_REPO --image-tag production-$IMAGE_TAG --image-manifest "$MANIFEST"
+
+				'''
+
+			}
+
+ 		}
+
+  	}
+
+  }
+
+  post {
+
+    always {
+
+        notify(
+            secretPath: "notification/slack",
+            secretName: "${env.SLACK_SECRET}"
+        ) 
+
+    }
+
+    cleanup {
+
+        cleanWs()
+
+    }
+
+  }
+
+}

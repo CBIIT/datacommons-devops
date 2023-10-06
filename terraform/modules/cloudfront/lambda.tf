@@ -16,13 +16,13 @@ resource "aws_iam_policy" "cloudwatch_log_iam_policy" {
 }
 
 resource "aws_iam_policy_attachment" "lambda_s3_policy_attachment" {
-  name = "${var.stack_name}-${var.env}-lambda-s3-attachement"
+  name = "${var.resource_prefix}-lambda-s3-attachement"
   policy_arn = aws_iam_policy.lambda_iam_policy.arn
   roles = [aws_iam_role.lambda_role.name]
 }
 
 resource "aws_iam_policy_attachment" "cloudwatch_log_policy_attachment" {
-  name = "${var.stack_name}-${var.env}-cloudwatch-log-attachement"
+  name = "${var.resource_prefix}-cloudwatch-log-attachement"
   policy_arn = aws_iam_policy.cloudwatch_log_iam_policy.arn
   roles = [aws_iam_role.lambda_role.name]
 }
@@ -56,7 +56,7 @@ resource "aws_lambda_permission" "lambda_invoke_sns" {
 
 resource "aws_lambda_function" "slack_waf" {
   filename = "${path.module}/wafreport.zip"
-  function_name = "${var.stack_name}-${var.env}-waf-report"
+  function_name = "${var.resource_prefix}-waf-report"
   role = aws_iam_role.lambda_role.arn
   handler = "blocked.handler"
   memory_size = 1024
@@ -79,14 +79,14 @@ resource "aws_lambda_function" "slack_waf" {
 }
 
 resource "aws_cloudwatch_event_rule" "every_7am" {
-  name = "${var.stack_name}-${var.env}-every-7am"
+  name = "${var.resource_prefix}-every-7am"
   description = "run waf report every 7am"
   schedule_expression = "cron(0 7 ? * MON-FRI *)"
 }
 
 resource "aws_cloudwatch_event_target" "run_waf_report_every_7am" {
   rule = aws_cloudwatch_event_rule.every_7am.name
-  target_id = "${var.stack_name}-${var.env}-waf-report"
+  target_id = "${var.resource_prefix}-waf-report"
   arn = aws_lambda_function.slack_waf.arn
 }
 

@@ -1,7 +1,7 @@
 #task definition
 resource "aws_ecs_task_definition" "task" {
   for_each                 = var.microservices
-  family                   = "${var.stack_name}-${var.env}-${each.value.name}"
+  family                   = "${var.resource_prefix}-${each.value.name}"
   network_mode             = var.ecs_network_mode
   requires_compatibilities = ["FARGATE"]
   cpu                      = each.value.cpu
@@ -34,7 +34,7 @@ resource "aws_ecs_task_definition" "task" {
 #ecs service
 resource "aws_ecs_service" "service" {
   for_each                           = var.microservices
-  name                               = "${var.stack_name}-${var.env}-${each.value.name}"
+  name                               = "${var.resource_prefix}-${each.value.name}"
   cluster                            = aws_ecs_cluster.ecs_cluster.id
   task_definition                    = aws_ecs_task_definition.task[each.key].arn
   desired_count                      = each.value.number_container_replicas
@@ -42,7 +42,8 @@ resource "aws_ecs_service" "service" {
   scheduling_strategy                = var.ecs_scheduling_strategy
   deployment_minimum_healthy_percent = 50
   deployment_maximum_percent         = 200
-
+  platform_version                   = "LATEST"
+  enable_execute_command             = true
   deployment_circuit_breaker {
     enable   = true
     rollback = true
@@ -95,7 +96,7 @@ resource "aws_appautoscaling_policy" "microservice_autoscaling_cpu" {
 }
 
 resource "aws_ecs_cluster" "ecs_cluster" {
-  name = "${var.stack_name}-${var.env}-ecs"
+  name = "${var.resource_prefix}-ecs"
 
   setting {
     name  = "containerInsights"

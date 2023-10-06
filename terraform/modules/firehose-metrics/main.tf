@@ -8,6 +8,7 @@ module "cloudwatch_metric_stream" {
   output_format                = var.output_format
   program                      = var.program
   role_arn                     = module.iam_cloudwatch_metric_stream.arn
+  resource_prefix              = var.resource_prefix
 }
 
 module "iam_cloudwatch_metric_stream" {
@@ -20,6 +21,7 @@ module "iam_cloudwatch_metric_stream" {
   level                   = var.level
   permission_boundary_arn = var.permission_boundary_arn
   program                 = var.program
+  resource_prefix         = var.resource_prefix
 }
 
 module "kinesis_firehose_datastream" {
@@ -41,6 +43,7 @@ module "kinesis_firehose_datastream" {
   s3_compression_format    = var.s3_compression_format
   s3_error_output_prefix   = var.s3_error_output_prefix
   s3_object_prefix         = var.s3_object_prefix
+  resource_prefix          = var.resource_prefix
 }
 
 module "iam_kinesis_firehose_datastream" {
@@ -54,6 +57,7 @@ module "iam_kinesis_firehose_datastream" {
   permission_boundary_arn = var.permission_boundary_arn
   program                 = var.program
   s3_bucket_arn           = var.s3_bucket_arn
+  resource_prefix         = var.resource_prefix
 }
 
 module "iam_read_only" {
@@ -67,4 +71,5 @@ module "iam_read_only" {
   new_relic_account_id     = var.new_relic_account_id
   permission_boundary_arn  = var.permission_boundary_arn
   program                  = var.program
+  resource_prefix          = var.resource_prefix
 }

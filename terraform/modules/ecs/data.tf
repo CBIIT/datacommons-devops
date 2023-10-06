@@ -26,6 +26,7 @@ data "aws_iam_policy_document" "ecs_task_execution_role_policy_doc" {
     data.aws_iam_policy_document.task_execution_secrets.json,
     data.aws_iam_policy_document.task_execution_kms.json,
     data.aws_iam_policy_document.ecs_exec_cloudwatch.json,
+    data.aws_iam_policy_document.task_execution_sqs.json
   ]
 }
 
@@ -125,8 +126,6 @@ data "aws_iam_policy_document" "ecs_exec_cloudwatch" {
     effect = "Allow"
     actions = [
       "logs:CreateLogStream",
-      "logs:DescribeLogGroup",
-      "logs:DescribeLogStream",
       "logs:CreateLogGroup"
     ]
     resources = [ var.allow_cloudwatch_stream ? "*" : aws_cloudwatch_log_group.ecs_execute_command_log_group.arn]
@@ -167,5 +166,15 @@ data "aws_iam_policy_document" "os_policy" {
 
 data "aws_lb_target_group" "frontend" {
   count = var.stack_name == "bento" && var.env == "prod" ? 1 : 0
-  name =  "${var.stack_name}-${var.env}-frontend"
+  name =  "${var.resource_prefix}-frontend"
+}
+
+data "aws_iam_policy_document" "task_execution_sqs" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:*"
+    ]
+    resources = ["arn:aws:sqs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
+  }
 }

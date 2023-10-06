@@ -1,3 +1,8 @@
+variable "resource_prefix" {
+  description = "the prefix to add when creating resources"
+  type        = string
+}
+
 variable "tags" {
   description = "tags to associate with this instance"
   type        = map(string)
@@ -6,6 +11,17 @@ variable "tags" {
 variable "stack_name" {
   description = "name of the project"
   type        = string
+}
+
+variable "program" {
+  type        = string
+  description = "the program associated with the application"
+  sensitive   = false
+
+  validation {
+    condition     = contains(["crdc", "ccdi", "ctos", "fnl"], var.program)
+    error_message = "valid values for program are 'crdc', 'ccdi', 'fnl' and 'ctos'"
+  }
 }
 
 variable "alb_type" {
@@ -22,7 +38,7 @@ variable "alb_internal" {
 
 variable "alb_ssl_policy" {
   description = "specify ssl policy to use"
-  default     = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
+  default     = "ELBSecurityPolicy-TLS13-1-2-2021-06"
   type        = string
 }
 
@@ -54,5 +70,6 @@ variable "alb_subnet_ids" {
 variable "alb_log_bucket_name" {
   description = "s3"
   type        = string
+  default     = "ctos-nonprod-manager-alb-logs"
 }
 

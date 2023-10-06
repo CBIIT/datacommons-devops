@@ -1,3 +1,8 @@
+variable "resource_prefix" {
+  description = "the prefix to add when creating resources"
+  type        = string
+}
+
 variable "tags" {
   description = "tags to associate with this instance"
   type        = map(string)
@@ -56,12 +61,13 @@ variable "opensearch_ebs_volume_size" {
 variable "opensearch_instance_count" {
   description = "the number of data nodes to provision for each instance in the cluster"
   type        = number
-  default     = 2
+  default     = 1
 }
 
 variable "multi_az_enabled" {
   description = "set to true to enable multi-az deployment"
   type        = bool
+  default     = false
 }
 
 variable "opensearch_tls_policy" {

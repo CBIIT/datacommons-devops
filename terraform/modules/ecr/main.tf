@@ -1,6 +1,6 @@
 resource "aws_ecr_repository" "ecr" {
   for_each             = toset(var.ecr_repo_names)
-  name                 = "${local.ecr_repo_prefix}-${each.key}"
+  name                 = "${var.resource_prefix}-${each.key}"
   image_tag_mutability = "MUTABLE"
   tags = merge(
     {
@@ -13,7 +13,7 @@ resource "aws_ecr_repository" "ecr" {
 resource "aws_ecr_repository_policy" "ecr_policy" {
   for_each   = toset(var.ecr_repo_names)
   repository = aws_ecr_repository.ecr[each.key].name
-  policy     = data.aws_iam_policy_document.ecr_policy_doc.json
+  policy     = local.policy_doc
 }
 
 resource "aws_ecr_lifecycle_policy" "ecr_life_cycle" {
@@ -23,14 +23,14 @@ resource "aws_ecr_lifecycle_policy" "ecr_life_cycle" {
   policy = jsonencode({
     rules = [{
       rulePriority = 1
-      description  = "keep last 20 images"
+      description  = "keep last ${var.max_images_to_keep} images"
       action = {
         type = "expire"
       }
       selection = {
         tagStatus   = "any"
         countType   = "imageCountMoreThan"
-        countNumber = 15
+        countNumber = var.max_images_to_keep
       }
     }]
   })

@@ -1,4 +1,9 @@
 locals {
   account_arn = format("arn:aws:iam::%s:root", data.aws_caller_identity.current.account_id)
-  ecr_repo_prefix = var.create_env_specific_repo ? "${var.stack_name}-${var.env}" : var.stack_name
+
+  # Access Policies
+  local       = var.access_scheme == "local" ? data.aws_iam_policy_document.local.json : ""
+  standard 	  = var.access_scheme == "standard" ? data.aws_iam_policy_document.standard.json : ""
+  alternate 	= var.access_scheme == "alternate" ? data.aws_iam_policy_document.alternate.json : ""
+  policy_doc  = coalesce(local.local, local.standard, local.alternate)
 }

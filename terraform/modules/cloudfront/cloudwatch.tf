@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_metric_alarm" "cloudfront_alarm" {
   for_each = var.alarms
-  alarm_name                = "${var.stack_name}-${var.env}-${each.key}-cloudfront-alarm"
+  alarm_name                = "${var.resource_prefix}-${each.key}-cloudfront-alarm"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "5"
   metric_name               = each.value["name"]
@@ -20,7 +20,7 @@ resource "aws_cloudwatch_metric_alarm" "cloudfront_alarm" {
 }
 
 resource "aws_sns_topic" "cloudfront_alarm_topic" {
-  name = "${var.stack_name}-${var.env}-cloudfront-4xx-5xx-errors"
+  name = "${var.resource_prefix}-cloudfront-4xx-5xx-errors"
   tags = var.tags
 }
 
