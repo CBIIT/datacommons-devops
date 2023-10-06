@@ -63,18 +63,35 @@ pipeline {
 
  		steps {
 
+            // NOTE: This version of the deploy script will run all of the jobs in parallel while waiting individually for each one to finish before 
+            //       exiting the pipeline. Doing this will help the pipeline run faster than if the jobs were called sequentially. However, when the 
+            //       deploy jobs are using ansible this can cause errors related to aws cli retries for certain commands, to avoid this add the following
+            //       environment variables to the ansible playbook when calling the ecs task:
+            //
+            //       include_role:
+            //         name: bento.common.ecs
+            //         apply:
+            //           environment:
+            //             AWS_RETRY_MODE: "standard"
+            //             AWS_MAX_ATTEMPTS: 10
+            //       vars:
+            
             script {
 
                 def deployment = readYaml file: "${WORKSPACE}/${PROJECT}-deployments/deployments.yaml"
-                deployment.services.each {
-                    buildJob(
-                        jobName: "${JOB_PATH}/Deploy" + "${it.key}".capitalize(),
-                        parameters:[
+                def deployJobs = [:]
+                deployment.services.each { service ->
+                    deployJobs[service] = {
+                        buildJob(
+                            jobName: "${JOB_PATH}/Deploy" + "${service.key}".capitalize(),
+                            parameters:[
                                 string(name: 'Environment', value: params["Environment"]),
-                                string(name: 'ImageTag' , value: it.value.image)
-                        ]
-                    )
+                                string(name: 'ImageTag' , value: service.value.image)
+                            ]
+                        )
+                    }
                 }
+                parallel deployJobs
 		    }
 
  		}
