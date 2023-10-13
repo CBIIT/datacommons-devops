@@ -6,14 +6,15 @@ data "aws_iam_policy_document" "os" {
   statement {
     effect = "Allow"
     actions = [
-      "logs:PutLogEvents",
-      "logs:PutLogEventsBatch",
-      "logs:CreateLogStream"
+      "logs:*",
     ]
     principals {
       type        = "Service"
       identifiers = ["es.amazonaws.com"]
     }
-    resources = ["arn:aws:logs:*"]
+    resources = [
+      aws_cloudwatch_log_group.os.arn,
+      "${aws_cloudwatch_log_group.os.arn}:*:*:*"
+    ]
   }
 }
