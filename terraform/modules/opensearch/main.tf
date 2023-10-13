@@ -52,7 +52,7 @@ resource "aws_opensearch_domain" "os" {
   }
 
   tags = var.tags
-
+  depends_on = [aws_cloudwatch_log_resource_policy.os]
 }
 
 resource "aws_cloudwatch_log_group" "os" {
