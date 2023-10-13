@@ -19,4 +19,3 @@ data "aws_iam_policy_document" "os" {
     ]
   }
 }
-arn:aws:logs:us-east-1:339649878709:log-group:cds-dev2-opensearch-logs:*
