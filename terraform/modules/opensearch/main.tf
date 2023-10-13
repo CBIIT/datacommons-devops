@@ -36,16 +36,16 @@ resource "aws_opensearch_domain" "os" {
     volume_size = var.opensearch_ebs_volume_size
   }
 
-  dynamic "log_publishing_options" {
-    for_each = var.opensearch_log_types
-    iterator = i
-
-    content {
-      enabled                  = true
-      cloudwatch_log_group_arn = aws_cloudwatch_log_group.os.arn
-      log_type                 = i.value
-    }
-  }
+#  dynamic "log_publishing_options" {
+#    for_each = var.opensearch_log_types
+#    iterator = i
+#
+#    content {
+#      enabled                  = true
+#      cloudwatch_log_group_arn = aws_cloudwatch_log_group.os.arn
+#      log_type                 = i.value
+#    }
+#  }
 
   snapshot_options {
     automated_snapshot_start_hour = var.automated_snapshot_start_hour
