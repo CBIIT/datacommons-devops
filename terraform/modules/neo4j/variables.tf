@@ -80,3 +80,36 @@ variable "enable_http_endpoint" {
   description = "choose if http_endpoint is enabled or disabld"
   default = "enabled"
 }
+
+variable "db_security_group_name" {
+  type = string
+  description = "provide existing security group"
+  default = null
+}
+variable "create_security_group" {
+  type = bool
+  default = true
+  description = "create security group or not"
+}
+variable "create_instance_profile" {
+  type = bool
+  default = true
+  description = "create instance profile or not"
+}
+variable "db_iam_profile_name" {
+  type = string
+  description = "name of iam profile to apply"
+  default = null
+}
+
+variable "create_bootstrap_script" {
+  type = bool
+  default = true
+  description = "choose to create bootstrap script or not"
+}
+
+variable "db_boostrap_ssm_document" {
+  type = string
+  default = null
+  description = "ssm document for db boostrap"
+}

@@ -47,3 +47,19 @@ data "aws_iam_policy_document" "sts_policy" {
 data "aws_iam_policy" "ssm_policy" {
   arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
+
+
+data "aws_security_group" "sg" {
+  count = var.create_security_group ? 0 : 1
+  name = var.db_security_group_name
+}
+
+data "aws_iam_instance_profile" "profile" {
+  count = var.create_instance_profile ? 0 : 1
+  name = var.db_iam_profile_name
+}
+data "aws_ssm_document" "ssm" {
+  count = var.create_bootstrap_script ? 0 : 1
+  name            = var.db_boostrap_ssm_document
+  document_format = "YAML"
+}

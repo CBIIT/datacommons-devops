@@ -30,11 +30,12 @@ No modules.
 | <a name="input_alb_certificate_arn"></a> [alb\_certificate\_arn](#input\_alb\_certificate\_arn) | arn for the ssl cert | `string` | n/a | yes |
 | <a name="input_alb_default_message"></a> [alb\_default\_message](#input\_alb\_default\_message) | default message response from alb when resource is not available | `string` | `"The requested resource is not found"` | no |
 | <a name="input_alb_internal"></a> [alb\_internal](#input\_alb\_internal) | is this alb internal? | `bool` | `false` | no |
-| <a name="input_alb_log_bucket_name"></a> [alb\_log\_bucket\_name](#input\_alb\_log\_bucket\_name) | s3 | `string` | n/a | yes |
-| <a name="input_alb_ssl_policy"></a> [alb\_ssl\_policy](#input\_alb\_ssl\_policy) | specify ssl policy to use | `string` | `"ELBSecurityPolicy-TLS-1-2-Ext-2018-06"` | no |
+| <a name="input_alb_log_bucket_name"></a> [alb\_log\_bucket\_name](#input\_alb\_log\_bucket\_name) | s3 | `string` | `"ctos-nonprod-manager-alb-logs"` | no |
+| <a name="input_alb_ssl_policy"></a> [alb\_ssl\_policy](#input\_alb\_ssl\_policy) | specify ssl policy to use | `string` | `"ELBSecurityPolicy-TLS13-1-2-2021-06"` | no |
 | <a name="input_alb_subnet_ids"></a> [alb\_subnet\_ids](#input\_alb\_subnet\_ids) | list of subnets to use for the alb | `list(string)` | n/a | yes |
 | <a name="input_alb_type"></a> [alb\_type](#input\_alb\_type) | Type of loadbalancer | `string` | `"application"` | no |
 | <a name="input_env"></a> [env](#input\_env) | name of the environment to provision | `string` | n/a | yes |
+| <a name="input_program"></a> [program](#input\_program) | the program associated with the application | `string` | n/a | yes |
 | <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | the prefix to add when creating resources | `string` | n/a | yes |
 | <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | tags to associate with this instance | `map(string)` | n/a | yes |

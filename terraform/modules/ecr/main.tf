@@ -13,7 +13,7 @@ resource "aws_ecr_repository" "ecr" {
 resource "aws_ecr_repository_policy" "ecr_policy" {
   for_each   = toset(var.ecr_repo_names)
   repository = aws_ecr_repository.ecr[each.key].name
-  policy     = data.aws_iam_policy_document.ecr_policy_doc.json
+  policy     = local.policy_doc
 }
 
 resource "aws_ecr_lifecycle_policy" "ecr_life_cycle" {

@@ -23,6 +23,25 @@ variable "env" {
   type        = string
 }
 
+# Access Policy Configuration
+variable "nonprod_account_id" {
+  type = string
+  description = "account ID for the project's non-production account"
+  default = ""
+}
+
+variable "prod_account_id" {
+  type = string
+  description = "account ID for the project's production account"
+  default = ""
+}
+
+variable "access_scheme" {
+  type = string
+  description = "the type of access to apply to the ECR repos"
+  default = "local"
+}
+
 # Lifecycle Policy Configuration
 variable "max_images_to_keep" {
   description = "the maximum number of images to keep in the repository"
