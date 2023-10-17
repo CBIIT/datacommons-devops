@@ -1,4 +1,4 @@
-Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Private_Location,Slack_Channel,,Monitored_Resources
+﻿Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Private_Location,Slack_Channel,,Monitored_Resources
 Clinical Trial Data Commons,ctdc,CRDC,Dev,Portal,https://trialcommons-dev.cancer.gov,,TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
 Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://trialcommons-dev.cancer.gov/v1/graphql,"var assert = require('assert');
 
@@ -10,12 +10,18 @@ $http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
     assert.ok('case_ids' in body.data.idsLists);
     assert.match(body.data.idsLists.case_ids[0], /CTDC-/);
 
-    console.log('Response:', body);
-    console.log('Response:', response.statusCode);
   }
 );",TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
 Clinical Trial Data Commons,ctdc,CRDC,Dev,Files,https://trialcommons-dev.cancer.gov/api/files,,TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
@@ -30,12 +36,18 @@ $http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
+    
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
     assert.ok('case_ids' in body.data.idsLists);
     assert.match(body.data.idsLists.case_ids[0], /CTDC-/);
 
-    console.log('Response:', body);
-    console.log('Response:', response.statusCode);
   }
 );",TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
 Clinical Trial Data Commons,ctdc,CRDC,QA,Files,https://trialcommons-qa.cancer.gov/api/files,,TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
@@ -50,11 +62,17 @@ $http.post('https://caninecommons-dev.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('numberOfStudies' in body.data);
+    
+    if (err) {
+        throw new Error(err);
+    }
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfStudies' in body.data);
+
   }
 );",TRUE,C04DYU071MG,,"alb,fargate,opensearch"
 Canine Data Commons,icdc,CRDC,Dev,Files,https://caninecommons-dev.cancer.gov/api/files,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
@@ -69,11 +87,17 @@ $http.post('https://caninecommons-qa.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('numberOfStudies' in body.data);
+    
+    if (err) {
+        throw new Error(err);
+    }
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfStudies' in body.data);
+
   }
 );",TRUE,C04DYU071MG,,"alb,fargate,opensearch"
 Canine Data Commons,icdc,CRDC,QA,Files,https://caninecommons-qa.cancer.gov/api/files,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
@@ -88,11 +112,17 @@ $http.post('https://caninecommons-stage.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('numberOfStudies' in body.data);
+    
+    if (err) {
+        throw new Error(err);
+    }
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfStudies' in body.data);
+
   }
 );",TRUE,C04DYU071MG,,"alb,fargate,opensearch"
 Canine Data Commons,icdc,CRDC,Stage,Files,https://caninecommons-stage.cancer.gov/api/files,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
@@ -107,11 +137,17 @@ $http.post('https://caninecommons.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('numberOfStudies' in body.data);
+    
+    if (err) {
+        throw new Error(err);
+    }
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfStudies' in body.data);
+
   }
 );",FALSE,C04E1C69JBE,,"alb,fargate,opensearch"
 Canine Data Commons,icdc,CRDC,Prod,Files,https://caninecommons.cancer.gov/api/files,,FALSE,C04E1C69JBE,,"alb,fargate,opensearch"
@@ -130,12 +166,17 @@ $http.post('https://studycatalog-dev.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('case_ids' in body.data.idsLists);
-    assert.match(body.data.idsLists.case_ids[0], /INS-/);
+    
+    if (err) {
+        throw new Error(err);
+    }
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('case_ids' in body.data.idsLists);
+    assert.match(body.data.idsLists.case_ids[0], /INS-/);
   }
 );",TRUE,C04693BUC9M,,"alb,fargate,opensearch"
 Index of NCI Studies,ins,CCDI,QA,Portal,https://studycatalog-qa.cancer.gov,,TRUE,C04693BUC9M,,"alb,fargate,opensearch"
@@ -149,12 +190,17 @@ $http.post('https://studycatalog-qa.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('case_ids' in body.data.idsLists);
-    assert.match(body.data.idsLists.case_ids[0], /INS-/);
+    
+    if (err) {
+        throw new Error(err);
+    }
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('case_ids' in body.data.idsLists);
+    assert.match(body.data.idsLists.case_ids[0], /INS-/);
   }
 );",TRUE,C04693BUC9M,,"alb,fargate,opensearch"
 Index of NCI Studies,ins,CCDI,Stage,Portal,https://studycatalog-stage.cancer.gov,,TRUE,C04693BUC9M,,"alb,fargate,opensearch"
@@ -168,12 +214,17 @@ $http.post('https://studycatalog-stage.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('case_ids' in body.data.idsLists);
-    assert.match(body.data.idsLists.case_ids[0], /INS-/);
+    
+    if (err) {
+        throw new Error(err);
+    }
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('case_ids' in body.data.idsLists);
+    assert.match(body.data.idsLists.case_ids[0], /INS-/);
   }
 );",TRUE,C04693BUC9M,,"alb,fargate,opensearch"
 Index of NCI Studies,ins,CCDI,Prod,Portal,https://studycatalog.cancer.gov,,TRUE,C04693BUC9M,,"alb,fargate,opensearch"
@@ -187,12 +238,17 @@ $http.post('https://studycatalog.cancer.gov/v1/graphql/',
   },
 
   function (err, response, body) {
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('case_ids' in body.data.idsLists);
-    assert.match(body.data.idsLists.case_ids[0], /INS-/);
+    
+    if (err) {
+        throw new Error(err);
+    }
 
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('case_ids' in body.data.idsLists);
+    assert.match(body.data.idsLists.case_ids[0], /INS-/);
   }
 );",TRUE,C04693BUC9M,,"alb,fargate,opensearch"
 Childhood Cancer Data Catalog,ccdc,CCDI,Dev,Portal,https://datacatalog-dev.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,"alb,fargate,opensearch"
@@ -203,27 +259,39 @@ Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,Portal,https://hub-dev.dataco
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,API,https://hub-dev.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://hub-dev.datacommons.cancer.gov/version',
-  function (err, response, body)
-    { console.log('Response:', body); console.log('Response:', response.statusCode); assert.equal(response.statusCode, 200, 'Expected a 200 OK response'); dateObject = new Date(body.date); assert.ok(dateObject.getTime() === dateObject.getTime()); }
-);",TRUE,C05KUCFPV50,,"alb,fargate"
+function (err, response, body) { 
+    
+    if (err) {
+        throw new Error(err);
+    }
+
+console.log('Response:', body); 
+console.log('Response:', response.statusCode); 
+
+assert.equal(response.statusCode, 200, 'Expected a 200 OK response'); 
+
+dateObject = new Date(body.date); 
+assert.ok(dateObject.getTime() === dateObject.getTime()); 
+
+} );",TRUE,C05KUCFPV50,,"alb,fargate"
 Cancer Research Data Commons Hub,crdc-hub,CRDC,QA,Portal,https://hub-qa.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate"
 Cancer Research Data Commons Hub,crdc-hub,CRDC,QA,API,https://hub-qa.datacommons.cancer.gov/version,"var assert = require('assert');
 
-$http.get('https://hub-qa.datacommons.cancer.gov/version',
-  function (err, response, body)
-    { console.log('Response:', body); console.log('Response:', response.statusCode); assert.equal(response.statusCode, 200, 'Expected a 200 OK response'); dateObject = new Date(body.date); assert.ok(dateObject.getTime() === dateObject.getTime()); }
-);",TRUE,C05KUCFPV50,,"alb,fargate"
+$http.get('https://hub-dev.datacommons.cancer.gov/version',
+function (err, response, body) { 
+    
+    if (err) {
+        throw new Error(err);
+    }
+
+console.log('Response:', body); 
+console.log('Response:', response.statusCode); 
+
+assert.equal(response.statusCode, 200, 'Expected a 200 OK response'); 
+
+dateObject = new Date(body.date); 
+assert.ok(dateObject.getTime() === dateObject.getTime()); 
+
+} );",TRUE,C05KUCFPV50,,"alb,fargate"
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,Portal,https://hub-stage.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate"
-Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,API,https://hub-stage.datacommons.cancer.gov/version,"var assert = require('assert');
-
-$http.get('https://hub-stage.datacommons.cancer.gov/version',
-  function (err, response, body)
-    { console.log('Response:', body); console.log('Response:', response.statusCode); assert.equal(response.statusCode, 200, 'Expected a 200 OK response'); dateObject = new Date(body.date); assert.ok(dateObject.getTime() === dateObject.getTime()); }
-);",TRUE,C05KUCFPV50,,"alb,fargate"
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,Portal,https://hub.datacommons.cancer.gov,,FALSE,C05LJ3E72V6,,"alb,fargate"
-Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,API,https://hub.datacommons.cancer.gov/version,"var assert = require('assert');
-
-$http.get('https://hub.datacommons.cancer.gov/version',
-  function (err, response, body)
-    { console.log('Response:', body); console.log('Response:', response.statusCode); assert.equal(response.statusCode, 200, 'Expected a 200 OK response'); dateObject = new Date(body.date); assert.ok(dateObject.getTime() === dateObject.getTime()); }
-);",FALSE,C05LJ3E72V6,,"alb,fargate"

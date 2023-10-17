@@ -51,6 +51,7 @@ pipeline {
 	  CODE_REPO    = ""   // set to your code repo name - NOTE: this is just the name of the repo and not the full URL
 	  JOB_PATH     = ""   // set to the base path of the build/deploy jobs you are using
 	  REGION       = "us-east-1"
+	  ENV          = "${params.Environment}"
 	  DEPLOY_REPO  = "${env.PROJECT}-deployments"
       CODE_BRANCH  = "${params.CodeBranch}"
       CODE_FOLDER  = "${env.PROJECT}-${env.SERVICE}"
@@ -109,7 +110,7 @@ pipeline {
 
 			    sh label: 'Docker-Build', script: '''#!/bin/bash
 
-				# build CTDC Docker container
+				# build Docker container
 				echo "Building: $ECR_REPO:$CODE_BRANCH.$BUILD_NUMBER"
 
 				cd $WORKSPACE/$CODE_FOLDER && DOCKER_BUILDKIT=1 docker build --no-cache -t $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER .
@@ -124,14 +125,6 @@ pipeline {
 
   	stage('Test'){
 
-        agent {
-            docker {
-                image 'cbiitssrepo/cicd-ansible_4.0'
-                args '--net=host -u root -v /var/run/docker.sock:/var/run/docker.sock'
-                reuseNode true
-            }
-        }
-
  		steps {
 
  			script {
@@ -141,8 +134,8 @@ pipeline {
 				# Test image for vulnerabilities
                 echo "Testing Image with Trivy: $ECR_REPO:$CODE_BRANCH.$BUILD_NUMBER"
 
-                #trivy image --exit-code 1 --severity HIGH,CRITICAL $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER
-                trivy image --timeout 15m --severity HIGH,CRITICAL $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER
+				#docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER
+				docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER
 
 				'''
 
@@ -160,16 +153,12 @@ pipeline {
 
 			    sh label: 'Docker-Push', script: '''#!/bin/bash
 
-				# push CTDC Docker container to ECR
+				# push Docker container to ECR
 				echo "Pushing: $ECR_REPO:$CODE_BRANCH.$BUILD_NUMBER"
 
 				# login and push to ECR
 				docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $REPO_URL
 				docker push $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER
-
-                # tag as latest and push to ECR
-				docker tag $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER $REPO_URL:latest
-                docker push $REPO_URL:latest
 
 				'''
 
