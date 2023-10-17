@@ -313,21 +313,7 @@ assert.ok(dateObject.getTime() === dateObject.getTime());
 
 } );",TRUE,C05KUCFPV50,,"alb,fargate"
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,Portal,https://hub.datacommons.cancer.gov,,FALSE,C05LJ3E72V6,,"alb,fargate"
-Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,API,https://hub.datacommons.cancer.gov/version,"var assert = require('assert');
-
-$http.get('https://hub.datacommons.cancer.gov/version',
-function (err, response, body) {
-
-    if (err) {
-        throw new Error(err);
-    }
-
-console.log('Response:', body);
-console.log('Response:', response.statusCode);
-
-assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-
-dateObject = new Date(body.date);
-assert.ok(dateObject.getTime() === dateObject.getTime());
-
-} );",FALSE,C05LJ3E72V6,,"alb,fargate"
+CCDI Hub,ccdi-hub,CCDI,Dev,Portal,https://ccdi-dev.cancer.gov/,,TRUE,C061YHQ6MED,,,
+CCDI Hub,ccdi-hub,CCDI,QA,Portal,https://ccdi-qa.cancer.gov/,,TRUE,C061YHQ6MED,,,
+CCDI Hub,ccdi-hub,CCDI,Stage,Portal,https://ccdi-stage.cancer.gov/,,TRUE,C061YHQ6MED,,,
+CCDI Hub,ccdi-hub,CCDI,Prod,Portal,https://ccdi.cancer.gov/,,FALSE,C061YHQ6MED,,,
