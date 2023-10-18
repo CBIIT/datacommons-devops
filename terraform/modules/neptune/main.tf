@@ -27,7 +27,7 @@ resource "aws_neptune_cluster_instance" "neptune_instance" {
   cluster_identifier           = aws_neptune_cluster.neptune_cluster.cluster_identifier
   engine                       = "neptune"
   identifier                   = "${var.resource_prefix}-neptune-instance"
-  instance_class               = var.neptune_instance_class #db.serverless
+  instance_class               = var.neptune_instance_class
   tags                         = var.tags
 }
 

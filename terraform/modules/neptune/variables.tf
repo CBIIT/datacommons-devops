@@ -99,6 +99,7 @@ variable "neptune_instance_class" {
   type        = string
   description = "instance class to use for the neptune instance"
   sensitive   = false
+  default     = "db.serverless"
 }
 
 variable "subnet_ids" {
