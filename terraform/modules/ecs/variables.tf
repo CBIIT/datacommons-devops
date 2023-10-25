@@ -125,3 +125,14 @@ variable "central_ecr_account_id" {
   description = "central ecr account number"
   default = null
 }
+variable "use_custom_trust_policy" {
+  type = bool
+  description = "use custom role trust policy"
+  default = false
+}
+
+variable "custom_trust_policy" {
+  type = string
+  description = "custom role trust policy"
+  default = null
+}
