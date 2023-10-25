@@ -19,7 +19,7 @@ pipeline {
 
  	CODE_REPO   = "datacommons-devops"
     CODE_FOLDER = "datacommons-devops"
- 	CODE_BRANCH = "base_image_pipeline"
+ 	CODE_BRANCH = "base_images_trivy"
 
 	ECR_REPO    = "cbiit-base-docker-images"
 	REGION      = "us-east-1"
