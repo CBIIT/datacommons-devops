@@ -102,7 +102,7 @@ pipeline {
 					trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
 
 					if [ \$? == 1 ];	then
-					  echo "\$trivy_out"
+					  echo "\$trivy_out \n\n"
 				    fi
 
                 done
