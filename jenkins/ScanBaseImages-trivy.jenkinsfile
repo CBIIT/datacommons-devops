@@ -137,10 +137,14 @@ pipeline {
 
 	failure {
 
-		emailext(mimeType: 'text/html',
-					body: "${RESULTS}",
-					subject: 'Base Image Vulnerabilities Found',
-					to: "${EmailRecipients}")
+		resultsFile = new File('results.txt')
+        resultsFile.write("${RESULTS}")
+		
+		emailext(attachmentsPattern: 'results.txt',
+			mimeType: 'text/html',
+			body: "${RESULTS}",
+			subject: 'Base Image Vulnerabilities Found',
+			to: "${EmailRecipients}")
     }
 
     cleanup {
