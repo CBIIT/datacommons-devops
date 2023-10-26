@@ -113,7 +113,7 @@ pipeline {
 
 				''').trim()
 
-				println "Results:   $RESULTS"
+				println RESULTS
 
 			}
 
