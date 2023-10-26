@@ -141,7 +141,7 @@ pipeline {
 
 			sh label: 'Write Results', script: """#!/bin/bash
 
-				echo "${RESULTS}" > results_$(date '+%Y%m%d').txt
+				echo "${RESULTS}" > results_\$(date '+%Y%m%d').txt
 
 				"""
 
