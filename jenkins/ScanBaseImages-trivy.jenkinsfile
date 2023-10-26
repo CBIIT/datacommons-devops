@@ -101,15 +101,13 @@ pipeline {
 				for image in ${image_list.join(' ')}; do
                     echo "the next image is \$image"
 
-					if ! trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image); then
-					  echo \$trivy_out
-					fi
+					trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
 
-					echo "\$?"
+					#echo "\$?"
 
-					#if [ \$? ];	then
-					#  echo "\$trivy_out"
-				    #fi
+					if [ \$? ];	then
+					  echo "\$trivy_out"
+				    fi
 
                 done
 
