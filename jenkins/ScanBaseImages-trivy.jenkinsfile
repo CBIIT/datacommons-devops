@@ -141,16 +141,16 @@ pipeline {
 
 			sh label: 'Write Results', script: """#!/bin/bash
 
-				echo "${RESULTS}" > results.txt
+				echo "${RESULTS}" > results_$(date '+%Y%m%d').txt
 
 				"""
 
 		}
 		
-		emailext(attachmentsPattern: 'results.txt',
+		emailext(attachmentsPattern: 'results_*.txt',
 			mimeType: 'text/html',
-			body: "${RESULTS}",
-			subject: 'Base Image Vulnerabilities Found',
+			body: "Base Image scan results attached",
+			subject: "Base Image Vulnerabilities Found",
 			to: "${EmailRecipients}")
     }
 
