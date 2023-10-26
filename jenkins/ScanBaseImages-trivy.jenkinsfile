@@ -108,12 +108,12 @@ pipeline {
                     echo "the next image is $image"
 
 					#docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL \$image
-					
+
                 done
 
 				""".trim()
 
-				println RESULTS
+				println "Results:   $RESULTS"
 
 			}
 
