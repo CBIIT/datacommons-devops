@@ -138,8 +138,13 @@ pipeline {
 	failure {
 
 		script {
-			resultsFile = new File('results.txt')
-            resultsFile.write("${RESULTS}")
+
+			sh label: 'Write Results', script: """#!/bin/bash
+
+				echo "${RESULTS}" > results.txt
+
+				"""
+
 		}
 		
 		emailext(attachmentsPattern: 'results.txt',
