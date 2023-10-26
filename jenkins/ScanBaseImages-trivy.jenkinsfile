@@ -94,8 +94,6 @@ pipeline {
 
 			    def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
 				
-				//sh(label: 'Get Scan Results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image").trim()
-				
 				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: """#!/bin/bash
 				
 				#echo $image_list
@@ -103,13 +101,15 @@ pipeline {
 				for image in ${image_list.join(' ')}; do
                     echo "the next image is \$image"
 
-					trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
+					if trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image); then
+					  echo \$trivy_out
+					fi
 
 					echo "\$?"
 
-					if [ \$? ];	then
-					  echo "\$trivy_out"
-				    fi
+					#if [ \$? ];	then
+					#  echo "\$trivy_out"
+				    #fi
 
                 done
 
