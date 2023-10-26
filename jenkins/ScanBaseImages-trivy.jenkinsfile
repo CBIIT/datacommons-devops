@@ -107,7 +107,7 @@ pipeline {
 				for image in ${image_list.join(' ')}; do
                     echo "the next image is \$image"
 
-					docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image
+					tirvy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
 
 					echo "\$?"
 
