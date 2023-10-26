@@ -43,13 +43,11 @@ pipeline {
 
   	}
 
-	// stage('Image Scans'){
+	// stage('Image Scans Groovy'){
 
  	// 	steps {
 
- 	// 		//withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USER')]){
-			
-	// 		script {
+ 	// 		script {
 
 	// 			def SCANNED_IMAGES = []
 	// 			def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
@@ -57,8 +55,6 @@ pipeline {
 	// 			image_list.each { String image ->
 
 	// 				println image
-
-	// 				//sh(label: 'Pull Image', returnStdout: true, script: "docker pull $image")
 
 	// 				//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli cves --only-severity critical,high,medium $image").trim()
 	// 				//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL $image || true").trim()
@@ -90,7 +86,7 @@ pipeline {
 
   	// }
 
-   stage('Image Scans'){
+   stage('Image Scans Bash'){
 
  		steps {
 
@@ -111,7 +107,7 @@ pipeline {
 
 					echo "\$?"
 
-					if [ "\$?" == 1 ];	then
+					if [ \$? ];	then
 					  echo "\$trivy_out"
 				    fi
 
