@@ -96,8 +96,6 @@ pipeline {
 				
 				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: """#!/bin/bash
 				
-				#echo $image_list
-
 				for image in ${image_list.join(' ')}; do
 					trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
 
@@ -136,6 +134,14 @@ pipeline {
     //     ) 
 
     // }
+
+	failure {
+
+		emailext(mimeType: 'text/html',
+					body: "${RESULTS}",
+					subject: 'Base Image Vulnerabilities Found',
+					to: "${EmailRecipients}")
+    }
 
     cleanup {
 
