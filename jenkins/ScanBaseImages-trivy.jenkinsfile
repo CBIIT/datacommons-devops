@@ -112,9 +112,10 @@ pipeline {
 				println RESULTS
 
 				if(RESULTS) {
-                        catchError(stageResult: 'FAILURE') {
-                            error 'VULNERABILITIES FOUND'
-                        }
+                    catchError(stageResult: 'FAILURE') {
+                        error 'VULNERABILITIES FOUND'
+                    }
+				}
 
 			}
 
