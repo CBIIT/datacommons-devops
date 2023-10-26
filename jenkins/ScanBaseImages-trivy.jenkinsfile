@@ -99,11 +99,7 @@ pipeline {
 				#echo $image_list
 
 				for image in ${image_list.join(' ')}; do
-                    echo "the next image is \$image"
-
 					trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
-
-					#echo "\$?"
 
 					if [ \$? == 1 ];	then
 					  echo "\$trivy_out"
@@ -114,6 +110,11 @@ pipeline {
 				""").trim()
 
 				println RESULTS
+
+				if(RESULTS) {
+                        catchError(stageResult: 'FAILURE') {
+                            error 'VULNERABILITIES FOUND'
+                        }
 
 			}
 
