@@ -100,7 +100,7 @@ pipeline {
 				
 				//sh(label: 'Get Scan Results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image").trim()
 				
-				RESULTS = sh label: 'Get Scan Results', returnStdout: true, script: '''#!/bin/bash
+				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: '''#!/bin/bash
 				
 				echo $image_list
 
@@ -111,7 +111,7 @@ pipeline {
 
                 done
 
-				'''.trim()
+				''').trim()
 
 				println "Results:   $RESULTS"
 
