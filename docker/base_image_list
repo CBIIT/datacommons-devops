@@ -1,2 +1,2 @@
-nginx:1.25.2-alpine3.18-slim
 nginx:1.25.2
+nginx:1.25.2-alpine3.18-slim
