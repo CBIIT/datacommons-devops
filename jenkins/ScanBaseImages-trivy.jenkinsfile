@@ -137,8 +137,10 @@ pipeline {
 
 	failure {
 
-		resultsFile = new File('results.txt')
-        resultsFile.write("${RESULTS}")
+		script {
+			resultsFile = new File('results.txt')
+            resultsFile.write("${RESULTS}")
+		}
 		
 		emailext(attachmentsPattern: 'results.txt',
 			mimeType: 'text/html',
