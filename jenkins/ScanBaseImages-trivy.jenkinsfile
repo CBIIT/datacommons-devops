@@ -1,0 +1,113 @@
+@Library('datacommons-jenkins-shared-library@v1.1') _
+
+pipeline {
+	agent {
+		node {
+			label 'cicd_microservice'
+		}
+	}
+
+  parameters {
+
+  string(defaultValue: "", 
+        description: 'Enter a list of email addresses to notify with results:', 
+        name: 'EmailRecipients')
+
+  }
+  
+  environment {
+
+ 	CODE_REPO   = "datacommons-devops"
+    CODE_FOLDER = "datacommons-devops"
+ 	CODE_BRANCH = "main"
+
+	ECR_REPO    = "cbiit-base-docker-images"
+	REGION      = "us-east-1"
+
+  }
+
+  stages{
+  	stage('checkout'){
+  		steps {
+
+		checkout([$class: 'GitSCM',
+			branches: [[name: "${env.CODE_BRANCH}"]],
+			extensions: [[$class: 'SubmoduleOption', 
+			recursiveSubmodules: true],
+			[$class: 'RelativeTargetDirectory',
+			relativeTargetDir: "${env.CODE_FOLDER}"]],
+			userRemoteConfigs:
+			[[url: "https://github.com/CBIIT/${env.CODE_REPO}"]]])
+
+        }
+
+  	}
+
+   stage('Image Scans'){
+
+ 		steps {
+
+ 			script {
+
+			    def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
+				
+				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: """#!/bin/bash
+				
+				for image in ${image_list.join(' ')}; do
+					trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
+
+					if [ \$? == 1 ];	then
+					  echo "\$trivy_out \n\n"
+				    fi
+
+                done
+
+				""").trim()
+
+				println RESULTS
+
+				if(RESULTS) {
+                    catchError(stageResult: 'FAILURE') {
+                        error 'VULNERABILITIES FOUND'
+                    }
+				}
+
+			}
+
+ 		}
+
+  	}
+
+
+  }
+
+  post {
+
+	failure {
+
+		script {
+
+			sh label: 'Write Results', script: """#!/bin/bash
+
+				echo "${RESULTS}" > results_\$(date '+%Y%m%d').txt
+
+				"""
+
+		}
+		
+		emailext(attachmentsPattern: 'results_*.txt',
+			mimeType: 'text/html',
+			body: "Base Image scan results attached",
+			subject: "Base Image Vulnerabilities Found",
+			to: "${EmailRecipients}")
+    }
+
+    cleanup {
+
+        cleanWs()
+
+    }
+
+  }
+
+}
