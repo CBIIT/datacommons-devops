@@ -103,7 +103,7 @@ pipeline {
 				RESULTS = sh label: 'Get Scan Results', returnStdout: true, script: """#!/bin/bash
 
 				# Redeploy Service Using The Latest Task Definition
-				#docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image
+				#docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL \$image
 				echo $image_list
 
 				""".trim()
