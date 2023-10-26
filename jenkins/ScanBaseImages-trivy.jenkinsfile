@@ -43,50 +43,7 @@ pipeline {
 
   	}
 
-	// stage('Image Scans Groovy'){
-
- 	// 	steps {
-
- 	// 		script {
-
-	// 			def SCANNED_IMAGES = []
-	// 			def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
-
-	// 			image_list.each { String image ->
-
-	// 				println image
-
-	// 				//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run -e DOCKER_SCOUT_HUB_USER=$DOCKER_USER -e DOCKER_SCOUT_HUB_PASSWORD=\"$DOCKER_PASSWORD\" docker/scout-cli cves --only-severity critical,high,medium $image").trim()
-	// 				//SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL $image || true").trim()
-	// 				SCAN_RESULT = sh(label: 'Get Scan Results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image").trim()
-
-	// 				//SCANNED_IMAGES.add("\n\n\n##########   SCANNING IMAGE:   $image   ##########\n\n\n")
-	// 				SCANNED_IMAGES.add(SCAN_RESULT)
-
-	// 			}
-
-	// 			println "RESULTS:    "
-				
-	// 			SCANNED_IMAGES.each { String results ->
-
-	// 			    println results
-
-	// 			}
-
-	// 			//emailext(mimeType: 'text/plain',
-	// 			//	body: "${SCANNED_IMAGES}",
-	// 			//	subject: 'Base Image Scans: results attached',
-	// 			//	to: "${params.EmailRecipients}")
-	
-
-	// 		}
-
-	// 		//}
-	// 	}
-
-  	// }
-
-   stage('Image Scans Bash'){
+   stage('Image Scans'){
 
  		steps {
 
@@ -125,15 +82,6 @@ pipeline {
   }
 
   post {
-
-    // always {
-	
-	//     notify(
-    //         secretPath: "notification/slack",
-    //         secretName: "${env.SLACK_SECRET}"
-    //     ) 
-
-    // }
 
 	failure {
 
