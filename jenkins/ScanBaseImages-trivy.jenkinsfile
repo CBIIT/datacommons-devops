@@ -111,7 +111,7 @@ pipeline {
 
 					echo "\$?"
 
-					if \$?
+					if "\$?"
 					then
 					  echo "\$trivy_out"
 				    fi
