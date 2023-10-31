@@ -143,9 +143,9 @@ resource "aws_cloudfront_key_group" "key_group" {
 }
 
 resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
-  log_destination_configs = [
-    #aws_kinesis_firehose_delivery_stream.firehose_stream.arn]
-  resource_arn = aws_wafv2_web_acl.waf.arn
+  /*log_destination_configs = [
+    aws_kinesis_firehose_delivery_stream.firehose_stream.arn]
+  resource_arn = aws_wafv2_web_acl.waf.arn */
   redacted_fields {
     single_header {
       name = "user-agent"
