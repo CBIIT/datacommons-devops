@@ -71,7 +71,7 @@ resource "aws_lambda_function" "slack_waf" {
       SLACK_CHANNEL = var.cloudfront_slack_channel_name
       BLOCK_IP_FILE_NAME = "blocked_ip/ips.txt"
       WAF_SCOPE = "CLOUDFRONT"
-      S3_BUCKET_NAME = aws_s3_bucket.kinesis_log.bucket
+      S3_BUCKET_NAME = aws_s3_bucket.kinesis_log[count.index].bucket
       TMP_FILE_NAME = "/tmp/blocked_ip.txt"
       IP_SETS_NAME = aws_wafv2_ip_set.ip_sets.name
     }
