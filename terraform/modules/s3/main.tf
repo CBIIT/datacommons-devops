@@ -4,6 +4,7 @@ resource "aws_s3_bucket" "s3" {
   bucket        = local.bucket_name
   force_destroy = var.s3_force_destroy
   tags          = var.tags
+  acl          = "private"
 
 }
 
