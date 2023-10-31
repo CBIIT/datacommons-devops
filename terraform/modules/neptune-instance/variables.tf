@@ -71,7 +71,7 @@ variable "engine_version" {
 variable "instance_class" {
   type        = string
   description = "the instance class to use"
-  default     = db.serverless
+  default     = "db.serverless"
   sensitive   = false
 }
 
