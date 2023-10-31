@@ -35,7 +35,7 @@ resource "aws_neptune_cluster" "this" {
 
 module "cluster_parameters" {
   count = var.enable_serverless ? 0 : 1
-  source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-cluster-parameter-group"
+  source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-cluster-parameter-group?ref=Neptune"
 
   app              = var.app
   env              = var.env
@@ -44,7 +44,7 @@ module "cluster_parameters" {
 }
 
 module "instance_parameters" {
-  source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-instance-parameter-group"
+  source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-instance-parameter-group?ref=Neptune"
 
   app            = var.app
   env            = var.env
@@ -54,7 +54,7 @@ module "instance_parameters" {
 }
 
 module "neptune_instance" {
-  source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-instance"
+  source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-instance?ref=Neptune"
 
   app                          = var.app
   env                          = var.env
