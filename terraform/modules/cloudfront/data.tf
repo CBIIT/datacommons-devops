@@ -94,7 +94,7 @@ data "aws_iam_policy_document" "lambda_s3_policy" {
       "s3:PutObject",
       "s3:GetObjectVersion",
     ]
-    resources = ["arn:aws:s3:::${aws_s3_bucket.kinesis_log.bucket}/*"]
+    #resources = ["arn:aws:s3:::${aws_s3_bucket.kinesis_log.bucket}/*"]
   }
   statement {
     sid = ""
@@ -102,9 +102,9 @@ data "aws_iam_policy_document" "lambda_s3_policy" {
     actions = [
       "s3:ListBucket"
     ]
-    resources = [
+    #resources = [
       "arn:aws:s3:::${aws_s3_bucket.kinesis_log.bucket}"
-    ]
+    #]
   }
   statement {
     sid = ""
