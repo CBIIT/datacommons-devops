@@ -15,11 +15,11 @@ resource "aws_iam_policy" "cloudwatch_log_iam_policy" {
   name   = local.cloudwatch_policy_name
 }
 
-resource "aws_iam_policy_attachment" "lambda_s3_policy_attachment" {
+/*resource "aws_iam_policy_attachment" "lambda_s3_policy_attachment" {
   name = "${var.stack_name}-${var.env}-lambda-s3-attachement"
   policy_arn = aws_iam_policy.lambda_iam_policy.arn
   roles = [aws_iam_role.lambda_role.name]
-}
+}*/
 
 resource "aws_iam_policy_attachment" "cloudwatch_log_policy_attachment" {
   name = "${var.stack_name}-${var.env}-cloudwatch-log-attachement"
