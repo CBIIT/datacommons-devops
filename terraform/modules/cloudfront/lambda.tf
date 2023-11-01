@@ -5,10 +5,10 @@ resource "aws_iam_role" "lambda_role" {
   permissions_boundary = var.target_account_cloudone ? local.permission_boundary_arn: null
 }
 
-resource "aws_iam_policy" "lambda_iam_policy" {
+/*resource "aws_iam_policy" "lambda_iam_policy" {
   policy = data.aws_iam_policy_document.lambda_s3_policy.json
   name = local.lambda_policy_name
-}
+}*/
 
 resource "aws_iam_policy" "cloudwatch_log_iam_policy" {
   policy = data.aws_iam_policy_document.lambda_exec_role_policy.json
