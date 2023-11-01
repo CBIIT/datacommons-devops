@@ -139,7 +139,7 @@ pipeline {
 				docker push $REPO_URL:prod-$IMAGE_TAG
 				'''
                 
-                env.IMAGE_TAG = "prod-$IMAGE_TAG"
+                IMAGE_TAG = "prod-$IMAGE_TAG"
 				
                 echo "updated image tag: $IMAGE_TAG"
 			}

@@ -115,13 +115,13 @@ pipeline {
 
 				# login and get manifest
 				docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $REPO_URL
-				
+
 				docker pull $REPO_URL:$IMAGE_TAG
 				docker tag $REPO_URL:$IMAGE_TAG $REPO_URL:prod-$IMAGE_TAG
 				docker push $REPO_URL:prod-$IMAGE_TAG
 				'''
                 
-                env.IMAGE_TAG = "prod-$IMAGE_TAG"
+                IMAGE_TAG = "prod-$IMAGE_TAG"
 				
                 echo "updated image tag: $IMAGE_TAG"
 			}
