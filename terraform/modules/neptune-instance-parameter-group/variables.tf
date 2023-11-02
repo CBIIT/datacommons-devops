@@ -26,6 +26,11 @@ variable "program" {
   }
 }
 
+variable "resource_prefix" {
+  description = "the prefix to add when creating resources"
+  type        = string
+}
+
 variable "enable_caching" {
   type        = bool
   description = "enable neptune query caching"

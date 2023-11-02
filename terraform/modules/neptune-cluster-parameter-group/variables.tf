@@ -26,6 +26,11 @@ variable "program" {
   }
 }
 
+variable "resource_prefix" {
+  description = "the prefix to add when creating resources"
+  type        = string
+}
+
 variable "enable_audit_log" {
   type        = bool
   description = "whether to enable audit logs"

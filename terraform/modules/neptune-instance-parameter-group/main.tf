@@ -1,7 +1,7 @@
 resource "aws_neptune_parameter_group" "this" {
-  name        = "${local.resource_prefix}-neptune-instance-params"
+  name        = "${var.resource_prefix}-neptune-instance-params"
   family      = var.family
-  description = "${local.resource_prefix} neptune instance-level parameter group"
+  description = "${var.resource_prefix} neptune instance-level parameter group"
 
   parameter {
     name  = "neptune_query_timeout"

@@ -2,7 +2,7 @@ resource "aws_neptune_cluster" "this" {
   allow_major_version_upgrade          = var.allow_major_version_upgrade
   apply_immediately                    = var.apply_immediately
   backup_retention_period              = var.backup_retention_period
-  cluster_identifier                   = "${local.resource_prefix}-neptune-cluster"
+  cluster_identifier                   = "${var.resource_prefix}-neptune-cluster"
   copy_tags_to_snapshot                = var.copy_tags_to_snapshot
   deletion_protection                  = var.deletion_protection
   enable_cloudwatch_logs_exports       = var.enable_cloudwatch_logs_exports
@@ -75,12 +75,12 @@ resource "aws_kms_key" "this" {
 }
 
 resource "aws_kms_alias" "this" {
-  name          = "alias/${local.resource_prefix}-neptune-key"
+  name          = "alias/${var.resource_prefix}-neptune-key"
   target_key_id = aws_kms_key.this.id
 }
 
 resource "aws_neptune_subnet_group" "this" {
-  name        = "${local.resource_prefix}-neptune-subnets"
+  name        = "${var.resource_prefix}-neptune-subnets"
   description = "subnet group for the ${var.env}-tier neptune cluster"
   subnet_ids  = var.database_subnet_ids
 }

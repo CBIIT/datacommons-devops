@@ -26,6 +26,11 @@ variable "program" {
   }
 }
 
+variable "resource_prefix" {
+  description = "the prefix to add when creating resources"
+  type        = string
+}
+
 variable "allow_major_version_upgrade" {
   type        = string
   description = "indicates that major version upgrades are allowed"

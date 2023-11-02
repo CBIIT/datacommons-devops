@@ -1,6 +1,7 @@
 data "aws_caller_identity" "current" {
 
 }
+data "aws_region" "current" {}
 
 data "aws_iam_policy_document" "kms" {
 
@@ -83,7 +84,7 @@ data "aws_iam_policy_document" "kms" {
       test     = "StringEquals"
       variable = "kms:ViaService"
       values = [
-        "rds.us-east-1.amazonaws.com"
+        "rds.${data.aws_region.current.name}.amazonaws.com"
       ]
     }
   }

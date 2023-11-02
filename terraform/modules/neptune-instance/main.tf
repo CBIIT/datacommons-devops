@@ -10,5 +10,5 @@ resource "aws_neptune_cluster_instance" "this" {
   neptune_parameter_group_name = var.neptune_parameter_group_name
   port                         = var.port
   promotion_tier               = var.promotion_tier
-  publicly_accessible          = false
+  publicly_accessible          = var.publicly_accessible
 }
