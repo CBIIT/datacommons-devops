@@ -139,7 +139,7 @@ resource "aws_cloudfront_public_key" "public_key" {
 resource "aws_cloudfront_key_group" "key_group" {
   comment = "files key group"
   items   = [aws_cloudfront_public_key.public_key.id]
-  name    = "${var.stack_name}-${var.env}-key-group"
+  name    = "${var.stack_name}-${var.env}-files-key-group"
 }
 
 /*resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
