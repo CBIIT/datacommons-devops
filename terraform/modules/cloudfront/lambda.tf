@@ -1,36 +1,36 @@
-/*resource "aws_iam_role" "lambda_role" {
+resource "aws_iam_role" "lambda_role" {
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_policy.json
   name =  local.lambda_role_name
   tags =  var.tags
-  permissions_boundary = var.target_account_cloudone ? local.permission_boundary_arn: null
-}*/
+  #permissions_boundary = var.target_account_cloudone ? local.permission_boundary_arn: null
+}
 
-/*resource "aws_iam_policy" "lambda_iam_policy" {
+resource "aws_iam_policy" "lambda_iam_policy" {
   policy = data.aws_iam_policy_document.lambda_s3_policy.json
   name = local.lambda_policy_name
-}*/
+}
 
 resource "aws_iam_policy" "cloudwatch_log_iam_policy" {
   policy = data.aws_iam_policy_document.lambda_exec_role_policy.json
   name   = local.cloudwatch_policy_name
 }
 
-/*resource "aws_iam_policy_attachment" "lambda_s3_policy_attachment" {
+resource "aws_iam_policy_attachment" "lambda_s3_policy_attachment" {
   name = "${var.stack_name}-${var.env}-lambda-s3-attachement"
   policy_arn = aws_iam_policy.lambda_iam_policy.arn
   roles = [aws_iam_role.lambda_role.name]
-}*/
+}
 
-/*resource "aws_iam_policy_attachment" "cloudwatch_log_policy_attachment" {
+resource "aws_iam_policy_attachment" "cloudwatch_log_policy_attachment" {
   name = "${var.stack_name}-${var.env}-cloudwatch-log-attachement"
   policy_arn = aws_iam_policy.cloudwatch_log_iam_policy.arn
   roles = [aws_iam_role.lambda_role.name]
-}*/
+}
 
 resource "aws_lambda_function" "slack_lambda" {
   filename = "${path.module}/send-slack.zip"
   function_name = "${var.stack_name}-${var.env}-send-slack"
-  #role = aws_iam_role.lambda_role.arn
+  role = aws_iam_role.lambda_role.arn
   handler = "slack.handler"
   memory_size = 512
   timeout = 60
@@ -57,7 +57,7 @@ resource "aws_lambda_permission" "lambda_invoke_sns" {
 resource "aws_lambda_function" "slack_waf" {
   filename = "${path.module}/wafreport.zip"
   function_name = "${var.stack_name}-${var.env}-waf-report"
-  #role = aws_iam_role.lambda_role.arn
+  role = aws_iam_role.lambda_role.arn
   handler = "blocked.handler"
   memory_size = 1024
   timeout = 60
