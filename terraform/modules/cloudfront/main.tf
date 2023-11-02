@@ -133,7 +133,7 @@ resource "aws_wafv2_regex_pattern_set" "api_files_pattern" {
 resource "aws_cloudfront_public_key" "public_key" {
   comment     = "files public key"
   encoded_key = var.public_key_path
-  name        = "${var.stack_name}-${var.env}-pub-key"
+  name        = "${var.stack_name}-${var.env}-files-pub-key"
 }
 
 resource "aws_cloudfront_key_group" "key_group" {
