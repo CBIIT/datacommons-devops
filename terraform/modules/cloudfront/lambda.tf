@@ -21,13 +21,13 @@ resource "aws_iam_policy" "cloudwatch_log_iam_policy" {
   roles = [aws_iam_role.lambda_role.name]
 }*/
 
-resource "aws_iam_policy_attachment" "cloudwatch_log_policy_attachment" {
+/*resource "aws_iam_policy_attachment" "cloudwatch_log_policy_attachment" {
   name = "${var.stack_name}-${var.env}-cloudwatch-log-attachement"
   policy_arn = aws_iam_policy.cloudwatch_log_iam_policy.arn
   roles = [aws_iam_role.lambda_role.name]
-}
+}*/
 
-resource "aws_lambda_function" "slack_lambda" {
+/*resource "aws_lambda_function" "slack_lambda" {
   filename = "${path.module}/send-slack.zip"
   function_name = "${var.stack_name}-${var.env}-send-slack"
   role = aws_iam_role.lambda_role.arn
@@ -44,7 +44,7 @@ resource "aws_lambda_function" "slack_lambda" {
     }
   }
 
-}
+}*/
 
 resource "aws_lambda_permission" "lambda_invoke_sns" {
   statement_id  = "allow_sns_function_invocation"
@@ -54,7 +54,7 @@ resource "aws_lambda_permission" "lambda_invoke_sns" {
   source_arn    = aws_sns_topic.cloudfront_alarm_topic.arn
 }
 
-resource "aws_lambda_function" "slack_waf" {
+/*resource "aws_lambda_function" "slack_waf" {
   filename = "${path.module}/wafreport.zip"
   function_name = "${var.stack_name}-${var.env}-waf-report"
   role = aws_iam_role.lambda_role.arn
@@ -76,7 +76,7 @@ resource "aws_lambda_function" "slack_waf" {
       IP_SETS_NAME = aws_wafv2_ip_set.ip_sets.name
     }
   }
-}
+}*/
 
 resource "aws_cloudwatch_event_rule" "every_7am" {
   name = "${var.stack_name}-${var.env}-every-7am"
