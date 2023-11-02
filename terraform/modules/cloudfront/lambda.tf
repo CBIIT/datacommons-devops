@@ -29,7 +29,7 @@ resource "aws_iam_policy_attachment" "cloudwatch_log_policy_attachment" {
 
 resource "aws_lambda_function" "slack_lambda" {
   filename = "${path.module}/send-slack.zip"
-  function_name = "${var.stack_name}-${var.env}-send-slack"
+  function_name = "${var.stack_name}-${var.env}-files-send-slack"
   role = aws_iam_role.lambda_role.arn
   handler = "slack.handler"
   memory_size = 512
@@ -56,7 +56,7 @@ resource "aws_lambda_permission" "lambda_invoke_sns" {
 
 resource "aws_lambda_function" "slack_waf" {
   filename = "${path.module}/wafreport.zip"
-  function_name = "${var.stack_name}-${var.env}-waf-report"
+  function_name = "${var.stack_name}-${var.env}-files-waf-report"
   role = aws_iam_role.lambda_role.arn
   handler = "blocked.handler"
   memory_size = 1024
