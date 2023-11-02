@@ -1,9 +1,9 @@
-resource "aws_iam_role" "lambda_role" {
+/*resource "aws_iam_role" "lambda_role" {
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_policy.json
   name =  local.lambda_role_name
   tags =  var.tags
   permissions_boundary = var.target_account_cloudone ? local.permission_boundary_arn: null
-}
+}*/
 
 /*resource "aws_iam_policy" "lambda_iam_policy" {
   policy = data.aws_iam_policy_document.lambda_s3_policy.json
