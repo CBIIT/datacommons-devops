@@ -91,6 +91,44 @@ pipeline {
 
   	}
 
+	stage('Add Production Tag'){
+
+ 		when {
+
+	        expression {
+
+                ENV == 'prod'
+
+            }
+
+        }
+
+		steps {
+
+ 			script {
+
+			    sh label: 'Docker-Tag', script: '''#!/bin/bash
+
+				# Tag image as production if deploying to prod tier
+				echo "Tagging Image as Production: $ECR_REPO:$IMAGE_TAG"
+
+				# login and get manifest
+				docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $REPO_URL
+
+				docker pull $REPO_URL:$IMAGE_TAG
+				docker tag $REPO_URL:$IMAGE_TAG $REPO_URL:prod-$IMAGE_TAG
+				docker push $REPO_URL:prod-$IMAGE_TAG
+				'''
+                
+                IMAGE_TAG = "prod-$IMAGE_TAG"
+				
+                echo "updated image tag: $IMAGE_TAG"
+			}
+
+ 		}
+
+  	}  	
+
   	stage('Deploy'){
 
         agent {
@@ -135,42 +173,6 @@ pipeline {
 
                 # wait untiil the service is stable
 				aws ecs wait services-stable --cluster $CLUSTER --region $REGION --service $SERVICE
-
-				'''
-
-			}
-
- 		}
-
-  	}
-
-	stage('Add Production Tag'){
-
- 		when {
-
-	        expression { 
-
-                ENV == 'prod'
-
-            }
-
-        }
-
-		steps {
-
- 			script {
-
-			    sh label: 'Docker-Tag', script: '''#!/bin/bash
-
-				# Tag image as production if deploying to prod tier
-				echo "Tagging Image as Production: $ECR_REPO:$IMAGE_TAG"
-
-				# login and get manifest
-				docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $REPO_URL
-				MANIFEST=$(aws ecr batch-get-image --repository-name $ECR_REPO --image-ids imageTag=$IMAGE_TAG --output json | jq --raw-output --join-output '.images[0].imageManifest')
-
-                # tag as latest and push to ECR
-				aws ecr put-image --repository-name $ECR_REPO --image-tag production-$IMAGE_TAG --image-manifest "$MANIFEST"
 
 				'''
 
