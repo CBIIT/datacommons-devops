@@ -44,9 +44,7 @@ module "cluster_parameters" {
 module "instance_parameters" {
   source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-instance-parameter-group?ref=Neptune"
 
-  app            = var.app
-  env            = var.env
-  program        = var.program
+  resource_prefix = var.resource_prefix
   enable_caching = var.enable_serverless ? false : var.enable_caching
   query_timeout  = var.query_timeout
 }
