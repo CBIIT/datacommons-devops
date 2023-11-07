@@ -52,9 +52,6 @@ module "instance_parameters" {
 module "neptune_instance" {
   source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-instance?ref=Neptune"
 
-  app                          = var.app
-  env                          = var.env
-  program                      = var.program
   auto_minor_version_upgrade   = var.auto_minor_version_upgrade
   cluster_identifier           = aws_neptune_cluster.this.cluster_identifier
   engine_version               = var.engine_version
@@ -62,6 +59,7 @@ module "neptune_instance" {
   neptune_subnet_group_name    = aws_neptune_subnet_group.this.name
   neptune_parameter_group_name = var.enable_serverless ? "default.neptune1.2" : module.instance_parameters.name
   port                         = var.port
+  resource_prefix              = var.resource_prefix
 }
 
 resource "aws_kms_key" "this" {
