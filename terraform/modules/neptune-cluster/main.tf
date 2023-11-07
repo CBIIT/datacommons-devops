@@ -37,9 +37,7 @@ module "cluster_parameters" {
   count = var.enable_serverless ? 0 : 1
   source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-cluster-parameter-group?ref=Neptune"
 
-  app              = var.app
-  env              = var.env
-  program          = var.program
+  resource_prefix  = var.resource_prefix
   enable_audit_log = var.enable_cloudwatch_logs_exports == ["audit"] ? true : false
 }
 
