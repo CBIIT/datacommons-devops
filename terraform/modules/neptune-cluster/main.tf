@@ -77,7 +77,7 @@ resource "aws_kms_alias" "this" {
 
 resource "aws_neptune_subnet_group" "this" {
   name        = "${var.resource_prefix}-neptune-subnets"
-  description = "subnet group for the ${var.env}-tier neptune cluster"
+  description = "subnet group for the ${terraform.workspace}-tier neptune cluster"
   subnet_ids  = var.database_subnet_ids
 }
 
