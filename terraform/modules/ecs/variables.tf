@@ -96,7 +96,7 @@ variable "container_insights_setting" {
 variable "target_account_cloudone"{
   description = "to add check conditions on whether the resources are brought up in cloudone or not"
   type        = bool
-  default = yes
+  default = true
 }
 
 variable "add_opensearch_permission" {
