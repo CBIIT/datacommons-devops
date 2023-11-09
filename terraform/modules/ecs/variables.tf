@@ -96,6 +96,7 @@ variable "container_insights_setting" {
 variable "target_account_cloudone"{
   description = "to add check conditions on whether the resources are brought up in cloudone or not"
   type        = bool
+  default = true
 }
 
 variable "add_opensearch_permission" {
@@ -123,5 +124,16 @@ variable "create_neo4j_db" {
 variable "central_ecr_account_id" {
   type = string
   description = "central ecr account number"
+  default = null
+}
+variable "use_custom_trust_policy" {
+  type = bool
+  description = "use custom role trust policy"
+  default = false
+}
+
+variable "custom_trust_policy" {
+  type = string
+  description = "custom role trust policy"
   default = null
 }
