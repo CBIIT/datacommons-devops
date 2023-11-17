@@ -1,4 +1,4 @@
-@Library('datacommons-jenkins-shared-library@v1.1') _
+@Library('datacommons-jenkins-shared-library@v1.2') _
 
 pipeline {
 	agent {
