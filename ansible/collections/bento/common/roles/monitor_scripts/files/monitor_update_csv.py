@@ -20,10 +20,45 @@ def main(argv):
       elif opt in ("-f", "--file"):
          input_url = arg
 
-   result = setMonitors(input_url)
-   result = setSynthetics(input_url)
+   policyList = getpolicylist(os.getenv('KEY'))
 
-def setMonitors(input_url):
+   result = setMonitors(input_url, policyList)
+   result = setSynthetics(input_url, policyList)
+
+def getpolicylist(key):
+   API_ENDPOINT = 'https://api.newrelic.com/graphql'
+   NR_ACCT_ID = os.getenv('NR_ACCT_ID')
+
+   headers = {
+     "Api-Key": key,
+     "Content-Type": "application/json"
+   }
+   
+   data = """{{
+     actor {{
+       account(id: {}) {{
+         alerts {{
+           policiesSearch {{
+             policies {{
+               name
+               id
+             }}
+           }}
+         }}
+       }}
+     }}
+   }}""".format(NR_ACCT_ID)
+
+   payload = { "query": data }
+
+   try:
+     response = requests.post('{}'.format(API_ENDPOINT), headers=headers, data=json.dumps(payload), allow_redirects=False)
+   except requests.exceptions.RequestException as e:
+     raise SystemExit(e)
+
+   return(response.json()['data']['actor']['account']['alerts']['policiesSearch']['policies'])
+
+def setMonitors(input_url, policyList):
 
    with contextlib.closing(requests.get(input_url, stream=True)) as csvfile:
      data = csv.DictReader(codecs.iterdecode(csvfile.iter_lines(), 'utf-8'))
@@ -37,6 +72,7 @@ def setMonitors(input_url):
        global key
        key = os.getenv('KEY')
        slack_channel = row["Slack_Channel"]
+       resources = row["Monitored_Resources"].split(",")
 
        if project + '-' + tier not in tiersSet:
          print()
@@ -47,15 +83,18 @@ def setMonitors(input_url):
          slack_id = set_slack_destination.setalertslack("Expand Data Commons", project, tier, key, slack_channel)
          workflow_id = set_workflow.setalertworkflow(project + "-" + tier + " Notifications", email_id, slack_id, project, tier, key)
 
-         os_policy_id = set_opensearch_policy.setpolicy(project, tier, key)
-         alb_policy_id = set_alb_policy.setpolicy(project, tier, key)
-         fargate_policy_id = set_fargate_policy.setpolicy(project, tier, key)
+         if 'opensearch' in resources:
+           print('adding opensearch config')
+           os_policy_id = set_opensearch_policy.setpolicy(project, tier, key, policyList)
+         if 'alb' in resources:
+           print('adding alb config')
+           alb_policy_id = set_alb_policy.setpolicy(project, tier, key, policyList)
+         if 'fargate' in resources:
+           print('adding fargate config')
+           fargate_policy_id = set_fargate_policy.setpolicy(project, tier, key, policyList)
          tiersSet.append(project + '-' + tier)
-         #print(tiersSet)
 
-   #return(data)
-
-def setSynthetics(input_url):
+def setSynthetics(input_url, policyList):
 
    with contextlib.closing(requests.get(input_url, stream=True)) as csvfile:
      data = csv.DictReader(codecs.iterdecode(csvfile.iter_lines(), 'utf-8'))
@@ -77,9 +116,8 @@ def setSynthetics(input_url):
        print()
 
        if project + '-' + tier not in tiersSet:
-         synthetics_policy_id = set_synthetics_policy.setpolicy(project, tier, key)
+         synthetics_policy_id = set_synthetics_policy.setpolicy(project, tier, key, policyList)
          tiersSet.append(project + '-' + tier)
-         #print(tiersSet)
 
        api_data = {}
        api_data['name'] = endpoint_name
@@ -93,7 +131,6 @@ def setSynthetics(input_url):
        else:
          set_synthetics_monitor_simple_browser.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
 
-   #return(data)
 
 if __name__ == "__main__":
    result = main(sys.argv[1:])
