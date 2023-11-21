@@ -32,8 +32,7 @@ pipeline {
   		steps {
 
   		checkout([$class: 'GitSCM',
-			//branches: [[name: '*/main']],
-			branches: [[name: '*/newrelic_updates']],
+			branches: [[name: '*/main']],
 			userRemoteConfigs:
 			[[url: 'https://github.com/CBIIT/datacommons-devops']]])
 
@@ -79,25 +78,6 @@ pipeline {
  		}
 
   	}
-
-	// stage('Update Synthetics Monitors'){
-
- 	// 	steps {
-
-	// 		script {
-
-    //             sh label: 'Monitor-Updates', script: """#!/bin/bash
-
-	// 				pip install -r monitoring/scripts/requirements.txt
-	// 				python3 monitoring/scripts/monitor_update_csv.py -f $INPUT_FILE -t synthetics
-
-    //             """
-
-    //         }
-
- 	// 	}
-
-  	// }
 
   }
 

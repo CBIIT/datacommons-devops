@@ -147,7 +147,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
      except (requests.exceptions.RequestException, ValueError) as e:
        raise SystemExit(e)
 
-     print("Monitor {} was created".format(monitor_name))
+     print("{} was created".format(monitor_name))
 
      # get the newly created monitor
      # pause to allow it to be created
