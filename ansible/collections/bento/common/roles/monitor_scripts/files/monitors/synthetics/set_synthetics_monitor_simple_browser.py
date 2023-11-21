@@ -64,7 +64,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
        monitor_found = True
        monitor_guid = x.get('guid')
        monitor_id = x.get('monitorID')
-       print('Monitor {} already exists, updating with the latest configuration.'.format(monitor_name))
+       print('{} already exists, updating with the latest configuration.'.format(monitor_name))
 
        data = {"query":"mutation {"
          "syntheticsUpdateSimpleBrowserMonitor ("
@@ -147,7 +147,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
      except (requests.exceptions.RequestException, ValueError) as e:
        raise SystemExit(e)
 
-     print("Monitor {} was created".format(monitor_name))
+     print("{} was created".format(monitor_name))
 
      # get the newly created monitor
      # pause to allow it to be created
