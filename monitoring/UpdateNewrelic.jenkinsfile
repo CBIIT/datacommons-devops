@@ -69,7 +69,8 @@ pipeline {
                 sh label: 'Monitor-Updates', script: """#!/bin/bash
 
 					pip install -r monitoring/scripts/requirements.txt
-					python3 monitoring/scripts/monitor_update_csv.py -f $INPUT_FILE -t services
+					#python3 monitoring/scripts/monitor_update_csv.py -f $INPUT_FILE -t services
+					python3 monitoring/scripts/monitor_update_csv.py -f $INPUT_FILE
 
                 """
 
@@ -79,24 +80,24 @@ pipeline {
 
   	}
 
-	stage('Update Synthetics Monitors'){
+	// stage('Update Synthetics Monitors'){
 
- 		steps {
+ 	// 	steps {
 
-			script {
+	// 		script {
 
-                sh label: 'Monitor-Updates', script: """#!/bin/bash
+    //             sh label: 'Monitor-Updates', script: """#!/bin/bash
 
-					pip install -r monitoring/scripts/requirements.txt
-					python3 monitoring/scripts/monitor_update_csv.py -f $INPUT_FILE -t synthetics
+	// 				pip install -r monitoring/scripts/requirements.txt
+	// 				python3 monitoring/scripts/monitor_update_csv.py -f $INPUT_FILE -t synthetics
 
-                """
+    //             """
 
-            }
+    //         }
 
- 		}
+ 	// 	}
 
-  	}
+  	// }
 
   }
 
