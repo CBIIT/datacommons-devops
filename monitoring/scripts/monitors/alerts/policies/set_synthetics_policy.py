@@ -3,28 +3,15 @@
 import os
 import json
 import requests
-#from monitors.alerts.conditions.fargate import set_fargate_nrql_cpu_condition, set_fargate_nrql_mem_condition, set_fargate_nrql_restarts_condition
 
-def setpolicy(project, tier, key):
-   API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_policies.json'
+def setpolicy(project, tier, key, policyList):
 
    policy_name = '{} {} Synthetics Policy'.format(project, tier)
    policy_found = False
-   headers = {'Api-Key': key}
-   
-   try:
-     response = requests.get('{}'.format(API_ENDPOINT), headers=headers)
-   except requests.exceptions.RequestException as e:
-     raise SystemExit(e)
-
-   for x in response.json()['policies']:
-     if policy_name in x.get("name", "none"):
-       policy_found = True
-       policy_id = x.get("id", "none")
 
    headers = {
-     "Api-Key": key,
-     "Content-Type": "application/json"
+    "Api-Key": key,
+    "Content-Type": "application/json"
    }
    
    data = {
@@ -34,7 +21,14 @@ def setpolicy(project, tier, key):
      }
    }
 
+   for x in policyList:
+     if policy_name in x.get("name", "none"):
+       policy_found = True
+       policy_id = x.get("id", "none")
+
    if not policy_found:
+
+     API_ENDPOINT = 'https://api.newrelic.com/v2/alerts_policies.json'
 
      # create policy
      try:
