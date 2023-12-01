@@ -1,9 +1,8 @@
-@Library('datacommons-jenkins-shared-library@v1.1') _
+@Library('datacommons-jenkins-shared-library@v1.2') _
 
 pipeline {
 	agent {
 		node {
-			//label 'cicd_microservice'
 			label 'slave-ncias-d2940-c'
 		}
 	}
