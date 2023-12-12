@@ -22,7 +22,7 @@ resource "aws_db_instance" "this" {
   monitoring_interval                   = var.monitoring_interval
   monitoring_role_arn                   = var.enable_enhanced_monitoring ? aws_iam_role.this[0].arn : null
   multi_az                              = var.multi_az
-  network_type                          = "IPV4"
+  #network_type                          = "IPV4"
   password                              = var.password
   performance_insights_enabled          = var.performance_insights_enabled
   performance_insights_retention_period = var.performance_insights_retention_period
@@ -32,14 +32,14 @@ resource "aws_db_instance" "this" {
   snapshot_identifier                   = var.create_from_snapshot ? var.snapshot_identifier : null
   storage_encrypted                     = true
   storage_type                          = var.storage_type
-  storage_throughput                    = var.allocated_storage > 399 ? var.storage_throughput : null
+  #storage_throughput                    = var.allocated_storage > 399 ? var.storage_throughput : null
   tags                                  = var.tags
   username                              = var.username
   vpc_security_group_ids                = var.create_security_group ? [aws_security_group.this[0].id] : var.vpc_security_group_ids
 
-  blue_green_update {
-    enabled = true
-  }
+  #blue_green_update {
+  #  enabled = true
+  #}
 
   lifecycle {
     ignore_changes = [snapshot_identifier]

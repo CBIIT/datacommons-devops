@@ -17,11 +17,6 @@ variable "tags" {
   type        = map(string)
 }
 
-variable "stack_name" {
-  description = "name of the project"
-  type        = string
-}
-
 variable "env" {
   description = "name of the environment to provision"
   type        = string
