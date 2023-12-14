@@ -52,7 +52,7 @@ $http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
 );",TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
 Clinical Trial Data Commons,ctdc,CRDC,QA,Files,https://trialcommons-qa.cancer.gov/api/files,,TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
 Canine Data Commons,icdc,CRDC,Dev,Portal,https://caninecommons-dev.cancer.gov,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
-Canine Data Commons,icdc,CRDC,Dev,API,https://caninecommons-dev.cancer.gov/v1/graphql/,"var assert = require('assert');
+Canine Data Commons,icdc,CRDC,Dev,API-Neo4j,https://caninecommons-dev.cancer.gov/v1/graphql/,"var assert = require('assert');
 
 $http.post('https://caninecommons-dev.cancer.gov/v1/graphql/',
   {
@@ -72,6 +72,37 @@ $http.post('https://caninecommons-dev.cancer.gov/v1/graphql/',
 
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
     assert.ok('numberOfStudies' in body.data);
+
+  }
+);",TRUE,C04DYU071MG,,"alb,fargate,opensearch"
+Canine Data Commons,icdc,CRDC,Dev,API-OS,https://caninecommons-dev.cancer.gov/v1/graphql/,"var assert = require('assert');
+
+$http.post('https://caninecommons-dev.cancer.gov/v1/graphql/',
+  {
+    json: {
+      query: '{ globalSearch(input: ""ICDC"") { \
+        about_page { \
+          type \
+          page \
+          title \
+          text \
+        } \
+        about_count \
+      } }'
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('about_page' in body.data.globalSearch);
 
   }
 );",TRUE,C04DYU071MG,,"alb,fargate,opensearch"
