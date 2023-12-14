@@ -67,7 +67,7 @@
 ############################################################################################################################
 - name: query task definition - {{ container_name }}
   ecs_taskdefinition_info:
-    task_definition: "{{ service_name }}"
+    task_definition: "{{ program }}-{{ tier }}-{{ project_name }}-{{ microservice }}"
     region: "{{ region }}"
   register: task
 
