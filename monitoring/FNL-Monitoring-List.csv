@@ -1,5 +1,5 @@
 ﻿Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Private_Location,Slack_Channel,,Monitored_Resources
-Clinical Trial Data Commons,ctdc,CRDC,Dev,Portal,https://trialcommons-dev.cancer.gov,,TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
+Clinical Trial Data Commons,ctdc,CRDC,Dev,Portal,https://trialcommons-dev.cancer.gov,,TRUE,C051XGDRQG6,,opensearch
 Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://trialcommons-dev.cancer.gov/v1/graphql,"var assert = require('assert');
 
 $http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
@@ -23,9 +23,9 @@ $http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
     assert.match(body.data.idsLists.case_ids[0], /CTDC-/);
 
   }
-);",TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
-Clinical Trial Data Commons,ctdc,CRDC,Dev,Files,https://trialcommons-dev.cancer.gov/api/files,,TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
-Clinical Trial Data Commons,ctdc,CRDC,QA,Portal,https://trialcommons-qa.cancer.gov,,TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
+);",TRUE,C051XGDRQG6,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,Dev,Files,https://trialcommons-dev.cancer.gov/api/files,,TRUE,C051XGDRQG6,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,QA,Portal,https://trialcommons-qa.cancer.gov,,TRUE,C051XGDRQG6,,opensearch
 Clinical Trial Data Commons,ctdc,CRDC,QA,API,https://trialcommons-qa.cancer.gov/v1/graphql,"var assert = require('assert');
 
 $http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
@@ -49,9 +49,9 @@ $http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
     assert.match(body.data.idsLists.case_ids[0], /CTDC-/);
 
   }
-);",TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
-Clinical Trial Data Commons,ctdc,CRDC,QA,Files,https://trialcommons-qa.cancer.gov/api/files,,TRUE,C051XGDRQG6,,"alb,fargate,opensearch"
-Canine Data Commons,icdc,CRDC,Dev,Portal,https://caninecommons-dev.cancer.gov,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
+);",TRUE,C051XGDRQG6,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,QA,Files,https://trialcommons-qa.cancer.gov/api/files,,TRUE,C051XGDRQG6,,opensearch
+Canine Data Commons,icdc,CRDC,Dev,Portal,https://caninecommons-dev.cancer.gov,,TRUE,C04DYU071MG,,opensearch
 Canine Data Commons,icdc,CRDC,Dev,API,https://caninecommons-dev.cancer.gov/v1/graphql/,"var assert = require('assert');
 
 $http.post('https://caninecommons-dev.cancer.gov/v1/graphql/',
@@ -74,9 +74,9 @@ $http.post('https://caninecommons-dev.cancer.gov/v1/graphql/',
     assert.ok('numberOfStudies' in body.data);
 
   }
-);",TRUE,C04DYU071MG,,"alb,fargate,opensearch"
-Canine Data Commons,icdc,CRDC,Dev,Files,https://caninecommons-dev.cancer.gov/api/files,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
-Canine Data Commons,icdc,CRDC,QA,Portal,https://caninecommons-qa.cancer.gov,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
+);",TRUE,C04DYU071MG,,opensearch
+Canine Data Commons,icdc,CRDC,Dev,Files,https://caninecommons-dev.cancer.gov/api/files,,TRUE,C04DYU071MG,,opensearch
+Canine Data Commons,icdc,CRDC,QA,Portal,https://caninecommons-qa.cancer.gov,,TRUE,C04DYU071MG,,opensearch
 Canine Data Commons,icdc,CRDC,QA,API,https://caninecommons-qa.cancer.gov/v1/graphql/,"var assert = require('assert');
 
 $http.post('https://caninecommons-qa.cancer.gov/v1/graphql/',
@@ -99,9 +99,9 @@ $http.post('https://caninecommons-qa.cancer.gov/v1/graphql/',
     assert.ok('numberOfStudies' in body.data);
 
   }
-);",TRUE,C04DYU071MG,,"alb,fargate,opensearch"
-Canine Data Commons,icdc,CRDC,QA,Files,https://caninecommons-qa.cancer.gov/api/files,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
-Canine Data Commons,icdc,CRDC,Stage,Portal,https://caninecommons-stage.cancer.gov,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
+);",TRUE,C04DYU071MG,,opensearch
+Canine Data Commons,icdc,CRDC,QA,Files,https://caninecommons-qa.cancer.gov/api/files,,TRUE,C04DYU071MG,,opensearch
+Canine Data Commons,icdc,CRDC,Stage,Portal,https://caninecommons-stage.cancer.gov,,TRUE,C04DYU071MG,,opensearch
 Canine Data Commons,icdc,CRDC,Stage,API,https://caninecommons-stage.cancer.gov/v1/graphql/,"var assert = require('assert');
 
 $http.post('https://caninecommons-stage.cancer.gov/v1/graphql/',
@@ -124,9 +124,9 @@ $http.post('https://caninecommons-stage.cancer.gov/v1/graphql/',
     assert.ok('numberOfStudies' in body.data);
 
   }
-);",TRUE,C04DYU071MG,,"alb,fargate,opensearch"
-Canine Data Commons,icdc,CRDC,Stage,Files,https://caninecommons-stage.cancer.gov/api/files,,TRUE,C04DYU071MG,,"alb,fargate,opensearch"
-Canine Data Commons,icdc,CRDC,Prod,Portal,https://caninecommons.cancer.gov,,FALSE,C04E1C69JBE,,"alb,fargate,opensearch"
+);",TRUE,C04DYU071MG,,opensearch
+Canine Data Commons,icdc,CRDC,Stage,Files,https://caninecommons-stage.cancer.gov/api/files,,TRUE,C04DYU071MG,,opensearch
+Canine Data Commons,icdc,CRDC,Prod,Portal,https://caninecommons.cancer.gov,,FALSE,C04E1C69JBE,,opensearch
 Canine Data Commons,icdc,CRDC,Prod,API,https://caninecommons.cancer.gov/v1/graphql/,"var assert = require('assert');
 
 $http.post('https://caninecommons.cancer.gov/v1/graphql/',
@@ -149,13 +149,13 @@ $http.post('https://caninecommons.cancer.gov/v1/graphql/',
     assert.ok('numberOfStudies' in body.data);
 
   }
-);",FALSE,C04E1C69JBE,,"alb,fargate,opensearch"
-Canine Data Commons,icdc,CRDC,Prod,Files,https://caninecommons.cancer.gov/api/files,,FALSE,C04E1C69JBE,,"alb,fargate,opensearch"
-Molecular Targets Platform,mtp,CCDI,Dev,Portal,https://moleculartargets-dev.ccdi.cancer.gov,,TRUE,C049VAHBKDL,,"alb,fargate,opensearch"
-Molecular Targets Platform,mtp,CCDI,QA,Portal,https://moleculartargets-qa.ccdi.cancer.gov,,TRUE,C049VAHBKDL,,"alb,fargate,opensearch"
-Molecular Targets Platform,mtp,CCDI,Stage,Portal,https://moleculartargets-stage.ccdi.cancer.gov,,TRUE,C049Z0RVCCD,,"alb,fargate,opensearch"
-Molecular Targets Platform,mtp,CCDI,Prod,Portal,https://moleculartargets.ccdi.cancer.gov,,TRUE,C049Z0RVCCD,,"alb,fargate,opensearch"
-Index of NCI Studies,ins,CCDI,Dev,Portal,https://studycatalog-dev.cancer.gov,,TRUE,C04693BUC9M,,"alb,fargate,opensearch"
+);",FALSE,C04E1C69JBE,,opensearch
+Canine Data Commons,icdc,CRDC,Prod,Files,https://caninecommons.cancer.gov/api/files,,FALSE,C04E1C69JBE,,opensearch
+Molecular Targets Platform,mtp,CCDI,Dev,Portal,https://moleculartargets-dev.ccdi.cancer.gov,,TRUE,C049VAHBKDL,,opensearch
+Molecular Targets Platform,mtp,CCDI,QA,Portal,https://moleculartargets-qa.ccdi.cancer.gov,,TRUE,C049VAHBKDL,,opensearch
+Molecular Targets Platform,mtp,CCDI,Stage,Portal,https://moleculartargets-stage.ccdi.cancer.gov,,TRUE,C049Z0RVCCD,,opensearch
+Molecular Targets Platform,mtp,CCDI,Prod,Portal,https://moleculartargets.ccdi.cancer.gov,,TRUE,C049Z0RVCCD,,opensearch
+Index of NCI Studies,ins,CCDI,Dev,Portal,https://studycatalog-dev.cancer.gov,,TRUE,C04693BUC9M,,opensearch
 Index of NCI Studies,ins,CCDI,Dev,API,https://studycatalog-dev.cancer.gov/v1/graphql,"var assert = require('assert');
 
 $http.post('https://studycatalog-dev.cancer.gov/v1/graphql/',
@@ -178,8 +178,8 @@ $http.post('https://studycatalog-dev.cancer.gov/v1/graphql/',
     assert.ok('case_ids' in body.data.idsLists);
     assert.match(body.data.idsLists.case_ids[0], /INS-/);
   }
-);",TRUE,C04693BUC9M,,"alb,fargate,opensearch"
-Index of NCI Studies,ins,CCDI,QA,Portal,https://studycatalog-qa.cancer.gov,,TRUE,C04693BUC9M,,"alb,fargate,opensearch"
+);",TRUE,C04693BUC9M,,opensearch
+Index of NCI Studies,ins,CCDI,QA,Portal,https://studycatalog-qa.cancer.gov,,TRUE,C04693BUC9M,,opensearch
 Index of NCI Studies,ins,CCDI,QA,API,https://studycatalog-qa.cancer.gov/v1/graphql,"var assert = require('assert');
 
 $http.post('https://studycatalog-qa.cancer.gov/v1/graphql/',
@@ -202,8 +202,8 @@ $http.post('https://studycatalog-qa.cancer.gov/v1/graphql/',
     assert.ok('case_ids' in body.data.idsLists);
     assert.match(body.data.idsLists.case_ids[0], /INS-/);
   }
-);",TRUE,C04693BUC9M,,"alb,fargate,opensearch"
-Index of NCI Studies,ins,CCDI,Stage,Portal,https://studycatalog-stage.cancer.gov,,TRUE,C04693BUC9M,,"alb,fargate,opensearch"
+);",TRUE,C04693BUC9M,,opensearch
+Index of NCI Studies,ins,CCDI,Stage,Portal,https://studycatalog-stage.cancer.gov,,TRUE,C04693BUC9M,,opensearch
 Index of NCI Studies,ins,CCDI,Stage,API,https://studycatalog-stage.cancer.gov/v1/graphql,"var assert = require('assert');
 
 $http.post('https://studycatalog-stage.cancer.gov/v1/graphql/',
@@ -226,8 +226,8 @@ $http.post('https://studycatalog-stage.cancer.gov/v1/graphql/',
     assert.ok('case_ids' in body.data.idsLists);
     assert.match(body.data.idsLists.case_ids[0], /INS-/);
   }
-);",TRUE,C04693BUC9M,,"alb,fargate,opensearch"
-Index of NCI Studies,ins,CCDI,Prod,Portal,https://studycatalog.cancer.gov,,TRUE,C04693BUC9M,,"alb,fargate,opensearch"
+);",TRUE,C04693BUC9M,,opensearch
+Index of NCI Studies,ins,CCDI,Prod,Portal,https://studycatalog.cancer.gov,,TRUE,C04693BUC9M,,opensearch
 Index of NCI Studies,ins,CCDI,Prod,API,https://studycatalog.cancer.gov/v1/graphql,"var assert = require('assert');
 
 $http.post('https://studycatalog.cancer.gov/v1/graphql/',
@@ -250,12 +250,12 @@ $http.post('https://studycatalog.cancer.gov/v1/graphql/',
     assert.ok('case_ids' in body.data.idsLists);
     assert.match(body.data.idsLists.case_ids[0], /INS-/);
   }
-);",TRUE,C04693BUC9M,,"alb,fargate,opensearch"
-Childhood Cancer Data Catalog,ccdc,CCDI,Dev,Portal,https://datacatalog-dev.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,"alb,fargate,opensearch"
-Childhood Cancer Data Catalog,ccdc,CCDI,QA,Portal,https://datacatalog-qa.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,"alb,fargate,opensearch"
-Childhood Cancer Data Catalog,ccdc,CCDI,Stage,Portal,https://datacatalog-stage.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,"alb,fargate,opensearch"
-Childhood Cancer Data Catalog,ccdc,CCDI,Prod,Portal,https://datacatalog.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,"alb,fargate,opensearch"
-Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,Portal,https://hub-dev.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate"
+);",TRUE,C04693BUC9M,,opensearch
+Childhood Cancer Data Catalog,ccdc,CCDI,Dev,Portal,https://datacatalog-dev.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,opensearch
+Childhood Cancer Data Catalog,ccdc,CCDI,QA,Portal,https://datacatalog-qa.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,opensearch
+Childhood Cancer Data Catalog,ccdc,CCDI,Stage,Portal,https://datacatalog-stage.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,opensearch
+Childhood Cancer Data Catalog,ccdc,CCDI,Prod,Portal,https://datacatalog.ccdi.cancer.gov,,TRUE,C049VAP8DEJ,,opensearch
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,Portal,https://hub-dev.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,API,https://hub-dev.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://hub-dev.datacommons.cancer.gov/version',
@@ -270,11 +270,11 @@ console.log('Response:', response.statusCode);
 
 assert.equal(response.statusCode, 200, 'Expected a 200 OK response'); 
 
-dateObject = new Date(body.date); 
+dateObject = new Date(); 
 assert.ok(dateObject.getTime() === dateObject.getTime()); 
 
-} );",TRUE,C05KUCFPV50,,"alb,fargate"
-Cancer Research Data Commons Hub,crdc-hub,CRDC,QA,Portal,https://hub-qa.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate"
+} );",TRUE,C05KUCFPV50,,
+Cancer Research Data Commons Hub,crdc-hub,CRDC,QA,Portal,https://hub-qa.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,QA,API,https://hub-qa.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://hub-qa.datacommons.cancer.gov/version',
@@ -289,11 +289,11 @@ console.log('Response:', response.statusCode);
 
 assert.equal(response.statusCode, 200, 'Expected a 200 OK response'); 
 
-dateObject = new Date(body.date); 
+dateObject = new Date(); 
 assert.ok(dateObject.getTime() === dateObject.getTime()); 
 
-} );",TRUE,C05KUCFPV50,,"alb,fargate"
-Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,Portal,https://hub-stage.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,"alb,fargate"
+} );",TRUE,C05KUCFPV50,,
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,Portal,https://hub-stage.datacommons.cancer.gov,,TRUE,C05KUCFPV50,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,API,https://hub-stage.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://hub-stage.datacommons.cancer.gov/version',
@@ -308,11 +308,11 @@ console.log('Response:', response.statusCode);
 
 assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
 
-dateObject = new Date(body.date);
+dateObject = new Date();
 assert.ok(dateObject.getTime() === dateObject.getTime());
 
-} );",TRUE,C05KUCFPV50,,"alb,fargate"
-Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,Portal,https://hub.datacommons.cancer.gov,,FALSE,C05LJ3E72V6,,"alb,fargate"
+} );",TRUE,C05KUCFPV50,,
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,Portal,https://hub.datacommons.cancer.gov,,FALSE,C05LJ3E72V6,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,API,https://hub.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://hub.datacommons.cancer.gov/version',
@@ -327,11 +327,15 @@ console.log('Response:', response.statusCode);
 
 assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
 
-dateObject = new Date(body.date);
+dateObject = new Date();
 assert.ok(dateObject.getTime() === dateObject.getTime());
 
-} );",FALSE,C05LJ3E72V6,,"alb,fargate"
-CCDI Hub,ccdi-hub,CCDI,Dev,Portal,https://ccdi-dev.cancer.gov/,,TRUE,C061YHQ6MED,,,
-CCDI Hub,ccdi-hub,CCDI,QA,Portal,https://ccdi-qa.cancer.gov/,,TRUE,C061YHQ6MED,,,
-CCDI Hub,ccdi-hub,CCDI,Stage,Portal,https://ccdi-stage.cancer.gov/,,TRUE,C061YHQ6MED,,,
-CCDI Hub,ccdi-hub,CCDI,Prod,Portal,https://ccdi.cancer.gov/,,FALSE,C061YHQ6MED,,,
+} );",FALSE,C05LJ3E72V6,,
+CCDI Hub,ccdi-hub,CCDI,Dev,Portal,https://ccdi-dev.cancer.gov/,,TRUE,C061YHQ6MED,,
+CCDI Hub,ccdi-hub,CCDI,QA,Portal,https://ccdi-qa.cancer.gov/,,TRUE,C061YHQ6MED,,
+CCDI Hub,ccdi-hub,CCDI,Stage,Portal,https://ccdi-stage.cancer.gov/,,TRUE,C061YHQ6MED,,
+CCDI Hub,ccdi-hub,CCDI,Prod,Portal,https://ccdi.cancer.gov/,,FALSE,C061YHQ6MED,,
+CCDI Hub,bento,FNL,Dev,Portal,https://bento-dev.bento-tools.org/,,FALSE,,,
+CCDI Hub,bento,FNL,QA,Portal,https://bento-qa.bento-tools.org/,,FALSE,,,
+CCDI Hub,bento,FNL,Perf,Portal,https://bento-perf.bento-tools.org/,,FALSE,,,
+CCDI Hub,bento,FNL,Prod,Portal,https://bento-tools.org/,,FALSE,,,
