@@ -31,7 +31,7 @@
             value: "{\"nrDeployMethod\":\"downloadPage\"}"
           - name: NRIA_LICENSE_KEY
             value: "{{ newrelic_license_key }}"
-      - name: "{{ microservice }}"
+      - name: "{{ container_name }}"
         essential: true
         image: "{{ container_image_url }}:{{ image_version }}"
         environment: "{{ container_env }}"
