@@ -1,0 +1,14 @@
+# vars file for opensearch data loading
+#clickhouse_path: 
+#backupfile: 
+#project_name:  
+#tier: 
+#snapshot_repo:  
+#snapshot_value:
+#opensearch_host: 
+#s3_bucket : 
+#base_path: 
+#workspace: 
+#indices: 
+#snapshot_path: 
+#role_arn: 

@@ -1,0 +1,31 @@
+---
+
+- name: listing the contents of the workspace after extracting
+  shell: pwd
+  register: shell_result
+
+- debug:
+        var: shell_result.stdout_lines
+
+- name: listing the contents of the workspace after extracting
+  shell: ls
+  register: shell_result
+
+- debug:
+        var: shell_result.stdout_lines
+
+- name: copy env to build
+  copy:
+    src: opensearch-backup.py
+    dest: "{{workspace}}/opensearch-backup.py"
+    mode: 0755
+
+- name: load data
+  shell:
+    cmd: >
+      python3 {{workspace}}/opensearch-backup.py --oshost {{opensearch_host}} --repo {{snapshot_repo}}  --s3bucket {{s3_bucket}} --snapshot {{snapshot_value}} --basePath {{base_path}}
+  register: data_loader
+
+- name: show dataloader output
+  debug:
+    msg: "{{ data_loader }}"
