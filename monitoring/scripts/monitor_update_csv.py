@@ -21,7 +21,6 @@ def main(argv):
          input_url = arg
 
    policyList = getpolicylist(os.getenv('KEY'))
-   print(policyList)
 
    result = setMonitors(input_url, policyList)
    result = setSynthetics(input_url, policyList)
