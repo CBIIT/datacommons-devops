@@ -2,7 +2,7 @@
 
 import sys, getopt, json, os, csv, codecs, requests, contextlib
 from monitors.alerts.policies import set_fargate_policy, set_alb_policy, set_opensearch_policy, set_synthetics_policy
-from monitors.synthetics import set_synthetics_monitor_simple_browser, set_synthetics_monitor_scripted_api
+from monitors.synthetics import set_synthetics_monitor_simple_browser, set_synthetics_monitor_scripted_api, set_synthetics_monitor_cert_expiration
 from monitors.alerts.destinations import set_email_destination, set_slack_destination
 from monitors.alerts.workflows import set_workflow
 
@@ -131,6 +131,8 @@ def setSynthetics(input_url, policyList):
        else:
          set_synthetics_monitor_simple_browser.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
 
+       if tier.lower() == 'prod':
+         set_synthetics_monitor_cert_expiration.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
 
 if __name__ == "__main__":
    result = main(sys.argv[1:])
