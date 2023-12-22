@@ -12,6 +12,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
    monitor_name = '{} {} Certificate Monitor'.format(project, tier)
    location = "public: [\"AWS_US_EAST_1\"]"
    domain = api['url'].replace("https://","")
+   domain = domain.replace("/","")
    period = "EVERY_DAY"
    daysToFail = "30"
 
