@@ -128,11 +128,11 @@ def setSynthetics(input_url, policyList):
 
        if api['query']:
          set_synthetics_monitor_scripted_api.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
+       elif tier.lower() == 'prod' and api['name'].lower() == 'portal':
+         set_synthetics_monitor_simple_browser.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
+         set_synthetics_monitor_cert_expiration.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
        else:
          set_synthetics_monitor_simple_browser.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
-
-       if tier.lower() == 'prod':
-         set_synthetics_monitor_cert_expiration.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
 
 if __name__ == "__main__":
    result = main(sys.argv[1:])

@@ -150,4 +150,4 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
          monitor_id = x.get('monitorID')
      
    # add synthetics condition
-   set_synthetics_condition.setcondition(project, tier, key, api['name'], monitor_id, policy_id)
+   set_synthetics_condition.setcondition(project, tier, key, 'Cert', monitor_id, policy_id)
