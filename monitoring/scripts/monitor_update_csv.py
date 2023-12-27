@@ -81,7 +81,7 @@ def setMonitors(input_url, policyList):
 
          email_id = set_email_destination.setalertemail("DevOps-FNL", project, tier, key)
          slack_id = set_slack_destination.setalertslack("Expand Data Commons", project, tier, key, slack_channel)
-         workflow_id = set_workflow.setalertworkflow(project + "-" + tier + " Notifications", email_id, slack_id, project, tier, key)
+         workflow_id = set_workflow.setalertworkflow(project + " " + tier + " Notifications", email_id, slack_id, project, tier, key)
 
          if 'opensearch' in resources:
            print('adding opensearch config')
