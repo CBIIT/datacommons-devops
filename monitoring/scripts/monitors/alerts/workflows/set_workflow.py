@@ -3,6 +3,7 @@
 import os
 import json
 import requests
+import time
 
 def setalertworkflow(workflow_name, email_id, slack_id, project, tier, key):
    API_ENDPOINT = 'https://api.newrelic.com/graphql'
@@ -98,7 +99,8 @@ def setalertworkflow(workflow_name, email_id, slack_id, project, tier, key):
 
    if not workflow_found:
      data = {"query":"mutation {"
-       "aiWorkflowsCreateWorkflow(accountId: " + NR_ACCT_ID + ", createWorkflowData: {destinationsEnabled: true, workflowEnabled: true, name: \"" + workflow_name + "\", issuesFilter: {name: \"" + workflow_name + "\", predicates: [{ attribute: \"accumulations.policyName\", operator: CONTAINS, values:[\"" + project.capitalize() + "-" + tier.capitalize() + "\"]}], type: FILTER}, destinationConfigurations: [{channelId: \"" + email_id + "\"},{channelId: \"" + slack_id + "\"}], enrichmentsEnabled: true, enrichments: {nrql: []}, , mutingRulesHandling: DONT_NOTIFY_FULLY_MUTED_ISSUES}) {"
+       #"aiWorkflowsCreateWorkflow(accountId: " + NR_ACCT_ID + ", createWorkflowData: {destinationsEnabled: true, workflowEnabled: true, name: \"" + workflow_name + "\", issuesFilter: {name: \"" + workflow_name + "\", predicates: [{ attribute: \"accumulations.policyName\", operator: CONTAINS, values:[\"" + project.capitalize() + "-" + tier.capitalize() + "\"]}], type: FILTER}, destinationConfigurations: [{channelId: \"" + email_id + "\"},{channelId: \"" + slack_id + "\"}], enrichmentsEnabled: true, enrichments: {nrql: []}, , mutingRulesHandling: DONT_NOTIFY_FULLY_MUTED_ISSUES}) {"
+       "aiWorkflowsCreateWorkflow(accountId: " + NR_ACCT_ID + ", createWorkflowData: {destinationsEnabled: true, workflowEnabled: true, name: \"" + workflow_name + "\", issuesFilter: {name: \"" + workflow_name + "\", predicates: [{ attribute: \"accumulations.policyName\", operator: CONTAINS, values:[\"" + project + " " + tier + "\"]}], type: FILTER}, destinationConfigurations: [{channelId: \"" + email_id + "\"},{channelId: \"" + slack_id + "\"}], enrichmentsEnabled: true, enrichments: {nrql: []}, , mutingRulesHandling: DONT_NOTIFY_FULLY_MUTED_ISSUES}) {"
          "workflow {"
            "id\n"
            "name\n"
@@ -131,6 +133,10 @@ def setalertworkflow(workflow_name, email_id, slack_id, project, tier, key):
        "}"
      "}", "variables":""}
 
+     # get the newly created workflow
+     # pause to allow it to be created
+     time.sleep(10)
+     
      try:
        response = requests.post('{}'.format(API_ENDPOINT), headers=headers, data=json.dumps(data), allow_redirects=False)
      except requests.exceptions.RequestException as e:
