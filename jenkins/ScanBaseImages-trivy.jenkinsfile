@@ -87,11 +87,14 @@ pipeline {
 
 		script {
 
-			sh label: 'Write Results', script: """#!/bin/bash
+			RESULTS_FILE = sh(label: 'Get results file name', returnStdout: true, script: "echo results_\$(date '+%Y%m%d').txt").trim()
+			writeFile(file: RESULTS_FILE, text: RESULTS)
+			
+			// sh label: 'Write Results', script: """#!/bin/bash
 
-				echo "${RESULTS}" > results_\$(date '+%Y%m%d').txt
+			// 	echo "${RESULTS}" > results_\$(date '+%Y%m%d').txt
 
-				"""
+			// 	"""
 
 		}
 		
