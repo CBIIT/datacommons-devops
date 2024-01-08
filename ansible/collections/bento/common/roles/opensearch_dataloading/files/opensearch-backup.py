@@ -49,6 +49,9 @@ if(r_get_repo.status_code!=200):
   print(r_create_repo.status_code)
   print(r_create_repo.text)
 
+print(r_get_repo.status_code)
+print(r_get_repo.text)
+
 #register repo
 # r = requests.put(oshost+'_snapshot/'+repo, auth=awsauth, json=payload, headers=headers)
 # print("registering repo")
