@@ -28,14 +28,19 @@ awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, servi
 
 # Register repository
 headers = {"Content-Type": "application/json"}
+path = '_snapshot/'+repo
+url = host + path
 payload = {
   "type": "s3",
   "settings": {
     "bucket": s3bucket,
     "base_path": base_path,
+    "region": "us-east-1",
     "role_arn": rolearn
   }
 }
+
+#create repo if not present
 print(payload)
 r_get_repo = requests.get(oshost+'_snapshot/'+repo, auth=awsauth, json=payload, headers=headers)
 if(r_get_repo.status_code!=200):
@@ -44,9 +49,14 @@ if(r_get_repo.status_code!=200):
   print(r_create_repo.status_code)
   print(r_create_repo.text)
 
+#register repo
+r = requests.put(url, auth=awsauth, json=payload, headers=headers)
+print(r.status_code)
+print(r.text)
 
 
 
+#snapshot
 path = '_snapshot/'
 path = path + repo+'/' + snapshot+'/'
 print(path) 
