@@ -53,11 +53,11 @@ if(r_get_repo.status_code!=200):
 print(r_get_repo.status_code)
 print(r_get_repo.text)
 
-#register repo
-r = requests.put(oshost+'_snapshot/'+repo, auth=awsauth, json=payload, headers=headers)
-print("registering repo")
-print(r.status_code)
-print(r.text)
+# #register repo
+# r = requests.put(oshost+'_snapshot/'+repo, auth=awsauth, json=payload, headers=headers)
+# print("registering repo")
+# print(r.status_code)
+# print(r.text)
 
 
 
@@ -77,7 +77,7 @@ payload = {
 
 
 print("taking opensearch snapshot")
-r = requests.put(url, auth=awsauth)
+r = requests.put(url, auth=awsauth, json=payload, headers=headers)
 
 print(r.status_code)
 print(r.text)
