@@ -34,7 +34,6 @@ payload = {
   "type": "s3",
   "settings": {
     "bucket": s3bucket,
-    "base_path": base_path,
     "region": "us-east-1",
     "role_arn": rolearn
   }
