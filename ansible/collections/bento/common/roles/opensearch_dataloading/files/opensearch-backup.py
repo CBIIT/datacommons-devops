@@ -60,23 +60,23 @@ print(r_get_repo.text)
 
 
 
-# #snapshot
-# path = '_snapshot/ctdc/os_1_8_2024' # '_snapshot/' + repo+'/' + snapshot+'/'
-# print(path) 
-# url = host + path
-# payload = {
-#   "type": "s3",
-#   "settings": {
-#     "bucket": s3bucket,
-#     "base_path": base_path,
-#     "region": "us-east-1",
-#     "role_arn": rolearn
-#   }
-# }
+#snapshot
+path = '_snapshot/ctdc/test_snapshot' # '_snapshot/' + repo+'/' + snapshot+'/'
+print(path) 
+url = host + path
+payload = {
+  "type": "s3",
+  "settings": {
+    "bucket": s3bucket,
+    "base_path": base_path,
+    "region": "us-east-1",
+    "role_arn": rolearn
+  }
+}
 
 
-# print("taking opensearch snapshot")
-# r = requests.put(url, auth=awsauth, json=payload, headers=headers)
+print("taking opensearch snapshot")
+r = requests.put(url, auth=awsauth)
 
 # print(r.status_code)
 # print(r.text)
