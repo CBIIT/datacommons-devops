@@ -50,7 +50,8 @@ if(r_get_repo.status_code!=200):
   print(r_create_repo.text)
 
 #register repo
-r = requests.put(url, auth=awsauth, json=payload, headers=headers)
+r = requests.put(url, auth=awsauth)
+print("registering repo")
 print(r.status_code)
 print(r.text)
 
