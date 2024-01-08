@@ -42,6 +42,7 @@ payload = {
 
 #create repo if not present
 print(payload)
+print("check repo")
 r_get_repo = requests.get(oshost+'_snapshot/'+repo, auth=awsauth, json=payload, headers=headers)
 if(r_get_repo.status_code!=200):
   print("repo does not exist, creating it")
@@ -58,22 +59,21 @@ print(r.text)
 
 
 #snapshot
-path = '_snapshot/'
-path = path + repo+'/' + snapshot+'/'
+path = '_snapshot/ctdc/os_1_8_2024' # '_snapshot/' + repo+'/' + snapshot+'/'
 print(path) 
 url = host + path
-payload = {
-  "type": "s3",
-  "settings": {
-    "bucket": s3bucket,
-    "base_path": base_path,
-    "region": "us-east-1",
-    "role_arn": rolearn
-  }
-}
+# payload = {
+#   "type": "s3",
+#   "settings": {
+#     "bucket": s3bucket,
+#     "base_path": base_path,
+#     "region": "us-east-1",
+#     "role_arn": rolearn
+#   }
+# }
 
 
-
+print("taking opensearch snapshot")
 r = requests.put(url, auth=awsauth)
 
 print(r.status_code)
