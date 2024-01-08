@@ -34,6 +34,7 @@ payload = {
   "type": "s3",
   "settings": {
     "bucket": s3bucket,
+    "base_path": base_path,
     "region": "us-east-1",
     "role_arn": rolearn
   }
@@ -52,11 +53,11 @@ if(r_get_repo.status_code!=200):
 print(r_get_repo.status_code)
 print(r_get_repo.text)
 
-#register repo
-# r = requests.put(oshost+'_snapshot/'+repo, auth=awsauth, json=payload, headers=headers)
-# print("registering repo")
-# print(r.status_code)
-# print(r.text)
+register repo
+r = requests.put(oshost+'_snapshot/'+repo, auth=awsauth, json=payload, headers=headers)
+print("registering repo")
+print(r.status_code)
+print(r.text)
 
 
 
