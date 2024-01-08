@@ -78,7 +78,7 @@ payload = {
 print("taking opensearch snapshot")
 r = requests.put(url, auth=awsauth)
 
-# print(r.status_code)
-# print(r.text)
-# if r.status_code!=200:
-#   raise Exception("Sorry, pipeline does not run successfully")
+print(r.status_code)
+print(r.text)
+if r.status_code!=200:
+  raise Exception("Sorry, pipeline does not run successfully")
