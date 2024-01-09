@@ -62,7 +62,7 @@ print(r_get_repo.text)
 
 
 #snapshot
-path = '_snapshot/ctdc/test_snapshot' # '_snapshot/' + repo+'/' + snapshot+'/'
+path = '_snapshot/ctdc/test_snapshot/' # '_snapshot/' + repo+'/' + snapshot+'/'
 print(path) 
 url = host + path
 payload = {
