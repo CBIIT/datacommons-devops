@@ -17,7 +17,7 @@ repo = args.repo
 
 s3bucket= args.s3bucket
 snapshot= args.snapshot 
-base_path= args.basePath
+basepath= args.basePath
 rolearn= args.rolearn
 
 host = (oshost) 
@@ -34,7 +34,7 @@ payload = {
   "type": "s3",
   "settings": {
     "bucket": s3bucket,
-    "base_path": base_path,
+    "base_path": basepath,
     "region": "us-east-1",
     "role_arn": rolearn
   }
@@ -69,7 +69,7 @@ payload = {
   "type": "s3",
   "settings": {
     "bucket": s3bucket,
-    "base_path": base_path,
+    "base_path": basepath,
     "region": "us-east-1",
     "role_arn": rolearn
   }
