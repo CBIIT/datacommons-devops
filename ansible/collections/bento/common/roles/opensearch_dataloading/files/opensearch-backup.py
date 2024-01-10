@@ -43,15 +43,17 @@ payload = {
 #create repo if not present
 print(payload)
 print("check repo")
-r_get_repo = requests.get(url, auth=awsauth, json=payload, headers=headers)
-if(r_get_repo.status_code!=200):
-  print("repo does not exist, creating it")
-  r_create_repo= requests.put(url, auth=awsauth, json=payload, headers=headers)
-  print(r_create_repo.status_code)
-  print(r_create_repo.text)
+# r_get_repo = requests.get(url, auth=awsauth, json=payload, headers=headers)
+# if(r_get_repo.status_code!=200):
+#   print("repo does not exist, creating it")
+#   r_create_repo= requests.put(url, auth=awsauth, json=payload, headers=headers)
+#   print(r_create_repo.status_code)
+#   print(r_create_repo.text)
 
-print(r_get_repo.status_code)
-print(r_get_repo.text)
+# print(r_get_repo.status_code)
+# print(r_get_repo.text)
+
+r_create_repo= requests.put(url, auth=awsauth, json=payload, headers=headers)
 
 #snapshot
 snapshot_path = '_snapshot/' + repo+'/' + snapshot+'/' #'_snapshot/ctdc/test_snapshot/' # 
