@@ -34,7 +34,7 @@ payload = {
   "type": "s3",
   "settings": {
     "bucket": s3bucket,
-    "base_path": "os_1_8_2024",
+    "base_path": basepath,
     "region": "us-east-1",
     "role_arn": rolearn
   }
@@ -43,10 +43,10 @@ payload = {
 #create repo if not present
 print(payload)
 print("check repo")
-r_get_repo = requests.get(oshost+'_snapshot/'+repo, auth=awsauth, json=payload, headers=headers)
+r_get_repo = requests.get(url, auth=awsauth, json=payload, headers=headers)
 if(r_get_repo.status_code!=200):
   print("repo does not exist, creating it")
-  r_create_repo= requests.put(oshost+'_snapshot/'+repo, auth=awsauth, json=payload, headers=headers)
+  r_create_repo= requests.put(url, auth=awsauth, json=payload, headers=headers)
   print(r_create_repo.status_code)
   print(r_create_repo.text)
 
@@ -61,7 +61,7 @@ payload = {
   "type": "s3",
   "settings": {
     "bucket": s3bucket,
-    "base_path": "os_1_8_2024",
+    "base_path": basepath,
     "region": "us-east-1",
     "role_arn": rolearn
   }
