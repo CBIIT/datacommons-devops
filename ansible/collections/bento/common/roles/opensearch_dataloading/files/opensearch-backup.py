@@ -53,18 +53,10 @@ if(r_get_repo.status_code!=200):
 print(r_get_repo.status_code)
 print(r_get_repo.text)
 
-# #register repo
-# r = requests.put(oshost+'_snapshot/'+repo, auth=awsauth, json=payload, headers=headers)
-# print("registering repo")
-# print(r.status_code)
-# print(r.text)
-
-
-
 #snapshot
-path = '_snapshot/' + repo+'/' + snapshot+'/' #'_snapshot/ctdc/test_snapshot/' # 
-print(path) 
-url = host + path
+snapshot_path = '_snapshot/' + repo+'/' + snapshot+'/' #'_snapshot/ctdc/test_snapshot/' # 
+print(snapshot_path) 
+url_create_snapshot = host + snapshot_path
 payload = {
   "type": "s3",
   "settings": {
@@ -77,7 +69,7 @@ payload = {
 
 
 print("taking opensearch snapshot")
-r = requests.put(url, auth=awsauth, json=payload, headers=headers)
+r = requests.put(url_create_snapshot, auth=awsauth, json=payload, headers=headers)
 
 print(r.status_code)
 print(r.text)
