@@ -23,12 +23,12 @@
 
 - name: update settings
   template:
-    dest: "{{ workspace }}/config/config.yml"
-    src: "{{ workspace }}/config/config.yml.j2"
+    dest: "{{ workspace }}/dataloader/config/config_s3.yml"
+    src: "{{ workspace }}/dataloader/config/config.yml.j2"
 
 - name: pip install requirements
   pip:
-    requirements: "{{ workspace }}/requirements.txt"
+    requirements: "{{ workspace }}/dataloader/requirements.txt"
     executable: pip3
 
 
@@ -37,8 +37,8 @@
     cmd: >
       python3
       loader.py 
-      {{workspace}}/config/config.yml
-    chdir: "{{ workspace }}"
+      config/config_s3.yml
+    chdir: "{{ workspace }}/dataloader"
   register: data_loader
 
 - name: show dataloader output
