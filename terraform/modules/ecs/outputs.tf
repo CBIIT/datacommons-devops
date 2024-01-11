@@ -18,6 +18,10 @@ output "ecs_cluster_arn" {
   value = aws_ecs_cluster.ecs_cluster.arn
 }
 
+output "ecs_cluster_name" {
+  value = aws_ecs_cluster.ecs_cluster.name
+}
+
 # IAM Outputs: 
 output "ecs_task_execution_role_name" {
   value = aws_iam_role.ecs_task_execution_role.name
