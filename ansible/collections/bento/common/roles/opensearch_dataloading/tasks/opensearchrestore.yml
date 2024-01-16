@@ -1,12 +1,12 @@
 ---
 
-- name: listing the contents of the workspace after extracting
-  shell: pwd
-  register: shell_result
+# - name: listing the contents of the workspace after extracting
+#   shell: pwd
+#   register: shell_result
 
-- name: listing the contents of the workspace after extracting
-  shell: ls
-  register: shell_result
+# - name: listing the contents of the workspace after extracting
+#   shell: ls
+#   register: shell_result
 
 - name: copy opensearch restore script
   copy:
