@@ -1,13 +1,12 @@
-data "aws_region" "region" {}
+data "aws_caller_identity" "current" {}
 
-data "aws_caller_identity" "caller" {}
+data "aws_iam_policy_document" "logs" {
+  count = var.create_cloudwatch_log_policy ? 1 : 0
 
-data "aws_iam_policy_document" "os" {
   statement {
     effect = "Allow"
     actions = [
       "logs:PutLogEvents",
-      "logs:PutLogEventsBatch",
       "logs:CreateLogStream"
     ]
     principals {
@@ -15,8 +14,81 @@ data "aws_iam_policy_document" "os" {
       identifiers = ["es.amazonaws.com"]
     }
     resources = [
-      aws_cloudwatch_log_group.os.arn,
-      "${aws_cloudwatch_log_group.os.arn}:*"
+      "${aws_cloudwatch_log_group.this[0].arn}",
+      "${aws_cloudwatch_log_group.this[0].arn}:*"
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "access_policy" {
+  count = var.create_access_policies ? 1 : 0
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "es:ESHttpPut",
+      "es:ESHttpPost",
+      "es:ESHttpPatch",
+      "es:ESHttpHead",
+      "es:ESHttpGet",
+      "es:ESHttpDelete"
+    ]
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    resources = ["${aws_opensearch_domain.this.arn}/*"]
+  }
+}
+
+data "aws_iam_policy_document" "trust" {
+  count = var.create_snapshot_role ? 1 : 0
+
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["es.amazonaws.com"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "snapshot" {
+  count = var.create_snapshot_role ? 1 : 0
+
+  statement {
+    effect    = "Allow"
+    actions   = ["s3:ListBucket"]
+    resources = [var.s3_snapshot_bucket_arn]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject"
+    ]
+    resources = ["${var.s3_snapshot_bucket_arn}/*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "iam:PassRole",
+      "iam:GetRole"
+    ]
+    resources = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/power-user*"]
+  }
+
+  statement {
+    effect  = "Allow"
+    actions = ["es:ESHttpPut"]
+    resources = [
+      "${aws_opensearch_domain.this.arn}/*",
+      "${aws_opensearch_domain.this.arn}/*/*"
     ]
   }
 }

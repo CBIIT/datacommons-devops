@@ -1,76 +1,138 @@
-resource "aws_iam_service_linked_role" "os" {
-  count            = var.create_os_service_role ? 1 : 0
-  aws_service_name = "es.amazonaws.com"
-}
-
-resource "aws_opensearch_domain" "os" {
-  domain_name    = local.domain_name
-  engine_version = var.opensearch_version
+resource "aws_opensearch_domain" "this" {
+  domain_name     = var.domain_name
+  engine_version  = var.engine_version
+  access_policies = local.access_policies
+  tags            = var.tags
 
   cluster_config {
-    instance_type          = var.opensearch_instance_type
-    instance_count         = var.opensearch_instance_count
-    zone_awareness_enabled = var.multi_az_enabled
+    instance_type  = local.custom_instance_type
+    instance_count = var.zone_awareness_enabled ? local.custom_instance_count : (local.custom_instance_count * 2)
+
+    zone_awareness_enabled = var.zone_awareness_enabled
+
+    zone_awareness_config {
+      availability_zone_count = var.zone_awareness_enabled ? 2 : null
+    }
+
+    dedicated_master_enabled = var.dedicated_master_enabled
+    dedicated_master_count   = var.dedicated_master_enabled ? 3 : 0
+    dedicated_master_type    = var.dedicated_master_enabled ? local.custom_instance_type : null
+
+    warm_enabled = var.warm_enabled
+    warm_count   = var.warm_enabled ? 2 : 0
+    warm_type    = var.warm_enabled ? local.custom_instance_type : null
+
+    cold_storage_options {
+      enabled = var.cold_storage_enabled
+    }
+  }
+
+  auto_tune_options {
+    desired_state = var.auto_tune_enabled ? "ENABLED" : "DISABLED"
   }
 
   domain_endpoint_options {
-    enforce_https       = true
-    tls_security_policy = var.opensearch_tls_policy
+    enforce_https       = var.enforce_https
+    tls_security_policy = var.tls_security_policy
+  }
+
+  ebs_options {
+    ebs_enabled = true
+    volume_size = local.custom_volume_size
+    volume_type = var.volume_type
   }
 
   encrypt_at_rest {
-    enabled = true
+    enabled = var.encrypt_at_rest
+  }
+
+  dynamic "log_publishing_options" {
+    for_each = var.log_types
+
+    content {
+      enabled                  = true
+      cloudwatch_log_group_arn = aws_cloudwatch_log_group.this[0].arn
+      log_type                 = each.value
+    }
   }
 
   node_to_node_encryption {
     enabled = true
   }
 
-  vpc_options {
-    subnet_ids         = local.subnets
-    security_group_ids = [aws_security_group.os.id]
-  }
-
-  ebs_options {
-    ebs_enabled = true
-    volume_size = var.opensearch_ebs_volume_size
-  }
-
-  dynamic "log_publishing_options" {
-    for_each = var.opensearch_log_types
-    iterator = i
-
-    content {
-      enabled                  = true
-      cloudwatch_log_group_arn = aws_cloudwatch_log_group.os.arn
-      log_type                 = i.value
-    }
-  }
-
   snapshot_options {
     automated_snapshot_start_hour = var.automated_snapshot_start_hour
   }
 
-  tags = var.tags
+  software_update_options {
+    auto_software_update_enabled = var.auto_software_update_enabled
+  }
 
+  vpc_options {
+    subnet_ids         = var.subnet_ids
+    security_group_ids = local.security_group_ids
+  }
 }
 
-resource "aws_cloudwatch_log_group" "os" {
-  name              = "${local.domain_name}-logs"
-  retention_in_days = local.log_retention
+resource "aws_security_group" "this" {
+  count = var.create_security_group ? 1 : 0
+
+  name        = "${var.domain_name}-security-group"
+  description = "The security group for the ${var.domain_name} OpenSearch domain"
+  vpc_id      = var.vpc_id
+
+  tags = {
+    Name = "${var.domain_name}-security-group"
+  }
+}
+
+resource "aws_security_group_rule" "this" {
+  count = var.create_security_group ? 1 : 0
+
+  security_group_id = aws_security_group.this[0].id
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_cloudwatch_log_group" "this" {
+  count = length(var.log_types) > 0 ? 1 : 0
+
+  name              = "/aws/opensearch-service/${var.domain_name}"
+  retention_in_days = var.log_retention_in_days
   tags              = var.tags
 }
 
-resource "aws_cloudwatch_log_resource_policy" "os" {
-  count = var.create_cloudwatch_log_policy ? 1: 0
-  policy_name     = "${local.domain_name}-log-policy"
-  policy_document = data.aws_iam_policy_document.os.json
+resource "aws_cloudwatch_log_resource_policy" "this" {
+  count = var.create_cloudwatch_log_policy ? 1 : 0
+
+  policy_name     = "${var.domain_name}-log-policy"
+  policy_document = data.aws_iam_policy_document.logs.json
 }
 
-resource "aws_security_group" "os" {
-  name                   = "${local.domain_name}-securitygroup"
-  description            = local.sg_description
-  revoke_rules_on_delete = true
-  vpc_id                 = var.vpc_id
-  tags                   = var.tags
+resource "aws_iam_role" "snapshot" {
+  count = var.create_snapshot_role ? 1 : 0
+
+  name                 = "${var.iam_prefix}-${var.domain_name}-snapshot-role"
+  description          = "The snapshot role for the ${var.domain_name} OpenSearch domain"
+  assume_role_policy   = data.aws_iam_policy_document.trust[0].json
+  permissions_boundary = local.permissions_boundary
+  tags                 = var.tags
+}
+
+resource "aws_iam_policy" "snapshot" {
+  count = var.create_snapshot_role ? 1 : 0
+
+  name        = "${var.iam_prefix}-${var.domain_name}-snapshot-policy"
+  description = "The snapshot policy for the ${var.domain_name} OpenSearch domain"
+  policy      = data.aws_iam_policy_document.snapshot[0].json
+}
+
+resource "aws_iam_role_policy_attachment" "snapshot" {
+  count = var.create_snapshot_role ? 1 : 0
+
+  role       = aws_iam_role.snapshot[0].name
+  policy_arn = aws_iam_policy.snapshot[0].arn
 }

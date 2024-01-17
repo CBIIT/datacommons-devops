@@ -1,3 +1,6 @@
+# Amazon OpenSearch Implementation Guide: 
+
+
 ## Notes on module configuration:
 
 - Project decides if a service-linked role is created by the module. 
@@ -9,7 +12,7 @@
 - Auto-tune is enabled by default, but can be disabled at by passing in "DISABLED" from the project for the opensearch_autotune_desired_state argument. Autotune set to occur daily at 11:59 PM EST. 
 - Logs are sent to cloudwatch, and cloudwatch group created in module. Need to decide as team as to which logs to send from OpenSearch.
 
-
+# Terraform Documentation
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -72,3 +75,58 @@ No modules.
 | <a name="output_opensearch_security_group_arn"></a> [opensearch\_security\_group\_arn](#output\_opensearch\_security\_group\_arn) | the arn of the security group associated with the OpenSearch cluster |
 | <a name="output_opensearch_security_group_id"></a> [opensearch\_security\_group\_id](#output\_opensearch\_security\_group\_id) | the id of the security group associated with the OpenSearch cluster |
 <!-- END_TF_DOCS -->
+
+# Implementation Guide
+The following guide provides a reference for OpenSearch service implementations aligned with NCI, NIST, and CTOS standards. 
+
+## Service-Linked Role 
+The OpenSearch service requires a service-linked role to be created in order to manage the OpenSearch cluster. The service-linked role is not created by the module, and therefore Terraform will return an error on the first apply. Simply execute the Terraform Apply workflow again to resolve the issue. Upon the failure on the initial apply, the service-linked role will be created and the apply will succeed on the second attempt.
+
+## OpenSearch Manual Snapshots
+By default, this module creates the IAM resources required to perform OpenSearch manual snapshot operations. Creation of the IAM resources can be disabled by setting the variable named `create_snapshot_role` to `false`. Please note that the module does not create an S3 bucket to store the snapshots, but provides the variable named `s3_snapshot_bucket_arn`. The project must create the S3 bucket and pass the ARN to the module.
+
+## Security Group
+By default, this module creates a security group for the OpenSearch cluster which can be disabled by setting the variable named `create_security_group` to `false` and providing one or more security group identifiers for the variable named `security_group_ids`. The security group is created with no ingress rules attached, but does create an egress rule allowing all outbound traffic. The project must attach the ingress rules to the security group by referencing the `security_group_id` output. 
+
+## Standard Cluster Sizing Configurations
+The CTOS program establishes pre-determined cluster sizing configurations for OpenSearch to simplify implementation and achieve cross-program standardization. T-Shirt sizes influence the instance type and EBS storage volume sizes. Please note: the storage sizes are per node, and the default node count is 1 data node.
+
+| Size  | vCPU  | Memory  | Storage |
+| :---: | :---: |  :---:  |  :---:  |
+| `xs`  | 2     | 2 GB    | 10 GB   |
+| `sm`  | 2     | 4 GB    | 20 GB   |
+| `md`  | 2     | 8 GB    | 40 GB   |
+| `lg`  | 4     | 16 GB   | 80 GB   |
+| `xl`  | 8     | 32 GB   | 160 GB  |
+
+If you select a T-Shirt size for the variable named `cluster_tshirt_size`, then you do not have to specify the `volume_size` or `instance_type` variables. The module will automatically select the appropriate instance type and storage volume size based on the T-Shirt size selected. Providing a value for the `volume_size` or `instance_type` variables will override the T-Shirt size selection. You can also specify `instance_count` to increase the number of data nodes in the cluster.
+
+## Choosing a Cluster T-Shirt Size
+Consider the following factors when choosing a cluster T-Shirt size:
+1. The target storage utilization should be no more than 70% of the total storage capacity.
+2. The estimated size of any index should not be larger than 50% of a single node's storage capacity.
+
+### Example Scenario 1:
+A project anticipates `5` indexes that will be stored in OpenSearch. Each of the five indexes are anticipated to be 1 GB in size. 
+- Total Storage Required: `5 GB`
+- Largest Index Size: `1 GB`
+- T-Shirt Size Recommendation: `xs`
+
+### Example Scenario 2:
+A project anticipates 2 indexes that will be stored in OpenSearch. One index is anticipated to be 6 GB in size. The other index is anticipated to be 0.5 GB in size.
+- Total Storage Required: `6.5 GB`
+- Largest Index Size: `6 GB`
+- T-Shirt Size Recommendation: `sm`
+
+
+## Multi-AZ Deployments
+By default, this module creates a single data node in a Single AWS Availability Zone (AZ). To configure the cluster for a Multi-AZ deployment, set the variable named `zone_awareness_enabled` to `true`. Be aware that Multi-AZ deployments will double the number of Data Nodes in the cluster. 
+
+## Domain Access Policies
+By default, this module creates and attaches an OpenSearch Domain Access Policy that allows HTTPS-based actions to be performed by any AWS principal. The policy can be disabled by setting the variable named `create_access_policies` to `false`. If you disable the access policy, you must provide your own access policy for the variable named `access_policies`. The value of the `access_policies` variable must be a valid JSON string, which can be produced from using a `data.iam_policy_document.{name}.json` data source reference.
+
+## Cluster Log Monitoring
+By default, the cluster has logging configured, and all types of logs generated by the cluster are forwarded to a CloudWatch Log Group created by the module. The logs that are generated are described below.
+- Index Slow Logs: Logs that are generated when indexing operations take longer than the index.indexing\_slowlog.threshold.index.warn value.
+- Search Slow Logs: Logs that are generated when search operations take longer than the index.search\_slowlog.threshold.query.warn value.
+- Application Logs: Error logs that are generated by the OpenSearch cluster.
