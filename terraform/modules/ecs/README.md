@@ -73,9 +73,10 @@ No modules.
 | <a name="input_alb_target_type"></a> [alb\_target\_type](#input\_alb\_target\_type) | type of alb target - ip , instance, lambda | `string` | `"ip"` | no |
 | <a name="input_allow_cloudwatch_stream"></a> [allow\_cloudwatch\_stream](#input\_allow\_cloudwatch\_stream) | allow cloudwatch stream for the containers | `bool` | `false` | no |
 | <a name="input_application_url"></a> [application\_url](#input\_application\_url) | url of the application | `string` | n/a | yes |
-| <a name="input_central_ecr_account_id"></a> [central\_ecr\_account\_id](#input\_central\_ecr\_account\_id) | central ecr account number | `string` | n/a | yes |
+| <a name="input_central_ecr_account_id"></a> [central\_ecr\_account\_id](#input\_central\_ecr\_account\_id) | central ecr account number | `string` | `null` | no |
 | <a name="input_container_insights_setting"></a> [container\_insights\_setting](#input\_container\_insights\_setting) | Whether or not the ECS cluster enables CloudWatch Container Insights | `string` | `"disabled"` | no |
 | <a name="input_create_neo4j_db"></a> [create\_neo4j\_db](#input\_create\_neo4j\_db) | choose to add neo4j container or not | `bool` | `false` | no |
+| <a name="input_custom_trust_policy"></a> [custom\_trust\_policy](#input\_custom\_trust\_policy) | custom role trust policy | `string` | `null` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | domain name of this app | `string` | `"bento-tools.org"` | no |
 | <a name="input_ecs_execute_command_logging"></a> [ecs\_execute\_command\_logging](#input\_ecs\_execute\_command\_logging) | The log setting to use for redirecting logs for ecs execute command results. Valid values are NONE, DEFAULT, and OVERRIDE. | `string` | `"OVERRIDE"` | no |
 | <a name="input_ecs_launch_type"></a> [ecs\_launch\_type](#input\_ecs\_launch\_type) | ecs launch type - FARGATE or EC2 | `string` | `"FARGATE"` | no |
@@ -88,7 +89,8 @@ No modules.
 | <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | the prefix to add when creating resources | `string` | n/a | yes |
 | <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | tags to associate with this instance | `map(string)` | n/a | yes |
-| <a name="input_target_account_cloudone"></a> [target\_account\_cloudone](#input\_target\_account\_cloudone) | to add check conditions on whether the resources are brought up in cloudone or not | `bool` | n/a | yes |
+| <a name="input_target_account_cloudone"></a> [target\_account\_cloudone](#input\_target\_account\_cloudone) | to add check conditions on whether the resources are brought up in cloudone or not | `bool` | `true` | no |
+| <a name="input_use_custom_trust_policy"></a> [use\_custom\_trust\_policy](#input\_use\_custom\_trust\_policy) | use custom role trust policy | `bool` | `false` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC Id to to launch the ALB | `string` | n/a | yes |
 
 ## Outputs
@@ -99,6 +101,7 @@ No modules.
 | <a name="output_app_security_group_id"></a> [app\_security\_group\_id](#output\_app\_security\_group\_id) | n/a |
 | <a name="output_appautoscaling_policy_arn"></a> [appautoscaling\_policy\_arn](#output\_appautoscaling\_policy\_arn) | n/a |
 | <a name="output_ecs_cluster_arn"></a> [ecs\_cluster\_arn](#output\_ecs\_cluster\_arn) | n/a |
+| <a name="output_ecs_cluster_name"></a> [ecs\_cluster\_name](#output\_ecs\_cluster\_name) | n/a |
 | <a name="output_ecs_security_group_arn"></a> [ecs\_security\_group\_arn](#output\_ecs\_security\_group\_arn) | n/a |
 | <a name="output_ecs_security_group_id"></a> [ecs\_security\_group\_id](#output\_ecs\_security\_group\_id) | n/a |
 | <a name="output_ecs_task_definition_arn"></a> [ecs\_task\_definition\_arn](#output\_ecs\_task\_definition\_arn) | ECS Outputs: |
