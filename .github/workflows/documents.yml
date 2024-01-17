@@ -17,6 +17,5 @@ jobs:
         working-dir: ./terraform
         output-file: README.md
         output-method: inject 
-        indentation: 2
         recursive: true
         git-push: true
