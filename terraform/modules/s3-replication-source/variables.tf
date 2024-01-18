@@ -41,3 +41,7 @@ variable "replication_destination_account_id" {
   description = "replication account id"
   default = ""
 }
+variable "resource_prefix" {
+  type = string
+  description = "value for resource prefix"
+}
