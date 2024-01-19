@@ -19,6 +19,14 @@ resource "aws_s3_bucket" "access_logs" {
   tags = var.tags
 }
 
+resource "aws_s3_bucket_ownership_controls" "example" {
+  bucket = aws_s3_bucket.access_logs.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
 #create s3 bucket policy
 resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = local.files_bucket_name
