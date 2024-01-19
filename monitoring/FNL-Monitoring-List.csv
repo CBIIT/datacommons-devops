@@ -335,11 +335,203 @@ CCDI Hub,ccdi-hub,CCDI,Dev,Portal,https://ccdi-dev.cancer.gov/,,TRUE,C061YHQ6MED
 CCDI Hub,ccdi-hub,CCDI,QA,Portal,https://ccdi-qa.cancer.gov/,,TRUE,C061YHQ6MED,,
 CCDI Hub,ccdi-hub,CCDI,Stage,Portal,https://ccdi-stage.cancer.gov/,,TRUE,C061YHQ6MED,,
 CCDI Hub,ccdi-hub,CCDI,Prod,Portal,https://ccdi.cancer.gov/,,FALSE,C061YHQ6MED,,
-Bento,bento,FNL,Dev,Portal,https://bento-dev.bento-tools.org/,,FALSE,C065PL460CW,,
-Bento,bento,FNL,QA,Portal,https://bento-qa.bento-tools.org/,,FALSE,C065PL460CW,,
-Bento,bento,FNL,Perf,Portal,https://bento-perf.bento-tools.org/,,FALSE,C065PL460CW,,
-Bento,bento,FNL,Prod,Portal,https://bento-tools.org/,,FALSE,C06AYDW6S2Z,,
 CCDI C3DC,c3dc,CCDI,Dev,Portal,https://clinicalcommons-dev.ccdi.cancer.gov,,TRUE,C065RHDELPQ,,
 CCDI C3DC,c3dc,CCDI,QA,Portal,https://clinicalcommons-qa.ccdi.cancer.gov,,TRUE,C065RHDELPQ,,
 CCDI C3DC,c3dc,CCDI,Stage,Portal,https://clinicalcommons-stage.ccdi.cancer.gov,,TRUE,C065HLMAM47,,
 CCDI C3DC,c3dc,CCDI,Prod,Portal,https://clinicalcommons.ccdi.cancer.gov,,FALSE,C065HLMAM47,,
+Bento,bento,FNL,Dev,Portal,https://bento-dev.bento-tools.org/,,FALSE,C065PL460CW,,
+Bento,bento,FNL,Dev,API,https://bento-dev.bento-tools.org//v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://bento-dev.bento-tools.org/v1/public-graphql/',
+  {
+    json: {
+    query: '{publicGlobalSearch(input: ""nct""){program_count}}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('program_count' in body.data.publicGlobalSearch);
+
+  }
+);",FALSE,C065PL460CW,,
+Bento,bento,FNL,Dev,API-OS,https://bento-dev.bento-tools.org//v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://bento-dev.bento-tools.org/v1/public-graphql/',
+  {
+    json: {
+    query: '{numberOfPrograms}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfPrograms' in body.data);
+
+  }
+);",FALSE,C065PL460CW,,
+Bento,bento,FNL,QA,Portal,https://bento-qa.bento-tools.org/,,FALSE,C06AYDW6S2Z,,
+Bento,bento,FNL,QA,API,https://bento-qa.bento-tools.org//v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://bento-qa.bento-tools.org/v1/public-graphql/',
+  {
+    json: {
+    query: '{publicGlobalSearch(input: ""nct""){program_count}}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('program_count' in body.data.publicGlobalSearch);
+
+  }
+);",FALSE,C065PL460CW,,
+Bento,bento,FNL,QA,API-OS,https://bento-qa.bento-tools.org//v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://bento-qa.bento-tools.org/v1/public-graphql/',
+  {
+    json: {
+    query: '{numberOfPrograms}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfPrograms' in body.data);
+
+  }
+);",FALSE,C065PL460CW,,
+Bento,bento,FNL,Perf,Portal,https://bento-perf.bento-tools.org/,,FALSE,C065PL460CW,,
+Bento,bento,FNL,Perf,API,https://bento-perf.bento-tools.org//v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://bento-perf.bento-tools.org/v1/public-graphql/',
+  {
+    json: {
+    query: '{publicGlobalSearch(input: ""nct""){program_count}}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('program_count' in body.data.publicGlobalSearch);
+
+  }
+);",FALSE,C065PL460CW,,
+Bento,bento,FNL,Perf,API-OS,https://bento-perf.bento-tools.org//v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://bento-perf.bento-tools.org/v1/public-graphql/',
+  {
+    json: {
+    query: '{numberOfPrograms}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfPrograms' in body.data);
+
+  }
+);",FALSE,C065PL460CW,,
+Bento,bento,FNL,Prod,Portal,https://bento-tools.org/,,FALSE,C06AYDW6S2Z,,
+Bento,bento,FNL,Prod,API,https://bento-tools.org//v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://bento-tools.org/v1/public-graphql/',
+  {
+    json: {
+    query: '{publicGlobalSearch(input: ""nct""){program_count}}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('program_count' in body.data.publicGlobalSearch);
+
+  }
+);",FALSE,C06AYDW6S2Z,,
+Bento,bento,FNL,Prod,API-OS,https://bento-tools.org//v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://bento-tools.org/v1/public-graphql/',
+  {
+    json: {
+    query: '{numberOfPrograms}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfPrograms' in body.data);
+
+  }
+);",FALSE,C06AYDW6S2Z,,
