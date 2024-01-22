@@ -41,7 +41,7 @@ resource "aws_s3_bucket_replication_configuration" "replication" {
   rule {
     id = "data-loader"
     filter {
-      prefix = "prod"
+      prefix = var.replication_filter_prefix
     }
     delete_marker_replication {
       status = "Enabled"

@@ -31,6 +31,12 @@ variable "destination_bucket_name" {
   type = string
   default = ""
 }
+
+variable "replication_filter_prefix" {
+  description = "prefix for objects to replicate"
+  type = string
+  default = "transformed"
+}
 variable "create_source_bucket" {
   type = bool
   default = false
