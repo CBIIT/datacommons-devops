@@ -34,7 +34,7 @@ resource "aws_neptune_cluster" "this" {
 }
 
 module "cluster_parameters" {
-  count = var.enable_serverless ? 0 : 1
+  count  = var.enable_serverless ? 0 : 1
   source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-cluster-parameter-group?ref=Neptune"
 
   resource_prefix  = var.resource_prefix
@@ -42,11 +42,12 @@ module "cluster_parameters" {
 }
 
 module "instance_parameters" {
+  count  = var.enable_serverless ? 0 : 1
   source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-instance-parameter-group?ref=Neptune"
 
   resource_prefix = var.resource_prefix
-  enable_caching = var.enable_serverless ? false : var.enable_caching
-  query_timeout  = var.query_timeout
+  enable_caching  = var.enable_serverless ? false : var.enable_caching
+  query_timeout   = var.query_timeout
 }
 
 module "neptune_instance" {
@@ -57,7 +58,7 @@ module "neptune_instance" {
   engine_version               = var.engine_version
   instance_class               = var.enable_serverless ? "db.serverless" : var.instance_class
   neptune_subnet_group_name    = aws_neptune_subnet_group.this.name
-  neptune_parameter_group_name = var.enable_serverless ? "default.neptune1.2" : module.instance_parameters.name
+  neptune_parameter_group_name = var.enable_serverless ? "default.neptune1.2" : module.instance_parameters[0].name
   port                         = var.port
 }
 
