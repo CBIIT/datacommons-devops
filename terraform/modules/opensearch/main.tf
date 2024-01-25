@@ -77,12 +77,12 @@ resource "aws_opensearch_domain" "this" {
 resource "aws_security_group" "this" {
   count = var.create_security_group ? 1 : 0
 
-  name        = "${var.domain_name}-security-group"
-  description = "The security group for the ${var.domain_name} OpenSearch domain"
+  name        = "${var.resource_prefix}-opensearch-security-group"
+  description = "The security group for the ${var.resource_prefix}-opensearch OpenSearch domain"
   vpc_id      = var.vpc_id
 
   tags = {
-    Name = "${var.domain_name}-security-group"
+    Name = "${var.resource_prefix}-opensearch-security-group"
   }
 }
 
@@ -100,7 +100,7 @@ resource "aws_security_group_rule" "this" {
 resource "aws_cloudwatch_log_group" "this" {
   count = length(var.log_types) > 0 ? 1 : 0
 
-  name              = "/aws/opensearch-service/${var.domain_name}"
+  name              = "/aws/opensearch-service/${var.resource_prefix}"
   retention_in_days = var.log_retention_in_days
   tags              = var.tags
 }
@@ -108,15 +108,15 @@ resource "aws_cloudwatch_log_group" "this" {
 resource "aws_cloudwatch_log_resource_policy" "this" {
   count = var.create_cloudwatch_log_policy ? 1 : 0
 
-  policy_name     = "${var.domain_name}-log-policy"
+  policy_name     = "${var.resource_prefix}-opensearch-log-policy"
   policy_document = data.aws_iam_policy_document.logs.json
 }
 
 resource "aws_iam_role" "snapshot" {
   count = var.create_snapshot_role ? 1 : 0
 
-  name                 = "${var.iam_prefix}-${var.domain_name}-snapshot-role"
-  description          = "The snapshot role for the ${var.domain_name} OpenSearch domain"
+  name                 = "${var.iam_prefix}-${var.resource_prefix}-opensearch-snapshot-role"
+  description          = "The snapshot role for the ${var.resource_prefix}-opensearch domain"
   assume_role_policy   = data.aws_iam_policy_document.trust[0].json
   permissions_boundary = local.permissions_boundary
   tags                 = var.tags
@@ -125,8 +125,8 @@ resource "aws_iam_role" "snapshot" {
 resource "aws_iam_policy" "snapshot" {
   count = var.create_snapshot_role ? 1 : 0
 
-  name        = "${var.iam_prefix}-${var.domain_name}-snapshot-policy"
-  description = "The snapshot policy for the ${var.domain_name} OpenSearch domain"
+  name        = "${var.iam_prefix}-${var.resource_prefix}-opensearch-snapshot-policy"
+  description = "The snapshot policy for the ${var.resource_prefix}-opensearch domain"
   policy      = data.aws_iam_policy_document.snapshot[0].json
 }
 

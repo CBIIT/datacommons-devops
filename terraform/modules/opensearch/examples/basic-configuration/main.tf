@@ -1,7 +1,6 @@
 module "opensearch" {
   source = "../.."
 
-
   attach_permissions_boundary = true
   cluster_tshirt_size         = "md"
   engine_version              = "OpenSearch_2.11"

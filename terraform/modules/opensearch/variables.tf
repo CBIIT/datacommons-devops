@@ -100,12 +100,6 @@ variable "dedicated_master_type" {
   sensitive   = false
 }
 
-variable "domain_name" {
-  type        = string
-  description = "The name of the OpenSearch domain"
-  sensitive   = false
-}
-
 variable "encrypt_at_rest" {
   type        = bool
   description = "Whether to enable encryption at rest for the domain"
