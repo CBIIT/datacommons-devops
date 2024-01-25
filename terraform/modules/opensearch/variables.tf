@@ -161,6 +161,12 @@ variable "log_types" {
   sensitive   = false
 }
 
+variable "resource_prefix" {
+  type        = string
+  description = "Prefix for resource names, advised to use the program-tier-app convention"
+  sensitive   = false
+}
+
 variable "s3_snapshot_bucket_arn" {
   type        = string
   description = "The ARN of the S3 bucket to store OpenSearch snapshots"

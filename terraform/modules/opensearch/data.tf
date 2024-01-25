@@ -80,7 +80,7 @@ data "aws_iam_policy_document" "snapshot" {
       "iam:PassRole",
       "iam:GetRole"
     ]
-    resources = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/power-user*"]
+    resources = [aws_iam_role.snapshot[0].arn]
   }
 
   statement {

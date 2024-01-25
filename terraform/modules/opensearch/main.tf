@@ -1,5 +1,5 @@
 resource "aws_opensearch_domain" "this" {
-  domain_name     = var.domain_name
+  domain_name     = "${var.resource_prefix}-opensearch"
   engine_version  = var.engine_version
   access_policies = local.access_policies
   tags            = var.tags
