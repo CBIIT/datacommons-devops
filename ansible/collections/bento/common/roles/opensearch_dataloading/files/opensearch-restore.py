@@ -37,8 +37,7 @@ payload = {
     "bucket": s3bucket,
     "base_path": basepath,
     "region": "us-east-1",
-    "role_arn": rolearn,
-    "server_side_encryption": "true"
+    "role_arn": rolearn
   }
 }
 
