@@ -36,8 +36,7 @@ payload = {
     "bucket": s3bucket,
     "base_path": basepath,
     "region": "us-east-1",
-    "role_arn": rolearn,
-    "canned_acl": "bucket-owner-full-control"
+    "role_arn": rolearn
   }
 }
 
@@ -66,8 +65,7 @@ payload = {
     "bucket": s3bucket,
     "base_path": basepath,
     "region": "us-east-1",
-    "role_arn": rolearn,
-    "canned_acl": "bucket-owner-full-control"
+    "role_arn": rolearn
   }
 }
 
