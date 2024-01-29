@@ -36,7 +36,8 @@ payload = {
     "bucket": s3bucket,
     "base_path": basepath,
     "region": "us-east-1",
-    "role_arn": rolearn
+    "role_arn": rolearn,
+    "canned_acl": "bucket-owner-full-control"
   }
 }
 
@@ -56,7 +57,7 @@ print("check repo")
 r_create_repo= requests.put(url, auth=awsauth, json=payload, headers=headers)
 
 #snapshot
-snapshot_path = '_snapshot/' + repo+'/' + snapshot+'/' #'_snapshot/ctdc/test_snapshot/' # 
+snapshot_path = '_snapshot/' + repo+'/' + snapshot+'/'
 print(snapshot_path) 
 url_create_snapshot = host + snapshot_path
 payload = {
@@ -65,7 +66,8 @@ payload = {
     "bucket": s3bucket,
     "base_path": basepath,
     "region": "us-east-1",
-    "role_arn": rolearn
+    "role_arn": rolearn,
+    "canned_acl": "bucket-owner-full-control"
   }
 }
 
