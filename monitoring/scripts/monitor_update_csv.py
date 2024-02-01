@@ -125,6 +125,7 @@ def setSynthetics(input_url, policyList):
        api = json.loads(json.dumps(api_data))
        api.update({"location": row["Private_Location"]})
        api.update({"query": row["Endpoint_Query"]})
+       api.update({"text": row["Validation_Text"]})
 
        if api['query']:
          set_synthetics_monitor_scripted_api.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
