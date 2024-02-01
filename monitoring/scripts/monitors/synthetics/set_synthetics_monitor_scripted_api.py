@@ -16,7 +16,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
    else:
      freq = 'EVERY_30_MINUTES'
 
-   if api['location'] and tier.lower() != 'prod':
+   if api['location'].lower() in ['true'] and tier.lower() != 'prod':
      location = '''private: {{
        guid: "{guid}",
        vsePassword: "{password}"
@@ -83,7 +83,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
                "runtimeTypeVersion: \"16.10\","
                "scriptLanguage: \"JAVASCRIPT\""
              "}"
-             "script: " + repr(api['query']) + ","
+             "script: " + json.dumps(api['query']) + ","
              "status: ENABLED,"
              "tags: ["
                "{"
@@ -124,7 +124,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
                "runtimeTypeVersion: \"16.10\","
                "scriptLanguage: \"JAVASCRIPT\""
            "}"
-           "script: " + repr(api['query']) + ","
+           "script: " + json.dumps(api['query']) + ","
            "status: ENABLED,"
            "tags: ["
              "{"
