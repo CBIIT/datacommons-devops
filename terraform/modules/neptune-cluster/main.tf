@@ -22,6 +22,7 @@ resource "aws_neptune_cluster" "this" {
   snapshot_identifier                  = var.snapshot_identifier
   storage_encrypted                    = true
   vpc_security_group_ids               = var.vpc_security_group_ids
+  global_cluster_identifier            = "${var.resource_prefix}-neptune-cluster"
 
   dynamic "serverless_v2_scaling_configuration" {
     for_each = var.enable_serverless ? [1] : []
