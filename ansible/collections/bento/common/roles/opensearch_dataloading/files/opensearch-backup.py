@@ -9,6 +9,7 @@ parser.add_argument("--repo", type=str, help="opensearch snapshot repository")
 parser.add_argument("--s3bucket", type=str, help="s3 bucket")
 parser.add_argument("--basePath", type=str, help="s3 bucket base path")
 parser.add_argument("--snapshot", type=str, help="opensearch snapshot value")
+parser.add_argument("--region", type=str, help="region")
 parser.add_argument("--rolearn", type=str, help="role arn - typically power user role")
 args = parser.parse_args()
 print(args)
@@ -21,7 +22,7 @@ basepath= args.basePath
 rolearn= args.rolearn
 
 host = (oshost) 
-region = 'us-east-1' 
+region = args.region
 service = 'es'
 credentials = boto3.Session().get_credentials()
 awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, service, session_token=credentials.token)
@@ -35,7 +36,7 @@ payload = {
   "settings": {
     "bucket": s3bucket,
     "base_path": basepath,
-    "region": "us-east-1",
+    "region": region,
     "role_arn": rolearn,
     "canned_acl": "bucket-owner-full-control"
   }
@@ -65,7 +66,7 @@ payload = {
   "settings": {
     "bucket": s3bucket,
     "base_path": basepath,
-    "region": "us-east-1",
+    "region": region,
     "role_arn": rolearn,
     "canned_acl": "bucket-owner-full-control"
   }
