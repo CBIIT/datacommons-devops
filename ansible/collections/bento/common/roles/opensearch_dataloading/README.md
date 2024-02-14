@@ -27,7 +27,7 @@ snapshot_value
 base_path
 role_arn
 
-For Opensearch Restore: 
+For Opensearch Restore:
 ansible_python_interpreter
 project_name
 tier
