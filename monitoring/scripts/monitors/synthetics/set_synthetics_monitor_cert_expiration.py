@@ -9,20 +9,12 @@ from monitors.alerts.conditions.synthetics import set_synthetics_condition
 def setsyntheticsmonitor(project, tier, key, api, policy_id):
    API_ENDPOINT = 'https://api.newrelic.com/graphql'
    NR_ACCT_ID = os.getenv('NR_ACCT_ID')
-   monitor_name = '{} {} {} Monitor'.format(project, tier, api['name'])
-
-   if tier.lower() == 'prod':
-     freq = 'EVERY_10_MINUTES'
-   else:
-     freq = 'EVERY_30_MINUTES'
-
-   if api['location'].lower() in ['true'] and tier.lower() != 'prod':
-     location = '''private: {{
-       guid: "{guid}",
-       vsePassword: "{password}"
-       }}'''.format(guid=os.getenv('LOCATION'), password=os.getenv('LOCATION_KEY'))
-   else:
-     location = "public: [\"AWS_US_EAST_1\"]"
+   monitor_name = '{} {} Certificate Monitor'.format(project, tier)
+   location = "public: [\"AWS_US_EAST_1\"]"
+   domain = api['url'].replace("https://","")
+   domain = domain.replace("/","")
+   period = "EVERY_DAY"
+   daysToFail = "30"
 
    monitor_found = False
    headers = {
@@ -70,20 +62,15 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
        print('{} already exists, updating with the latest configuration.'.format(monitor_name))
 
        data = {"query":"mutation {"
-         "syntheticsUpdateScriptApiMonitor ("
+         "syntheticsUpdateCertCheckMonitor ("
            "guid: \"" + monitor_guid + "\","
            "monitor: {"
              "locations: {"
                "" + location + ""
              "},"
-             "name: \"" + monitor_name + "\","
-             "period: " + freq + ","
-             "runtime: {"
-               "runtimeType: \"NODE_API\","
-               "runtimeTypeVersion: \"16.10\","
-               "scriptLanguage: \"JAVASCRIPT\""
-             "}"
-             "script: " + json.dumps(api['query']) + ","
+             "period: " + period + ","
+             "domain: \"" + domain + "\","
+             "numberDaysToFailBeforeCertExpires: " + daysToFail + ","
              "status: ENABLED,"
              "tags: ["
                "{"
@@ -111,20 +98,16 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
 
    if not monitor_found:
      data = {"query":"mutation {"
-       "syntheticsCreateScriptApiMonitor ("
+       "syntheticsCreateCertCheckMonitor("
          "accountId: " + NR_ACCT_ID + ","
          "monitor: {"
            "locations: {"
              "" + location + ""
            "},"
            "name: \"" + monitor_name + "\","
-           "period: " + freq + ","
-           "runtime: {"
-             "runtimeType: \"NODE_API\","
-               "runtimeTypeVersion: \"16.10\","
-               "scriptLanguage: \"JAVASCRIPT\""
-           "}"
-           "script: " + json.dumps(api['query']) + ","
+           "period: " + period + ","
+           "domain: \"" + domain + "\","
+           "numberDaysToFailBeforeCertExpires: " + daysToFail + ","
            "status: ENABLED,"
            "tags: ["
              "{"
@@ -146,7 +129,6 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
 
      try:
        response = requests.post('{}'.format(API_ENDPOINT), headers=headers, data=json.dumps(data), allow_redirects=False)
-       print(response.json())
        if 'errors' in response.json(): raise ValueError('{} Script Error:   {}'.format(monitor_name, response.json()['errors']))
      except (requests.exceptions.RequestException, ValueError) as e:
        raise SystemExit(e)
@@ -169,4 +151,4 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
          monitor_id = x.get('monitorID')
      
    # add synthetics condition
-   set_synthetics_condition.setcondition(project, tier, key, api['name'], monitor_id, policy_id)
+   set_synthetics_condition.setcondition(project, tier, key, 'Cert', monitor_id, policy_id)

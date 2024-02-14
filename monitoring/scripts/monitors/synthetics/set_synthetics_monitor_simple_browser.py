@@ -16,7 +16,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
    else:
      freq = 'EVERY_30_MINUTES'
    
-   if api['location'] and tier.lower() != 'prod':
+   if api['location'].lower() in ['true'] and tier.lower() != 'prod':
      location = "private: [\"" + os.getenv('LOCATION') + "\"]"
    else:
      location = "public: [\"AWS_US_EAST_1\"]"
@@ -79,9 +79,13 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
                "runtimeType: \"CHROME_BROWSER\","
                "runtimeTypeVersion: \"100\","
                "scriptLanguage: \"JAVASCRIPT\""
-             "}"
+             "},"
              "status: ENABLED,"
              "uri: \"" + api['url'] + "\","
+             "advancedOptions: {"
+               "responseValidationText: \"" + api['text'] + "\","
+               "useTlsValidation: true"
+             "},"
              "tags: ["
                "{"
                  "key: \"Project\","
@@ -123,6 +127,10 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
            "}"
            "status: ENABLED,"
            "uri: \"" + api['url'] + "\","
+           "advancedOptions: {"
+               "responseValidationText: \"" + api['text'] + "\","
+               "useTlsValidation: true"
+           "},"
            "tags: ["
              "{"
                "key: \"Project\","
