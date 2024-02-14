@@ -48,7 +48,6 @@ Along with the IAM roles(opensearch snapshot role in prod and nonprod account, c
 
 we need to enable ACL on the S3 bucket and set Object ownership to Bucket Owner preferred.
 
-
 Example Playbook
 ----------------
 
