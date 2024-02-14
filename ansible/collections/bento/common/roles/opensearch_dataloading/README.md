@@ -9,7 +9,6 @@ Opensearch restore : This task perform dataloading on the OpenSearch from the sn
 Requirements
 ------------
 
-
 Role Variables
 --------------
 
