@@ -14,7 +14,7 @@ Role Variables
 
 Required variables:
 
-For Opensearch Backup: 
+For Opensearch Backup:
 ansible_python_interpreter
 project_name
 tier
