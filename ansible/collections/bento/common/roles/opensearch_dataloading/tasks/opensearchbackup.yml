@@ -1,19 +1,5 @@
 ---
 
-# - name: listing the contents of the workspace after extracting
-#   shell: pwd
-#   register: shell_result
-
-# - debug:
-#         var: shell_result.stdout_lines
-
-# - name: listing the contents of the workspace after extracting
-#   shell: ls
-#   register: shell_result
-
-# - debug:
-#         var: shell_result.stdout_lines
-
 - name: copy env to build
   copy:
     src: opensearch-backup.py
