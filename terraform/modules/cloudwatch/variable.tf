@@ -1,30 +1,21 @@
 variable "resource_prefix" {
   description = "Prefix for all resources"
-   type        = string
-}
-
-variable "ecs_cluster_name" {
-  description = "Name of the existing ECS cluster"
-  type        = string
-}
-
-variable "ecs_task_definition" {
-  description = "ARN of the existing ECS task definition"
-  type        = string
-}
-
-variable "slack_notification_endpoint" {
-  description = "Slack notification endpoint"
   type        = string
 }
 
 variable "cron_expression" {
   description = "Cron expression for the CloudWatch event rule"
-   type        = string
+  type        = string
 }
 
-variable "launch_type" {
-  description = "ecs launch type - FARGATE or EC2"
+variable "target_type" {
+  description = "Select a target type for the CloudWatch event"
   type        = string
-  default     = "FARGATE"
+  default     = "" // No default target type
+}
+
+variable "custom_target_arn" {
+  description = "ARN for the custom target"
+  type        = string
+  default     = ""
 }
