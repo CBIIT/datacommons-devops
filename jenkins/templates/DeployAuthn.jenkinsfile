@@ -1,0 +1,171 @@
+@Library('datacommons-jenkins-shared-library@v1.2') _
+
+pipeline {
+    agent {
+        node {
+            //label 'ctdc-docker'
+            label 'crdc-dh-docker'
+        }
+    }
+
+    parameters {
+        string(defaultValue: '',
+                description: 'The image tag to deploy',
+                name: 'ImageTag')
+
+        extendedChoice(name: 'Environment',
+                defaultValue: 'dev',
+                description: 'Choose the environment to build',
+                type: 'PT_SINGLE_SELECT',
+                value: 'dev,dev2,qa,qa2,stage,prod')
+    }
+
+    options {
+        ansiColor('xterm')
+        timestamps()
+    }
+
+    environment {
+        PROJECT = 'crdc-hub'
+        APP = 'authn'
+        SLACK_SECRET = 'crdcdh_slack_url'
+        REGION = 'us-east-1'
+        ECR_REPO = "${env.PROJECT}-${env.APP}"
+        IMAGE_TAG = "${params.ImageTag}"
+        ENV = "${params.Environment}"
+        CLUSTER = "${env.PROJECT}-${env.ENV}-ecs"
+        SERVICE = "${env.PROJECT}-${env.ENV}-${env.APP}"
+    }
+
+    stages {
+        stage('checkout') {
+            steps {
+                checkout([$class: 'GitSCM',
+                          branches: [[name: '*/main']],
+                          doGenerateSubmoduleConfigurations: false,
+                          extensions: [[$class: 'RelativeTargetDirectory',
+                                        relativeTargetDir: 'playbooks']],
+                          submoduleCfg: [],
+                          userRemoteConfigs: [[url: 'https://github.com/CBIIT/crdc-hub-deployments']]])
+
+                checkout([$class: 'GitSCM',
+                          branches: [[name: "${params.Environment}"]],
+                          doGenerateSubmoduleConfigurations: false,
+                          extensions: [[$class: 'RelativeTargetDirectory',
+                          relativeTargetDir: "${env.PROJECT}-deployments"]],
+                          submoduleCfg: [],
+                          userRemoteConfigs: [[url: 'https://github.com/CBIIT/crdc-hub-deployments']]])
+            }
+        }
+
+        stage('Set Environment Variables') {
+            steps {
+                script {
+                    // set central ECR account number
+                    env.ECR_ACCOUNT = sh(label: 'Get ECR account', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id ecr --query SecretString --output text | jq -r '.central_account_id'").trim()
+                    // set repo URL
+                    env.REGISTRY_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com"
+                    env.DATE = sh(script: 'date +%Y-%m-%d.%H%M', returnStdout: true).trim()
+                }
+            }
+        }
+
+        stage('Add Production Tag') {
+            when {
+                expression {
+                    ENV == 'prod'
+                }
+            }
+
+            steps {
+                script {
+                    sh label: 'Docker-Tag', script: '''#!/bin/bash
+
+                        # Tag image as production if deploying to prod tier
+                        echo "Tagging Image as Production: $ECR_REPO:$IMAGE_TAG-$DATE"
+                        aws_account=$(aws sts get-caller-identity --query "Account" --output text)
+                        repo_url="$REGISTRY_URL/$ECR_REPO"
+
+                        #DATE
+                        DATE="$DATE"
+                        # login and get manifest
+                        docker login -u AWS -p $(aws ecr get-login-password --region $REGION) $repo_url
+
+                        docker pull $repo_url:$IMAGE_TAG
+                        docker tag $repo_url:$IMAGE_TAG $repo_url:prod-$IMAGE_TAG-$DATE
+                        docker push $repo_url:prod-$IMAGE_TAG-$DATE
+                        '''
+
+                    IMAGE_TAG = "prod-$IMAGE_TAG"
+
+                    echo "updated image tag: $IMAGE_TAG-$DATE"
+                }
+            }
+        }
+
+        stage('Deploy Service') {
+            steps {
+                script {
+                    sh label: 'Deploy-Service', script: '''#!/bin/bash
+                    # Register environment variables (note that exports are only available for the lifetime of this shell)
+                    export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+                    export DEPLOY_DATE="$(date -I)"
+
+                    # We can eliminate the line below if we store the full sumo_collector_uri_authn in secrets manager
+                    export SUMO_LOGIC_COLLECTOR_TOKEN=$(aws secretsmanager get-secret-value --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.sumo_collector_token_authn')
+
+#test the if statement
+                    #if [ "$ENV" == "dev" ]; then
+                    #export DEV_TIER="indev"
+                    #elif [ "$ENV" == "qa" ]; then
+                    #export DEV_TIER="inqa"
+                    #elif [ "$ENV" == "dev2" ]; then
+                    #export DEV_TIER="indev2"
+                    #elif [ "$ENV" == "stage" ]; then
+                    #export DEV_TIER="instage"
+                    #else export DEV_TIER="prod"
+                    #fi 
+     
+                    #if [ "$ENV" == "dev" ] || [ "$ENV" == "dev2" ]; then
+                    #export SCHEDULE_JOB="0 * * * * *"
+                    #elif [ "$ENV" == "qa" ]; then
+                    #export SCHEDULE_JOB="0 */5 * * * *"
+                    #else export SCHEDULE_JOB="0 0 0 * * *"
+                    #fi
+                    
+                    # Update and register task definition
+                    TASK_DEFINTION_FOLDER=$WORKSPACE/aws/ecs/task-definitions
+                    envsubst < $TASK_DEFINTION_FOLDER/$PROJECT-$APP.yml > $TASK_DEFINTION_FOLDER/$PROJECT-$APP-deploy.yml
+                    aws ecs register-task-definition --cli-input-yaml file://$TASK_DEFINTION_FOLDER/$PROJECT-$APP-deploy.yml
+
+                    # Update service
+                    aws ecs update-service --cluster $CLUSTER --service $SERVICE --task-definition $SERVICE --desired-count 1 --deployment-configuration "maximumPercent=200,minimumHealthyPercent=50,deploymentCircuitBreaker={enable=true,rollback=false}" --force-new-deployment
+                    '''
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                script {
+                    sh label: 'Verify-Deploy', script: '''#!/bin/bash
+    
+                    # wait until the service is stable
+                    aws ecs wait services-stable --cluster $CLUSTER --region $REGION --service $SERVICE
+    
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            notify(secretPath: 'notification/slack', secretName: "${env.SLACK_SECRET}")
+        }
+
+        cleanup {
+            cleanWs()
+        }
+    }
+}
