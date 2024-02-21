@@ -165,7 +165,6 @@ $http.post('https://moleculartargets.ccdi.cancer.gov/api/v4/graphql',
       query: 'query TargetFacetsQuery($ensemblId: String!, $aggregationFilters: [AggregationFilter!]) { target(ensemblId: $ensemblId) { id approvedName associatedDiseases(aggregationFilters: $aggregationFilters) { count aggregations { uniques aggs { name uniques __typename } __typename } __typename } __typename } }'
     }
   },
-  // Callback
   function (err, response, body) {
      if (err) {
         throw new Error(err);
