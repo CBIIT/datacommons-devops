@@ -151,9 +151,6 @@ $http.post('https://caninecommons.cancer.gov/v1/graphql/',
   }
 );",,FALSE,C04E1C69JBE,,opensearch
 Canine Data Commons,icdc,CRDC,Prod,Files,https://caninecommons.cancer.gov/api/files,,,FALSE,C04E1C69JBE,,opensearch
-Molecular Targets Platform,mtp,CCDI,Dev,Portal,https://moleculartargets-dev.ccdi.cancer.gov,,,TRUE,C049VAHBKDL,,opensearch
-Molecular Targets Platform,mtp,CCDI,QA,Portal,https://moleculartargets-qa.ccdi.cancer.gov,,,TRUE,C049VAHBKDL,,opensearch
-Molecular Targets Platform,mtp,CCDI,Stage,Portal,https://moleculartargets-stage.ccdi.cancer.gov,,,TRUE,C049Z0RVCCD,,opensearch
 Molecular Targets Platform,mtp,CCDI,Prod,Portal,https://moleculartargets.ccdi.cancer.gov,,,TRUE,C049Z0RVCCD,,opensearch
 Index of NCI Studies,ins,CCDI,Dev,Portal,https://studycatalog-dev.cancer.gov,,,TRUE,C04693BUC9M,,opensearch
 Index of NCI Studies,ins,CCDI,Dev,API,https://studycatalog-dev.cancer.gov/v1/graphql,"var assert = require('assert');
