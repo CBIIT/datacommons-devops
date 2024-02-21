@@ -1,24 +1,65 @@
-output "opensearch_endpoint" {
-  value       = aws_opensearch_domain.os.endpoint
-  description = "the opensearch domain endpoint url"
+output "arn" {
+  value       = aws_opensearch_domain.this.arn
+  description = "The ARN of the OpenSearch domain"
+  sensitive   = false
 }
 
-output "opensearch_arn" {
-  value       = aws_opensearch_domain.os.arn
-  description = "the OpenSearch domain arn"
+output "dashboard_endpoint" {
+  value       = aws_opensearch_domain.this.dashboard_endpoint
+  description = "The endpoint of the OpenSearch domain dashboard"
+  sensitive   = false
 }
 
-output "opensearch_cloudwatch_log_group_arn" {
-  value       = aws_cloudwatch_log_group.os.arn
-  description = "the log group arn that collects OpenSearch logs"
+output "domain_id" {
+  value       = aws_opensearch_domain.this.domain_id
+  description = "The unique identifier for the OpenSearch domain"
+  sensitive   = false
 }
 
-output "opensearch_security_group_id" {
-  value       = aws_security_group.os.id
-  description = "the id of the security group associated with the OpenSearch cluster"
+output "domain_name" {
+  value       = aws_opensearch_domain.this.domain_name
+  description = "The name of the OpenSearch domain"
+  sensitive   = false
 }
 
-output "opensearch_security_group_arn" {
-  value       = aws_security_group.os.arn
-  description = "the arn of the security group associated with the OpenSearch cluster"
+output "endpoint" {
+  value       = aws_opensearch_domain.this.endpoint
+  description = "The domain-specific endpoint used to submit index, search, and data upload requests to an OpenSearch domain"
+  sensitive   = false
+}
+
+output "id" {
+  value       = aws_opensearch_domain.this.id
+  description = "The unique identifier for the OpenSearch domain"
+  sensitive   = false
+}
+
+output "security_group_arn" {
+  value       = local.outputs.security_group_arn
+  description = "The ARN of the security group for the OpenSearch domain"
+  sensitive   = false
+}
+
+output "security_group_id" {
+  value       = local.outputs.security_group_id
+  description = "The ID of the security group for the OpenSearch domain"
+  sensitive   = false
+}
+
+output "role_arn" {
+  value       = local.outputs.role_arn
+  description = "The ARN of the IAM role used to take snapshots of the OpenSearch domain"
+  sensitive   = false
+}
+
+output "role_id" {
+  value       = local.outputs.role_id
+  description = "The ID of the IAM role used to take snapshots of the OpenSearch domain"
+  sensitive   = false
+}
+
+output "role_name" {
+  value       = local.outputs.role_name
+  description = "The name of the IAM role used to take snapshots of the OpenSearch domain"
+  sensitive   = false
 }
