@@ -151,7 +151,32 @@ $http.post('https://caninecommons.cancer.gov/v1/graphql/',
   }
 );",,FALSE,C04E1C69JBE,,opensearch
 Canine Data Commons,icdc,CRDC,Prod,Files,https://caninecommons.cancer.gov/api/files,,,FALSE,C04E1C69JBE,,opensearch
-Molecular Targets Platform,mtp,CCDI,Prod,Portal,https://moleculartargets.ccdi.cancer.gov,,,TRUE,C049Z0RVCCD,,opensearch
+Molecular Targets Platform,mtp,CCDI,Prod,Portal,https://moleculartargets.ccdi.cancer.gov,,,FALSE,C049Z0RVCCD,,opensearch
+Molecular Targets Platform,mtp,CCDI,Prod,API,https://moleculartargets.ccdi.cancer.gov/api/v4/graphql,"var assert = require('assert');
+
+$http.post('https://moleculartargets.ccdi.cancer.gov/api/v4/graphql',
+  {
+    json: {
+      operationName: 'TargetFacetsQuery',
+      variables: {
+        ensemblId: 'ENSG00000001626',
+        aggregationFilters: []
+      },
+      query: 'query TargetFacetsQuery($ensemblId: String!, $aggregationFilters: [AggregationFilter!]) { target(ensemblId: $ensemblId) { id approvedName associatedDiseases(aggregationFilters: $aggregationFilters) { count aggregations { uniques aggs { name uniques __typename } __typename } __typename } __typename } }'
+    }
+  },
+  // Callback
+  function (err, response, body) {
+     if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+  }
+);",,FALSE,C049Z0RVCCD,,opensearch
 Index of NCI Studies,ins,CCDI,Dev,Portal,https://studycatalog-dev.cancer.gov,,,TRUE,C04693BUC9M,,opensearch
 Index of NCI Studies,ins,CCDI,Dev,API,https://studycatalog-dev.cancer.gov/v1/graphql,"var assert = require('assert');
 
