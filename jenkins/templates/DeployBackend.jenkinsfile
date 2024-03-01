@@ -71,7 +71,7 @@ pipeline {
  			script {
 
 			    // set sumo vars for logging
-				env.SUMO_COLLECTOR_ENDPOINT = sh(label: 'Get Sumo Endpoint', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.sumo_collector_endpoint'").trim()
+				//env.SUMO_COLLECTOR_ENDPOINT = sh(label: 'Get Sumo Endpoint', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.sumo_collector_endpoint'").trim()
 				env.SUMO_COLLECTOR_TOKEN = sh(label: 'Get Sumo Token', returnStdout: true, script: "aws secretsmanager get-secret-value --region $REGION --secret-id bento/$PROJECT/$ENV --query SecretString --output text | jq -r '.sumo_collector_token_$APP'").trim()
 
 				// set neo4j vars
@@ -140,18 +140,11 @@ pipeline {
 
 				# create new revision for $PROJECT-$APP Task Definition
 				echo "Updating Task Defintion to Use: $ECR_REPO:$IMAGE_TAG"
-				ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-				IMAGE_ID="$REPO_URL:$IMAGE_TAG"
+				export ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+				export IMAGE_ID="$REPO_URL:$IMAGE_TAG"
 
-				sed -i "s|{{account_id}}|$ACCOUNT_ID|" $TEMPLATE_FILE
-				sed -i "s|{{image_id}}|$IMAGE_ID|" $TEMPLATE_FILE
-				sed -i "s|{{image_tag}}|$IMAGE_TAG|" $TEMPLATE_FILE
-				sed -i "s|{{environment}}|$ENV|" $TEMPLATE_FILE
-				sed -i "s|{{project}}|$PROJECT|" $TEMPLATE_FILE
-				sed -i "s|{{sumo_collector_endpoint}}|$SUMO_COLLECTOR_ENDPOINT|" $TEMPLATE_FILE
-				sed -i "s|{{sumo_collector_token}}|$SUMO_COLLECTOR_TOKEN|" $TEMPLATE_FILE
-				sed -i "s|{{neo4j_host}}|$NEO4J_HOST|" $TEMPLATE_FILE
-
+				# Update and register task definition
+                envsubst < $TEMPLATE_FILE > $TEMPLATE_FILE
 				aws ecs register-task-definition --cli-input-json file://$TEMPLATE_FILE
 
 				'''
