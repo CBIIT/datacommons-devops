@@ -162,7 +162,7 @@ pipeline {
 				export IMAGE_ID="$REPO_URL:$IMAGE_TAG"
 
 				# Update and register task definition
-                envsubst < $TEMPLATE_FILE > $TEMPLATE_FILE
+				envsubst < $TEMPLATE_FILE > $TEMPLATE_FILE
 				aws ecs register-task-definition --cli-input-yaml file://$TEMPLATE_FILE
 
 				'''

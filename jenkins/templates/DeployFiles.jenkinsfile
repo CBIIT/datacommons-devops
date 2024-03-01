@@ -150,7 +150,7 @@ pipeline {
 				export DATE=$(date '+%m/%d/%Y')
 
 				# Update and register task definition
-                envsubst < $TEMPLATE_FILE > $TEMPLATE_FILE
+				envsubst < $TEMPLATE_FILE > $TEMPLATE_FILE
 				aws ecs register-task-definition --cli-input-yaml file://$TEMPLATE_FILE
 
 				'''
