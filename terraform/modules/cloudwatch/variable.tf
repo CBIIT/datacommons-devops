@@ -11,7 +11,7 @@ variable "cron_expression" {
 variable "target_type" {
   description = "Select a target type for the CloudWatch event"
   type        = string
-  default     = "" // No default target type
+  default     = "" 
 }
 
 variable "custom_target_arn" {
