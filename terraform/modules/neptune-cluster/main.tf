@@ -70,8 +70,6 @@ resource "aws_neptune_cluster_instance" "this" {
   neptune_subnet_group_name    = aws_neptune_subnet_group.this.name
   neptune_parameter_group_name = var.enable_serverless ? "default.neptune1.3" : aws_neptune_cluster_parameter_group.this[0].name
   port                         = var.port
-  preferred_backup_window      = var.preferred_backup_window
-  preferred_maintenance_window = var.preferred_maintenance_window
   publicly_accessible          = false
 }
 
