@@ -61,13 +61,17 @@ resource "aws_neptune_cluster_parameter_group" "this" {
   }
 }
 
-module "instance_parameters" {
-  count  = local.create_parameter_groups ? 1 : 0
-  source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-instance-parameter-group?ref=Neptune"
+resource "aws_neptune_parameter_group" "this" {
+  count = local.create_parameter_groups ? 1 : 0
 
-  resource_prefix = var.resource_prefix
-  enable_caching  = var.enable_serverless ? false : var.enable_caching
-  query_timeout   = var.query_timeout
+  name        = "${var.resource_prefix}-neptune-instance-params"
+  family      = var.parameter_group_family
+  description = "${var.resource_prefix} neptune instance-level parameter group"
+
+  parameter {
+    name  = "neptune_result_cache"
+    value = var.enable_result_cache ? "1" : "0"
+  }
 }
 
 module "neptune_instance" {

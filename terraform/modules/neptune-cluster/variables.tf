@@ -79,6 +79,13 @@ variable "enable_cloudwatch_logs_exports" {
   sensitive   = false
 }
 
+variable "enable_result_cache" {
+  type        = bool
+  description = "whether to enable the result cache for the instances in the cluster"
+  default     = false
+  sensitive   = false
+}
+
 variable "enable_serverless" {
   type        = bool
   description = "whether to enable serverless mode for the cluster"
