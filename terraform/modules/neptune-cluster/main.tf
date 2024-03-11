@@ -33,15 +33,32 @@ resource "aws_neptune_cluster" "this" {
   }
 }
 
-## if serverless mode is enabled, do not create parameter groups. 
-## if create_parameter groups
+resource "aws_neptune_cluster_parameter_group" "this" {
+  count = local.create_parameter_groups ? 1 : 0
 
-module "cluster_parameters" {
-  count  = local.create_parameter_groups ? 1 : 0
-  source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-cluster-parameter-group?ref=Neptune"
+  name        = "${var.resource_prefix}-neptune-cluster-params"
+  family      = var.parameter_group_family
+  description = "${var.resource_prefix} neptune cluster-level parameter group"
 
-  resource_prefix  = var.resource_prefix
-  enable_audit_log = var.enable_cloudwatch_logs_exports == ["audit"] ? true : false
+  parameter {
+    name  = "neptune_enable_audit_log"
+    value = var.enable_audit_log ? "1" : "0"
+  }
+
+  parameter {
+    name  = "neptune_enable_slow_query_log"
+    value = var.enable_slow_query_log
+  }
+
+  parameter {
+    name  = "neptune_slow_query_log_threshold"
+    value = var.slow_query_log_threshold
+  }
+
+  parameter {
+    name  = "neptune_query_timeout"
+    value = var.query_timeout
+  }
 }
 
 module "instance_parameters" {

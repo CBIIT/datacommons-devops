@@ -58,6 +58,13 @@ variable "deletion_protection" {
   sensitive   = false
 }
 
+variable "enable_audit_log" {
+  type        = bool
+  description = "whether to enable audit logs at the cluster level"
+  default     = true
+  sensitive   = false
+}
+
 variable "enable_caching" {
   type        = bool
   description = "whether to enable caching for the cluster"
@@ -76,6 +83,13 @@ variable "enable_serverless" {
   type        = bool
   description = "whether to enable serverless mode for the cluster"
   default     = true
+  sensitive   = false
+}
+
+variable "enable_slow_query_log" {
+  type        = string
+  description = "the log level for slow queries applied at the cluster-level - either 'info', 'debug', or 'disable'"
+  default     = "info"
   sensitive   = false
 }
 
@@ -135,6 +149,13 @@ variable "min_capacity" {
   sensitive   = false
 }
 
+variable "parameter_group_family" {
+  type        = string
+  description = "the family of the neptune cluster parameter group (i.e. neptune1.3)"
+  default     = "neptune1.3"
+  sensitive   = false
+}
+
 variable "preferred_backup_window" {
   type        = string
   description = "the daily time range during which automated backups are created if automated backups are enabled"
@@ -159,7 +180,7 @@ variable "port" {
 variable "query_timeout" {
   type        = string
   description = "time in milliseconds that a query can run before it is terminated by the cluster"
-  default     = "120000"
+  default     = "60000"
   sensitive   = false
 }
 
@@ -169,6 +190,14 @@ variable "replication_source_identifier" {
   default     = null
   sensitive   = false
 }
+
+variable "slow_query_log_threshold" {
+  type        = number
+  description = "the threshold in milliseconds for slow queries applied at the cluster level"
+  default     = 5000
+  sensitive   = false
+}
+
 
 variable "skip_final_snapshot" {
   type        = bool
