@@ -75,7 +75,7 @@ variable "enable_caching" {
 variable "enable_cloudwatch_logs_exports" {
   type        = list(string)
   description = "list of log types to export to cloudwatch"
-  default     = ["audit"]
+  default     = ["audit", "slowquery"]
   sensitive   = false
 }
 

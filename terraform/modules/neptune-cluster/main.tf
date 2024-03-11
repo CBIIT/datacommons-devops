@@ -13,7 +13,7 @@ resource "aws_neptune_cluster" "this" {
   iam_database_authentication_enabled  = var.iam_database_authentication_enabled
   kms_key_arn                          = aws_kms_key.this.arn
   neptune_subnet_group_name            = aws_neptune_subnet_group.this.name
-  neptune_cluster_parameter_group_name = var.enable_serverless ? "default.neptune1.2" : aws_neptune_cluster_parameter_group.this[0].name
+  neptune_cluster_parameter_group_name = var.enable_serverless ? "default.neptune1.3" : aws_neptune_cluster_parameter_group.this[0].name
   preferred_backup_window              = var.preferred_backup_window
   preferred_maintenance_window         = var.preferred_maintenance_window
   port                                 = var.port
