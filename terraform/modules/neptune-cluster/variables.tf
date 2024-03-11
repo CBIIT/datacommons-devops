@@ -38,6 +38,13 @@ variable "copy_tags_to_snapshot" {
   sensitive   = false
 }
 
+variable "create_parameter_groups" {
+  type        = bool
+  description = "whether to create parameter groups for the cluster and instance(s)"
+  default     = false
+  sensitive   = false
+}
+
 variable "database_subnet_ids" {
   type        = set(string)
   description = "the list of subnet IDs to associate with the cluster"
