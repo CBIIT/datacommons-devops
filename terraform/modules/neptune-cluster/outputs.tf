@@ -71,7 +71,7 @@ output "instance_cluster_identifier" {
 }
 
 output "instance_dbi_resource_id" {
-  value       = aws_neptune_cluster_instance.this.instance_dbi_resource_id
+  value       = aws_neptune_cluster_instance.this.dbi_resource_id
   description = "The neptune instance resource ID"
   sensitive   = false
 }
