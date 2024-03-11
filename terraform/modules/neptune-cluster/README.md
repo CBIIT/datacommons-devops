@@ -43,7 +43,7 @@ No modules.
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | whether to enable deletion protection | `bool` | `true` | no |
 | <a name="input_enable_audit_log"></a> [enable\_audit\_log](#input\_enable\_audit\_log) | whether to enable audit logs at the cluster level | `bool` | `true` | no |
 | <a name="input_enable_caching"></a> [enable\_caching](#input\_enable\_caching) | whether to enable caching for the cluster | `bool` | `false` | no |
-| <a name="input_enable_cloudwatch_logs_exports"></a> [enable\_cloudwatch\_logs\_exports](#input\_enable\_cloudwatch\_logs\_exports) | list of log types to export to cloudwatch | `list(string)` | <pre>[<br>  "audit",<br>  "slowquery"<br>]</pre> | no |
+| <a name="input_enable_cloudwatch_logs_exports"></a> [enable\_cloudwatch\_logs\_exports](#input\_enable\_cloudwatch\_logs\_exports) | list of log types to export to cloudwatch | `list(string)` | <pre>[<br>  "audit"<br>]</pre> | no |
 | <a name="input_enable_result_cache"></a> [enable\_result\_cache](#input\_enable\_result\_cache) | whether to enable the result cache for the instances in the cluster | `bool` | `false` | no |
 | <a name="input_enable_serverless"></a> [enable\_serverless](#input\_enable\_serverless) | whether to enable serverless mode for the cluster | `bool` | `true` | no |
 | <a name="input_enable_slow_query_log"></a> [enable\_slow\_query\_log](#input\_enable\_slow\_query\_log) | the log level for slow queries applied at the cluster-level - either 'info', 'debug', or 'disable' | `string` | `"info"` | no |
