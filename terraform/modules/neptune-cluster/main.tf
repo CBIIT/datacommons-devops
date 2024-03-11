@@ -61,6 +61,20 @@ resource "aws_neptune_cluster_parameter_group" "this" {
   }
 }
 
+resource "aws_neptune_cluster_instance" "this" {
+  auto_minor_version_upgrade   = var.auto_minor_version_upgrade
+  cluster_identifier           = aws_neptune_cluster.this.cluster_identifier
+  engine                       = var.engine
+  engine_version               = var.engine_version
+  instance_class               = var.instance_class
+  neptune_subnet_group_name    = aws_neptune_subnet_group.this.name
+  neptune_parameter_group_name = local.create_parameter_groups ? aws_neptune_parameter_group.this[0].name : null
+  port                         = var.port
+  preferred_backup_window      = var.preferred_backup_window
+  preferred_maintenance_window = var.preferred_maintenance_window
+  publicly_accessible          = false
+}
+
 resource "aws_neptune_parameter_group" "this" {
   count = local.create_parameter_groups ? 1 : 0
 
@@ -72,18 +86,6 @@ resource "aws_neptune_parameter_group" "this" {
     name  = "neptune_result_cache"
     value = var.enable_result_cache ? "1" : "0"
   }
-}
-
-module "neptune_instance" {
-  source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-instance?ref=Neptune"
-
-  auto_minor_version_upgrade   = var.auto_minor_version_upgrade
-  cluster_identifier           = aws_neptune_cluster.this.cluster_identifier
-  engine_version               = var.engine_version
-  instance_class               = var.enable_serverless ? "db.serverless" : var.instance_class
-  neptune_subnet_group_name    = aws_neptune_subnet_group.this.name
-  neptune_parameter_group_name = var.enable_serverless ? "default.neptune1.2" : module.instance_parameters[0].name
-  port                         = var.port
 }
 
 resource "aws_kms_key" "this" {

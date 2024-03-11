@@ -53,43 +53,43 @@ output "kms_key_arn" {
 }
 
 output "instance_address" {
-  value       = module.neptune_instance.address
+  value       = aws_neptune_cluster_instance.this[0].address
   description = "The hostname of the instance. See also endpoint and port."
   sensitive   = false
 }
 
 output "instance_arn" {
-  value       = module.neptune_instance.arn
+  value       = aws_neptune_cluster_instance.this[0].arn
   description = "The ARN of the neptune instance"
   sensitive   = false
 }
 
 output "instance_cluster_identifier" {
-  value       = module.neptune_instance.cluster_identifier
+  value       = aws_neptune_cluster_instance.this[0].cluster_identifier
   description = "The neptune cluster identifier"
   sensitive   = false
 }
 
 output "instance_dbi_resource_id" {
-  value       = module.neptune_instance.dbi_resource_id
+  value       = aws_neptune_cluster_instance.this[0].instance_dbi_resource_id
   description = "The neptune instance resource ID"
   sensitive   = false
 }
 
 output "instance_endpoint" {
-  value       = module.neptune_instance.endpoint
+  value       = aws_neptune_cluster_instance.this[0].endpoint
   description = "The hostname of the instance. See also address and port."
   sensitive   = false
 }
 
 output "instance_id" {
-  value       = module.neptune_instance.id
+  value       = aws_neptune_cluster_instance.this[0].id
   description = "The neptune instance ID"
   sensitive   = false
 }
 
 output "instance_identifier" {
-  value       = module.neptune_instance.identifier
+  value       = aws_neptune_cluster_instance.this[0].identifier
   description = "The neptune instance identifier"
   sensitive   = false
 }
