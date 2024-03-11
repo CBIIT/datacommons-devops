@@ -33,8 +33,11 @@ resource "aws_neptune_cluster" "this" {
   }
 }
 
+## if serverless mode is enabled, do not create parameter groups. 
+## if create_parameter groups
+
 module "cluster_parameters" {
-  count  = var.enable_serverless ? 0 : 1
+  count  = local.create_parameter_groups ? 1 : 0
   source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-cluster-parameter-group?ref=Neptune"
 
   resource_prefix  = var.resource_prefix
@@ -42,7 +45,7 @@ module "cluster_parameters" {
 }
 
 module "instance_parameters" {
-  count  = var.enable_serverless ? 0 : 1
+  count  = local.create_parameter_groups ? 1 : 0
   source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-instance-parameter-group?ref=Neptune"
 
   resource_prefix = var.resource_prefix
