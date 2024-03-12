@@ -31,6 +31,12 @@ resource "aws_neptune_cluster" "this" {
       min_capacity = var.min_capacity
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      kms_key_arn
+    ]
+  }
 }
 
 resource "aws_neptune_cluster_parameter_group" "this" {
