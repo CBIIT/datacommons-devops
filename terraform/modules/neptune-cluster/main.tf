@@ -74,7 +74,7 @@ resource "aws_neptune_cluster_instance" "this" {
   engine_version               = var.engine_version
   instance_class               = var.instance_class
   neptune_subnet_group_name    = aws_neptune_subnet_group.this.name
-  neptune_parameter_group_name = var.enable_serverless ? "default.neptune1.3" : aws_neptune_cluster_parameter_group.this[0].name
+  neptune_parameter_group_name = var.enable_serverless ? "default.neptune1.3" : aws_neptune_parameter_group.this[0].name
   port                         = var.port
   publicly_accessible          = false
 
