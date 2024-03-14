@@ -1,9 +1,17 @@
-@Library('datacommons-jenkins-shared-library@v1.1') _
+@Library('datacommons-jenkins-shared-library@v1.2') _
+
+def getLabelForEnvironment(environment) {
+	if (environment == "stage" || environment == "prod"){
+		return ""     // Set to use a Jenkins agent in your prod account
+	}else {
+		return ""     // Set to use a Jenkins agent in your nonprod account
+	}
+}
 
 pipeline {
 	agent {
 		node {
-			label ''   // Set to use a Jenkins agent in your desired account
+			label getLabelForEnvironment(params.Environment)
 		}
 	}
 
