@@ -185,7 +185,7 @@ $http.post('https://studycatalog-dev.cancer.gov/v1/graphql/',
   {
     json: {
     query: '{ idsLists { case_ids } }',
-    _variables: {}
+    variables: {}
     }
   },
 
