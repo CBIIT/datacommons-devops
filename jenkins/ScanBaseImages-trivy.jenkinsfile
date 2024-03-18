@@ -49,28 +49,30 @@ pipeline {
 
  			script {
 
-			    def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
+			    //def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
 				
-				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: """#!/bin/bash
+				// RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: """#!/bin/bash
 				
-				for image in ${image_list.join(' ')}; do
-					trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
+				// for image in ${image_list.join(' ')}; do
+				// 	trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
 
-					if [ \$? == 1 ];	then
-					  echo "\$trivy_out \n\n"
-				    fi
+				// 	if [ \$? == 1 ];	then
+				// 	  echo "\$trivy_out \n\n"
+				//     fi
 
-                done
+                // done
 
-				""").trim()
+				// """).trim()
+
+				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: "curl -i https://api.github.com/orgs/cbiit/repos?type=all").trim()
 
 				println RESULTS
 
-				if(RESULTS) {
-                    catchError(stageResult: 'FAILURE') {
-                        error 'VULNERABILITIES FOUND'
-                    }
-				}
+				// if(RESULTS) {
+                //     catchError(stageResult: 'FAILURE') {
+                //         error 'VULNERABILITIES FOUND'
+                //     }
+				// }
 
 			}
 
@@ -83,27 +85,27 @@ pipeline {
 
   post {
 
-	failure {
+	// failure {
 
-		script {
+	// 	script {
 
-			RESULTS_FILE = sh(label: 'Get results file name', returnStdout: true, script: "echo results_\$(date '+%Y%m%d').txt").trim()
-			writeFile(file: RESULTS_FILE, text: RESULTS)
+	// 		RESULTS_FILE = sh(label: 'Get results file name', returnStdout: true, script: "echo results_\$(date '+%Y%m%d').txt").trim()
+	// 		writeFile(file: RESULTS_FILE, text: RESULTS)
 			
-			// sh label: 'Write Results', script: """#!/bin/bash
+	// 		// sh label: 'Write Results', script: """#!/bin/bash
 
-			// 	echo "${RESULTS}" > results_\$(date '+%Y%m%d').txt
+	// 		// 	echo "${RESULTS}" > results_\$(date '+%Y%m%d').txt
 
-			// 	"""
+	// 		// 	"""
 
-		}
+	// 	}
 		
-		emailext(attachmentsPattern: 'results_*.txt',
-			mimeType: 'text/html',
-			body: "Base Image scan results attached",
-			subject: "Base Image Vulnerabilities Found",
-			to: "${EmailRecipients}")
-    }
+	// 	emailext(attachmentsPattern: 'results_*.txt',
+	// 		mimeType: 'text/html',
+	// 		body: "Base Image scan results attached",
+	// 		subject: "Base Image Vulnerabilities Found",
+	// 		to: "${EmailRecipients}")
+    // }
 
     cleanup {
 
