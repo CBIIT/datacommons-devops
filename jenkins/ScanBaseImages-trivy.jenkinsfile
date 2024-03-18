@@ -68,7 +68,7 @@ pipeline {
 
 				//println RESULTS
 
-				RESULTS.each(println it)
+				RESULTS.each{println it}
 
 				// if(RESULTS) {
                 //     catchError(stageResult: 'FAILURE') {
