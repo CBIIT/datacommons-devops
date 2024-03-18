@@ -68,7 +68,7 @@ pipeline {
 
 				//println RESULTS
 
-				def json = new JsonSlurper().parseText(RESULTS)
+				json = readJson(RESULTS)
 				
 				json.each { 
 					println JsonOutput.prettyPrint(JsonOutput.toJson(it))
