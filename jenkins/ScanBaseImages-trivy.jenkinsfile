@@ -68,7 +68,7 @@ pipeline {
 
 				//println RESULTS
 
-				json = readJson(RESULTS)
+				json = readJSON(RESULTS)
 				
 				json.each { 
 					println JsonOutput.prettyPrint(JsonOutput.toJson(it))
