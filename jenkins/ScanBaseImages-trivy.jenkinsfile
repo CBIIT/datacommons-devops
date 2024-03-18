@@ -71,7 +71,7 @@ pipeline {
 				json = readJSON(RESULTS)
 				
 				json.each { 
-					println JsonOutput.prettyPrint(JsonOutput.toJson(it))
+					println(it)
 					}
 
 				// if(RESULTS) {
