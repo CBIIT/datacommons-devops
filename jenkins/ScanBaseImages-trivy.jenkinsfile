@@ -70,9 +70,7 @@ pipeline {
 
 				json = readJSON(RESULTS)
 				
-				json.each { 
-					println(it)
-					}
+				json.each JsonOutput.prettyPrint(JsonOutput.toJson(it))
 
 				// if(RESULTS) {
                 //     catchError(stageResult: 'FAILURE') {
