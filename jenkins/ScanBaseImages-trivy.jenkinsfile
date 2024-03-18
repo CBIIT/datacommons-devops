@@ -68,7 +68,11 @@ pipeline {
 
 				//println RESULTS
 
-				RESULTS.each{println it}
+				def json = new JsonSlurper().parseText(RESULTS)
+				
+				json.each { 
+					println JsonOutput.prettyPrint(JsonOutput.toJson(it))
+					}
 
 				// if(RESULTS) {
                 //     catchError(stageResult: 'FAILURE') {
