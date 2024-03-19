@@ -67,10 +67,11 @@ pipeline {
 				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: "curl https://api.github.com/orgs/cbiit/repos?type=all").trim()
 
 				//println RESULTS
+				RESULTS.each println(it)
 
-				json = readJSON(RESULTS)
+				//json = readJSON(RESULTS)
 				
-				json.each JsonOutput.prettyPrint(JsonOutput.toJson(it))
+				//json.each JsonOutput.prettyPrint(JsonOutput.toJson(it))
 
 				// if(RESULTS) {
                 //     catchError(stageResult: 'FAILURE') {
