@@ -73,7 +73,7 @@ pipeline {
 				// RESULTS.each println(it)
 				
 				def list = new JsonSlurper().parseText( RESULTS )
-				list.each { println it }
+				list.each { println it.name }
 
 				//json = readJSON(RESULTS)
 				
