@@ -1,5 +1,5 @@
 @Library('datacommons-jenkins-shared-library@v1.2') _
-//import groovy.json.JsonSlurper
+import groovy.json.JsonSlurper
 
 pipeline {
 	agent {
@@ -65,7 +65,7 @@ pipeline {
 
 				// """).trim()
 
-				import groovy.json.JsonSlurper
+				//import groovy.json.JsonSlurper
 				
 				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: "curl https://api.github.com/orgs/cbiit/repos?type=all").trim()
 
