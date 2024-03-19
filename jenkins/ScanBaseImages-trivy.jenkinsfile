@@ -1,4 +1,5 @@
 @Library('datacommons-jenkins-shared-library@v1.2') _
+import groovy.json.JsonSlurper
 
 pipeline {
 	agent {
@@ -49,7 +50,7 @@ pipeline {
 
  			script {
 
-			    //def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
+				//def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
 				
 				// RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: """#!/bin/bash
 				
@@ -64,10 +65,15 @@ pipeline {
 
 				// """).trim()
 
+				import groovy.json.JsonSlurper
+				
 				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: "curl https://api.github.com/orgs/cbiit/repos?type=all").trim()
 
-				println RESULTS
-				RESULTS.each println(it)
+				// println RESULTS
+				// RESULTS.each println(it)
+				
+				def list = new JsonSlurper().parseText( RESULTS )
+				list.each { println it }
 
 				//json = readJSON(RESULTS)
 				
