@@ -66,7 +66,7 @@ pipeline {
 
 				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: "curl https://api.github.com/orgs/cbiit/repos?type=all").trim()
 
-				//println RESULTS
+				println RESULTS
 				RESULTS.each println(it)
 
 				//json = readJSON(RESULTS)
