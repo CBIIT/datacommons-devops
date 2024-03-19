@@ -67,7 +67,7 @@ pipeline {
 
 				//import groovy.json.JsonSlurper
 				
-				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: "curl -L 100 https://api.github.com/orgs/cbiit/repos?per_page=100").trim()
+				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: "curl -L 100 https://api.github.com/orgs/cbiit/repos?per_page=1000").trim()
 
 				// println RESULTS
 				// RESULTS.each println(it)
