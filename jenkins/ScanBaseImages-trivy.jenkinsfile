@@ -95,7 +95,7 @@ pipeline {
 				    # -------
 
 				    #status () {
-				    #		  echo "---> ${@}" >&2
+				    #		  echo "---> {@}" >&2
 				    #}
 
 				    set +xe
