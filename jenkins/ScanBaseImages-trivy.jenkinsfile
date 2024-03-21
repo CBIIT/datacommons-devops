@@ -64,16 +64,14 @@ pipeline {
                 // done
 
 				// """).trim()
-
-				//import groovy.json.JsonSlurper
 				
-				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: "curl -L 100 https://api.github.com/orgs/cbiit/repos?per_page=1000").trim()
+				//RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: "curl -L 100 https://api.github.com/orgs/cbiit/repos?per_page=1000").trim()
 
 				// println RESULTS
 				// RESULTS.each println(it)
 				
-				def list = new JsonSlurper().parseText( RESULTS )
-				list.each { println it.name }
+				//def list = new JsonSlurper().parseText( RESULTS )
+				//list.each { println it.name }
 
 				//json = readJSON(RESULTS)
 				
@@ -84,6 +82,65 @@ pipeline {
                 //         error 'VULNERABILITIES FOUND'
                 //     }
 				// }
+
+				sh label: 'Get Dockerfiles', script: """"#!/bin/bash
+
+				    # Retrieve all Dockerfiles of a given Github organization 
+
+				    # set username, password, and organization
+				    #UNAME="${1}"
+				    #UPASS="${2}"
+				    URI="https://api.github.com"
+				    ORG="CBIIT"
+				    # -------
+
+				    status () {
+				    		  echo "---> ${@}" >&2
+				    }
+
+				    set +xe
+
+				    #if [ -n "${UNAME}" ] && [ -n "${UPASS}" ] && [ -n "$ORG" ]; then
+				    #	status "Init ok"
+				    #else
+				    #	status "Please set values for UNAME, UPASS & ORG"
+				    #	exit 1
+				    #fi
+
+				    # Get list of repositories
+				    status "Retrieving repository list ..."
+				    #REPO_NB_PAGES=$(curl -I -u "${UNAME}:${UPASS}"  -s ${URI}/orgs/${ORG}/repos\?page\=1\&per_page\=\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\1/p')
+					REPO_NB_PAGES=$(curl -I -s ${URI}/orgs/${ORG}/repos\?page\=1\&per_page\=\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\1/p')
+				    status "Nb pages: ${REPO_NB_PAGES}"
+
+				    i=1
+				    #mkdir -p ${ORG}-dockerfiles
+				    while [ "$i" -le $REPO_NB_PAGES ]; do
+				    	status "Command is: curl -u "${UNAME}:${UPASS}" -s ${URI}/orgs/${ORG}/repos\?page=${i}\&per_page\=\100  | jq -r '.[].name'"
+				    	readarray -t repos0 < <(curl -u "${UNAME}:${UPASS}" -s ${URI}/orgs/${ORG}/repos\?page=${i}\&per_page\=\100  | jq -r -c '.[].name')
+				    	readarray -t repos1 < <(curl -u "${UNAME}:${UPASS}" -s ${URI}/orgs/${ORG}/repos\?page=${i}\&per_page\=\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
+	
+				    	repos1_index=0
+				    	for repo in ${repos0[@]}; do
+				    		status "Repository: ${repo}"
+				    		status "Repos tree master url: ${repos1[repos1_index]}"
+				    		#curl -u "${UNAME}:${UPASS}" -s ${repos3[repos1_index]}/master\?recursive\=1 | grep -i 'not found'
+							curl -s ${repos3[repos1_index]}/master\?recursive\=1 | grep -i 'not found'
+				    		if [ $? != 0 ] ; then  
+				    			url_Dockerfile=$(curl -u "${UNAME}:${UPASS}" -s ${repos1[repos1_index]}/master\?recursive\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
+				    			if [[ ! -z $url_Dockerfile ]]; then
+				    				status "Dockerfile found!"
+				    				#curl -H "Accept: application/vnd.github-blob.raw" -u "${UNAME}:${UPASS}" -s ${url_Dockerfile} > ${ORG}-dockerfiles/Dockerfile.${repo}
+				    			else
+				    				status "No Dockerfile in ${repo}"
+				    			fi
+				    		else
+				    			echo "Nothing in the repo ${repo}"
+				    		fi
+				    		repos1_index=$(($repos1_index + 1))
+				    	done
+				    	i=$(($i + 1))
+				    done"""
 
 			}
 
