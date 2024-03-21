@@ -121,7 +121,8 @@ pipeline {
 						echo "Command is: curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r '.[].name'"
 				    	#readarray -t repos0 < <(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
 						repos0=$(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
-				    	readarray -t repos1 < <(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
+				    	#readarray -t repos1 < <(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
+						repos1=$(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
 	
 				    	echo "Repos0:  $repos0"
 						echo "Repos1:  $repos1"
