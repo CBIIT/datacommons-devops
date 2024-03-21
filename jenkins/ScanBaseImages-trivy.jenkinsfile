@@ -118,7 +118,7 @@ pipeline {
 				    #mkdir -p $ORG-dockerfiles
 				    while [ "$i" -le $REPO_NB_PAGES ]; do
 				    	#status "Command is: curl -u "{UNAME}:{UPASS}" -s ${URI}/orgs/${ORG}/repos\\?page=${i}\\&per_page\\=\\100  | jq -r '.[].name'"
-						#echo "Command is: curl -u "{UNAME}:{UPASS}" -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r '.[].name'"
+						echo "Command is: curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r '.[].name'"
 				    	readarray -t repos0 < <(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
 				    	readarray -t repos1 < <(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
 	
