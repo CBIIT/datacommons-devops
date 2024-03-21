@@ -110,7 +110,7 @@ pipeline {
 				    # Get list of repositories
 				    #status "Retrieving repository list ..."
 					echo "Retrieving repository list ..."
-				    #REPO_NB_PAGES=$(curl -I -u "${UNAME}:${UPASS}"  -s ${URI}/orgs/${ORG}/repos\?page\=1\&per_page\=\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\1/p')
+				    #REPO_NB_PAGES=$(curl -I -u "{UNAME}:{UPASS}"  -s ${URI}/orgs/${ORG}/repos\?page\=1\&per_page\=\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\1/p')
 					REPO_NB_PAGES=$(curl -I -s ${URI}/orgs/${ORG}/repos\?page\=1\&per_page\=\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\1/p')
 				    #status "Nb pages: ${REPO_NB_PAGES}"
 					echo "Nb pages: ${REPO_NB_PAGES}"
@@ -118,10 +118,10 @@ pipeline {
 				    i=1
 				    #mkdir -p ${ORG}-dockerfiles
 				    while [ "$i" -le $REPO_NB_PAGES ]; do
-				    	#status "Command is: curl -u "${UNAME}:${UPASS}" -s ${URI}/orgs/${ORG}/repos\?page=${i}\&per_page\=\100  | jq -r '.[].name'"
-						echo "Command is: curl -u "${UNAME}:${UPASS}" -s ${URI}/orgs/${ORG}/repos\?page=${i}\&per_page\=\100  | jq -r '.[].name'"
-				    	readarray -t repos0 < <(curl -u "${UNAME}:${UPASS}" -s ${URI}/orgs/${ORG}/repos\?page=${i}\&per_page\=\100  | jq -r -c '.[].name')
-				    	readarray -t repos1 < <(curl -u "${UNAME}:${UPASS}" -s ${URI}/orgs/${ORG}/repos\?page=${i}\&per_page\=\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
+				    	#status "Command is: curl -u "{UNAME}:{UPASS}" -s ${URI}/orgs/${ORG}/repos\?page=${i}\&per_page\=\100  | jq -r '.[].name'"
+						echo "Command is: curl -u "{UNAME}:{UPASS}" -s ${URI}/orgs/${ORG}/repos\?page=${i}\&per_page\=\100  | jq -r '.[].name'"
+				    	readarray -t repos0 < <(curl -s ${URI}/orgs/${ORG}/repos\?page=${i}\&per_page\=\100  | jq -r -c '.[].name')
+				    	readarray -t repos1 < <(curl -s ${URI}/orgs/${ORG}/repos\?page=${i}\&per_page\=\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
 	
 				    	repos1_index=0
 				    	for repo in ${repos0[@]}; do
@@ -129,14 +129,14 @@ pipeline {
 							echo "Repository: ${repo}"
 				    		#status "Repos tree master url: ${repos1[repos1_index]}"
 							echo "Repos tree master url: ${repos1[repos1_index]}"
-				    		#curl -u "${UNAME}:${UPASS}" -s ${repos3[repos1_index]}/master\?recursive\=1 | grep -i 'not found'
+				    		#curl -s ${repos3[repos1_index]}/master\?recursive\=1 | grep -i 'not found'
 							curl -s ${repos3[repos1_index]}/master\?recursive\=1 | grep -i 'not found'
 				    		if [ $? != 0 ] ; then  
-				    			url_Dockerfile=$(curl -u "${UNAME}:${UPASS}" -s ${repos1[repos1_index]}/master\?recursive\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
+				    			url_Dockerfile=$(curl -s ${repos1[repos1_index]}/master\?recursive\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
 				    			if [[ ! -z $url_Dockerfile ]]; then
 				    				#status "Dockerfile found!"
 									echo "Dockerfile found!"
-				    				#curl -H "Accept: application/vnd.github-blob.raw" -u "${UNAME}:${UPASS}" -s ${url_Dockerfile} > ${ORG}-dockerfiles/Dockerfile.${repo}
+				    				#curl -H "Accept: application/vnd.github-blob.raw" -s ${url_Dockerfile} > ${ORG}-dockerfiles/Dockerfile.${repo}
 				    			else
 				    				#status "No Dockerfile in ${repo}"
 									echo "No Dockerfile in ${repo}"
