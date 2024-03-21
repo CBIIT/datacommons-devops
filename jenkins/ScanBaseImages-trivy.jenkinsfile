@@ -83,7 +83,7 @@ pipeline {
                 //     }
 				// }
 
-				sh label: 'Get Dockerfiles', script: """"#!/bin/bash
+				sh label: 'Get Dockerfiles', script: '''#!/bin/bash
 
 				    # Retrieve all Dockerfiles of a given Github organization 
 
@@ -146,7 +146,7 @@ pipeline {
 				    		repos1_index=$(($repos1_index + 1))
 				    	done
 				    	i=$(($i + 1))
-				    done"""
+				    done'''
 
 			}
 
