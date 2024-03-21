@@ -123,8 +123,9 @@ pipeline {
 				    	readarray -t repos1 < <(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
 	
 				    	repos1_index=0
-				    	for repo in $repos0[@]; do
-				    		#status "Repository: ${repo}"
+				    	for repo in $repos0; do
+				    		echo "Repos index: $repos1_index"
+							#status "Repository: ${repo}"
 							echo "Repository: $repo"
 				    		#status "Repos tree master url: $repos1[repos1_index]"
 							echo "Repos tree master url: $repos1[$repos1_index]"
