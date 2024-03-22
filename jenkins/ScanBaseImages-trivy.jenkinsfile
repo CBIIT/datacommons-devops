@@ -87,32 +87,14 @@ pipeline {
 
 				    # Retrieve all Dockerfiles of a given Github organization 
 
-				    # set username, password, and organization
-				    #UNAME="${1}"
-				    #UPASS="${2}"
+				    # set organization
 				    URI="https://api.github.com"
 				    ORG="CBIIT"
-				    # -------
-
-				    #status () {
-				    #		  echo "---> {@}" >&2
-				    #}
-
-				    set +xe
-
-				    #if [ -n "${UNAME}" ] && [ -n "${UPASS}" ] && [ -n "$ORG" ]; then
-				    #	status "Init ok"
-				    #else
-				    #	status "Please set values for UNAME, UPASS & ORG"
-				    #	exit 1
-				    #fi
 
 				    # Get list of repositories
-				    #status "Retrieving repository list ..."
 					echo "Retrieving repository list ..."
 					echo "Command is:   curl -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^link:.*page=([0-9]+)&per_page=100.*/\\1/p'"
 					REPO_NB_PAGES=$(curl -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^link:.*page=([0-9]+)&per_page=100.*/\\1/p')
-				    #status "Nb pages: $REPO_NB_PAGES"
 					echo "Nb pages: $REPO_NB_PAGES"
 
 				    i=1
