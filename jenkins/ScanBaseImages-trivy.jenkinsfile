@@ -93,8 +93,8 @@ pipeline {
 
 				    # Get list of repositories
 					echo "Retrieving repository list ..."
-					echo "Command is:   curl -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^link:.*page=([0-9]+)&per_page=100.*/\\1/p'"
-					REPO_NB_PAGES=$(curl -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^link:.*page=([0-9]+)&per_page=100.*/\\1/p')
+					echo "Command is:   curl -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'"
+					REPO_NB_PAGES=$(curl -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p')
 					echo "Nb pages: $REPO_NB_PAGES"
 
 				    i=1
