@@ -119,9 +119,11 @@ pipeline {
 				    		#status "Repos tree master url: $repos1[repos1_index]"
 							echo "Repos tree master url: $repos1[$repos1_index]"
 				    		#curl -s $repos3[repos1_index]/master\\?recursive\\=1 | grep -i 'not found'
+							echo "Command:   curl -s $repos1[$repos1_index]/master\\?recursive\\=1"
 							curl -s $repos1[$repos1_index]/master\\?recursive\\=1 | grep -i 'not found'
 				    		if [ $? != 0 ] ; then  
-				    			url_Dockerfile=$(curl -s $repos1[$repos1_index]/master\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
+				    			echo "Command:     curl -s $repos1[$repos1_index]/master\\?recursive\\=1"
+								url_Dockerfile=$(curl -s $repos1[$repos1_index]/master\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
 				    			if [[ ! -z $url_Dockerfile ]]; then
 				    				#status "Dockerfile found!"
 									echo "Dockerfile found!"
