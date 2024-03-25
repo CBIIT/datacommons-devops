@@ -83,6 +83,10 @@ pipeline {
                 //     }
 				// }
 
+				// set ECR account number
+				env.GITHUB_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.user'").trim()
+				env.GITHUB_PAT = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.token'").trim()
+				
 				sh label: 'Get Dockerfiles', script: '''#!/bin/bash
 
 				    # Retrieve all Dockerfiles of a given Github organization 
@@ -94,7 +98,7 @@ pipeline {
 				    # Get list of repositories
 					echo "Retrieving repository list ..."
 					echo "Command is:   curl -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'"
-					REPO_NB_PAGES=$(curl -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p')
+					REPO_NB_PAGES=$(curl -u $GITHUB_USER:$GITHUB_PAT -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p')
 					echo "Nb pages: $REPO_NB_PAGES"
 
 				    i=1
@@ -103,9 +107,9 @@ pipeline {
 				    	#status "Command is: curl -u "{UNAME}:{UPASS}" -s ${URI}/orgs/${ORG}/repos\\?page=${i}\\&per_page\\=\\100  | jq -r '.[].name'"
 						echo "Command is: curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r '.[].name'"
 				    	#readarray -t repos0 < <(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
-						repos0=$(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
+						repos0=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
 				    	#readarray -t repos1 < <(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
-						repos1=$(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
+						repos1=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
 						#repos1=$(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url')
 	
 				    	echo "Repos0:  $repos0"
@@ -120,11 +124,11 @@ pipeline {
 							echo "Repos tree master url: $repos1[$repos1_index]"
 				    		#curl -s $repos3[repos1_index]/master\\?recursive\\=1 | grep -i 'not found'
 							echo "Command:   curl -s $repos1[$repos1_index]/master\\?recursive\\=1"
-							is_Dockerfile=$(curl -s $repos1[$repos1_index]/master\\?recursive\\=1 | grep -i 'not found')
+							is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $repos1[$repos1_index]/master\\?recursive\\=1 | grep -i 'not found')
 				    		echo "Is Dockerfile:     $is_Dockerfile"
 							if [ $? != 0 ] ; then  
 				    			echo "Command:     curl -s $repos1[$repos1_index]/master\\?recursive\\=1"
-								url_Dockerfile=$(curl -s $repos1[$repos1_index]/master\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
+								url_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $repos1[$repos1_index]/master\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
 				    			if [[ ! -z $url_Dockerfile ]]; then
 				    				#status "Dockerfile found!"
 									echo "Dockerfile found!"
