@@ -120,8 +120,9 @@ pipeline {
 							echo "Repos tree master url: $repos1[$repos1_index]"
 				    		#curl -s $repos3[repos1_index]/master\\?recursive\\=1 | grep -i 'not found'
 							echo "Command:   curl -s $repos1[$repos1_index]/master\\?recursive\\=1"
-							curl -s $repos1[$repos1_index]/master\\?recursive\\=1 | grep -i 'not found'
-				    		if [ $? != 0 ] ; then  
+							is_Dockerfile=$(curl -s $repos1[$repos1_index]/master\\?recursive\\=1 | grep -i 'not found')
+				    		echo "$is_Dockerfile"
+							if [ $? != 0 ] ; then  
 				    			echo "Command:     curl -s $repos1[$repos1_index]/master\\?recursive\\=1"
 								url_Dockerfile=$(curl -s $repos1[$repos1_index]/master\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
 				    			if [[ ! -z $url_Dockerfile ]]; then
