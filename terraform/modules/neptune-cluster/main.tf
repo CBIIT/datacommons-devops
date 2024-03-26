@@ -32,11 +32,7 @@ resource "aws_neptune_cluster" "this" {
     }
   }
 
-  lifecycle {
-    ignore_changes = [
-      kms_key_arn
-    ]
-  }
+  depends_on = [aws_kms_key.this, aws_kms_alias.this]
 }
 
 resource "aws_neptune_cluster_parameter_group" "this" {
@@ -65,6 +61,8 @@ resource "aws_neptune_cluster_parameter_group" "this" {
     name  = "neptune_query_timeout"
     value = var.query_timeout
   }
+
+  depends_on = [aws_kms_key.this, aws_kms_alias.this]
 }
 
 resource "aws_neptune_cluster_instance" "this" {
