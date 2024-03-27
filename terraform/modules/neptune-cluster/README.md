@@ -49,7 +49,7 @@ No modules.
 | <a name="input_enable_serverless"></a> [enable\_serverless](#input\_enable\_serverless) | whether to enable serverless mode for the cluster | `bool` | `true` | no |
 | <a name="input_enable_slow_query_log"></a> [enable\_slow\_query\_log](#input\_enable\_slow\_query\_log) | the log level for slow queries applied at the cluster-level - either 'info', 'debug', or 'disable' | `string` | `"info"` | no |
 | <a name="input_engine"></a> [engine](#input\_engine) | the name of the database engine to be used for this instance | `string` | `"neptune"` | no |
-| <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | the version of the database engine to use | `string` | `"1.2.1.0"` | no |
+| <a name="input_engine_version"></a> [engine\_version](#input\_engine\_version) | the version of the database engine to use | `string` | `"1.3.1.0"` | no |
 | <a name="input_final_snapshot_identifier"></a> [final\_snapshot\_identifier](#input\_final\_snapshot\_identifier) | the name of the final snapshot to be created immediately before deleting the cluster | `string` | `null` | no |
 | <a name="input_iam_database_authentication_enabled"></a> [iam\_database\_authentication\_enabled](#input\_iam\_database\_authentication\_enabled) | whether to enable IAM database authentication for the cluster | `bool` | `false` | no |
 | <a name="input_iam_roles"></a> [iam\_roles](#input\_iam\_roles) | the list of IAM roles to associate with the cluster | `set(string)` | `[]` | no |
