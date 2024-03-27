@@ -11,9 +11,9 @@ resource "aws_neptune_cluster" "this" {
   final_snapshot_identifier            = var.final_snapshot_identifier
   iam_roles                            = var.iam_roles
   iam_database_authentication_enabled  = var.iam_database_authentication_enabled
-  kms_key_arn                          = aws_kms_key.this.arn
+  kms_key_arn                          = var.create_kms_key ? aws_kms_alias.this[0].arn : null
   neptune_subnet_group_name            = aws_neptune_subnet_group.this.name
-  neptune_cluster_parameter_group_name = var.enable_serverless ? "default.neptune1.2" : module.cluster_parameters[0].name
+  neptune_cluster_parameter_group_name = var.enable_serverless ? "default.neptune1.3" : aws_neptune_cluster_parameter_group.this[0].name
   preferred_backup_window              = var.preferred_backup_window
   preferred_maintenance_window         = var.preferred_maintenance_window
   port                                 = var.port
@@ -31,55 +31,91 @@ resource "aws_neptune_cluster" "this" {
       min_capacity = var.min_capacity
     }
   }
+
+  depends_on = [aws_kms_key.this, aws_kms_alias.this]
 }
 
-module "cluster_parameters" {
-  count  = var.enable_serverless ? 0 : 1
-  source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-cluster-parameter-group?ref=Neptune"
+resource "aws_neptune_cluster_parameter_group" "this" {
+  count = local.create_parameter_groups ? 1 : 0
 
-  resource_prefix  = var.resource_prefix
-  enable_audit_log = var.enable_cloudwatch_logs_exports == ["audit"] ? true : false
+  name        = "${var.resource_prefix}-neptune-cluster-params"
+  family      = var.parameter_group_family
+  description = "${var.resource_prefix} neptune cluster-level parameter group"
+
+  parameter {
+    name  = "neptune_enable_audit_log"
+    value = var.enable_audit_log ? "1" : "0"
+  }
+
+  parameter {
+    name  = "neptune_enable_slow_query_log"
+    value = var.enable_slow_query_log
+  }
+
+  parameter {
+    name  = "neptune_slow_query_log_threshold"
+    value = var.slow_query_log_threshold
+  }
+
+  parameter {
+    name  = "neptune_query_timeout"
+    value = var.query_timeout
+  }
 }
 
-module "instance_parameters" {
-  count  = var.enable_serverless ? 0 : 1
-  source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-instance-parameter-group?ref=Neptune"
-
-  resource_prefix = var.resource_prefix
-  enable_caching  = var.enable_serverless ? false : var.enable_caching
-  query_timeout   = var.query_timeout
-}
-
-module "neptune_instance" {
-  source = "git::https://github.com/CBIIT/datacommons-devops.git//terraform/modules/neptune-instance?ref=Neptune"
-
+resource "aws_neptune_cluster_instance" "this" {
   auto_minor_version_upgrade   = var.auto_minor_version_upgrade
   cluster_identifier           = aws_neptune_cluster.this.cluster_identifier
+  engine                       = var.engine
   engine_version               = var.engine_version
-  instance_class               = var.enable_serverless ? "db.serverless" : var.instance_class
+  instance_class               = var.instance_class
   neptune_subnet_group_name    = aws_neptune_subnet_group.this.name
-  neptune_parameter_group_name = var.enable_serverless ? "default.neptune1.2" : module.instance_parameters[0].name
+  neptune_parameter_group_name = var.enable_serverless ? "default.neptune1.3" : aws_neptune_parameter_group.this[0].name
   port                         = var.port
+  publicly_accessible          = false
+
+  depends_on = [
+    aws_neptune_parameter_group.this
+  ]
+}
+
+resource "aws_neptune_parameter_group" "this" {
+  count = local.create_parameter_groups ? 1 : 0
+
+  name        = "${var.resource_prefix}-neptune-instance-params"
+  family      = var.parameter_group_family
+  description = "${var.resource_prefix} neptune instance-level parameter group"
+
+  parameter {
+    name  = "neptune_result_cache"
+    value = var.enable_result_cache ? "1" : "0"
+  }
 }
 
 resource "aws_kms_key" "this" {
+  count = var.create_kms_key ? 1 : 0
+
   deletion_window_in_days = 7
   description             = "Enforces encryption at rest for the ${terraform.workspace}-tier neptune cluster"
   key_usage               = "ENCRYPT_DECRYPT"
 }
 
 resource "aws_kms_alias" "this" {
+  count = var.create_kms_key ? 1 : 0
+
   name          = "alias/${var.resource_prefix}-neptune-key"
-  target_key_id = aws_kms_key.this.id
+  target_key_id = aws_kms_key.this[0].id
+}
+
+resource "aws_kms_key_policy" "this" {
+  count = var.create_kms_key ? 1 : 0
+
+  key_id = aws_kms_key.this[0].id
+  policy = data.aws_iam_policy_document.kms[0].json
 }
 
 resource "aws_neptune_subnet_group" "this" {
   name        = "${var.resource_prefix}-neptune-subnets"
   description = "subnet group for the ${terraform.workspace}-tier neptune cluster"
   subnet_ids  = var.database_subnet_ids
-}
-
-resource "aws_kms_key_policy" "this" {
-  key_id = aws_kms_key.this.id
-  policy = data.aws_iam_policy_document.kms.json
 }
