@@ -107,17 +107,15 @@ resource "aws_kms_alias" "this" {
   target_key_id = aws_kms_key.this[0].id
 }
 
-resource "aws_neptune_subnet_group" "this" {
-  count = var.create_kms_key ? 1 : 0
-
-  name        = "${var.resource_prefix}-neptune-subnets"
-  description = "subnet group for the ${terraform.workspace}-tier neptune cluster"
-  subnet_ids  = var.database_subnet_ids
-}
-
 resource "aws_kms_key_policy" "this" {
   count = var.create_kms_key ? 1 : 0
 
   key_id = aws_kms_key.this[0].id
   policy = data.aws_iam_policy_document.kms[0].json
+}
+
+resource "aws_neptune_subnet_group" "this" {
+  name        = "${var.resource_prefix}-neptune-subnets"
+  description = "subnet group for the ${terraform.workspace}-tier neptune cluster"
+  subnet_ids  = var.database_subnet_ids
 }
