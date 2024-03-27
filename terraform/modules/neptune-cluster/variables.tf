@@ -45,6 +45,13 @@ variable "create_parameter_groups" {
   sensitive   = false
 }
 
+variable "create_kms_key" {
+  type        = bool
+  description = "whether to create the kms key that encrypts the cluster and instance(s)"
+  default     = true
+  sensitive   = false
+}
+
 variable "database_subnet_ids" {
   type        = set(string)
   description = "the list of subnet IDs to associate with the cluster"

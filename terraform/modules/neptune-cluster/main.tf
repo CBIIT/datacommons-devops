@@ -11,7 +11,7 @@ resource "aws_neptune_cluster" "this" {
   final_snapshot_identifier            = var.final_snapshot_identifier
   iam_roles                            = var.iam_roles
   iam_database_authentication_enabled  = var.iam_database_authentication_enabled
-  kms_key_arn                          = aws_kms_alias.this.arn
+  kms_key_arn                          = var.create_kms_key ? aws_kms_alias.this[0].arn : null
   neptune_subnet_group_name            = aws_neptune_subnet_group.this.name
   neptune_cluster_parameter_group_name = var.enable_serverless ? "default.neptune1.3" : aws_neptune_cluster_parameter_group.this[0].name
   preferred_backup_window              = var.preferred_backup_window
@@ -93,23 +93,31 @@ resource "aws_neptune_parameter_group" "this" {
 }
 
 resource "aws_kms_key" "this" {
+  count = var.create_kms_key ? 1 : 0
+
   deletion_window_in_days = 7
   description             = "Enforces encryption at rest for the ${terraform.workspace}-tier neptune cluster"
   key_usage               = "ENCRYPT_DECRYPT"
 }
 
 resource "aws_kms_alias" "this" {
+  count = var.create_kms_key ? 1 : 0
+
   name          = "alias/${var.resource_prefix}-neptune-key"
-  target_key_id = aws_kms_key.this.id
+  target_key_id = aws_kms_key.this[0].id
 }
 
 resource "aws_neptune_subnet_group" "this" {
+  count = var.create_kms_key ? 1 : 0
+
   name        = "${var.resource_prefix}-neptune-subnets"
   description = "subnet group for the ${terraform.workspace}-tier neptune cluster"
   subnet_ids  = var.database_subnet_ids
 }
 
 resource "aws_kms_key_policy" "this" {
-  key_id = aws_kms_key.this.id
-  policy = data.aws_iam_policy_document.kms.json
+  count = var.create_kms_key ? 1 : 0
+
+  key_id = aws_kms_key.this[0].id
+  policy = data.aws_iam_policy_document.kms[0].json
 }
