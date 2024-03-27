@@ -117,7 +117,7 @@ variable "engine" {
 variable "engine_version" {
   type        = string
   description = "the version of the database engine to use"
-  default     = "1.2.1.0"
+  default     = "1.3.1.0"
   sensitive   = false
 }
 
