@@ -1,4 +1,4 @@
-name: Documentation
+name: Documentation for Terraform
 on:
   - pull_request 
 jobs:
@@ -8,7 +8,7 @@ jobs:
     steps:
     - name: Clone Repository
       id: checkout
-      uses: actions/checkout@master
+      uses: actions/checkout@v3
       with:
         ref: ${{ github.event.pull_request.head.ref }}
     - name: Terraform Documentation

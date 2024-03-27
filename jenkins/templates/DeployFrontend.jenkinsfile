@@ -1,9 +1,17 @@
-@Library('datacommons-jenkins-shared-library@v1.1') _
+@Library('datacommons-jenkins-shared-library@v1.2') _
+
+def getLabelForEnvironment(environment) {
+	if (environment == "stage" || environment == "prod"){
+		return ""     // Set to use a Jenkins agent in your prod account
+	}else {
+		return ""     // Set to use a Jenkins agent in your nonprod account
+	}
+}
 
 pipeline {
 	agent {
 		node {
-			label ''   // Set to use a Jenkins agent in your desired account
+			label getLabelForEnvironment(params.Environment)
 		}
 	}
 
@@ -103,7 +111,7 @@ pipeline {
 				env.REPO_URL = "${ECR_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO}"
 
 				// set template file name
-				env.TEMPLATE_FILE="${PROJECT}-deployments/aws/${APP}_task.json"
+				env.TEMPLATE_FILE="${PROJECT}-deployments/aws/${APP}_task.yml"
 
 			}
 
@@ -158,23 +166,12 @@ pipeline {
 
 				# create new revision for $PROJECT-$APP Task Definition
 				echo "Updating Task Defintion to Use: $ECR_REPO:$IMAGE_TAG"
-				ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-				IMAGE_ID="$REPO_URL:$IMAGE_TAG"
+				export ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+				export IMAGE_ID="$REPO_URL:$IMAGE_TAG"
 
-				sed -i "s|{{project}}|$PROJECT|" $TEMPLATE_FILE
-				sed -i "s|{{environment}}|$ENV|" $TEMPLATE_FILE
-				sed -i "s|{{account_id}}|$ACCOUNT_ID|" $TEMPLATE_FILE
-
-				sed -i "s|{{image_id}}|$IMAGE_ID|" $TEMPLATE_FILE
-				sed -i "s|{{image_tag}}|$IMAGE_TAG|" $TEMPLATE_FILE
-
-				sed -i "s|{{sumo_collector_endpoint}}|$SUMO_COLLECTOR_ENDPOINT|" $TEMPLATE_FILE
-				sed -i "s|{{sumo_collector_token}}|$SUMO_COLLECTOR_TOKEN|" $TEMPLATE_FILE
-
-				sed -i "s|{{domain_name}}|$DOMAIN_NAME|" $TEMPLATE_FILE
-				sed -i "s|{{be_version}}|$BE_VERSION|" $TEMPLATE_FILE
-
-				aws ecs register-task-definition --cli-input-json file://$TEMPLATE_FILE
+				# Update and register task definition
+				envsubst < $TEMPLATE_FILE > $TEMPLATE_FILE
+				aws ecs register-task-definition --cli-input-yaml file://$TEMPLATE_FILE
 
 				'''
 
