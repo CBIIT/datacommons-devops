@@ -52,6 +52,30 @@ output "kms_key_arn" {
   sensitive   = false
 }
 
+output "kms_key_id" {
+  value       = local.kms_key_id
+  description = "the neptune cluster kms key id"
+  sensitive   = false
+}
+
+output "kms_alias_arn" {
+  value       = local.kms_alias_arn
+  description = "the neptune cluster kms key alias arn"
+  sensitive   = false
+}
+
+output "kms_alias_id" {
+  value       = local.kms_alias_id
+  description = "the neptune cluster kms key alias id"
+  sensitive   = false
+}
+
+output "kms_alias_name" {
+  value       = local.kms_alias_name
+  description = "the neptune cluster kms key alias name"
+  sensitive   = false
+}
+
 output "instance_address" {
   value       = aws_neptune_cluster_instance.this.address
   description = "The hostname of the instance. See also endpoint and port."
@@ -91,29 +115,5 @@ output "instance_id" {
 output "instance_identifier" {
   value       = aws_neptune_cluster_instance.this.identifier
   description = "The neptune instance identifier"
-  sensitive   = false
-}
-
-output "kms_key_id" {
-  value       = aws_kms_key.this[0].key_id
-  description = "the neptune cluster kms key id"
-  sensitive   = false
-}
-
-output "kms_alias_arn" {
-  value       = aws_kms_alias.this[0].arn
-  description = "the neptune cluster kms key alias arn"
-  sensitive   = false
-}
-
-output "kms_alias_id" {
-  value       = aws_kms_alias.this[0].id
-  description = "the neptune cluster kms key alias id"
-  sensitive   = false
-}
-
-output "kms_alias_name" {
-  value       = aws_kms_alias.this[0].name
-  description = "the neptune cluster kms key alias name"
   sensitive   = false
 }

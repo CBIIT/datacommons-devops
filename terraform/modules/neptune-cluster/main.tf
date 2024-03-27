@@ -119,4 +119,3 @@ resource "aws_neptune_subnet_group" "this" {
   description = "subnet group for the ${terraform.workspace}-tier neptune cluster"
   subnet_ids  = var.database_subnet_ids
 }
-
