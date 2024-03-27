@@ -95,25 +95,25 @@ output "instance_identifier" {
 }
 
 output "kms_key_id" {
-  value       = aws_kms_key.this.key_id
+  value       = aws_kms_key.this[0].key_id
   description = "the neptune cluster kms key id"
   sensitive   = false
 }
 
 output "kms_alias_arn" {
-  value       = aws_kms_alias.this.arn
+  value       = aws_kms_alias.this[0].arn
   description = "the neptune cluster kms key alias arn"
   sensitive   = false
 }
 
 output "kms_alias_id" {
-  value       = aws_kms_alias.this.id
+  value       = aws_kms_alias.this[0].id
   description = "the neptune cluster kms key alias id"
   sensitive   = false
 }
 
 output "kms_alias_name" {
-  value       = aws_kms_alias.this.name
+  value       = aws_kms_alias.this[0].name
   description = "the neptune cluster kms key alias name"
   sensitive   = false
 }
