@@ -47,7 +47,7 @@ output "cluster_reader_endpoint" {
 }
 
 output "kms_key_arn" {
-  value       = aws_kms_key.this.arn
+  value       = aws_kms_key.this[0].arn
   description = "the neptune cluster kms key arn"
   sensitive   = false
 }
