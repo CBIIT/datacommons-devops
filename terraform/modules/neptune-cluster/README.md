@@ -38,6 +38,7 @@ No modules.
 | <a name="input_auto_minor_version_upgrade"></a> [auto\_minor\_version\_upgrade](#input\_auto\_minor\_version\_upgrade) | indicates that minor engine upgrades are applied automatically to the instance during the maintenance window | `bool` | `true` | no |
 | <a name="input_backup_retention_period"></a> [backup\_retention\_period](#input\_backup\_retention\_period) | number of days to retain backups for | `string` | `1` | no |
 | <a name="input_copy_tags_to_snapshot"></a> [copy\_tags\_to\_snapshot](#input\_copy\_tags\_to\_snapshot) | whether to copy tags to snapshots | `bool` | `true` | no |
+| <a name="input_create_kms_key"></a> [create\_kms\_key](#input\_create\_kms\_key) | whether to create the kms key that encrypts the cluster and instance(s) | `bool` | `true` | no |
 | <a name="input_create_parameter_groups"></a> [create\_parameter\_groups](#input\_create\_parameter\_groups) | whether to create parameter groups for the cluster and instance(s) | `bool` | `false` | no |
 | <a name="input_database_subnet_ids"></a> [database\_subnet\_ids](#input\_database\_subnet\_ids) | the list of subnet IDs to associate with the cluster | `set(string)` | n/a | yes |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | whether to enable deletion protection | `bool` | `true` | no |
