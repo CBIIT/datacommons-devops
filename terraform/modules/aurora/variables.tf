@@ -5,11 +5,11 @@ variable "resource_prefix" {
 
 variable "tags" {
   description = "tags to associate with this instance"
-  type = map(string)
+  type        = map(string)
 }
 variable "stack_name" {
   description = "name of the project"
-  type = string
+  type        = string
 }
 
 variable "env" {
@@ -91,8 +91,8 @@ variable "db_engine_version" {
 }
 variable "lifecycle_policy_name" {
   description = "name of resource lifecycle policy"
-  default = "ignore_changes"
-  type = string
+  default     = "ignore_changes"
+  type        = string
 }
 
 variable "db_engine_mode" {
@@ -139,8 +139,8 @@ variable "max_capacity" {
 }
 variable "master_password_length" {
   description = "length of master user password"
-  type = number
-  default = 15
+  type        = number
+  default     = 15
 }
 variable "vpc_id" {
   type        = string
@@ -149,16 +149,16 @@ variable "vpc_id" {
 
 variable "secret_recovery_window_in_days" {
   description = "number of days to keep secret after deletion"
-  type = number
-  default = 0
+  type        = number
+  default     = 0
 }
 variable "allowed_ip_blocks" {
   description = "allowed ip block for the rds ingress"
-  type = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 variable "database_name" {
   description = "name of the database"
-  type = string
-  default = "bento"
+  type        = string
+  default     = "bento"
 }

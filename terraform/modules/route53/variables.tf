@@ -21,6 +21,6 @@ variable "env" {
 }
 variable "stack_name" {
   description = "stack name"
-  type = string
-  default = "bento"
+  type        = string
+  default     = "bento"
 }

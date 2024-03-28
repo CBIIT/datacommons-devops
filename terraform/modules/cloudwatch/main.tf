@@ -19,12 +19,12 @@ resource "aws_cloudwatch_event_target" "event_target" {
 }
 
 resource "aws_cloudwatch_event_permission" "events_permission" {
-  count            = var.target_type != "" ? 1 : 0
-  action          = "lambda:InvokeFunction"
-  principal       = "events.amazonaws.com"
-  source_arn      = aws_cloudwatch_event_rule.scheduled_event.arn
-  statement_id    = "AllowInvoke"
-  function_name   = aws_cloudwatch_event_target.event_target[0].arn
-  source_profile  = aws_iam_role.events_role.arn
+  count          = var.target_type != "" ? 1 : 0
+  action         = "lambda:InvokeFunction"
+  principal      = "events.amazonaws.com"
+  source_arn     = aws_cloudwatch_event_rule.scheduled_event.arn
+  statement_id   = "AllowInvoke"
+  function_name  = aws_cloudwatch_event_target.event_target[0].arn
+  source_profile = aws_iam_role.events_role.arn
 }
 

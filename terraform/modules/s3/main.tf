@@ -1,9 +1,20 @@
 resource "aws_s3_bucket" "s3" {
-	# checkov:skip=CKV_AWS_145: Ignore customer managed key (cmk) warning
-	# checkov:skip=CKV_AWS_144: Ignore cross-region replication warnings
+  # checkov:skip=CKV_AWS_145: Ignore customer managed key (cmk) warning
+  # checkov:skip=CKV_AWS_144: Ignore cross-region replication warnings
   bucket        = local.bucket_name
   force_destroy = var.s3_force_destroy
-  tags          = var.tags
+  tags = merge(
+    {
+      "CreateDate" = timestamp()
+    },
+    var.tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 
 }
 
@@ -41,25 +52,25 @@ resource "aws_s3_bucket_versioning" "s3" {
 
 resource "aws_s3_bucket_intelligent_tiering_configuration" "s3" {
   bucket = aws_s3_bucket.s3.bucket
-  name = "${local.bucket_name}-intelligent-tiering"
+  name   = "${local.bucket_name}-intelligent-tiering"
 
   status = var.s3_intelligent_tiering_status
 
   tiering {
     access_tier = "ARCHIVE_ACCESS"
-    days = var.days_for_archive_tiering
+    days        = var.days_for_archive_tiering
   }
 
   tiering {
     access_tier = "DEEP_ARCHIVE_ACCESS"
-    days = var.days_for_deep_archive_tiering
+    days        = var.days_for_deep_archive_tiering
   }
 }
 
 resource "aws_s3_bucket_logging" "s3" {
   count = var.s3_enable_access_logging == true ? 1 : 0
-  
-  bucket = aws_s3_bucket.s3.id
+
+  bucket        = aws_s3_bucket.s3.id
   target_bucket = var.s3_access_log_bucket_id
   target_prefix = var.s3_log_prefix
 }

@@ -5,10 +5,18 @@ resource "aws_security_group" "ecs" {
 
   tags = merge(
     {
-      "Name" = format("%s-%s-%s-%s", var.stack_name, var.env, "ecs", "sg")
+      "Name"       = format("%s-%s-%s-%s", var.stack_name, var.env, "ecs", "sg"),
+      "CreateDate" = timestamp()
     },
-    var.tags
+    var.tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
+
 }
 
 
@@ -23,15 +31,24 @@ resource "aws_security_group_rule" "all_egress" {
 
 #create app security group
 resource "aws_security_group" "app" {
-  name = "${var.resource_prefix}-app-sg"
-  description       = "Allow application to communicate with other aws resources"
-  vpc_id = var.vpc_id
+  name        = "${var.resource_prefix}-app-sg"
+  description = "Allow application to communicate with other aws resources"
+  vpc_id      = var.vpc_id
+
   tags = merge(
-  {
-    "Name" = format("%s-%s-app-sg",var.stack_name,terraform.workspace),
-  },
-  var.tags,
+    {
+      "Name"       = format("%s-%s-app-sg", var.stack_name, terraform.workspace),
+      "CreateDate" = timestamp()
+    },
+    var.tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
+
 }
 
 resource "aws_security_group_rule" "app_all_egress" {

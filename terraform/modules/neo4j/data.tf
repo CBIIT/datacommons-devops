@@ -36,7 +36,7 @@ data "aws_ssm_parameter" "sshkey" {
 
 data "aws_iam_policy_document" "sts_policy" {
   statement {
-    effect = "Allow"
+    effect  = "Allow"
     actions = ["sts:AssumeRole"]
     principals {
       identifiers = ["ec2.amazonaws.com"]
@@ -51,15 +51,15 @@ data "aws_iam_policy" "ssm_policy" {
 
 data "aws_security_group" "sg" {
   count = var.create_security_group ? 0 : 1
-  name = var.db_security_group_name
+  name  = var.db_security_group_name
 }
 
 data "aws_iam_instance_profile" "profile" {
   count = var.create_instance_profile ? 0 : 1
-  name = var.db_iam_profile_name
+  name  = var.db_iam_profile_name
 }
 data "aws_ssm_document" "ssm" {
-  count = var.create_bootstrap_script ? 0 : 1
+  count           = var.create_bootstrap_script ? 0 : 1
   name            = var.db_boostrap_ssm_document
   document_format = "YAML"
 }

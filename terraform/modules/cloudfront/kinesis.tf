@@ -4,19 +4,43 @@ resource "aws_s3_bucket" "kinesis_log" {
   acl    = "private"
 }
 resource "aws_iam_role" "firehose_role" {
-  name = local.kenesis_role_name
-  assume_role_policy = data.aws_iam_policy_document.kinesis_assume_role_policy.json
-  permissions_boundary = var.target_account_cloudone ? local.permission_boundary_arn: null
-  tags = var.tags
+  name                 = local.kenesis_role_name
+  assume_role_policy   = data.aws_iam_policy_document.kinesis_assume_role_policy.json
+  permissions_boundary = var.target_account_cloudone ? local.permission_boundary_arn : null
+
+  tags = merge(
+    {
+      "CreateDate" = timestamp()
+    },
+    var.tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 }
 resource "aws_iam_policy" "firehose_policy" {
-  name = local.kenesis_policy_name
+  name   = local.kenesis_policy_name
   policy = data.aws_iam_policy_document.firehose_policy.json
-  tags = var.tags
+
+  tags = merge(
+    {
+      "CreateDate" = timestamp()
+    },
+    var.tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "firehose_policy_attachment" {
-  policy_arn =  aws_iam_policy.firehose_policy.arn
+  policy_arn = aws_iam_policy.firehose_policy.arn
   role       = aws_iam_role.firehose_role.name
 }
 

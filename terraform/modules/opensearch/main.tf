@@ -2,7 +2,18 @@ resource "aws_opensearch_domain" "this" {
   domain_name     = "${var.resource_prefix}-opensearch"
   engine_version  = var.engine_version
   access_policies = local.access_policies
-  tags            = var.tags
+  tags = merge(
+    {
+      "CreateDate" = timestamp()
+    },
+    var.tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 
   cluster_config {
     instance_type  = local.custom_instance_type
@@ -81,8 +92,18 @@ resource "aws_security_group" "this" {
   description = "The security group for the ${var.resource_prefix}-opensearch OpenSearch domain"
   vpc_id      = var.vpc_id
 
-  tags = {
-    Name = "${var.resource_prefix}-opensearch-security-group"
+  tags = merge(
+    {
+      "Name"       = "${var.resource_prefix}-opensearch-security-group",
+      "CreateDate" = timestamp()
+    },
+    var.tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
   }
 }
 
@@ -102,7 +123,18 @@ resource "aws_cloudwatch_log_group" "this" {
 
   name              = "/aws/opensearch-service/${var.resource_prefix}"
   retention_in_days = var.log_retention_in_days
-  tags              = var.tags
+  tags = merge(
+    {
+      "CreateDate" = timestamp()
+    },
+    var.tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 }
 
 resource "aws_cloudwatch_log_resource_policy" "this" {
@@ -119,7 +151,18 @@ resource "aws_iam_role" "snapshot" {
   description          = "The snapshot role for the ${var.resource_prefix}-opensearch domain"
   assume_role_policy   = data.aws_iam_policy_document.trust[0].json
   permissions_boundary = local.permissions_boundary
-  tags                 = var.tags
+  tags = merge(
+    {
+      "CreateDate" = timestamp()
+    },
+    var.tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 }
 
 resource "aws_iam_policy" "snapshot" {

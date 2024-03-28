@@ -4,8 +4,16 @@ resource "aws_kms_key" "ecs_exec" {
 
   tags = merge(
     {
-      "Name" = format("%s-%s", var.stack_name, "ecs-exec-kms-key")
+      "Name"       = format("%s-%s", var.stack_name, "ecs-exec-kms-key"),
+      "CreateDate" = timestamp()
     },
-    var.tags
+    var.tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
+
 }

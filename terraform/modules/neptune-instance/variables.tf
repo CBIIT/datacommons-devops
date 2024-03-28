@@ -75,7 +75,7 @@ variable "promotion_tier" {
   sensitive   = false
 }
 
-variable "publicly_accessible"{
+variable "publicly_accessible" {
   type        = bool
   description = "if its publicly accessible or not"
   default     = false

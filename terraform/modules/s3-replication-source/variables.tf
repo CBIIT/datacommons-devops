@@ -3,11 +3,14 @@ variable "iam_prefix" {
   type        = string
   default     = "power-user"
 }
-
-variable "target_account_cloudone"{
+variable "resource_prefix" {
+  description = "The string prefix for resource names"
+  type        = string
+}
+variable "target_account_cloudone" {
   description = "to add check conditions on whether the resources are brought up in cloudone or not"
   type        = bool
-  default = false
+  default     = false
 }
 variable "tags" {
   description = "tags to associate with this instance"
@@ -23,21 +26,21 @@ variable "env" {
 }
 variable "source_bucket_name" {
   description = "source bucket name"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 variable "destination_bucket_name" {
   description = "destination bucket name"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 variable "create_source_bucket" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = "choose to create source bucket"
 }
 variable "replication_destination_account_id" {
-  type = string
+  type        = string
   description = "replication account id"
-  default = ""
+  default     = ""
 }

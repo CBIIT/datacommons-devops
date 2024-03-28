@@ -1,5 +1,5 @@
 resource "aws_sns_topic" "main" {
-  name        = "${var.resource_prefix}-${var.sns_topic_name}"
+  name         = "${var.resource_prefix}-${var.sns_topic_name}"
   display_name = var.sns_display_name
 }
 

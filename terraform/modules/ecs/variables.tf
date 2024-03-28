@@ -93,47 +93,47 @@ variable "container_insights_setting" {
   default     = "disabled"
 }
 
-variable "target_account_cloudone"{
+variable "target_account_cloudone" {
   description = "to add check conditions on whether the resources are brought up in cloudone or not"
   type        = bool
   default     = true
 }
 
 variable "add_opensearch_permission" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = "choose to create opensearch permission or not"
 }
 variable "allow_cloudwatch_stream" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = "allow cloudwatch stream for the containers"
 
 }
 variable "domain_name" {
-  type = string
+  type        = string
   description = "domain name of this app"
-  default = "bento-tools.org"
+  default     = "bento-tools.org"
 }
 
 variable "create_neo4j_db" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = "choose to add neo4j container or not"
 }
 variable "central_ecr_account_id" {
-  type = string
+  type        = string
   description = "central ecr account number"
-  default = null
+  default     = null
 }
 variable "use_custom_trust_policy" {
-  type = bool
+  type        = bool
   description = "use custom role trust policy"
-  default = false
+  default     = false
 }
 
 variable "custom_trust_policy" {
-  type = string
+  type        = string
   description = "custom role trust policy"
-  default = null
+  default     = null
 }

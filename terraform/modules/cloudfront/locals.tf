@@ -1,6 +1,6 @@
 locals {
-  s3_origin_id = "${var.stack_name}_files_origin_id"
-  env_type =  var.env == "dev" || var.env == "qa" ? "nonprod" : "prod"
+  s3_origin_id            = "${var.stack_name}_files_origin_id"
+  env_type                = var.env == "dev" || var.env == "qa" ? "nonprod" : "prod"
   kenesis_role_name       = var.target_account_cloudone ? "${var.iam_prefix}-${var.resource_prefix}-firehose-role" : "${var.resource_prefix}-firehose-role"
   kenesis_policy_name     = var.target_account_cloudone ? "${var.iam_prefix}-${var.resource_prefix}-firehose-policy" : "${var.resource_prefix}-firehose-policy"
   kenesis_bucket_name     = var.target_account_cloudone ? "cloudone-${var.resource_prefix}-kinesis-firehose-stream" : "${var.resource_prefix}-kinesis-firehose-stream"
