@@ -28,7 +28,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_app"></a> [app](#input\_app) | name of the app | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | aws region to use for this resource | `string` | `"us-east-1"` | no |
-| <a name="input_secret_values"></a> [secret\_values](#input\_secret\_values) | n/a | <pre>map(object({<br>    secretKey = string<br>    secretValue = map(string)<br>    description = string<br>  }))</pre> | n/a | yes |
+| <a name="input_secret_values"></a> [secret\_values](#input\_secret\_values) | n/a | <pre>map(object({<br>    secretKey   = string<br>    secretValue = map(string)<br>    description = string<br>  }))</pre> | n/a | yes |
 
 ## Outputs
 
