@@ -1,0 +1,14 @@
+---
+# vars file for data loading
+neo4j_password: "{{ lookup('env','NEO4J_PASSWORD') }}"
+neo4j_user: neo4j
+tier: "{{ lookup('env','TIER') }}"
+workspace: "{{ lookup('env','WORKSPACE') }}"
+neo4j_ip: "{{ lookup('env','NEO4J_IP') }}"
+s3_folder: "{{ lookup('env','S3_FOLDER') }}"
+region: us-east-1
+bucket_Name: "{{ lookup('env','S3_BUCKET') }}"
+s3_bucket: "{{ lookup('env','S3_BUCKET') }}"
+data_bucket: "{{bucket[project]}}"
+project: "{{ lookup('env','PROJECT') }}"
+project_name: "{{ lookup('env','PROJECT') }}"
