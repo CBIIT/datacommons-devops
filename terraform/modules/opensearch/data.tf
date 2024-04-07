@@ -10,17 +10,15 @@ data "aws_iam_policy_document" "os" {
       "logs:CreateLogStream",
       "logs:PutLogEvents",
       "logs:PutMetricFilter",
-      "logs:PutRetentionPolicy"
+      "logs:PutRetentionPolicy",
+      "logs:*"
     ]
     principals {
       type        = "Service"
       identifiers = ["es.amazonaws.com"]
     }
     resources = [
-      
-      # aws_cloudwatch_log_group.os.arn,
-      # arn:aws:logs:us-east-1:339649878709:log-group:cds-dev2-opensearch-logs:*
-      "arn:aws:logs:*:*:*"
+      aws_cloudwatch_log_group.os.arn
     ]
   }
 }
