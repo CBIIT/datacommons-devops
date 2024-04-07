@@ -41,7 +41,7 @@ resource "aws_opensearch_domain" "os" {
     iterator = i
 
     content {
-      enabled                  = true
+      enabled                  = false
       cloudwatch_log_group_arn = aws_cloudwatch_log_group.os.arn
       log_type                 = i.value
     }
