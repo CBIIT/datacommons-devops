@@ -18,7 +18,7 @@ data "aws_iam_policy_document" "os" {
     }
     resources = [
     
-      # aws_cloudwatch_log_group.os.arn,
+      aws_cloudwatch_log_group.os.arn,
       # "${aws_cloudwatch_log_group.os.arn}:*"
       "arn:aws:logs:*"
     ]
