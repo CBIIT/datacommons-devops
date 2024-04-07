@@ -6,9 +6,11 @@ data "aws_iam_policy_document" "os" {
   statement {
     effect = "Allow"
     actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
       "logs:PutLogEvents",
-      "logs:PutLogEventsBatch",
-      "logs:CreateLogStream"
+      "logs:PutMetricFilter",
+      "logs:PutRetentionPolicy"
     ]
     principals {
       type        = "Service"
