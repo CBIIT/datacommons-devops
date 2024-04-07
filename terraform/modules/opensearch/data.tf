@@ -17,8 +17,9 @@ data "aws_iam_policy_document" "os" {
       identifiers = ["es.amazonaws.com"]
     }
     resources = [
-      aws_cloudwatch_log_group.os.arn,
-      "${aws_cloudwatch_log_group.os.arn}:*"
+      "arn:aws:logs:${data.aws_region.region.name}:${data.aws_caller_identity.caller.account_id}:log-group:/aws/OpenSearchService/domains/*:*"
+      # aws_cloudwatch_log_group.os.arn,
+      # "${aws_cloudwatch_log_group.os.arn}:*"
     ]
   }
 }
