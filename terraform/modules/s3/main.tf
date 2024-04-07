@@ -63,3 +63,11 @@ resource "aws_s3_bucket_logging" "s3" {
   target_bucket = var.s3_access_log_bucket_id
   target_prefix = var.s3_log_prefix
 }
+
+resource "aws_s3_bucket_ownership_controls" "s3" {
+  bucket = aws_s3_bucket.s3.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
