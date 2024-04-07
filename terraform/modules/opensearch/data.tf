@@ -11,7 +11,10 @@ data "aws_iam_policy_document" "os" {
       "logs:PutLogEvents",
       "logs:PutMetricFilter",
       "logs:PutRetentionPolicy",
-      "logs:*"
+      "logs:CreateLogDelivery",
+      "logs:PutResourcePolicy",
+      "logs:DescribeResourcePolicies",
+      "logs:DescribeLogGroups"
     ]
     principals {
       type        = "Service"
