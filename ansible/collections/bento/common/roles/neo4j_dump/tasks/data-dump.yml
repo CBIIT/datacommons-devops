@@ -2,7 +2,7 @@
 # tasks file for neo4j-loader
 
 - name: ensure backup directory exists
-  become: yes
+  #become: yes
   file:
     path: "{{ backup_directory }}"
     state: directory
@@ -10,11 +10,11 @@
     group: neo4j
 
 - name: Remove old backup files if found
-  become: yes
+  #become: yes
   file: path="{{ backup_directory }}/{{ dump_file_name }}.dump" state=absent
 
 - name: stop neo4j
-  become: yes
+  #become: yes
   service:
     name: neo4j
     state: stopped
@@ -25,8 +25,8 @@
 
 - name: backup neo4j db
   command: "neo4j-admin dump --database=neo4j --to={{ backup_directory }}/{{ dump_file_name }}.dump"
-  #become_user: neo4j
-  become: yes
+  become_user: neo4j
+  #become: yes
 
 - name: verify file is present
   stat:
@@ -34,7 +34,7 @@
   register: file_status
 
 - name: start neo4j
-  become: yes
+  #become: yes
   service:
     name: neo4j
     state: started
@@ -43,8 +43,8 @@
   debug:
     msg: "{{ remote_workspace }}"
 
-# - name: ansible copy file from remote to local
-#   fetch:
-#     src: "{{ backup_directory }}/{{ dump_file_name }}.dump"
-#     dest: "{{ remote_workspace }}-{{ tier }}/"
-#     flat: yes
+- name: ansible copy file from remote to local
+  fetch:
+    src: "{{ backup_directory }}/{{ dump_file_name }}.dump"
+    dest: "{{ remote_workspace }}-{{ tier }}/"
+    flat: yes
