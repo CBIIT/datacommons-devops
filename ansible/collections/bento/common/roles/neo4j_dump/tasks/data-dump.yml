@@ -19,6 +19,10 @@
     name: neo4j
     state: stopped
 
+- name: Print backup file name
+  debug:
+    msg: "{{ backup_directory }}/{{ dump_file_name }}.dump"
+
 - name: backup neo4j db
   command: "neo4j-admin dump --database=neo4j --to={{ backup_directory }}/{{ dump_file_name }}.dump"
   #become_user: neo4j
