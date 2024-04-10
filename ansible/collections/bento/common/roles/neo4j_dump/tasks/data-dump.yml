@@ -2,6 +2,7 @@
 # tasks file for neo4j-loader
 
 - name: ensure backup directory exists
+  become: yes
   file:
     path: "{{ backup_directory }}"
     state: directory
@@ -9,9 +10,11 @@
     group: neo4j
 
 - name: Remove old backup files if found
+  become: yes
   file: path="{{ backup_directory }}/{{ dump_file_name }}.dump" state=absent
 
 - name: stop neo4j
+  become: yes
   service:
     name: neo4j
     state: stopped
@@ -26,6 +29,7 @@
   register: file_status
 
 - name: start neo4j
+  become: yes
   service:
     name: neo4j
     state: started
