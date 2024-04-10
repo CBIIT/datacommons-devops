@@ -21,7 +21,8 @@
 
 - name: backup neo4j db
   command: "neo4j-admin dump --database=neo4j --to={{ backup_directory }}/{{ dump_file_name }}.dump"
-  become_user: neo4j
+  #become_user: neo4j
+  become: yes
 
 - name: verify file is present
   stat:
