@@ -39,6 +39,10 @@
     name: neo4j
     state: started
 
+- name: Print to console
+  debug:
+    msg: "{{ remote_workspace }}"
+
 # - name: ansible copy file from remote to local
 #   fetch:
 #     src: "{{ backup_directory }}/{{ dump_file_name }}.dump"
