@@ -1,0 +1,4 @@
+- name: Push Dump File
+  include_tasks:
+    file: push_dump.yml
+  when: push_stage
