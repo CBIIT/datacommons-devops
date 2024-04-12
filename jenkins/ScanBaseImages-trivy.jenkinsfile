@@ -149,6 +149,7 @@ pipeline {
 								#	echo "Nothing in the repo $repo"
 								#fi
 								#repos1_index=$(($repos1_index + 1))
+								shift
 							#done
 				    	done
 				    	i=$(($i + 1))
