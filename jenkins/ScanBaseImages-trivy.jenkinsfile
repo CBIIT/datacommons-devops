@@ -118,8 +118,10 @@ pipeline {
 						echo "Repos1:  $repos1"
 						
 						#repos1_index=0
-				    	for repo in $repos0; do
-							for tree in $repos1; do
+				    	set -- $repos1
+						for repo in $repos0; do
+							#for tree in $repos1; do
+								tree=$1
 								#echo "Repos index: $repos1_index"
 								#status "Repository: ${repo}"
 								echo "Repository: $repo"
@@ -147,7 +149,7 @@ pipeline {
 								#	echo "Nothing in the repo $repo"
 								#fi
 								#repos1_index=$(($repos1_index + 1))
-							done
+							#done
 				    	done
 				    	i=$(($i + 1))
 				    done'''
