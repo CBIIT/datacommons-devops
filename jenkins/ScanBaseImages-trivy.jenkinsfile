@@ -110,9 +110,9 @@ pipeline {
 						repos0=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
 				    	echo "repos1 Command is: curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g'"
 						#readarray -t repos1 < <(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
-						#readarray -t repos1 < <(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
+						readarray -t repos1 < <(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
 						#repos1=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
-						repos1=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url')
+						#repos1=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url')
 	
 				    	echo "Repos0:  $repos0"
 						echo "Repos1:  $repos1"
