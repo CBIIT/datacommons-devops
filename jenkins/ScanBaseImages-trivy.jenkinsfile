@@ -117,32 +117,37 @@ pipeline {
 				    	echo "Repos0:  $repos0"
 						echo "Repos1:  $repos1"
 						
-						repos1_index=0
+						#repos1_index=0
 				    	for repo in $repos0; do
-				    		echo "Repos index: $repos1_index"
-							#status "Repository: ${repo}"
-							echo "Repository: $repo"
-				    		#status "Repos tree master url: $repos1[repos1_index]"
-							echo "Repos tree master url: ${repos1[$repos1_index]}"
-				    		#curl -s $repos3[repos1_index]/master\\?recursive\\=1 | grep -i 'not found'
-							echo "Command:   curl -s ${repos1[$repos1_index]}/master\\?recursive\\=1"
-							is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s ${repos1[$repos1_index]}/master\\?recursive\\=1 | grep -i 'not found')
-				    		echo "Is Dockerfile:     $is_Dockerfile"
-							if [ $? != 0 ] ; then  
-				    			echo "Command:     curl -s $repos1[$repos1_index]/master\\?recursive\\=1"
-								url_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $repos1[$repos1_index]/master\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
-				    			if [[ ! -z $url_Dockerfile ]]; then
-				    				#status "Dockerfile found!"
-									echo "Dockerfile found!"
-				    				#curl -H "Accept: application/vnd.github-blob.raw" -s $url_Dockerfile > ${ORG}-dockerfiles/Dockerfile.${repo}
-				    			else
-				    				#status "No Dockerfile in ${repo}"
-									echo "No Dockerfile in $repo"
-				    			fi
-				    		else
-				    			echo "Nothing in the repo $repo"
-				    		fi
-				    		repos1_index=$(($repos1_index + 1))
+							for tree in $repos1; do
+								#echo "Repos index: $repos1_index"
+								#status "Repository: ${repo}"
+								echo "Repository: $repo"
+								#status "Repos tree master url: $repos1[repos1_index]"
+								#echo "Repos tree master url: ${repos1[$repos1_index]}"
+								echo "Repos tree master url: $tree"
+								#curl -s $repos3[repos1_index]/master\\?recursive\\=1 | grep -i 'not found'
+								#echo "Command:   curl -s ${repos1[$repos1_index]}/master\\?recursive\\=1"
+								echo "Command:   curl -s $tree/master\\?recursive\\=1"
+								#is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s ${repos1[$repos1_index]}/master\\?recursive\\=1 | grep -i 'not found')
+								is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/master\\?recursive\\=1 | grep -i 'not found')
+								echo "Is Dockerfile:     $is_Dockerfile"
+								#if [ $? != 0 ] ; then  
+								#	echo "Command:     curl -s $repos1[$repos1_index]/master\\?recursive\\=1"
+								#	url_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $repos1[$repos1_index]/master\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
+								#	if [[ ! -z $url_Dockerfile ]]; then
+								#		#status "Dockerfile found!"
+								#		echo "Dockerfile found!"
+								#		#curl -H "Accept: application/vnd.github-blob.raw" -s $url_Dockerfile > ${ORG}-dockerfiles/Dockerfile.${repo}
+								#	else
+								#		#status "No Dockerfile in ${repo}"
+								#		echo "No Dockerfile in $repo"
+								#	fi
+								#else
+								#	echo "Nothing in the repo $repo"
+								#fi
+								#repos1_index=$(($repos1_index + 1))
+							done
 				    	done
 				    	i=$(($i + 1))
 				    done'''
