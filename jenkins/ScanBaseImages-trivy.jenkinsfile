@@ -106,11 +106,11 @@ pipeline {
 				    while [ $i -le $REPO_NB_PAGES ]; do
 				    	#status "Command is: curl -u "{UNAME}:{UPASS}" -s ${URI}/orgs/${ORG}/repos\\?page=${i}\\&per_page\\=\\100  | jq -r '.[].name'"
 						echo "repos0 Command is: curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r '.[].name'"
-				    	#readarray -t repos0 < <(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
-						repos0=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
+				    	readarray -t repos0 <<< $(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
+						#repos0=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
 				    	echo "repos1 Command is: curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g'"
 						#readarray -t repos1 < <(curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
-						readarray -t repos1 < <(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
+						readarray -t repos1 <<< $(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
 						#repos1=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
 						#repos1=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].trees_url')
 	
@@ -123,10 +123,10 @@ pipeline {
 							#status "Repository: ${repo}"
 							echo "Repository: $repo"
 				    		#status "Repos tree master url: $repos1[repos1_index]"
-							echo "Repos tree master url: $repos1[$repos1_index]"
+							echo "Repos tree master url: ${repos1[$repos1_index]}"
 				    		#curl -s $repos3[repos1_index]/master\\?recursive\\=1 | grep -i 'not found'
-							echo "Command:   curl -s $repos1[$repos1_index]/master\\?recursive\\=1"
-							is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $repos1[$repos1_index]/master\\?recursive\\=1 | grep -i 'not found')
+							echo "Command:   curl -s ${repos1[$repos1_index]}/master\\?recursive\\=1"
+							is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s ${repos1[$repos1_index]}/master\\?recursive\\=1 | grep -i 'not found')
 				    		echo "Is Dockerfile:     $is_Dockerfile"
 							if [ $? != 0 ] ; then  
 				    			echo "Command:     curl -s $repos1[$repos1_index]/master\\?recursive\\=1"
