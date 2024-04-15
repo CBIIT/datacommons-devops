@@ -127,11 +127,11 @@ pipeline {
 								if [[ ! -z $url_Dockerfile ]]; then
 									echo "Dockerfile found in repository: $repo - Branch: $branch"
 									#curl -H "Accept: application/vnd.github-blob.raw" -s $url_Dockerfile > ${ORG}-dockerfiles/Dockerfile.${repo}
-								else
-									echo "No Dockerfile in $repo"
+								#else
+									#echo "No Dockerfile in $repo"
 								fi
-							else
-								echo "Nothing in the repo $repo"
+							#else
+								#echo "Nothing in the repo $repo"
 							fi
 							#break
 				    	done
