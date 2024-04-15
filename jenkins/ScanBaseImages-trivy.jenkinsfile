@@ -118,10 +118,11 @@ pipeline {
 						echo "Repos1:  $repos1"
 						
 						#repos1_index=0
-				    	set -- $repos1
+				    	#set -- $repos1
 						for repo in $repos0; do
 							#for tree in $repos1; do
-								tree=$1
+								#tree=$1
+								tree=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
 								#echo "Repos index: $repos1_index"
 								#status "Repository: ${repo}"
 								echo "Repository: $repo"
@@ -130,10 +131,10 @@ pipeline {
 								echo "Repos tree master url: $tree"
 								#curl -s $repos3[repos1_index]/master\\?recursive\\=1 | grep -i 'not found'
 								#echo "Command:   curl -s ${repos1[$repos1_index]}/master\\?recursive\\=1"
-								echo "Command:   curl -s $tree/master\\?recursive\\=1"
+								##echo "Command:   curl -s $tree/master\\?recursive\\=1"
 								#is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s ${repos1[$repos1_index]}/master\\?recursive\\=1 | grep -i 'not found')
-								is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/master\\?recursive\\=1 | grep -i 'not found')
-								echo "Is Dockerfile:     $is_Dockerfile"
+								##is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/master\\?recursive\\=1 | grep -i 'not found')
+								##echo "Is Dockerfile:     $is_Dockerfile"
 								#if [ $? != 0 ] ; then  
 								#	echo "Command:     curl -s $repos1[$repos1_index]/master\\?recursive\\=1"
 								#	url_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $repos1[$repos1_index]/master\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
@@ -149,8 +150,9 @@ pipeline {
 								#	echo "Nothing in the repo $repo"
 								#fi
 								#repos1_index=$(($repos1_index + 1))
-								shift
+								#shift
 							#done
+							break
 				    	done
 				    	i=$(($i + 1))
 				    done'''
