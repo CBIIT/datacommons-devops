@@ -133,7 +133,7 @@ pipeline {
 							else
 								echo "Nothing in the repo $repo"
 							fi
-							break
+							#break
 				    	done
 						break
 				    	i=$(($i + 1))
