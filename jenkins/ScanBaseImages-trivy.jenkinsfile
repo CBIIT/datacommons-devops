@@ -125,7 +125,7 @@ pipeline {
 								#echo "Tree Cmd:     curl -s $URI/repos/$ORG/$repo | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g'"
 								echo "Tree Cmd:     curl -s $URI/repos/$ORG/$repo | jq -r -c '.[].trees_url' | grep trees_url | grep $ORG | sed 's/^.*\(https.*trees\).*$/\1/'"
 								#tree=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | jq -r -c '.[].trees_url' | sed -e 's;{/sha};;g')
-								tree=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep trees_url | grep $ORG | sed 's/^.*\(https.*trees\).*$/\1/')
+								tree=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/')
 								#echo "Repos index: $repos1_index"
 								#status "Repository: ${repo}"
 								echo "Repository: $repo"
