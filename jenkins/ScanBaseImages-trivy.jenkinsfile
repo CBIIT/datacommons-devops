@@ -120,9 +120,8 @@ pipeline {
 							echo "Repo default branch: $branch"
 
 							echo "Command:   curl -s $tree/$branch\\?recursive\\=1"
-							#is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s ${repos1[$repos1_index]}/master\\?recursive\\=1 | grep -i 'not found')
-							##is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/master\\?recursive\\=1 | grep -i 'not found')
-							##echo "Is Dockerfile:     $is_Dockerfile"
+							is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'not found')
+							echo "Is Dockerfile:     $is_Dockerfile"
 							#if [ $? != 0 ] ; then  
 							#	echo "Command:     curl -s $repos1[$repos1_index]/master\\?recursive\\=1"
 							#	url_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $repos1[$repos1_index]/master\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
@@ -140,7 +139,7 @@ pipeline {
 							#repos1_index=$(($repos1_index + 1))
 							break
 				    	done
-						break
+						#break
 				    	i=$(($i + 1))
 				    done'''
 
