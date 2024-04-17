@@ -68,10 +68,10 @@ pipeline {
 						
 						repos.each() {
 							println "Repo:     ${it}"
-							tree=sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
+							tree=sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\\$/\\1/'").trim()
 				 			println "Repo tree master url: ${tree}"
 
-							cmd_tree=['/bin/sh', '-c', "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'"].execute().text
+							cmd_tree=['/bin/sh', '-c', "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\\$/\\1/'"].execute().text
 							println "CMD Repo tree master url: ${cmd_tree}"
 
 						}
