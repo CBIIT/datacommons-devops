@@ -68,16 +68,17 @@ pipeline {
 						
 						repos.each() {
 							println "Repo:     ${it}"
-							tree=sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
+							//tree=sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
 				 			//println "Repo tree master url: ${tree}"
 
 							dockerFiles=sh label: 'Get Dockerfiles', returnStdout: true, script: """#!/bin/bash
 
 								# Retrieve all Dockerfiles of a given Github organization 
+								tree=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/')
 								echo 'Repo tree master url: $tree'
 								#echo '$URI/repos/$ORG/$it'
 
-								branch=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
+								branch=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
 								#echo 'Repo default branch: $branch'
 
 								is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'not found')
