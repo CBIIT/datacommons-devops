@@ -76,7 +76,7 @@ pipeline {
 								# Retrieve all Dockerfiles of a given Github organization 
 								#echo "Tree Cmd:     curl -s $URI/repos/$ORG/$repo | jq -r -c '.[].trees_url' | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/'"
 								tree=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/')
-								#echo "Repo tree master url: $tree"
+								echo "Repo tree master url: $tree"
 
 								branch=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
 								#echo "Repo default branch: $branch"
