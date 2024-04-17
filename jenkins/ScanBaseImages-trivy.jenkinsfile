@@ -63,10 +63,11 @@ pipeline {
 				println "Repo Pages:  ${REPO_NB_PAGES}"
 
 				def page = 1
-				do {
+				while(page <= 1) {   //REPO_NB_PAGES)
 					repos=sh(label: 'get repo names', returnStdout: yes, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name'")
 					println "Repos:   ${repos}"
-				} while(page <= 1)  //REPO_NB_PAGES)
+					page++
+				} 
 				
 				// sh label: 'Get Dockerfiles', script: '''#!/bin/bash
 
