@@ -87,57 +87,60 @@ pipeline {
 				env.GITHUB_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.user'").trim()
 				env.GITHUB_PAT = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.token'").trim()
 				
-				sh label: 'Get Dockerfiles', script: '''#!/bin/bash
+				REPO_NB_PAGES=sh(label: 'Get repo pages', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'").trim()
+				println "Repo Pages:  ${REPO_NB_PAGES}"
 
-				    # Retrieve all Dockerfiles of a given Github organization 
+				// sh label: 'Get Dockerfiles', script: '''#!/bin/bash
 
-				    # set organization
-				    URI="https://api.github.com"
-				    ORG="CBIIT"
+				//     # Retrieve all Dockerfiles of a given Github organization 
 
-				    # Get list of repositories
-					echo "Retrieving repository list ..."
-					#echo "Command is:   curl -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'"
-					REPO_NB_PAGES=$(curl -u $GITHUB_USER:$GITHUB_PAT -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p')
-					#echo "Nb pages: $REPO_NB_PAGES"
+				//     # set organization
+				//     URI="https://api.github.com"
+				//     ORG="CBIIT"
 
-				    i=1
-				    #mkdir -p $ORG-dockerfiles
-				    while [ $i -le $REPO_NB_PAGES ]; do
-						#echo "repos Command is: curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r '.[].name'"
-				    	readarray -t repos <<< $(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
+				//     # Get list of repositories
+				// 	echo "Retrieving repository list ..."
+				// 	#echo "Command is:   curl -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'"
+				// 	REPO_NB_PAGES=$(curl -u $GITHUB_USER:$GITHUB_PAT -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p')
+				// 	#echo "Nb pages: $REPO_NB_PAGES"
+
+				//     i=1
+				//     #mkdir -p $ORG-dockerfiles
+				//     while [ $i -le $REPO_NB_PAGES ]; do
+				// 		#echo "repos Command is: curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r '.[].name'"
+				//     	readarray -t repos <<< $(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
 	
-				    	#echo "Repos:  $repos"
+				//     	#echo "Repos:  $repos"
 						
-						for repo in $repos; do
-							#echo "Repository: $repo"
+				// 		for repo in $repos; do
+				// 			#echo "Repository: $repo"
 
-							#echo "Tree Cmd:     curl -s $URI/repos/$ORG/$repo | jq -r -c '.[].trees_url' | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/'"
-							tree=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/')
-							#echo "Repo tree master url: $tree"
+				// 			#echo "Tree Cmd:     curl -s $URI/repos/$ORG/$repo | jq -r -c '.[].trees_url' | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/'"
+				// 			tree=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/')
+				// 			#echo "Repo tree master url: $tree"
 
-							branch=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
-							#echo "Repo default branch: $branch"
+				// 			branch=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
+				// 			#echo "Repo default branch: $branch"
 
-							is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'not found')
-							#echo "Is Dockerfile:     $is_Dockerfile"
-							if [ $? != 0 ] ; then  
-								#echo "Files Command:     curl -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')"
-								url_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
-								if [[ ! -z $url_Dockerfile ]]; then
-									echo "Dockerfile found in repository: $repo - Branch: $branch"
-									#curl -H "Accept: application/vnd.github-blob.raw" -s $url_Dockerfile > ${ORG}-dockerfiles/Dockerfile.${repo}
-								#else
-									#echo "No Dockerfile in $repo"
-								fi
-							#else
-								#echo "Nothing in the repo $repo"
-							fi
-							#break
-				    	done
-						break
-				    	i=$(($i + 1))
-				    done'''
+				// 			is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'not found')
+				// 			#echo "Is Dockerfile:     $is_Dockerfile"
+				// 			if [ $? != 0 ] ; then  
+				// 				#echo "Files Command:     curl -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')"
+				// 				url_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
+				// 				if [[ ! -z $url_Dockerfile ]]; then
+				// 					echo "Dockerfile found in repository: $repo - Branch: $branch"
+				// 					#curl -H "Accept: application/vnd.github-blob.raw" -s $url_Dockerfile > ${ORG}-dockerfiles/Dockerfile.${repo}
+				// 				#else
+				// 					#echo "No Dockerfile in $repo"
+				// 				fi
+				// 			#else
+				// 				#echo "Nothing in the repo $repo"
+				// 			fi
+				// 			#break
+				//     	done
+				// 		break
+				//     	i=$(($i + 1))
+				//     done'''
 
 			}
 
