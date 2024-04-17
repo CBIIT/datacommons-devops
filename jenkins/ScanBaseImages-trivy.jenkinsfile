@@ -71,7 +71,7 @@ pipeline {
 							tree=sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
 				 			println "Repo tree master url: ${tree}"
 
-							dockerFiles=sh label: 'Get Dockerfiles', script: '''#!/bin/bash
+							dockerFiles=sh label: 'Get Dockerfiles', returnStdout: true, script: '''#!/bin/bash
 
 								# Retrieve all Dockerfiles of a given Github organization 
 								#echo "Tree Cmd:     curl -s $URI/repos/$ORG/$repo | jq -r -c '.[].trees_url' | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/'"
