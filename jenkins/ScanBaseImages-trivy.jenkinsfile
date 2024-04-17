@@ -77,7 +77,7 @@ pipeline {
 								echo 'Repo tree master url: $tree'
 								#echo '$URI/repos/$ORG/$it'
 
-								branch=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$repo | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
+								branch=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
 								#echo 'Repo default branch: $branch'
 
 								is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'not found')
