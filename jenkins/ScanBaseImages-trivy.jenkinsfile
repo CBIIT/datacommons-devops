@@ -52,40 +52,6 @@ pipeline {
  		steps {
 
  			script {
-
-				//def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
-				
-				// RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: """#!/bin/bash
-				
-				// for image in ${image_list.join(' ')}; do
-				// 	trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
-
-				// 	if [ \$? == 1 ];	then
-				// 	  echo "\$trivy_out \n\n"
-				//     fi
-
-                // done
-
-				// """).trim()
-				
-				//RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: "curl -L 100 https://api.github.com/orgs/cbiit/repos?per_page=1000").trim()
-
-				// println RESULTS
-				// RESULTS.each println(it)
-				
-				//def list = new JsonSlurper().parseText( RESULTS )
-				//list.each { println it.name }
-
-				//json = readJSON(RESULTS)
-				
-				//json.each JsonOutput.prettyPrint(JsonOutput.toJson(it))
-
-				// if(RESULTS) {
-                //     catchError(stageResult: 'FAILURE') {
-                //         error 'VULNERABILITIES FOUND'
-                //     }
-				// }
-
 				// set ECR account number
 				env.GITHUB_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.user'").trim()
 				env.GITHUB_PAT = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.token'").trim()
@@ -96,6 +62,12 @@ pipeline {
 				
 				println "Repo Pages:  ${REPO_NB_PAGES}"
 
+				def page = 1
+				do {
+					repos=sh(label: 'get repo names', returnStdout: yes, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name'")
+					println "Repos:   ${repos}"
+				} while(page <= 1)  //REPO_NB_PAGES)
+				
 				// sh label: 'Get Dockerfiles', script: '''#!/bin/bash
 
 				//     # Retrieve all Dockerfiles of a given Github organization 
