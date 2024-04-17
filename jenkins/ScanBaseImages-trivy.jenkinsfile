@@ -25,6 +25,9 @@ pipeline {
 	ECR_REPO    = "cbiit-base-docker-images"
 	REGION      = "us-east-1"
 
+	API_URI     = "https://api.github.com"
+	ORG         = "CBIIT"
+
   }
 
   stages{
@@ -87,7 +90,7 @@ pipeline {
 				env.GITHUB_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.user'").trim()
 				env.GITHUB_PAT = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.token'").trim()
 				
-				REPO_NB_PAGES=sh(label: 'Get repo pages', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'").trim()
+				REPO_NB_PAGES=sh(label: 'Get repo pages', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -I -s $API_URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'").trim()
 				println "Repo Pages:  ${REPO_NB_PAGES}"
 
 				// sh label: 'Get Dockerfiles', script: '''#!/bin/bash
