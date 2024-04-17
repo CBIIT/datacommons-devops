@@ -62,7 +62,7 @@ pipeline {
 					println "Repo Pages:  ${REPO_NB_PAGES}"
 
 					def page = 1
-					while(page <= REPO_NB_PAGES) {
+					while(page <= 1) {    //REPO_NB_PAGES) {
 						repos=sh(label: 'get repo names', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/orgs/$ORG/repos\\?page=$page\\&per_page\\=\\100  | jq -r -c '.[].name'").trim().split()
 						println "Repos:   ${repos}"
 						
@@ -75,7 +75,7 @@ pipeline {
 
 								# Retrieve all Dockerfiles of a given Github organization 
 								#echo "Tree Cmd:     curl -s $URI/repos/$ORG/$repo | jq -r -c '.[].trees_url' | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/'"
-								tree=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/')
+								tree=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/')
 								#echo "Repo tree master url: $tree"
 
 								branch=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
