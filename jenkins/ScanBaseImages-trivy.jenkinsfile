@@ -71,8 +71,32 @@ pipeline {
 							tree=sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\\$/\\1/'").trim()
 				 			println "Repo tree master url: ${tree}"
 
-							cmd_tree=['/bin/sh', '-c', "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\\$/\\1/'"].execute().text
-							println "CMD Repo tree master url: ${cmd_tree}"
+							dockerFiles=sh label: 'Get Dockerfiles', script: '''#!/bin/bash
+
+								# Retrieve all Dockerfiles of a given Github organization 
+								#echo "Tree Cmd:     curl -s $URI/repos/$ORG/$repo | jq -r -c '.[].trees_url' | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/'"
+								tree=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/')
+								#echo "Repo tree master url: $tree"
+
+								branch=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
+								#echo "Repo default branch: $branch"
+
+								is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'not found')
+								#echo "Is Dockerfile:     $is_Dockerfile"
+								if [ $? != 0 ] ; then  
+									#echo "Files Command:     curl -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')"
+									url_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
+									if [[ ! -z $url_Dockerfile ]]; then
+										echo "Dockerfile found in repository: $repo - Branch: $branch"
+										#curl -H "Accept: application/vnd.github-blob.raw" -s $url_Dockerfile > ${ORG}-dockerfiles/Dockerfile.${repo}
+									#else
+										#echo "No Dockerfile in $repo"
+									fi
+								#else
+									#echo "Nothing in the repo $repo"
+								fi'''
+
+							println "Dockerfiles:    ${dockerFiles}"
 
 						}
 						page++
