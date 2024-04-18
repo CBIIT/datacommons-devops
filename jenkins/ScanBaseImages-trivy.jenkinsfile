@@ -81,13 +81,14 @@ pipeline {
 							println "Repo Empty:  $repo_empty"
 							if (! repo_empty) {
 							
-							  url_Dockerfile=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.url'").trim()
+							  //url_Dockerfile=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.url'").trim()
+							  url_Dockerfile=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.path'").trim()
 							  //println "Dockerfile: $url_Dockerfile"
 
 							  if (url_Dockerfile) {
 								dockerFiles.add(url_Dockerfile)
-								file_content=sh(label: 'get dockerfile content', returnStdout: true, script: "curl -s -J '$url_Dockerfile'")
-								println "Dockerfile:   $file_content"
+								//file_content=sh(label: 'get dockerfile content', returnStdout: true, script: "curl -s -J '$url_Dockerfile'")
+								//println "Dockerfile:   $file_content"
 							  }
 							
 							}
