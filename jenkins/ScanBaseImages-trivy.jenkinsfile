@@ -87,8 +87,8 @@ pipeline {
 
 							  if (url_Dockerfile) {
 								dockerFiles.add(url_Dockerfile)
-								//file_content=sh(label: 'get dockerfile content', returnStdout: true, script: "curl -s -J '$url_Dockerfile'")
-								//println "Dockerfile:   $file_content"
+								file_content=sh(label: 'get dockerfile content', returnStdout: true, script: "curl -s -J 'https://github.com/$ORG/$it/blob/$branch/$url_Dockerfile'")
+								println "Dockerfile:   $file_content"
 							  }
 							
 							}
