@@ -78,7 +78,7 @@ pipeline {
 							//is_Repo=sh(label: 'check repo status', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'not found' || true")
 							repo_empty=sh(label: 'check repo status', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'Git Repository is empty' || true")
 							println "Repo Empty:  $repo_empty"
-							if (repo_empty) { println "The Repo is empty" }
+							if (! repo_empty) { println "The Repo is not empty" }
 							
 							url_Dockerfile=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.url'").trim()
 							println "Dockerfile: $url_Dockerfile"
