@@ -69,41 +69,41 @@ pipeline {
 						repos.each() {
 							println "Repo:     ${it}"
 							
-							tree=sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
-				 			println "Repo tree master url: ${tree}"
+							// tree=sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
+				 			// println "Repo tree master url: ${tree}"
 
-							branch=sh(label: 'get default branch', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m 1 default_branch | sed -z 's/.*: \"//' | sed -e 's/\",//g'").trim()
-							println "Repo default branch: $branch"
+							// branch=sh(label: 'get default branch', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m 1 default_branch | sed -z 's/.*: \"//' | sed -e 's/\",//g'").trim()
+							// println "Repo default branch: $branch"
 
-							url_Dockerfile=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.url'").trim()
-							println "Dockerfile: $url_Dockerfile"
+							// url_Dockerfile=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.url'").trim()
+							// println "Dockerfile: $url_Dockerfile"
 
-							// dockerFiles=sh label: 'Get Dockerfiles', returnStdout: true, script: """#!/bin/bash
+							dockerFiles=sh label: 'Get Dockerfiles', returnStdout: true, script: """#!/bin/bash
 
-							// 	# Retrieve all Dockerfiles of a given Github organization 
-							// 	tree=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/')
-							// 	#echo 'Repo tree master url: ${tree}'
-							// 	echo '$URI/repos/$ORG/$it'
+								# Retrieve all Dockerfiles of a given Github organization 
+								tree=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/')
+								#echo 'Repo tree master url: ${tree}'
+								echo "$URI/repos/$ORG/$it"
 
-							// 	branch=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
-							// 	#echo 'Repo default branch: $branch'
+								branch=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
+								#echo 'Repo default branch: $branch'
 
-							// 	is_Dockerfile=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'not found')
-							// 	#echo "Is Dockerfile:     $is_Dockerfile"
-							// 	if [ \$? != 0 ] ; then  
-							// 		#echo "Files Command:     curl -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')"
-							// 		url_Dockerfile=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
-							// 		if [[ ! -z $url_Dockerfile ]]; then
-							// 			echo 'Dockerfile found in repository: $repo - Branch: $branch'
-							// 			#curl -H "Accept: application/vnd.github-blob.raw" -s $url_Dockerfile > ${ORG}-dockerfiles/Dockerfile.${repo}
-							// 		#else
-							// 			#echo "No Dockerfile in $repo"
-							// 		fi
-							// 	#else
-							// 		#echo "Nothing in the repo $repo"
-							// 	fi"""
+								is_Dockerfile=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'not found')
+								#echo "Is Dockerfile:     $is_Dockerfile"
+								if [ \$? != 0 ] ; then  
+									#echo "Files Command:     curl -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')"
+									url_Dockerfile=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
+									if [[ ! -z $url_Dockerfile ]]; then
+										echo 'Dockerfile found in repository: $repo - Branch: $branch'
+										#curl -H "Accept: application/vnd.github-blob.raw" -s $url_Dockerfile > ${ORG}-dockerfiles/Dockerfile.${repo}
+									#else
+										#echo "No Dockerfile in $repo"
+									fi
+								#else
+									#echo "Nothing in the repo $repo"
+								fi"""
 
-							//println "Dockerfiles:    ${dockerFiles}"
+							println "Dockerfiles:    ${dockerFiles}"
 
 						}
 						page++
