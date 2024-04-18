@@ -68,10 +68,10 @@ pipeline {
 						println "Repos:   ${repos}"
 						
 						repos.each() {
-							println "Repo:     ${it}"
+							println "Repo:     $it"
 							
 							tree=sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
-				 			println "Repo tree master url: ${tree}"
+				 			println "Repo tree master url: $tree"
 
 							branch=sh(label: 'get default branch', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m 1 default_branch | sed -z 's/.*: \"//' | sed -e 's/\",//g'").trim()
 							println "Repo default branch: $branch"
@@ -84,7 +84,11 @@ pipeline {
 							  url_Dockerfile=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.url'").trim()
 							  //println "Dockerfile: $url_Dockerfile"
 
-							  dockerFiles.add(url_Dockerfile)
+							  if (url_Dockerfile) {
+								dockerFiles.add(url_Dockerfile)
+								file_content=sh(label: 'get dockerfile content', returnStdout: true, script: "curl -s -J '$url_Dockerfile'")
+								println "Dockerfile:   $file_content"
+							  }
 							
 							}
 
