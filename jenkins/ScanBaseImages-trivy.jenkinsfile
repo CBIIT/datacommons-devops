@@ -63,8 +63,7 @@ pipeline {
 
 					def page = 1
 					while(page <= 1) {    //REPO_NB_PAGES) {
-						//repos=sh(label: 'get repo names', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/orgs/$ORG/repos\\?page=$page\\&per_page\\=\\100  | jq -r -c '.[].name'").trim().split()
-						repos=sh(label: 'get repo names', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/orgs/$ORG/repos\\?page=$page\\&per_page\\=\\10  | jq -r -c '.[].name'").trim().split()
+						repos=sh(label: 'get repo names', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/orgs/$ORG/repos\\?page=$page\\&per_page\\=\\100  | jq -r -c '.[].name'").trim().split()
 						println "Repos:   ${repos}"
 						
 						repos.each() {
