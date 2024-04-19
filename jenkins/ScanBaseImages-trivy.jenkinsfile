@@ -83,7 +83,7 @@ pipeline {
 							
 							  //url_Dockerfile=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.url'").trim()
 							  url_Dockerfile=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.path'").trim()
-							  //println "Dockerfile: $url_Dockerfile"
+							  println "Dockerfile: $url_Dockerfile"
 
 							  if (url_Dockerfile) {
 								dockerFiles.add(url_Dockerfile)
