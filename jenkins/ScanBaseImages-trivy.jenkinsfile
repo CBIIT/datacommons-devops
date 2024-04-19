@@ -82,13 +82,16 @@ pipeline {
 							if (! repo_empty) {
 							
 							  //url_Dockerfile=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.url'").trim()
-							  url_Dockerfile=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.path'").trim()
-							  println "Dockerfile: $url_Dockerfile"
+							  dockerfilePath=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.path'").trim().split()
+							  //println "Dockerfile: $url_Dockerfile"
 
-							  if (url_Dockerfile) {
-								dockerFiles.add(url_Dockerfile)
-								file_content=sh(label: 'get dockerfile content', returnStdout: true, script: "curl -s -J https://raw.githubusercontent.com/$ORG/$it/$branch/$url_Dockerfile")
-								println "Dockerfile:   $file_content"
+							  if (dockerfilePath) {
+								dockerfilePath.each() {
+									println "Dockerfile: $it"
+									dockerFiles.add(it)
+									file_content=sh(label: 'get dockerfile content', returnStdout: true, script: "curl -s -J https://raw.githubusercontent.com/$ORG/$it/$branch/$it")
+									println "Dockerfile:   $file_content"
+								}
 							  }
 							
 							}
