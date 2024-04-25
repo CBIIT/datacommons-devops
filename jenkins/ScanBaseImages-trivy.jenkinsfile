@@ -61,6 +61,7 @@ pipeline {
 					println "Repo Pages:  ${REPO_NB_PAGES}"
 
 					def dockerFiles = []
+					def baseImages = []
 
 					def page = 1
 					while(page <= 1) {    //REPO_NB_PAGES) {
@@ -90,8 +91,11 @@ pipeline {
 								dockerfilePath.each() {
 									println "Dockerfile: $it"
 									dockerFiles.add(it)
-									file_content = sh(label: 'get dockerfile content', returnStdout: true, script: "curl -s -J $rawUrl/$it")
-									println "Dockerfile:   $file_content"
+									//file_content = sh(label: 'get dockerfile content', returnStdout: true, script: "curl -s -J $rawUrl/$it")
+									base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM")
+									//println "Dockerfile:   $file_content"
+									println "Base Image:   $base_image"
+									baseImages.add(base_image)
 								}
 							  }
 							
