@@ -92,9 +92,9 @@ pipeline {
 									println "Dockerfile: $it"
 									dockerFiles.add(it)
 									//file_content = sh(label: 'get dockerfile content', returnStdout: true, script: "curl -s -J $rawUrl/$it")
-									base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM || false")
+									base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM || echo 'NOT_FOUND'")
 									//println "Dockerfile:   $file_content"
-									if (base_image) {
+									if (base_image != 'NOT_FOUND') {
 										println "Base Image:   $base_image"
 										baseImages.add(base_image)
 									}
