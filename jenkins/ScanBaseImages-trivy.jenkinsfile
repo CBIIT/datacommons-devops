@@ -88,6 +88,7 @@ pipeline {
 							  rawUrl =  "https://raw.githubusercontent.com/$ORG/$it/$branch"
 
 							  if (dockerfilePath) {
+								repo_name = it
 								dockerfilePath.each() {
 									println "Dockerfile: $it"
 									dockerFiles.add(it)
@@ -95,8 +96,10 @@ pipeline {
 									base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM || echo 'NOT_FOUND'").trim()
 									//println "Dockerfile:   $file_content"
 									if (!(base_image == 'NOT_FOUND')) {
-										println "Base Image:   $base_image"
-										baseImages.add(base_image)
+										image_info = ['Name' : base_image, 'Projects' : repo_name]
+										println "Base Image:   $image_info"
+										//baseImages.add(base_image)
+										baseImages.add(image_info)
 									}
 								}
 							  }
@@ -134,7 +137,8 @@ pipeline {
 						page++
 					}
 
-					println dockerFiles
+					//println dockerFiles
+					println baseImages
 
 				}
 
