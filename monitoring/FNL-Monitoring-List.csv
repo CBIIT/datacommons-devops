@@ -5,7 +5,8 @@ Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://trialcommons-dev.cancer.go
 $http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ idsLists { case_ids } }'
+    query: '{ idsLists { case_ids } }',
+    variables: {}
     }
   },
 
@@ -31,7 +32,8 @@ Clinical Trial Data Commons,ctdc,CRDC,QA,API,https://trialcommons-qa.cancer.gov/
 $http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ idsLists { case_ids } }'
+    query: '{ idsLists { case_ids } }',
+    variables: {}
     }
   },
 
@@ -151,17 +153,39 @@ $http.post('https://caninecommons.cancer.gov/v1/graphql/',
   }
 );",,FALSE,C04E1C69JBE,,opensearch
 Canine Data Commons,icdc,CRDC,Prod,Files,https://caninecommons.cancer.gov/api/files,,,FALSE,C04E1C69JBE,,opensearch
-Molecular Targets Platform,mtp,CCDI,Dev,Portal,https://moleculartargets-dev.ccdi.cancer.gov,,,TRUE,C049VAHBKDL,,opensearch
-Molecular Targets Platform,mtp,CCDI,QA,Portal,https://moleculartargets-qa.ccdi.cancer.gov,,,TRUE,C049VAHBKDL,,opensearch
-Molecular Targets Platform,mtp,CCDI,Stage,Portal,https://moleculartargets-stage.ccdi.cancer.gov,,,TRUE,C049Z0RVCCD,,opensearch
-Molecular Targets Platform,mtp,CCDI,Prod,Portal,https://moleculartargets.ccdi.cancer.gov,,,TRUE,C049Z0RVCCD,,opensearch
+Molecular Targets Platform,mtp,CCDI,Prod,Portal,https://moleculartargets.ccdi.cancer.gov,,,FALSE,C049Z0RVCCD,,opensearch
+Molecular Targets Platform,mtp,CCDI,Prod,API,https://moleculartargets.ccdi.cancer.gov/api/v4/graphql,"var assert = require('assert');
+
+$http.post('https://moleculartargets.ccdi.cancer.gov/api/v4/graphql',
+  {
+    json: {
+      operationName: 'TargetFacetsQuery',
+      variables: {
+        ensemblId: 'ENSG00000001626',
+        aggregationFilters: []
+      },
+      query: 'query TargetFacetsQuery($ensemblId: String!, $aggregationFilters: [AggregationFilter!]) { target(ensemblId: $ensemblId) { id approvedName associatedDiseases(aggregationFilters: $aggregationFilters) { count aggregations { uniques aggs { name uniques __typename } __typename } __typename } __typename } }'
+    }
+  },
+  function (err, response, body) {
+     if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+  }
+);",,FALSE,C049Z0RVCCD,,opensearch
 Index of NCI Studies,ins,CCDI,Dev,Portal,https://studycatalog-dev.cancer.gov,,,TRUE,C04693BUC9M,,opensearch
 Index of NCI Studies,ins,CCDI,Dev,API,https://studycatalog-dev.cancer.gov/v1/graphql,"var assert = require('assert');
 
 $http.post('https://studycatalog-dev.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ idsLists { case_ids } }'
+    query: '{ idsLists { case_ids } }',
+    variables: {}
     }
   },
 
@@ -185,7 +209,8 @@ Index of NCI Studies,ins,CCDI,QA,API,https://studycatalog-qa.cancer.gov/v1/graph
 $http.post('https://studycatalog-qa.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ idsLists { case_ids } }'
+    query: '{ idsLists { case_ids } }',
+    variables: {}
     }
   },
 
@@ -209,7 +234,8 @@ Index of NCI Studies,ins,CCDI,Stage,API,https://studycatalog-stage.cancer.gov/v1
 $http.post('https://studycatalog-stage.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ idsLists { case_ids } }'
+    query: '{ idsLists { case_ids } }',
+    variables: {}
     }
   },
 
@@ -233,7 +259,8 @@ Index of NCI Studies,ins,CCDI,Prod,API,https://studycatalog.cancer.gov/v1/graphq
 $http.post('https://studycatalog.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ idsLists { case_ids } }'
+    query: '{ idsLists { case_ids } }',
+    variables: {}
     }
   },
 
