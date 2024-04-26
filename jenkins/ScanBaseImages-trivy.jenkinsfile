@@ -148,8 +148,15 @@ pipeline {
 
 					//println dockerFiles
 					println baseImages
-					test_search = baseImages.find { it.Name } == "cbiit/centos7_base"
-					println "Results:     $test_search"
+					//test_search = baseImages.find { it.Name } == "cbiit/centos7_base"
+					//println "Results:     $test_search"
+
+					baseImages.each { imageList ->
+					  def currentImage = imageList.find{ it.Name == "cbiit/centos7_base" }
+					  if( !(currentImage == null) ) {
+						println "Image used for project $imageList.Project"
+					  }
+					}
 
 				}
 
