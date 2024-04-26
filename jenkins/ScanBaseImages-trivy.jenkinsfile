@@ -152,6 +152,7 @@ pipeline {
 					//println "Results:     $test_search"
 
 					baseImages.each { imageList ->
+					  println imageList
 					  def currentImage = imageList.find{ it.Name == "cbiit/centos7_base" }
 					  if( !(currentImage == null) ) {
 						println "Image used for project $imageList.Project"
