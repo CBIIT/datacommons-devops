@@ -99,6 +99,7 @@ pipeline {
 										image_name = base_image.substring(base_image.indexOf(" ") + 1).trim()
 										//image_info = ['Name' : base_image, 'Projects' : repo_name]
 										//image_info = ['Name' : image_name, 'Projects' : repo_name]
+										image_info = [:]
 										image_info = [Name:image_name, Projects:repo_name]
 										println "Base Image:   $image_name"
 										//baseImages.add(base_image)
