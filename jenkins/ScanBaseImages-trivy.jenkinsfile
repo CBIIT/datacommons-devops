@@ -103,8 +103,8 @@ pipeline {
 										//baseImages.add(base_image)
 										if (baseImages.findResult { it.Name } == image_name) {
 											println "Base Image $image_name already used by $it.Project"
-											it.Project += repo_name
-											println "$it.Project"
+											it.Project += ", $repo_name"
+											println "Duplicate Images in:     $it.Project"
 											baseImages.add(image_info)
 										} else {
 											baseImages.add(image_info)
