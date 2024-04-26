@@ -96,10 +96,19 @@ pipeline {
 									base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM || echo 'NOT_FOUND'").trim()
 									//println "Dockerfile:   $file_content"
 									if (!(base_image == 'NOT_FOUND')) {
-										image_info = ['Name' : base_image, 'Projects' : repo_name]
-										println "Base Image:   $image_info"
+										image_name = base_image.substring(s.indexOf(" ") + 1).trim()
+										//image_info = ['Name' : base_image, 'Projects' : repo_name]
+										image_info = ['Name' : image_name, 'Projects' : repo_name]
+										println "Base Image:   $image_name"
 										//baseImages.add(base_image)
-										baseImages.add(image_info)
+										if (baseImages.findResult { it.Name } == image_name) {
+											println "Base Image $image_name already used by $it.Project"
+											it.Project += repo_name
+											println "$it.Project"
+											baseImages.add(image_info)
+										} else {
+											baseImages.add(image_info)
+										}
 									}
 								}
 							  }
