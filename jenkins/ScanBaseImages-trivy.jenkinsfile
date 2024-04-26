@@ -148,9 +148,8 @@ pipeline {
 
 					//println dockerFiles
 					println baseImages
-					if (baseImages.find { it.Name } == "cbiit/centos7_base") {
-						println "Duplicate Images in:     $it.Project"
-					}
+					test_search = baseImages.find { it.Name } == "cbiit/centos7_base"
+					println "Results:     $test_search"
 
 				}
 
