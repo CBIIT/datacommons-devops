@@ -134,9 +134,9 @@ pipeline {
 				println imageList
 
 				imageList.each { image ->
-				    //trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL $image.Name").trim()
-					trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image.Name").trim()
-					println "Trivy Results:   $trivy_out"
+				    trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL $image.Name); if [ \$? == 1 ]; then echo '\$trivy_out \n\n\N'fi").trim()
+					//trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image.Name").trim()
+					RESULTS += "\n\n\n Trivy Results: $image.Projects\n$trivy_out"
 
 				}
 				
@@ -155,7 +155,7 @@ pipeline {
 
 				// """).trim()
 
-				// println RESULTS
+				println RESULTS
 
 				// if(RESULTS) {
                 //     catchError(stageResult: 'FAILURE') {
