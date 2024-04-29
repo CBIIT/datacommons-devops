@@ -73,13 +73,9 @@ pipeline {
 							println "Repo:     $it"
 							
 							tree = sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
-				 			println "Repo tree master url: $tree"
-
 							branch = sh(label: 'get default branch', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m 1 default_branch | sed -z 's/.*: \"//' | sed -e 's/\",//g'").trim()
-							println "Repo default branch: $branch"
-
 							repo_empty = sh(label: 'check repo status', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'Git Repository is empty' || true")
-							println "Repo Empty:  $repo_empty"
+
 							if (! repo_empty) {
 							
 							  dockerfilePath = sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.path'").trim().split()
@@ -89,7 +85,6 @@ pipeline {
 								repo_name = it
 								dockerfilePath.each() {
 									println "Dockerfile: $it"
-									//dockerFiles.add(it)
 									base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM || echo 'NOT_FOUND'").trim()
 									if (!(base_image == 'NOT_FOUND')) {
 										image_name = base_image.substring(base_image.indexOf(" ") + 1).trim()
@@ -105,18 +100,15 @@ pipeline {
 						page++
 					}
 
-					//println dockerFiles
 					println baseImages
-					//test_search = baseImages.find { it.Name } == "cbiit/centos7_base"
-					//println "Results:     $test_search"
 
 					// consolidate base image list to remove duplicate entries
 					imageList = []
 					baseImages.each { image ->
-					  println image
+					  //println image
 					  def currentImage = imageList.find{ it.Name == image.Name }
 					  if( !(currentImage == null) ) {
-						println "Image used for project $image.Projects"
+						//println "Image used for project $image.Projects"
 						currentImage.Projects += ",$image.Projects"
 					  } else {
 						imageList.add(image)
@@ -139,10 +131,16 @@ pipeline {
 
  			script {
 
-			    //def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
-
 				println imageList
+
+				imageList.each { image ->
+				    trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL $image").trim()
+					println trivy_out
+
+				}
 				
+
+
 				// RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: """#!/bin/bash
 				
 				// for image in ${image_list.join(' ')}; do
