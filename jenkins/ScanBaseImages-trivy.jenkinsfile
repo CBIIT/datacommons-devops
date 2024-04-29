@@ -47,7 +47,7 @@ pipeline {
 
   	}
 
-   stage('Image Scans'){
+   stage('Image List'){
 
  		steps {
 
@@ -56,6 +56,7 @@ pipeline {
 				env.GITHUB_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.user'").trim()
 				env.GITHUB_PAT = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.token'").trim()
 				
+				// get list of all base images found in CBIIT repos
 				maskPasswords(varPasswordPairs: [[password: "${env.GITHUB_PAT}"]]){
 					REPO_NB_PAGES=sh(label: 'Get repo pages', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -I -s $API_URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'").trim()
 					println "Repo Pages:  ${REPO_NB_PAGES}"
@@ -77,64 +78,29 @@ pipeline {
 							branch = sh(label: 'get default branch', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m 1 default_branch | sed -z 's/.*: \"//' | sed -e 's/\",//g'").trim()
 							println "Repo default branch: $branch"
 
-							//is_Repo=sh(label: 'check repo status', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'not found' || true")
 							repo_empty = sh(label: 'check repo status', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'Git Repository is empty' || true")
 							println "Repo Empty:  $repo_empty"
 							if (! repo_empty) {
 							
-							  //url_Dockerfile=sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.url'").trim()
 							  dockerfilePath = sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.path'").trim().split()
-							  //println "Dockerfile: $url_Dockerfile"
 							  rawUrl =  "https://raw.githubusercontent.com/$ORG/$it/$branch"
 
 							  if (dockerfilePath) {
 								repo_name = it
 								dockerfilePath.each() {
 									println "Dockerfile: $it"
-									dockerFiles.add(it)
-									//file_content = sh(label: 'get dockerfile content', returnStdout: true, script: "curl -s -J $rawUrl/$it")
+									//dockerFiles.add(it)
 									base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM || echo 'NOT_FOUND'").trim()
-									//println "Dockerfile:   $file_content"
 									if (!(base_image == 'NOT_FOUND')) {
 										image_name = base_image.substring(base_image.indexOf(" ") + 1).trim()
-										//image_info = ['Name' : base_image, 'Projects' : repo_name]
 										image_info = [Name:image_name, Projects:repo_name]
 										println "Base Image:   $image_name"
-										//baseImages.add(base_image)
 										baseImages.add(image_info)
 									}
 								}
 							  }
 							
 							}
-
-							// dockerFiles=sh label: 'Get Dockerfiles', returnStdout: true, script: """#!/bin/bash
-
-							// 	# Retrieve all Dockerfiles of a given Github organization 
-							// 	tree=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/')
-							// 	echo "Repo tree master url: $tree"
-							// 	#echo "$API_URI/repos/$ORG/$it"
-
-							// 	branch=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
-							// 	#echo 'Repo default branch: \$branch'
-
-							// 	is_Dockerfile=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s \$tree/\$branch\\?recursive\\=1 | grep -i 'not found')
-							// 	#echo "Is Dockerfile:     \$is_Dockerfile"
-							// 	if [ \$? != 0 ] ; then  
-							// 		#echo "Files Command:     curl -s \$tree/\$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')"
-							// 		url_Dockerfile=\$(curl -u $GITHUB_USER:$GITHUB_PAT -s \$tree/\$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
-							// 		if [[ ! -z \$url_Dockerfile ]]; then
-							// 			echo 'Dockerfile found in repository: $it - Branch: \$branch'
-							// 			#curl -H "Accept: application/vnd.github-blob.raw" -s \$url_Dockerfile > ${ORG}-dockerfiles/Dockerfile.\${repo}
-							// 		#else
-							// 			#echo "No Dockerfile in \$repo"
-							// 		fi
-							// 	#else
-							// 		#echo "Nothing in the repo \$repo"
-							// 	fi"""
-
-							// println "Dockerfiles:    ${dockerFiles}"
-
 						}
 						page++
 					}
@@ -144,6 +110,7 @@ pipeline {
 					//test_search = baseImages.find { it.Name } == "cbiit/centos7_base"
 					//println "Results:     $test_search"
 
+					// consolidate base image list to remove duplicate entries
 					imageList = []
 					baseImages.each { image ->
 					  println image
@@ -160,58 +127,42 @@ pipeline {
 
 				}
 
+			}
 
-				// sh label: 'Get Dockerfiles', script: '''#!/bin/bash
+ 		}
 
-				//     # Retrieve all Dockerfiles of a given Github organization 
+  	}
 
-				//     # set organization
-				//     URI="https://api.github.com"
-				//     ORG="CBIIT"
+	stage('Image Scans'){
 
-				//     # Get list of repositories
-				// 	echo "Retrieving repository list ..."
-				// 	#echo "Command is:   curl -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'"
-				// 	REPO_NB_PAGES=$(curl -u $GITHUB_USER:$GITHUB_PAT -I -s $URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p')
-				// 	#echo "Nb pages: $REPO_NB_PAGES"
+ 		steps {
 
-				//     i=1
-				//     #mkdir -p $ORG-dockerfiles
-				//     while [ $i -le $REPO_NB_PAGES ]; do
-				// 		#echo "repos Command is: curl -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r '.[].name'"
-				//     	readarray -t repos <<< $(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/orgs/$ORG/repos\\?page=$i\\&per_page\\=\\100  | jq -r -c '.[].name')
-	
-				//     	#echo "Repos:  $repos"
-						
-				// 		for repo in $repos; do
-				// 			#echo "Repository: $repo"
+ 			script {
 
-				// 			#echo "Tree Cmd:     curl -s $URI/repos/$ORG/$repo | jq -r -c '.[].trees_url' | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/'"
-				// 			tree=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*$/\\1/')
-				// 			#echo "Repo tree master url: $tree"
+			    //def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
 
-				// 			branch=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $URI/repos/$ORG/$repo | grep -m 1 default_branch | sed -z 's/.*: "//' | sed -e 's/",//g')
-				// 			#echo "Repo default branch: $branch"
+				println imageList
+				
+				// RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: """#!/bin/bash
+				
+				// for image in ${image_list.join(' ')}; do
+				// 	trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
 
-				// 			is_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'not found')
-				// 			#echo "Is Dockerfile:     $is_Dockerfile"
-				// 			if [ $? != 0 ] ; then  
-				// 				#echo "Files Command:     curl -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')"
-				// 				url_Dockerfile=$(curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains("Dockerfile"))? |.url')
-				// 				if [[ ! -z $url_Dockerfile ]]; then
-				// 					echo "Dockerfile found in repository: $repo - Branch: $branch"
-				// 					#curl -H "Accept: application/vnd.github-blob.raw" -s $url_Dockerfile > ${ORG}-dockerfiles/Dockerfile.${repo}
-				// 				#else
-				// 					#echo "No Dockerfile in $repo"
-				// 				fi
-				// 			#else
-				// 				#echo "Nothing in the repo $repo"
-				// 			fi
-				// 			#break
-				//     	done
-				// 		break
-				//     	i=$(($i + 1))
-				//     done'''
+				// 	if [ \$? == 1 ];	then
+				// 	  echo "\$trivy_out \n\n"
+				//     fi
+
+                // done
+
+				// """).trim()
+
+				// println RESULTS
+
+				// if(RESULTS) {
+                //     catchError(stageResult: 'FAILURE') {
+                //         error 'VULNERABILITIES FOUND'
+                //     }
+				// }
 
 			}
 
