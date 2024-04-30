@@ -88,7 +88,8 @@ pipeline {
 									println "Dockerfile: $it"
 									base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM | grep fnl_base_image || echo 'NOT_FOUND'").trim()
 									if (!(base_image == 'NOT_FOUND')) {
-										image_name = base_image.substring(base_image.indexOf(" ") + 1).trim()
+										base_image = base_image.substring(base_image.indexOf(" ") + 1).trim()
+										base_image = base_image.substring(0, base_image.indexOf(" ")).trim()
 										image_info = [Name:image_name, Projects:repo_name]
 										println "Base Image:   $image_name"
 										baseImages.add(image_info)
