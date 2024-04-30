@@ -105,10 +105,8 @@ pipeline {
 					// consolidate base image list to remove duplicate entries
 					imageList = []
 					baseImages.each { image ->
-					  //println image
 					  def currentImage = imageList.find{ it.Name == image.Name }
 					  if( !(currentImage == null) ) {
-						//println "Image used for project $image.Projects"
 						currentImage.Projects += ",$image.Projects"
 					  } else {
 						imageList.add(image)
@@ -137,7 +135,9 @@ pipeline {
 				imageList.each { image ->
 				    //trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL $image.Name) | if [ \$? == 1 ]; then echo '\$trivy_out \n\n' fi").trim()
 					trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image.Name").trim()
-					RESULTS += "\n\n\n Trivy Results: $image.Projects\n$trivy_out"
+					if (!(trivy_out.contains("Total: 0"))) {
+					    RESULTS += "\n\n\nTrivy Results: $image.Projects\n$trivy_out"
+					}
 
 				}
 				
