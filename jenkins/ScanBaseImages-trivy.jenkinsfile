@@ -79,10 +79,10 @@ pipeline {
 
 							if (! repo_empty) {
 							
-							  dockerfilePath = sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.path'").trim().split()
+							  dockerfilePath = sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.path' || echo 'NOT_FOUND'").trim().split()
 							  rawUrl =  "https://raw.githubusercontent.com/$ORG/$it/$branch"
 
-							  if (dockerfilePath) {
+							  if (!(dockerfilePath == 'NOT_FOUND')) {
 								repo_name = it
 								dockerfilePath.each() {
 									println "Dockerfile: $it"
