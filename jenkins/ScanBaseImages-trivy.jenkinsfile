@@ -18,15 +18,17 @@ pipeline {
   
   environment {
 
- 	CODE_REPO   = "datacommons-devops"
-    CODE_FOLDER = "datacommons-devops"
- 	CODE_BRANCH = "main"
+ 	CODE_REPO      = "datacommons-devops"
+    CODE_FOLDER    = "datacommons-devops"
+ 	CODE_BRANCH    = "main"
 
-	ECR_REPO    = "cbiit-base-docker-images"
-	REGION      = "us-east-1"
+	ECR_REPO       = "cbiit-base-docker-images"
+	REGION         = "us-east-1"
 
-	API_URI     = "https://api.github.com"
-	ORG         = "CBIIT"
+	API_URI        = "https://api.github.com"
+	ORG            = "CBIIT"
+
+	BASE_IMAGE_TAG = "fnl_base_image"
 
   }
 
@@ -86,7 +88,7 @@ pipeline {
 								repo_name = it
 								dockerfilePath.each() {
 									println "Dockerfile: $it"
-									base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM | grep fnl_base_image || echo 'NOT_FOUND'").trim()
+									base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM | grep $BASE_IMAGE_TAG || echo 'NOT_FOUND'").trim()
 									if (!(base_image == 'NOT_FOUND')) {
 										base_image = base_image.substring(base_image.indexOf(" ") + 1).trim()
 										base_image = base_image.substring(0, base_image.indexOf(" ")).trim()
