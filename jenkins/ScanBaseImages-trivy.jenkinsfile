@@ -98,7 +98,7 @@ pipeline {
 										if (!(base_image == 'NOT_FOUND')) {
 											base_image = base_image.substring(base_image.indexOf(" ") + 1).trim()
 											base_image = base_image.substring(0, base_image.indexOf(" ")).trim()
-											image_info = [Name:base_image, Projects:repo_name]
+											image_info = [Name:base_image, Projects:"$repo_name:$branch"]
 											println "Base Image:   $base_image"
 											baseImages.add(image_info)
 										}
