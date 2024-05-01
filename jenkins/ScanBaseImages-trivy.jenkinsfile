@@ -169,11 +169,11 @@ pipeline {
 
 				println RESULTS
 
-				// if(RESULTS) {
-                //     catchError(stageResult: 'FAILURE') {
-                //         error 'VULNERABILITIES FOUND'
-                //     }
-				// }
+				if(RESULTS) {
+                    catchError(stageResult: 'FAILURE') {
+                        error 'VULNERABILITIES FOUND'
+                    }
+				}
 
 			}
 
