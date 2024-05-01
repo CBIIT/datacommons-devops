@@ -67,8 +67,8 @@ pipeline {
 					def baseImages = []
 
 					def page = 1
-					while(page <= 1) {
-					//while(page <= REPO_NB_PAGES) {
+					//while(page <= 1) {
+					while(page <= REPO_NB_PAGES) {
 						repos = sh(label: 'get repo names', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/orgs/$ORG/repos\\?page=$page\\&per_page\\=\\100  | jq -r -c '.[].name'").trim().split()
 						println "Repos:   ${repos}"
 						
@@ -151,21 +151,6 @@ pipeline {
 					}
 
 				}
-				
-
-
-				// RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: """#!/bin/bash
-				
-				// for image in ${image_list.join(' ')}; do
-				// 	trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
-
-				// 	if [ \$? == 1 ];	then
-				// 	  echo "\$trivy_out \n\n"
-				//     fi
-
-                // done
-
-				// """).trim()
 
 				println RESULTS
 
@@ -186,27 +171,21 @@ pipeline {
 
   post {
 
-	// failure {
+	failure {
 
-	// 	script {
+		script {
 
-	// 		RESULTS_FILE = sh(label: 'Get results file name', returnStdout: true, script: "echo results_\$(date '+%Y%m%d').txt").trim()
-	// 		writeFile(file: RESULTS_FILE, text: RESULTS)
-			
-	// 		// sh label: 'Write Results', script: """#!/bin/bash
+			RESULTS_FILE = sh(label: 'Get results file name', returnStdout: true, script: "echo results_\$(date '+%Y%m%d').txt").trim()
+			writeFile(file: RESULTS_FILE, text: RESULTS)
 
-	// 		// 	echo "${RESULTS}" > results_\$(date '+%Y%m%d').txt
-
-	// 		// 	"""
-
-	// 	}
+		}
 		
-	// 	emailext(attachmentsPattern: 'results_*.txt',
-	// 		mimeType: 'text/html',
-	// 		body: "Base Image scan results attached",
-	// 		subject: "Base Image Vulnerabilities Found",
-	// 		to: "${EmailRecipients}")
-    // }
+		emailext(attachmentsPattern: 'results_*.txt',
+			mimeType: 'text/html',
+			body: "Base Image scan results attached",
+			subject: "Base Image Vulnerabilities Found",
+			to: "${EmailRecipients}")
+    }
 
     cleanup {
 
