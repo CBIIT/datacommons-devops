@@ -77,7 +77,7 @@ pipeline {
 							
 							tree = sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m1 trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
 							//branch = sh(label: 'get default branch', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m 1 default_branch | sed -z 's/.*: \"//' | sed -e 's/\",//g'").trim()
-							branch_list = sh(label: 'get default branch', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it/branches | jq -r -c '.[].name'").trim().split()
+							branch_list = sh(label: 'get default branch', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it/branches | jq -r -c '.[].name' | sed 's:\([()]\+\):\\\1:g'").trim().split()
 							println "Branches:  $branch_list"
 
 
