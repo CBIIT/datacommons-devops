@@ -6,6 +6,10 @@
     dest: "{{workspace}}/opensearch-restore.py"
     mode: 0755
 
+- name: show dataloader command
+  debug:
+    msg: "python3 {{workspace}}/opensearch-restore.py --oshost {{opensearch_host}} --repo {{snapshot_repo}} --snapshot {{snapshot_value}}  --s3bucket {{s3_bucket}} --indices {{indices}} --rolearn {{role_arn}} --basepath {{base_path}} --region {{region}}"
+
 - name: load data
   shell:
     cmd: >
