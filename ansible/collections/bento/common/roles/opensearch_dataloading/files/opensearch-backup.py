@@ -20,9 +20,9 @@ s3bucket= args.s3bucket
 snapshot= args.snapshot 
 rolearn= args.rolearn
 
-#basepath= args.basePath
-if args.basepath :
-  basepath = args.basepath + '/' + snapshot
+basepath= args.basePath
+if basepath :
+  basepath = basepath + '/' + snapshot
 else:
   basepath = snapshot
 
