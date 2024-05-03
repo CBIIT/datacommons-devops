@@ -566,3 +566,7 @@ $http.post('https://bento-tools.org/v1/public-graphql/',
 
   }
 );",,FALSE,C06AYDW6S2Z,,
+Computation Resources for Cancer Research,CRCR,DOERC,dev,Portal,https://computational-dev.cancer.gov/,,,TRUE,C071J4NEJJ3,,
+Computation Resources for Cancer Research,CRCR,DOERC,qa,Portal,https://computational-qa.cancer.gov/,,,TRUE,C071J4NEJJ3,,
+Computation Resources for Cancer Research,CRCR,DOERC,stage,Portal,https://computational-stage.cancer.gov/,,,TRUE,C071J5E4RU7,,
+Computation Resources for Cancer Research,CRCR,DOERC,prod,Portal,https://computational.cancer.gov/,,,FALSE,C071J5E4RU7,,
