@@ -85,6 +85,8 @@ def deleteIndexes(argList, awsauth):
         print(r.text)
   else:
     print("no listed indices - deleting all indices")
+    r = requests.delete(argList['oshost'] + '/*', auth=awsauth, headers=headers)
+    print(r.text)
 
   print("finished deleting the indices, waiting 2 mins for the deletion to complete")
   time.sleep(120)
