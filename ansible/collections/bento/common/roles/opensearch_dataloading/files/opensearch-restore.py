@@ -75,6 +75,8 @@ time.sleep(100)
 # Restoring Indexes
 print("started restore the indices")
 payload_restore = {
+  "rename_pattern": ".*",
+  "rename_replacement": "restored-$0",
   "indices": indices,
   "include_global_state": False
 }
