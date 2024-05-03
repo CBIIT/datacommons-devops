@@ -91,7 +91,7 @@ def restoreIndexes(argList, awsauth):
   
   headers = {"Content-Type": "application/json"}
   payload = {
-    #"indices": argList['indices'],
+    "indices": argList['indices'],
     "include_global_state": False
   }
   path = '_snapshot/' + argList['repo'] + '/' + argList['snapshot'] + '/_restore'
