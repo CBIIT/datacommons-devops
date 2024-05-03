@@ -22,9 +22,9 @@ rolearn= args.rolearn
 
 #basepath= args.basePath
 if args.basepath :
-  basepath = args.basepath + '/'
+  basepath = args.basepath + '/' + snapshot
 else:
-  basepath = ''
+  basepath = snapshot
 
 host = (oshost) 
 region = args.region
@@ -40,7 +40,7 @@ payload = {
   "type": "s3",
   "settings": {
     "bucket": s3bucket,
-    "base_path": basepath+snapshot,
+    "base_path": basepath,
     "region": region,
     "role_arn": rolearn,
     "canned_acl": "bucket-owner-full-control"
@@ -70,7 +70,7 @@ payload = {
   "type": "s3",
   "settings": {
     "bucket": s3bucket,
-    "base_path": basepath+snapshot,
+    "base_path": basepath,
     "region": region,
     "role_arn": rolearn,
     "canned_acl": "bucket-owner-full-control"
