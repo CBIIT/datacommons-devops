@@ -18,10 +18,13 @@ repo = args.repo
 
 s3bucket= args.s3bucket
 snapshot= args.snapshot 
-basepath= args.basePath
-if basepath :
-  basepath = basepath + '/'
 rolearn= args.rolearn
+
+#basepath= args.basePath
+if args.basepath :
+  basepath = args.basepath + '/'
+else:
+  basepath = ''
 
 host = (oshost) 
 region = args.region
