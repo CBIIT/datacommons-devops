@@ -7,7 +7,7 @@ parser = argparse.ArgumentParser(description='Opensearch Backup Script')
 parser.add_argument("--oshost", type=str, help="opensearch host with trailing /")
 parser.add_argument("--repo", type=str, help="opensearch snapshot repository")
 parser.add_argument("--s3bucket", type=str, help="s3 bucket")
-parser.add_argument("--basePath", type=str, help="s3 bucket base path")
+parser.add_argument("--basePath", type=str, help="s3 bucket base path", default="")
 parser.add_argument("--snapshot", type=str, help="opensearch snapshot value")
 parser.add_argument("--region", type=str, help="region")
 parser.add_argument("--rolearn", type=str, help="role arn - typically power user role")
@@ -19,6 +19,8 @@ repo = args.repo
 s3bucket= args.s3bucket
 snapshot= args.snapshot 
 basepath= args.basePath
+if basepath :
+  basepath = basepath + '/'
 rolearn= args.rolearn
 
 host = (oshost) 
@@ -35,7 +37,7 @@ payload = {
   "type": "s3",
   "settings": {
     "bucket": s3bucket,
-    "base_path": basepath,
+    "base_path": basepath+snapshot,
     "region": region,
     "role_arn": rolearn,
     "canned_acl": "bucket-owner-full-control"
@@ -65,7 +67,7 @@ payload = {
   "type": "s3",
   "settings": {
     "bucket": s3bucket,
-    "base_path": basepath,
+    "base_path": basepath+snapshot,
     "region": region,
     "role_arn": rolearn,
     "canned_acl": "bucket-owner-full-control"
