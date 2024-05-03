@@ -11,7 +11,7 @@ parser.add_argument("--s3bucket", type=str, help="s3 bucket")
 parser.add_argument("--snapshot", type=str, help="opensearch snapshot value")
 parser.add_argument("--indices", type=str, help="indices")
 parser.add_argument("--rolearn", type=str, help="role arn - typically power user role")
-parser.add_argument("--basepath", type=str, help="basepath")
+parser.add_argument("--basepath", type=str, help="basepath", nargs='?', const='')
 parser.add_argument("--region", type=str, help="region")
 args = parser.parse_args()
 oshost = args.oshost
@@ -20,8 +20,14 @@ s3bucket= args.s3bucket
 snapshot= args.snapshot 
 indices = args.indices
 rolearn = args.rolearn 
+
 basepath = args.basepath
-# test
+if basepath :
+  basepath = basepath + '/' + snapshot
+else:
+  basepath = snapshot
+
+# Opensearch authentication
 host = oshost 
 region = args.region
 service = 'es'
@@ -29,6 +35,8 @@ credentials = boto3.Session().get_credentials()
 awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, service, session_token=credentials.token)
 
 print(awsauth)
+
+# Registering Repo
 path = '_snapshot/'+repo
 url = host + path
 
@@ -51,18 +59,20 @@ print(r.status_code)
 print(r.text)
 time.sleep(100) 
 
-headers = {"Content-Type": "application/json"}
-print("starting deleting the indices")
-indice_arr = indices.split(",")
-for i in indice_arr:
-  check = requests.get(oshost+i, auth=awsauth, headers=headers)
-  if check.status_code==200:
-    r = requests.delete(oshost+i, auth=awsauth, headers=headers)
-    print(r.text)
+# # Deleting Indexes
+# headers = {"Content-Type": "application/json"}
+# print("starting deleting the indices")
+# indice_arr = indices.split(",")
+# for i in indice_arr:
+#   check = requests.get(oshost+i, auth=awsauth, headers=headers)
+#   if check.status_code==200:
+#     r = requests.delete(oshost+i, auth=awsauth, headers=headers)
+#     print(r.text)
 
-print("finished deleting the indices, waiting 2 mins for the deletion to complete")
-time.sleep(120) 
-#
+# print("finished deleting the indices, waiting 2 mins for the deletion to complete")
+# time.sleep(120)
+
+# Restoring Indexes
 print("started restore the indices")
 payload_restore = {
   "indices": indices,
