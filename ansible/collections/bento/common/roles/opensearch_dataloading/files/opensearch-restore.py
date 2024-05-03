@@ -85,22 +85,22 @@ def registerRepo(argList, awsauth):
 # time.sleep(120)
 
 # Restoring Indexes
-print("started restore the indices")
-payload_restore = {
-  "rename_pattern": ".*",
-  "rename_replacement": "$0",
-  "indices": indices,
-  "include_global_state": False
-}
-path = '_snapshot/'+repo+'/'+snapshot+'/_restore'
-print(path)
-print(payload)
+# print("started restore the indices")
+# payload_restore = {
+#   "rename_pattern": ".*",
+#   "rename_replacement": "$0",
+#   "indices": indices,
+#   "include_global_state": False
+# }
+# path = '_snapshot/'+repo+'/'+snapshot+'/_restore'
+# print(path)
+# print(payload)
 
-r = requests.post(oshost+path, auth=awsauth, json=payload_restore, headers=headers)
-#
-print(r.text)
-if r.status_code!=200:
-  raise Exception("Sorry, pipeline does not run successfully")
+# r = requests.post(oshost+path, auth=awsauth, json=payload_restore, headers=headers)
+# #
+# print(r.text)
+# if r.status_code!=200:
+#   raise Exception("Sorry, pipeline does not run successfully")
 
 
 if __name__ == "__main__":
