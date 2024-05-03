@@ -71,18 +71,23 @@ def registerRepo(argList, awsauth):
   print(r.text)
   time.sleep(100) 
 
-# # Deleting Indexes
-# headers = {"Content-Type": "application/json"}
-# print("starting deleting the indices")
-# indice_arr = indices.split(",")
-# for i in indice_arr:
-#   check = requests.get(oshost+i, auth=awsauth, headers=headers)
-#   if check.status_code==200:
-#     r = requests.delete(oshost+i, auth=awsauth, headers=headers)
-#     print(r.text)
+def deleteIndexes(argList, awsauth):
+  # Deleting Indexes
+  headers = {"Content-Type": "application/json"}
+  
+  if argList['indices']:
+    print("deleting the listed indices")
+    indice_arr = argList['indices'].split(",")
+    for i in indice_arr:
+      check = requests.get(argList['oshost'] + i, auth=awsauth, headers=headers)
+      if check.status_code==200:
+        r = requests.delete(argList['oshost'] + i, auth=awsauth, headers=headers)
+        print(r.text)
+  else:
+    print("no listed indices - deleting all indices")
 
-# print("finished deleting the indices, waiting 2 mins for the deletion to complete")
-# time.sleep(120)
+  print("finished deleting the indices, waiting 2 mins for the deletion to complete")
+  time.sleep(120)
 
 def restoreIndexes(argList, awsauth):
 
@@ -96,7 +101,6 @@ def restoreIndexes(argList, awsauth):
   }
   path = '_snapshot/' + argList['repo'] + '/' + argList['snapshot'] + '/_restore'
   print(path)
-  #print(payload)
 
   result = requests.post(argList['oshost'] + path, auth=awsauth, json=payload, headers=headers)
 
@@ -108,6 +112,7 @@ if __name__ == "__main__":
    awsauth = osAuth(argList)
    registerRepo(argList, awsauth)
 
+   deleteIndexes(argList, awsauth)
    result = restoreIndexes(argList, awsauth)
    print(result.text)
    if result.status_code!=200:
