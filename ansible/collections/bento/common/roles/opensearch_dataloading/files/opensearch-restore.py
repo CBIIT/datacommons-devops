@@ -84,26 +84,31 @@ def registerRepo(argList, awsauth):
 # print("finished deleting the indices, waiting 2 mins for the deletion to complete")
 # time.sleep(120)
 
-# Restoring Indexes
-# print("started restore the indices")
-# payload_restore = {
-#   "rename_pattern": ".*",
-#   "rename_replacement": "$0",
-#   "indices": indices,
-#   "include_global_state": False
-# }
-# path = '_snapshot/'+repo+'/'+snapshot+'/_restore'
-# print(path)
-# print(payload)
+def restoreIndexes(argList, awsauth):
 
-# r = requests.post(oshost+path, auth=awsauth, json=payload_restore, headers=headers)
-# #
-# print(r.text)
-# if r.status_code!=200:
-#   raise Exception("Sorry, pipeline does not run successfully")
+  # Restoring Indexes
+  print("started restore the indices")
+  
+  headers = {"Content-Type": "application/json"}
+  payload = {
+    #"indices": argList['indices'],
+    "include_global_state": False
+  }
+  path = '_snapshot/' + argList['repo'] + '/' + argList['snapshot'] + '/_restore'
+  print(path)
+  #print(payload)
+
+  result = requests.post(argList['oshost'] + path, auth=awsauth, json=payload, headers=headers)
+
+  return result
 
 
 if __name__ == "__main__":
    argList = getArgs()
    awsauth = osAuth(argList)
    registerRepo(argList, awsauth)
+
+   result = restoreIndexes(argList, awsauth)
+   print(result.text)
+   if result.status_code!=200:
+    raise Exception("Sorry, pipeline does not run successfully")
