@@ -34,6 +34,7 @@ def getArgs():
 
   return argList
 
+
 def osAuth(argList):
   # Opensearch authentication
   #host = oshost 
@@ -45,6 +46,7 @@ def osAuth(argList):
   print(awsauth)
 
   return awsauth
+
 
 def registerRepo(argList, awsauth):
 
@@ -71,6 +73,7 @@ def registerRepo(argList, awsauth):
   print(r.text)
   time.sleep(100) 
 
+
 def deleteIndexes(argList, awsauth):
   # Deleting Indexes
   headers = {"Content-Type": "application/json"}
@@ -91,6 +94,7 @@ def deleteIndexes(argList, awsauth):
   print("finished deleting the indices, waiting 2 mins for the deletion to complete")
   time.sleep(120)
 
+
 def restoreIndexes(argList, awsauth):
 
   # Restoring Indexes
@@ -99,7 +103,9 @@ def restoreIndexes(argList, awsauth):
   headers = {"Content-Type": "application/json"}
   payload = {
     "indices": argList['indices'],
-    "include_global_state": False
+    "include_global_state": False,
+    "rename_pattern": ".kibana",
+    "rename_replacement": "restored_.kibana"
   }
   path = '_snapshot/' + argList['repo'] + '/' + argList['snapshot'] + '/_restore'
   print(path)
