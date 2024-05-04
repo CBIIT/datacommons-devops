@@ -109,8 +109,8 @@ def restoreIndexes(argList, awsauth):
   payload = {
     "indices": argList['indices'],
     "include_global_state": False,
-    "rename_pattern": ".kibana*",
-    "rename_replacement": "restored_.kibana*"
+    "rename_pattern": ".kibana",
+    "rename_replacement": "restored_.kibana"
   }
   path = '_snapshot/' + argList['repo'] + '/' + argList['snapshot'] + '/_restore'
   print(path)
@@ -119,20 +119,20 @@ def restoreIndexes(argList, awsauth):
     result = requests.post(argList['oshost'] + path, auth=awsauth, json=payload, headers=headers)
   except requests.exceptions.RequestException as e:
      raise SystemExit(e)
-  else:
-    # reindex restored_.kibana to .kibana 
-    payload = {
-      "source": {
-        "index": "restored_.kibana"
-      },
-      "dest": {
-        "index": ".kibana"
-      }
-    }
-    try:
-      result = requests.post(argList['oshost'] + '_reindex', auth=awsauth, json=payload, headers=headers)
-    except requests.exceptions.RequestException as e:
-      raise SystemExit(e)
+  # else:
+  #   # reindex restored_.kibana to .kibana 
+  #   payload = {
+  #     "source": {
+  #       "index": "restored_.kibana"
+  #     },
+  #     "dest": {
+  #       "index": ".kibana"
+  #     }
+  #   }
+  #   try:
+  #     result = requests.post(argList['oshost'] + '_reindex', auth=awsauth, json=payload, headers=headers)
+  #   except requests.exceptions.RequestException as e:
+  #     raise SystemExit(e)
 
   return result
 
