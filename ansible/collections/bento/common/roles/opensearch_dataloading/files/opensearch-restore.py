@@ -109,8 +109,8 @@ def restoreIndexes(argList, awsauth):
   payload = {
     "indices": argList['indices'],
     "include_global_state": False,
-    "rename_pattern": ".kibana",
-    "rename_replacement": "restored_.kibana"
+    "rename_pattern": ".kibana*",
+    "rename_replacement": "restored_.kibana*"
   }
   path = '_snapshot/' + argList['repo'] + '/' + argList['snapshot'] + '/_restore'
   print(path)
