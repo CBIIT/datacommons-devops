@@ -106,6 +106,11 @@ def restoreIndexes(argList, awsauth):
   print("started restore the indices")
   
   headers = {"Content-Type": "application/json"}
+
+  kb_indices = requests.get(argList['oshost'] + '_cat/indices/*kibana*?v')
+  print(kb_indices)
+
+
   payload = {
     "indices": argList['indices'],
     "include_global_state": False,
