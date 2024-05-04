@@ -107,22 +107,9 @@ def restoreIndexes(argList, awsauth):
   
   headers = {"Content-Type": "application/json"}
 
-  # try:
-  #   result = requests.get(argList['oshost'] + '_cat/indices/*kibana*?h=index')
-  # except requests.exceptions.RequestException as e:
-  #    raise SystemExit(e)
-  # else:
-  #   kb_indices = result.text
-  #   print(kb_indices)
-
-
   payload = {
     "indices": argList['indices'],
     "include_global_state": False,
-    #"rename_pattern": ".kibana",
-    #"rename_pattern": kb_indices,
-    #"rename_replacement": "restored_.kibana"
-    #"rename_replacement": "restored_" + kb_indices
   }
   path = '_snapshot/' + argList['repo'] + '/' + argList['snapshot'] + '/_restore'
   print(path)
@@ -131,20 +118,6 @@ def restoreIndexes(argList, awsauth):
     result = requests.post(argList['oshost'] + path, auth=awsauth, json=payload, headers=headers)
   except requests.exceptions.RequestException as e:
      raise SystemExit(e)
-  # else:
-  #   # reindex restored_.kibana to .kibana 
-  #   payload = {
-  #     "source": {
-  #       "index": "restored_.kibana*"
-  #     },
-  #     "dest": {
-  #       "index": ".kibana*"
-  #     }
-  #   }
-  #   try:
-  #     result = requests.post(argList['oshost'] + '_reindex', auth=awsauth, json=payload, headers=headers)
-  #   except requests.exceptions.RequestException as e:
-  #     raise SystemExit(e)
 
   return result
 
