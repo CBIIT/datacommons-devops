@@ -126,7 +126,7 @@ def restoreIndexes(argList, awsauth):
         "index": "restored_.kibana*"
       },
       "dest": {
-        "index": ".kibana"
+        "index": ".kibana*"
       }
     }
     try:
