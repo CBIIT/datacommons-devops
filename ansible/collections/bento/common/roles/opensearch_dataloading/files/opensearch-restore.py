@@ -37,12 +37,9 @@ def getArgs():
 
 def osAuth(argList):
   # Opensearch authentication
-  #host = oshost 
-  #region = args.region
   service = 'es'
   credentials = boto3.Session().get_credentials()
   awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, argList['region'], service, session_token=credentials.token)
-
   print(awsauth)
 
   return awsauth
@@ -67,11 +64,13 @@ def registerRepo(argList, awsauth):
 
   headers = {"Content-Type": "application/json"}
   print("registering repo")
-  r = requests.put(url, auth=awsauth, json=payload, headers=headers)
-
-  print(r.status_code)
-  print(r.text)
-  time.sleep(100) 
+  try:
+    r = requests.put(url, auth=awsauth, json=payload, headers=headers)
+    print(r.status_code)
+    print(r.text)
+    time.sleep(100)
+  except requests.exceptions.RequestException as e:
+    raise SystemExit(e)
 
 
 def deleteIndexes(argList, awsauth):
@@ -84,12 +83,18 @@ def deleteIndexes(argList, awsauth):
     for i in indice_arr:
       check = requests.get(argList['oshost'] + i, auth=awsauth, headers=headers)
       if check.status_code==200:
-        r = requests.delete(argList['oshost'] + i, auth=awsauth, headers=headers)
-        print(r.text)
+        try:
+          r = requests.delete(argList['oshost'] + i, auth=awsauth, headers=headers)
+          print(r.text)
+        except requests.exceptions.RequestException as e:
+          raise SystemExit(e)
   else:
     print("no listed indices - deleting all indices")
-    r = requests.delete(argList['oshost'] + '/*', auth=awsauth, headers=headers)
-    print(r.text)
+    try:
+      r = requests.delete(argList['oshost'] + '/*', auth=awsauth, headers=headers)
+      print(r.text)
+    except requests.exceptions.RequestException as e:
+     raise SystemExit(e)
 
   print("finished deleting the indices, waiting 2 mins for the deletion to complete")
   time.sleep(120)
@@ -110,7 +115,24 @@ def restoreIndexes(argList, awsauth):
   path = '_snapshot/' + argList['repo'] + '/' + argList['snapshot'] + '/_restore'
   print(path)
 
-  result = requests.post(argList['oshost'] + path, auth=awsauth, json=payload, headers=headers)
+  try:
+    result = requests.post(argList['oshost'] + path, auth=awsauth, json=payload, headers=headers)
+  except requests.exceptions.RequestException as e:
+     raise SystemExit(e)
+  else:
+    # reindex restored_.kibana to .kibana 
+    payload = {
+      "source": {
+        "index": "restored_.kibana"
+      },
+      "dest": {
+        "index": ".kibana"
+      }
+    }
+    try:
+      result = requests.post(argList['oshost'] + '_reindex', auth=awsauth, json=payload, headers=headers)
+    except requests.exceptions.RequestException as e:
+      raise SystemExit(e)
 
   return result
 
