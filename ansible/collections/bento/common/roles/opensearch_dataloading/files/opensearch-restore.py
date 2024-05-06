@@ -40,7 +40,6 @@ def osAuth(argList):
   service = 'es'
   credentials = boto3.Session().get_credentials()
   awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, argList['region'], service, session_token=credentials.token)
-  print(awsauth)
 
   return awsauth
 
@@ -66,8 +65,6 @@ def registerRepo(argList, awsauth):
   print("registering repo")
   try:
     r = requests.put(url, auth=awsauth, json=payload, headers=headers)
-    print(r.status_code)
-    print(r.text)
     time.sleep(100)
   except requests.exceptions.RequestException as e:
     raise SystemExit(e)
@@ -112,7 +109,6 @@ def restoreIndexes(argList, awsauth):
     "include_global_state": False,
   }
   path = '_snapshot/' + argList['repo'] + '/' + argList['snapshot'] + '/_restore'
-  print(path)
 
   try:
     result = requests.post(argList['oshost'] + path, auth=awsauth, json=payload, headers=headers)
