@@ -74,15 +74,7 @@ def createSnapshot(argList, awsauth):
 
   headers = {"Content-Type": "application/json"}
   payload = {
-    "type": "s3",
-    "settings": {
-      "indices": argList['indices'],
-      "bucket": argList['s3bucket'],
-      "base_path": argList['basepath'],
-      "region": argList['region'],
-      "role_arn": argList['rolearn'],
-      "canned_acl": "bucket-owner-full-control"
-    }
+    "indices": argList['indices'],
   }
 
   print("taking opensearch snapshot")
