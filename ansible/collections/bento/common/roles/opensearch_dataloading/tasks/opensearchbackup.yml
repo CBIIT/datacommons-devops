@@ -9,7 +9,7 @@
 - name: load data
   shell:
     cmd: >
-      python3 {{workspace}}/opensearch-backup.py --oshost {{opensearch_host}} --repo {{snapshot_repo}}  --s3bucket {{s3_bucket}} --indices {{indices}} --snapshot {{snapshot_value}} --basePath {{base_path}} --region {{region}} --rolearn {{role_arn}}
+      python3 {{workspace}}/opensearch-backup.py --oshost {{opensearch_host}} --repo {{snapshot_repo}}  --s3bucket {{s3_bucket}} --indices {{indices}} --snapshot {{snapshot_value}} --basepath {{base_path}} --region {{region}} --rolearn {{role_arn}}
   register: data_loader
 
 - name: show dataloader output
