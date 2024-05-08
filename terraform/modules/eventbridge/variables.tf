@@ -59,3 +59,8 @@ variable "input_paths" {
   type        = map(string)
   default     = {}
 }
+
+variable "resource_prefix" {
+  description = "The prefix to add when creating resources"
+  type        = string
+}

@@ -1,5 +1,5 @@
 resource "aws_eventbridge_rule" "module_event" {
-  name                = var.name
+  name                = "${var.resource_prefix}-${var.name}"
   schedule_expression = var.schedule_expression
 }
 
