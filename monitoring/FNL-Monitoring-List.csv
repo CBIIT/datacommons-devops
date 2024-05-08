@@ -5,7 +5,8 @@ Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://trialcommons-dev.cancer.go
 $http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ idsLists { case_ids } }'
+    query: '{ idsLists { case_ids } }',
+    variables: {}
     }
   },
 
@@ -31,7 +32,8 @@ Clinical Trial Data Commons,ctdc,CRDC,QA,API,https://trialcommons-qa.cancer.gov/
 $http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ idsLists { case_ids } }'
+    query: '{ idsLists { case_ids } }',
+    variables: {}
     }
   },
 
@@ -182,7 +184,8 @@ Index of NCI Studies,ins,CCDI,Dev,API,https://studycatalog-dev.cancer.gov/v1/gra
 $http.post('https://studycatalog-dev.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ idsLists { case_ids } }'
+    query: '{ idsLists { case_ids } }',
+    variables: {}
     }
   },
 
@@ -206,7 +209,8 @@ Index of NCI Studies,ins,CCDI,QA,API,https://studycatalog-qa.cancer.gov/v1/graph
 $http.post('https://studycatalog-qa.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ idsLists { case_ids } }'
+    query: '{ idsLists { case_ids } }',
+    variables: {}
     }
   },
 
@@ -230,7 +234,8 @@ Index of NCI Studies,ins,CCDI,Stage,API,https://studycatalog-stage.cancer.gov/v1
 $http.post('https://studycatalog-stage.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ idsLists { case_ids } }'
+    query: '{ idsLists { case_ids } }',
+    variables: {}
     }
   },
 
@@ -254,7 +259,8 @@ Index of NCI Studies,ins,CCDI,Prod,API,https://studycatalog.cancer.gov/v1/graphq
 $http.post('https://studycatalog.cancer.gov/v1/graphql/',
   {
     json: {
-    query: '{ idsLists { case_ids } }'
+    query: '{ idsLists { case_ids } }',
+    variables: {}
     }
   },
 

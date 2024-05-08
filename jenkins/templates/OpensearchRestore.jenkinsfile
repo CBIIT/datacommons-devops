@@ -1,0 +1,98 @@
+import groovy.json.JsonOutput
+
+pipeline {
+  agent {
+    node {
+      label ''  // Set to use a Jenkins agent in your desired account
+    }
+  }
+	parameters {
+    extendedChoice( 
+        name: 'Environment', 
+        defaultValue: 'dev', 
+        description: 'Choose the environment to build', 
+        type: 'PT_SINGLE_SELECT',
+        value: 'dev,qa,stage,prod' )
+    string(defaultValue: "",
+                    description: 'project name',
+                    name: 'PROJECT_NAME')
+    string(defaultValue: "",
+                    description: 'snapshot repository name',
+                    name: 'SNAPSHOT_REPO')
+    string(defaultValue: "",
+            description: 'Snapshot name used for restore operation',
+            name: 'SNAPSHOT_VALUE')
+    string(description: 'indices to be loaded to opensearch. values should comma seperated. Only new indices should be loaded',
+            name: 'INDICES')
+    string(defaultValue: "",
+            description: 'S3 bucket which has the snapshot to restore',
+            name: 'S3_BUCKET')
+    string(defaultValue: "",
+            description: 'sub folder in S3 bucket where the snapshot is present',
+            name: 'BASE_PATH')
+  }
+  options {
+  	ansiColor('xterm')
+  }
+  tools {
+  	maven 'Default' 
+    jdk 'Default' 
+  }
+  environment {
+      PROGRAM      = ""    // set to your program name (crdc, ccdi)
+	  PROJECT      = ""    // set to your project name
+	  SLACK_SECRET = ""     // set to your slack secret name
+	  ENV          = "${params.Environment}"
+	  REGION       = "us-east-1"
+	  DEPLOY_REPO  = "${env.PROJECT}-deployments"
+  }
+  stages{
+
+      stage('checkout'){
+      steps {
+        checkout( poll: false, 
+        changelog:false,
+        scm: [$class: 'GitSCM', 
+        branches: [[name: '*/main']], 
+        doGenerateSubmoduleConfigurations: false, 
+        extensions: [[$class: 'DisableRemotePoll'],
+        [$class: 'PathRestriction', excludedRegions: '*'], 
+        [$class: 'RelativeTargetDirectory', 
+        relativeTargetDir: "${env.PROJECT}-deployments"]],
+        submoduleCfg: [], 
+	    userRemoteConfigs:
+		[[url: "https://github.com/CBIIT/${env.DEPLOY_REPO}"]]])
+        }
+    }
+
+  	stage('opensearch_restore'){
+        agent {
+            docker {
+                image 'cbiitssrepo/cicd-ansible_4.0'
+                args '--net=host -u root -v /var/run/docker.sock:/var/run/docker.sock'
+                reuseNode true
+            }
+        }
+ 		steps{
+          wrap([$class: 'AnsiColorBuildWrapper', colorMapName: "xterm"]){
+             ansiblePlaybook( 
+                playbook: '${WORKSPACE}/${env.PROJECT}-deployments/ansible/playbooks/dataloader/opensearchrestore.yml',
+                inventory: '${WORKSPACE}/${env.PROJECT}-deployments/ansible/playbooks/hosts',
+                extraVars: [
+                    tier: "${ENV}",
+                    project_name: "${PROJECT}",
+                    snapshot_repo: "${params.SNAPSHOT_REPO}", 
+                    snapshot_value: "${params.SNAPSHOT_VALUE}",
+                    base_path: "${params.BASE_PATH}",
+                    s3_bucket: "${params.S3_BUCKET}",
+                    project: "${PROJECT}",
+                    indices: "${params.INDICES}"
+                    ],
+                  hostKeyChecking: false,
+                  colorized: true,
+                  extras: '-vvv') 
+        }
+      }
+    }
+  }
+}
