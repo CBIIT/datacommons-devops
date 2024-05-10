@@ -1,4 +1,4 @@
-variable "name" {
+variable "eventbridge_name" {
   description = "Name of the EventBridge rule"
   type        = string
 }
@@ -63,4 +63,10 @@ variable "input_paths" {
 variable "resource_prefix" {
   description = "The prefix to add when creating resources"
   type        = string
+}
+
+variable "target_account_cloudone"{
+  description = "to add check conditions on whether the resources are brought up in cloudone or not"
+  type        = bool
+  default     = true
 }
