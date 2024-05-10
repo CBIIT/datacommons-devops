@@ -36,7 +36,7 @@ variable "private_subnet_ids" {
   default     = []
 }
 
-variable "security_groups" {
+variable "ecs_security_groups" {
   description = "List of security group IDs for ECS task type targets"
   type        = list(string)
   default     = []
@@ -48,7 +48,7 @@ variable "assign_public_ip" {
   default     = "DISABLED"
 }
 
-variable "input" {
+/*variable "input" {
   description = "Input passed to the target, must be JSON"
   type        = string
   default     = "{}"
@@ -58,7 +58,7 @@ variable "input_paths" {
   description = "JSON paths to be extracted from the event and used in the input template"
   type        = map(string)
   default     = {}
-}
+}*/
 
 variable "resource_prefix" {
   description = "The prefix to add when creating resources"
