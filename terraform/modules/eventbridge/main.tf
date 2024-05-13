@@ -1,17 +1,12 @@
-resource "aws_eventbridge_rule" "module_event" {
-  name                = "${var.resource_prefix}-${var.eventbridge_name}"
+resource "aws_cloudwatch_event_rule" "module_event" {
+  name                = var.eventbridge_name
   schedule_expression = var.schedule_expression
 }
 
-resource "aws_eventbridge_target" "module_target" {
-  rule      = aws_eventbridge_rule.module_event.name
+resource "aws_cloudwatch_event_target" "module_target" {
+  rule      = aws_cloudwatch_event_rule.module_event.name
   arn       = var.target_arn
-  target_id = "${var.target_type}-${aws_eventbridge_rule.module_event.name}"
-
-  /*input_transformer {
-    input_paths    = var.input_paths
-    input_template = var.input
-  }*/
+  target_id = "${var.target_type}-${aws_cloudwatch_event_rule.module_event.name}"
 
   dynamic "ecs_parameters" {
     for_each = local.ecs_conditions ? [1] : []
@@ -20,9 +15,9 @@ resource "aws_eventbridge_target" "module_target" {
       task_count          = 1
       launch_type         = "FARGATE"
       network_configuration {
-        ecs_subnet_ids   = var.private_subnet_ids
-        ecs_security_groups   = var.ecs_security_groups
-        assign_public_ip  = var.assign_public_ip
+        subnets         = var.private_subnet_ids
+        security_groups = var.ecs_security_groups
+        assign_public_ip = var.assign_public_ip
       }
     }
   }
@@ -34,3 +29,4 @@ resource "aws_eventbridge_target" "module_target" {
     }
   }
 }
+
