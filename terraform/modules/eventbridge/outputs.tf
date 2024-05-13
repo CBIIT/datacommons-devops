@@ -4,16 +4,14 @@ output "eventbridge_rule_name" {
   description = "The name of the EventBridge rule."
 }
 
-# Output for the ECS EventBridge target ID, conditionally output if ECS target is created
+# Output for the ECS EventBridge target ID, providing a default value if no resource is created
 output "eventbridge_ecs_target_id" {
-  value       = aws_cloudwatch_event_target.ecs_target[0].target_id
+  value = length(aws_cloudwatch_event_target.ecs_target) > 0 ? aws_cloudwatch_event_target.ecs_target[0].target_id : "No ECS target created"
   description = "The ID of the EventBridge target for the ECS task."
-  condition   = length(aws_cloudwatch_event_target.ecs_target) > 0
 }
 
-# Output for the Lambda EventBridge target ID, conditionally output if Lambda target is created
+# Output for the Lambda EventBridge target ID, providing a default value if no resource is created
 output "eventbridge_lambda_target_id" {
-  value       = aws_cloudwatch_event_target.lambda_target[0].target_id
+  value = length(aws_cloudwatch_event_target.lambda_target) > 0 ? aws_cloudwatch_event_target.lambda_target[0].target_id : "No Lambda target created"
   description = "The ID of the EventBridge target for the Lambda function."
-  condition   = length(aws_cloudwatch_event_target.lambda_target) > 0
 }
