@@ -30,8 +30,5 @@ resource "aws_cloudwatch_event_target" "lambda_target" {
   rule      = aws_cloudwatch_event_rule.module_event.name
   arn       = var.target_arn
   target_id = "${var.target_type}-${aws_cloudwatch_event_rule.module_event.name}"
-
-  lambda_target {
-    function_arn = var.target_arn
-  }
+  
 }
