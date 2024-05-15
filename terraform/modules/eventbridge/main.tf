@@ -1,6 +1,7 @@
 resource "aws_cloudwatch_event_rule" "module_event" {
   name                = var.eventbridge_name
   schedule_expression = var.schedule_expression
+  role_arn            = aws_iam_role.eventbridge_role.arn
 }
 
 # For ECS Task
@@ -30,5 +31,5 @@ resource "aws_cloudwatch_event_target" "lambda_target" {
   rule      = aws_cloudwatch_event_rule.module_event.name
   arn       = var.target_arn
   target_id = "${var.target_type}-${aws_cloudwatch_event_rule.module_event.name}"
-  
+
 }
