@@ -65,6 +65,12 @@ variable "resource_prefix" {
   type        = string
 }
 
+variable "iam_prefix" {
+  description = "The string prefix for IAM roles and policies to conform to NCI power-user compliance"
+  type        = string
+  default     = "power-user"
+}
+
 variable "target_account_cloudone"{
   description = "to add check conditions on whether the resources are brought up in cloudone or not"
   type        = bool

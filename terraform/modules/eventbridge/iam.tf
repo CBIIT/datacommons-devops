@@ -1,5 +1,5 @@
 resource "aws_iam_role" "eventbridge_role" {
-  name = "${var.resource_prefix}-eventbridge_access_role"
+  name = "${var.iam_prefix}-${var.resource_prefix}-eventbridge_access_role"
   permissions_boundary = var.target_account_cloudone ? local.permission_boundary_arn : null
 
   assume_role_policy = jsonencode({
