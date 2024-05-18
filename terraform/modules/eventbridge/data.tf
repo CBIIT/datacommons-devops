@@ -1,5 +1,5 @@
 data "aws_caller_identity" "current" {}
 
 data "aws_ecs_task_definition" "latest" {
-  family = var.task_family
+  task_definition  = var.task_definition_arn
 }
