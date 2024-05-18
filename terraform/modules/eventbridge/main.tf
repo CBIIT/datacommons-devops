@@ -11,7 +11,7 @@ resource "aws_cloudwatch_event_target" "ecs_target" {
   rule      = aws_cloudwatch_event_rule.module_event.name
   arn       = var.target_arn
   target_id = "${var.target_type}-${aws_cloudwatch_event_rule.module_event.name}"
-  role_arn            = aws_iam_role.eventbridge_role.arn
+  role_arn            = var.ecs_task_execution_role_arn
   ecs_target {
     task_definition_arn = var.task_definition_arn
     task_count          = 1

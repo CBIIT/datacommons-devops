@@ -76,3 +76,8 @@ variable "target_account_cloudone"{
   type        = bool
   default     = true
 }
+
+variable "iecs_task_execution_role_arn" {
+  description = "arn of the ecs_task_execution_role"
+  type        = string  
+}
