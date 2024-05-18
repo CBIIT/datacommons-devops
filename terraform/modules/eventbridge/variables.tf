@@ -77,7 +77,7 @@ variable "target_account_cloudone"{
   default     = true
 }
 
-variable "iecs_task_execution_role_arn" {
-  description = "arn of the ecs_task_execution_role"
-  type        = string  
+variable "role_arn" {
+  description = "The ARN of the IAM role to use for EventBridge."
+  type        = string
 }
