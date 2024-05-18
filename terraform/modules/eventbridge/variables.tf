@@ -24,11 +24,11 @@ variable "ecs_cluster_arn" {
   default     = ""
 }
 
-variable "task_definition_arn" {
+/*variable "task_definition_arn" {
   description = "ARN of the ECS task definition for ECS task type targets"
   type        = string
   default     = ""
-}
+}*/
 
 variable "private_subnet_ids" {
   description = "List of private subnet IDs for ECS task type targets"
@@ -79,5 +79,10 @@ variable "target_account_cloudone"{
 
 variable "role_arn" {
   description = "The ARN of the IAM role to use for EventBridge."
+  type        = string
+}
+
+variable "task_family" {
+  description = "The family of the ECS task definition"
   type        = string
 }

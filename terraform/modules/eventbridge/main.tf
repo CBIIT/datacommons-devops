@@ -13,7 +13,7 @@ resource "aws_cloudwatch_event_target" "ecs_target" {
   target_id = "${var.target_type}-${aws_cloudwatch_event_rule.module_event.name}"
   role_arn  = var.role_arn
   ecs_target {
-    task_definition_arn = var.task_definition_arn
+    task_definition_arn = data.aws_ecs_task_definition.latest.arn
     task_count          = 1
     launch_type         = "FARGATE"
     network_configuration {
