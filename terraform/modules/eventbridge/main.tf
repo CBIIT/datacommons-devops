@@ -24,11 +24,6 @@ resource "aws_cloudwatch_event_target" "ecs_target" {
       assign_public_ip = var.assign_public_ip
     }
   }
-  // Log failed invocations
-  cloudwatch_logs {
-    log_group_name  = aws_cloudwatch_log_group.eventbridge_log_group.name
-    log_stream_name = aws_cloudwatch_log_stream.eventbridge_log_stream.name
-  }
 }
 
 # For Lambda Function
