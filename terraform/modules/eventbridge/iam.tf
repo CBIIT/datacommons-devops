@@ -23,6 +23,10 @@ resource "aws_iam_role_policy" "eventbridge_policy" {
       Action   = [
         "ecs:RunTask",
         "lambda:InvokeFunction",
+        "iam:PassRole",
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
         "sns:Publish"
       ]
       Resource = "*"
