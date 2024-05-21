@@ -4,6 +4,8 @@ resource "aws_cloudwatch_event_rule" "module_event" {
   role_arn            = aws_iam_role.eventbridge_role.arn
 }
 
+
+
 # For ECS Task
 resource "aws_cloudwatch_event_target" "ecs_target" {
   count = local.ecs_conditions ? 1 : 0
@@ -21,6 +23,11 @@ resource "aws_cloudwatch_event_target" "ecs_target" {
       security_groups = var.ecs_security_groups
       assign_public_ip = var.assign_public_ip
     }
+  }
+  // Log failed invocations
+  cloudwatch_logs {
+    log_group_name  = aws_cloudwatch_log_group.eventbridge_log_group.name
+    log_stream_name = aws_cloudwatch_log_stream.eventbridge_log_stream.name
   }
 }
 
