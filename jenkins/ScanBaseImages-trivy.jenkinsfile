@@ -1,4 +1,5 @@
 @Library('datacommons-jenkins-shared-library@v1.2') _
+import groovy.json.JsonSlurper
 
 pipeline {
 	agent {
@@ -17,12 +18,17 @@ pipeline {
   
   environment {
 
- 	CODE_REPO   = "datacommons-devops"
-    CODE_FOLDER = "datacommons-devops"
- 	CODE_BRANCH = "main"
+	CODE_REPO      = "datacommons-devops"
+	CODE_FOLDER    = "datacommons-devops"
+	CODE_BRANCH    = "main"
 
-	ECR_REPO    = "cbiit-base-docker-images"
-	REGION      = "us-east-1"
+	ECR_REPO       = "cbiit-base-docker-images"
+	REGION         = "us-east-1"
+
+	API_URI        = "https://api.github.com"
+	ORG            = "CBIIT"
+
+	BASE_IMAGE_TAG = "fnl_base_image"
 
   }
 
@@ -43,26 +49,96 @@ pipeline {
 
   	}
 
-   stage('Image Scans'){
+   stage('Image List'){
+
+ 		steps {
+
+ 			script {
+				// set ECR account number
+				env.GITHUB_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.user'").trim()
+				env.GITHUB_PAT = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.token'").trim()
+				
+				// get list of all base images found in CBIIT repos
+				maskPasswords(varPasswordPairs: [[password: "${env.GITHUB_PAT}"]]){
+					REPO_NB_PAGES=sh(label: 'Get repo pages', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -I -s $API_URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'").trim()
+					println "Repo Pages:  ${REPO_NB_PAGES}"
+
+					def dockerFiles = []
+					def baseImages = []
+
+					def page = 1
+					while(page <= REPO_NB_PAGES) {
+						repos = sh(label: 'get repo names', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/orgs/$ORG/repos\\?page=$page\\&per_page\\=\\100  | jq -r -c '.[].name'").trim().split()
+						
+						repos.each() {
+							println "Repo:     $it"
+							
+							tree = sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m1 trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
+							
+							// get all branches for this repo
+							branch_list = sh(label: 'get default branch', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it/branches | jq -r -c '.[].name' | sed 's:\\([()]\\+\\):\\\1:g'").trim().split()
+							branch_list.each { branch ->
+
+								repo_empty = sh(label: 'check repo status', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'Git Repository is empty' || true")
+
+								if (! repo_empty) {
+								
+								dockerfilePath = sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | contains(\"Dockerfile\"))? |.path' || echo 'NOT_FOUND'").trim().split()
+								rawUrl =  "https://raw.githubusercontent.com/$ORG/$it/$branch"
+
+								if (!(dockerfilePath == 'NOT_FOUND')) {
+									repo_name = it
+									dockerfilePath.each() {
+										base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM | grep $BASE_IMAGE_TAG || echo 'NOT_FOUND'").trim()
+										if (!(base_image == 'NOT_FOUND')) {
+											base_image = base_image.substring(base_image.indexOf(" ") + 1).trim()
+											base_image = base_image.substring(0, base_image.indexOf(" ")).trim()
+											image_info = [Name:base_image, Projects:"$repo_name:$branch"]
+											println "Base Image:   $base_image"
+											baseImages.add(image_info)
+										}
+									}
+								}
+								
+								}
+							}
+						}
+						page++
+					}
+
+					// consolidate base image list to remove duplicate entries
+					imageList = []
+					baseImages.each { image ->
+					  def currentImage = imageList.find{ it.Name == image.Name }
+					  if( !(currentImage == null) ) {
+						currentImage.Projects += ", $image.Projects"
+					  } else {
+						imageList.add(image)
+					  }
+					}
+
+				}
+
+			}
+
+ 		}
+
+  	}
+
+	stage('Image Scans'){
 
  		steps {
 
  			script {
 
-			    def image_list = readFile("${WORKSPACE}/${CODE_FOLDER}/docker/base_image_list").readLines()
-				
-				RESULTS = sh(label: 'Get Scan Results', returnStdout: true, script: """#!/bin/bash
-				
-				for image in ${image_list.join(' ')}; do
-					trivy_out=\$(docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL \$image)
+				RESULTS = ""
+				imageList.each { image ->
+					trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image.Name").trim()
+					if (!(trivy_out.contains("Total: 0"))) {
+					    RESULTS += "\n\n\nTrivy Results: $image.Projects\n$trivy_out"
+					}
 
-					if [ \$? == 1 ];	then
-					  echo "\$trivy_out \n\n"
-				    fi
-
-                done
-
-				""").trim()
+				}
 
 				println RESULTS
 
@@ -89,12 +165,6 @@ pipeline {
 
 			RESULTS_FILE = sh(label: 'Get results file name', returnStdout: true, script: "echo results_\$(date '+%Y%m%d').txt").trim()
 			writeFile(file: RESULTS_FILE, text: RESULTS)
-			
-			// sh label: 'Write Results', script: """#!/bin/bash
-
-			// 	echo "${RESULTS}" > results_\$(date '+%Y%m%d').txt
-
-			// 	"""
 
 		}
 		
