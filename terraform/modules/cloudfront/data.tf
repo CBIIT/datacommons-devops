@@ -1,14 +1,14 @@
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 data "aws_s3_bucket" "files_bucket" {
-  count = var.create_files_bucket ? 0 : 1
+  count  = var.create_files_bucket ? 0 : 1
   bucket = var.cloudfront_distribution_bucket_name
 }
 
 data "aws_iam_policy_document" "s3_policy" {
   statement {
     actions   = ["s3:GetObject"]
-    resources = [var.create_files_bucket ?  "arn:aws:s3:::${local.files_bucket_name}/*" : "${data.aws_s3_bucket.files_bucket[0].arn}/*"]
+    resources = [var.create_files_bucket ? "arn:aws:s3:::${local.files_bucket_name}/*" : "${data.aws_s3_bucket.files_bucket[0].arn}/*"]
 
     principals {
       type        = "AWS"
@@ -30,18 +30,18 @@ data "aws_cloudfront_cache_policy" "managed_cache" {
 data "aws_iam_policy_document" "kinesis_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRole"]
-    effect = "Allow"
-    sid = ""
+    effect  = "Allow"
+    sid     = ""
     principals {
       identifiers = ["firehose.amazonaws.com"]
-      type = "Service"
+      type        = "Service"
     }
   }
 }
 
 data "aws_iam_policy_document" "firehose_policy" {
   statement {
-    sid = ""
+    sid    = ""
     effect = "Allow"
     actions = [
       "s3:AbortMultipartUpload",
@@ -57,9 +57,9 @@ data "aws_iam_policy_document" "firehose_policy" {
     ]
   }
   statement {
-    effect = "Allow"
-    sid = ""
-    actions = ["iam:CreateServiceLinkedRole"]
+    effect    = "Allow"
+    sid       = ""
+    actions   = ["iam:CreateServiceLinkedRole"]
     resources = ["arn:aws:iam::*:role/aws-service-role/wafv2.amazonaws.com/AWSServiceRoleForWAFV2Logging"]
   }
 }
@@ -72,21 +72,21 @@ data "aws_secretsmanager_secret_version" "cloudfront" {
 
 data "aws_iam_policy_document" "lambda_assume_policy" {
   statement {
-    sid = ""
+    sid    = ""
     effect = "Allow"
     actions = [
       "sts:AssumeRole"
     ]
     principals {
       identifiers = ["lambda.amazonaws.com"]
-      type = "Service"
+      type        = "Service"
     }
   }
 }
 
 data "aws_iam_policy_document" "lambda_s3_policy" {
   statement {
-    sid = ""
+    sid    = ""
     effect = "Allow"
     actions = [
       "s3:GetObject",
@@ -96,7 +96,7 @@ data "aws_iam_policy_document" "lambda_s3_policy" {
     resources = ["arn:aws:s3:::${aws_s3_bucket.kinesis_log.bucket}/*"]
   }
   statement {
-    sid = ""
+    sid    = ""
     effect = "Allow"
     actions = [
       "s3:ListBucket"
@@ -106,7 +106,7 @@ data "aws_iam_policy_document" "lambda_s3_policy" {
     ]
   }
   statement {
-    sid = ""
+    sid    = ""
     effect = "Allow"
     actions = [
       "wafv2:ListIPSets",

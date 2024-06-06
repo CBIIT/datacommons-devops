@@ -25,10 +25,18 @@ resource "aws_ecs_task_definition" "task" {
 
   tags = merge(
     {
-      "Name" = format("%s-%s-%s-%s", var.stack_name, var.env, each.value.name, "task-definition")
+      "Name"       = format("%s-%s-%s-%s", var.stack_name, var.env, each.value.name, "task-definition"),
+      "CreateDate" = timestamp()
     },
     var.tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
+
 }
 
 #ecs service
@@ -50,7 +58,7 @@ resource "aws_ecs_service" "service" {
   }
 
   network_configuration {
-    security_groups  = [ aws_security_group.ecs.id,aws_security_group.app.id]
+    security_groups  = [aws_security_group.ecs.id, aws_security_group.app.id]
     subnets          = var.ecs_subnet_ids
     assign_public_ip = false
   }
@@ -117,8 +125,16 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 
   tags = merge(
     {
-      "Name" = format("%s-%s", var.stack_name, "ecs-cluster")
+      "Name"       = format("%s-%s", var.stack_name, "ecs-cluster"),
+      "CreateDate" = timestamp()
     },
-    var.tags
+    var.tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
+
 }

@@ -4,10 +4,17 @@ resource "aws_ecr_repository" "ecr" {
   image_tag_mutability = "MUTABLE"
   tags = merge(
     {
-      "Name" = format("%s-%s-%s", each.key, var.env, "ecr-registry")
+      "Name"       = format("%s-%s-%s", each.key, var.env, "ecr-registry"),
+      "CreateDate" = timestamp()
     },
     var.tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 }
 
 resource "aws_ecr_repository_policy" "ecr_policy" {
@@ -37,7 +44,7 @@ resource "aws_ecr_lifecycle_policy" "ecr_life_cycle" {
 }
 
 resource "aws_ecr_registry_policy" "this" {
-  count = var.allow_ecr_replication ? 1: 0
+  count = var.allow_ecr_replication ? 1 : 0
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -60,7 +67,7 @@ resource "aws_ecr_registry_policy" "this" {
 }
 
 resource "aws_ecr_replication_configuration" "replication" {
-  count = var.enable_ecr_replication ? 1: 0
+  count = var.enable_ecr_replication ? 1 : 0
   replication_configuration {
     rule {
       destination {

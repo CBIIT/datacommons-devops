@@ -71,45 +71,45 @@ variable "public_ssh_key_ssm_parameter_name" {
   type        = string
 }
 variable "require_http_tokens" {
-  type = string
+  type        = string
   description = "choose if http_tokens is required or optional"
-  default = "optional"
+  default     = "optional"
 }
 variable "enable_http_endpoint" {
-  type = string
+  type        = string
   description = "choose if http_endpoint is enabled or disabld"
-  default = "enabled"
+  default     = "enabled"
 }
 
 variable "db_security_group_name" {
-  type = string
+  type        = string
   description = "provide existing security group"
-  default = null
+  default     = null
 }
 variable "create_security_group" {
-  type = bool
-  default = true
+  type        = bool
+  default     = true
   description = "create security group or not"
 }
 variable "create_instance_profile" {
-  type = bool
-  default = true
+  type        = bool
+  default     = true
   description = "create instance profile or not"
 }
 variable "db_iam_profile_name" {
-  type = string
+  type        = string
   description = "name of iam profile to apply"
-  default = null
+  default     = null
 }
 
 variable "create_bootstrap_script" {
-  type = bool
-  default = true
+  type        = bool
+  default     = true
   description = "choose to create bootstrap script or not"
 }
 
 variable "db_boostrap_ssm_document" {
-  type = string
-  default = null
+  type        = string
+  default     = null
   description = "ssm document for db boostrap"
 }

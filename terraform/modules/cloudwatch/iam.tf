@@ -6,7 +6,7 @@ resource "aws_iam_role" "events_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "events_attachment" {
-  count       = var.target_type != "" ? 1 : 0
-  policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  role        = aws_iam_role.events_role[0].name
+  count      = var.target_type != "" ? 1 : 0
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  role       = aws_iam_role.events_role[0].name
 }

@@ -25,51 +25,51 @@ variable "env" {
 
 # Access Policy Configuration
 variable "nonprod_account_id" {
-  type = string
+  type        = string
   description = "account ID for the project's non-production account"
-  default = ""
+  default     = ""
 }
 
 variable "prod_account_id" {
-  type = string
+  type        = string
   description = "account ID for the project's production account"
-  default = ""
+  default     = ""
 }
 
 variable "access_scheme" {
-  type = string
+  type        = string
   description = "the type of access to apply to the ECR repos"
-  default = "local"
+  default     = "local"
 }
 
 # Lifecycle Policy Configuration
 variable "max_images_to_keep" {
   description = "the maximum number of images to keep in the repository"
-  type = number
-  default = 20
+  type        = number
+  default     = 20
 }
 
 # Replication
 variable "replication_destination_registry_id" {
-  type = string
+  type        = string
   description = "registry id for destination image"
-  default = ""
+  default     = ""
 }
 
 variable "replication_source_registry_id" {
-  type = string
+  type        = string
   description = "registry id for source image"
-  default = ""
+  default     = ""
 }
 
 variable "enable_ecr_replication" {
   description = "enable ecr replication"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "allow_ecr_replication" {
   description = "allow ecr replication"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
 }

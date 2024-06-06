@@ -1,5 +1,5 @@
 data "aws_s3_bucket" "dest" {
-  count = var.create_destination_bucket ? 0 : 1
+  count  = var.create_destination_bucket ? 0 : 1
   bucket = var.destination_bucket_name
 }
 
@@ -58,7 +58,7 @@ data "aws_iam_policy_document" "dest" {
     resources = ["${local.destination_bucket_arn}/*"]
   }
   statement {
-    sid = "AllowDataloaderAccess"
+    sid    = "AllowDataloaderAccess"
     effect = "Allow"
     principals {
       identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/power-user-integration-server-profile"]
@@ -72,7 +72,7 @@ data "aws_iam_policy_document" "dest" {
     resources = [local.destination_bucket_arn]
   }
   statement {
-    sid = "AllowDataloaderOperation"
+    sid    = "AllowDataloaderOperation"
     effect = "Allow"
     principals {
       identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/power-user-integration-server-profile"]

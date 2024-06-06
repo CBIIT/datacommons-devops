@@ -27,9 +27,9 @@ resource "aws_sns_topic_policy" "sns_publish_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect    = "Allow",
-        Action    = "sns:Publish",
-        Resource  = aws_sns_topic.main.arn,
+        Effect   = "Allow",
+        Action   = "sns:Publish",
+        Resource = aws_sns_topic.main.arn,
         Principal = {
           Service = "lambda.amazonaws.com"
         }

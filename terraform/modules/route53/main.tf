@@ -10,8 +10,8 @@ resource "aws_route53_record" "dns_record" {
 }
 
 resource "aws_route53_record" "dns_record_prod" {
-  count =  var.env ==  "prod" ? 1 : 0
-  name    = "${var.application_subdomain}"
+  count   = var.env == "prod" ? 1 : 0
+  name    = var.application_subdomain
   type    = "A"
   zone_id = data.aws_route53_zone.zone.id
   alias {
@@ -22,22 +22,22 @@ resource "aws_route53_record" "dns_record_prod" {
 }
 
 resource "aws_route53_record" "www" {
-  count =  var.env ==  "prod" ? 1 : 0
-  name = "www"
-  type = "CNAME"
+  count   = var.env == "prod" ? 1 : 0
+  name    = "www"
+  type    = "CNAME"
   zone_id = data.aws_route53_zone.zone.zone_id
-  ttl = "5"
+  ttl     = "5"
   records = [var.domain_name]
 }
 
 resource "aws_route53_record" "bento_url" {
-  count =  var.env ==  "prod" && var.stack_name == "bento" ? 1 : 0
-  name = var.domain_name
-  type = "A"
+  count   = var.env == "prod" && var.stack_name == "bento" ? 1 : 0
+  name    = var.domain_name
+  type    = "A"
   zone_id = data.aws_route53_zone.zone.zone_id
   alias {
     evaluate_target_health = false
-    name    = var.alb_dns_name
-    zone_id = var.alb_zone_id
+    name                   = var.alb_dns_name
+    zone_id                = var.alb_zone_id
   }
 }

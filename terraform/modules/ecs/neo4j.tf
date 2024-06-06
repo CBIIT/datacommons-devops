@@ -1,6 +1,6 @@
 #task definition
 resource "aws_ecs_task_definition" "neo4j" {
-  count = var.create_neo4j_db ? 1 : 0
+  count                    = var.create_neo4j_db ? 1 : 0
   family                   = "${var.stack_name}-${var.env}-neo4j-db"
   network_mode             = var.ecs_network_mode
   requires_compatibilities = ["FARGATE"]
@@ -28,16 +28,24 @@ resource "aws_ecs_task_definition" "neo4j" {
   ])
 
   tags = merge(
-  {
-    "Name" = format("%s-%s-%s-%s", var.stack_name, var.env, "neo4j", "task-definition")
-  },
-  var.tags,
+    {
+      "Name"       = format("%s-%s-%s-%s", var.stack_name, var.env, "neo4j", "task-definition"),
+      "CreateDate" = timestamp()
+    },
+    var.tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
+
 }
 
 #ecs service
 resource "aws_ecs_service" "neo4j" {
-  count = var.create_neo4j_db ? 1 : 0
+  count                              = var.create_neo4j_db ? 1 : 0
   name                               = "${var.stack_name}-${var.env}-neo4j"
   cluster                            = aws_ecs_cluster.ecs_cluster.id
   task_definition                    = aws_ecs_task_definition.neo4j[0].arn
@@ -53,7 +61,7 @@ resource "aws_ecs_service" "neo4j" {
   }
 
   network_configuration {
-    security_groups  = [ aws_security_group.ecs.id,aws_security_group.app.id]
+    security_groups  = [aws_security_group.ecs.id, aws_security_group.app.id]
     subnets          = var.ecs_subnet_ids
     assign_public_ip = false
   }
@@ -67,7 +75,7 @@ resource "aws_ecs_service" "neo4j" {
 }
 
 resource "aws_appautoscaling_target" "neo4j_autoscaling_target" {
-  count = var.create_neo4j_db ? 1 : 0
+  count              = var.create_neo4j_db ? 1 : 0
   max_capacity       = 5
   min_capacity       = 1
   resource_id        = "service/${aws_ecs_cluster.ecs_cluster.name}/${aws_ecs_service.neo4j[0].name}"
@@ -76,7 +84,7 @@ resource "aws_appautoscaling_target" "neo4j_autoscaling_target" {
 }
 
 resource "aws_appautoscaling_policy" "neo4j_autoscaling_cpu" {
-  count = var.create_neo4j_db ? 1 : 0
+  count              = var.create_neo4j_db ? 1 : 0
   name               = "cpu-autoscaling"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.neo4j_autoscaling_target[0].resource_id

@@ -9,5 +9,5 @@ locals {
   vpc_cidr                        = data.aws_vpc.current.cidr_block
   os_domain_name                  = var.add_opensearch_permission ? "${var.resource_prefix}-opensearch" : "*"
   permission_boundary_arn         = terraform.workspace == "stage" || terraform.workspace == "prod" ? null : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
-  ecr_account                     =  var.central_ecr_account_id
+  ecr_account                     = var.central_ecr_account_id
 }

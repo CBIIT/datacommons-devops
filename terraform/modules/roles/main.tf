@@ -8,7 +8,18 @@ module "iam_assumable_role" {
   number_of_custom_role_policy_arns = length(local.all_custom_policy_arns)
   trusted_role_services             = var.trusted_role_services
   role_description                  = var.role_description
-  tags                              = var.tags
+  tags = merge(
+    {
+      "CreateDate" = timestamp()
+    },
+    var.tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 }
 
 module "iam_policy" {
@@ -18,5 +29,16 @@ module "iam_policy" {
   name        = var.custom_policy_name
   description = var.iam_policy_description
   policy      = var.iam_policy
-  tags        = var.tags
+  tags = merge(
+    {
+      "CreateDate" = timestamp()
+    },
+    var.tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 }

@@ -1,8 +1,8 @@
 resource "aws_lb" "alb" {
-  name                       = local.alb_name
-  load_balancer_type         = var.alb_type
-  subnets                    = var.alb_subnet_ids
-  security_groups            = [aws_security_group.alb.id]
+  name               = local.alb_name
+  load_balancer_type = var.alb_type
+  subnets            = var.alb_subnet_ids
+  security_groups    = [aws_security_group.alb.id]
   #tfsec:ignore:aws-elb-alb-not-public
   internal                   = var.alb_internal
   drop_invalid_header_fields = true
@@ -21,10 +21,17 @@ resource "aws_lb" "alb" {
 
   tags = merge(
     {
-      "Name" = format("%s-%s-lb", var.stack_name, var.env)
+      "Name"       = format("%s-%s-lb", var.stack_name, var.env),
+      "CreateDate" = timestamp()
     },
     var.tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 }
 
 #create https redirect
@@ -43,7 +50,18 @@ resource "aws_lb_listener" "http" {
     }
   }
 
-  tags = var.tags
+  tags = merge(
+    {
+      "CreateDate" = timestamp()
+    },
+    var.tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 }
 
 resource "aws_lb_listener" "https" {
@@ -63,7 +81,18 @@ resource "aws_lb_listener" "https" {
     }
   }
 
-  tags = var.tags
+  tags = merge(
+    {
+      "CreateDate" = timestamp()
+    },
+    var.tags,
+  )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 }
 
 resource "aws_security_group" "alb" {
@@ -71,11 +100,18 @@ resource "aws_security_group" "alb" {
   description = local.alb_sg_description
   vpc_id      = var.vpc_id
   tags = merge(
-  {
-    "Name" = format("%s-sg", local.alb_name)
-  },
-  var.tags,
+    {
+      "Name"       = format("%s-sg", local.alb_name),
+      "CreateDate" = timestamp()
+    },
+    var.tags,
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreateDate"],
+    ]
+  }
 }
 
 resource "aws_security_group_rule" "all_egress" {

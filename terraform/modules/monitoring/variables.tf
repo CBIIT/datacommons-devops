@@ -1,15 +1,15 @@
 variable "resource_prefix" {
   description = "the prefix to add when creating resources"
-  type = string
+  type        = string
 }
 
 variable "service" {
-  type = string
+  type        = string
   description = "Name of the service where the monitoring is configured. example ecs, database etc"
 }
 
 variable "program" {
-  type = string
+  type        = string
   description = "Name of the program where the application is running. example ccdi or crdc etc"
 }
 
