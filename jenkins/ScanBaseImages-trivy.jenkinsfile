@@ -117,10 +117,6 @@ pipeline {
 					  }
 					}
 
-					println "Base Images Collected:"
-					println imageList
-					println ""
-
 				}
 
 			}
@@ -136,6 +132,10 @@ pipeline {
  			script {
 
 				RESULTS = ""
+				
+				// Add image list to RESULTS
+				RESULTS += "Base Images Collected:\n\n$imageList\n\n"
+
 				imageList.each { image ->
 					trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image.Name").trim()
 					if (!(trivy_out.contains("Total: 0"))) {
