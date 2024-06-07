@@ -134,7 +134,11 @@ pipeline {
 				RESULTS = ""
 				
 				// Add image list to RESULTS
-				RESULTS += "Base Images Collected:\n\n$imageList\n\n"
+				RESULTS += "Images Scanned:\n\n"
+				imageList.each { image ->
+					RESULTS += "Name:  $image.Name     Projects:  $image.Projects\n"
+
+				}
 
 				imageList.each { image ->
 					trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image.Name").trim()
