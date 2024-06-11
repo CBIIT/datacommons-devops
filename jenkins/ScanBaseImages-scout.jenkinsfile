@@ -134,11 +134,12 @@ pipeline {
  			script {
 
 				RESULTS = ""
-				
+				IMAGES = ""
+
 				// Add image list to RESULTS
-				RESULTS += "Images Scanned:\n\n"
+				IMAGES += "Images Scanned:\n\n"
 				imageList.each { image ->
-					RESULTS += "Name:  $image.Name     Projects:  $image.Projects\n"
+					IMAGES += "Name:  $image.Name     Projects:  $image.Projects\n"
 
 				}
 
@@ -150,11 +151,13 @@ pipeline {
 
 				}
 
+				println IMAGES
 				println RESULTS
 
 				if(RESULTS) {
                     catchError(stageResult: 'FAILURE') {
                         error 'VULNERABILITIES FOUND'
+						RESULTS = IMAGES + RESULTS
                     }
 				}
 
