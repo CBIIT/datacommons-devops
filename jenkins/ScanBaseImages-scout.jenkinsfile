@@ -139,7 +139,6 @@ pipeline {
 				env.DOCKER_PAT = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id docker/pat --query SecretString --output text | jq -r '.token'").trim()
 
 				RESULTS = ""
-				FULL_RESULTS = ""
 				IMAGES = ""
 
 				// Add image list to RESULTS
@@ -171,8 +170,8 @@ pipeline {
 				if(RESULTS) {
                     catchError(stageResult: 'FAILURE') {
                         error 'VULNERABILITIES FOUND'
-						FULL_RESULTS = IMAGES + RESULTS
                     }
+					RESULTS = IMAGES + RESULTS
 				}
 
 			}
@@ -191,7 +190,7 @@ pipeline {
 		script {
 
 			RESULTS_FILE = sh(label: 'Get results file name', returnStdout: true, script: "echo results_\$(date '+%Y%m%d').txt").trim()
-			writeFile(file: RESULTS_FILE, text: FULL_RESULTS)
+			writeFile(file: RESULTS_FILE, text: RESULTS)
 
 		}
 		
