@@ -151,7 +151,7 @@ pipeline {
 					//     RESULTS += "\n\n\nTrivy Results: $image.Projects\n$trivy_out\n"
 					// }
 
-					scout_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image.Name").trim()
+					scout_out=sh(label: 'Get scan results', returnStdout: true, script: "docker scout cves --only-severity critical,high $image.Name").trim()
 					if (!(scout_out.contains("No vulnerable packages detected"))) {
 					    RESULTS += "\n\n\nResults: $image.Projects\n$scout_out\n"
 					}
