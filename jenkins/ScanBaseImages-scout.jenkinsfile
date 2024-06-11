@@ -67,12 +67,9 @@ pipeline {
 					def dockerFiles = []
 					def baseImages = []
 
-					//def page = 1
-					def page = 2
-					//while(page <= REPO_NB_PAGES) {
-					while(page <= 2) {
-						//repos = sh(label: 'get repo names', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/orgs/$ORG/repos\\?page=$page\\&per_page\\=\\100  | jq -r -c '.[].name'").trim().split()
-						repos = ["bento-files"]
+					def page = 1
+					while(page <= REPO_NB_PAGES) {
+						repos = sh(label: 'get repo names', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/orgs/$ORG/repos\\?page=$page\\&per_page\\=\\100  | jq -r -c '.[].name'").trim().split()
 
 						repos.each() {
 							println "Repo:     $it"
@@ -151,11 +148,6 @@ pipeline {
 				docker_login=sh(label: 'Get scan results', returnStdout: true, script: "docker login -u $DOCKER_USER -p $DOCKER_PAT").trim()
 
 				imageList.each { image ->
-					// trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image.Name").trim()
-					// if (!(trivy_out.contains("Total: 0"))) {
-					//     RESULTS += "\n\n\nTrivy Results: $image.Projects\n$trivy_out\n"
-					// }
-
 					scout_out=sh(label: 'Get scan results', returnStdout: true, script: "docker scout cves --only-severity critical,high $image.Name").trim()
 					if (!(scout_out.contains("No vulnerable packages detected"))) {
 					    RESULTS += "\n\nResults: $image.Projects\n$scout_out\n\n"
