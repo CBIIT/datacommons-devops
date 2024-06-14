@@ -64,9 +64,9 @@ resource "aws_opensearch_domain" "this" {
     automated_snapshot_start_hour = var.automated_snapshot_start_hour
   }
 
-  software_update_options {
-    auto_software_update_enabled = var.auto_software_update_enabled
-  }
+  # software_update_options {
+  #   auto_software_update_enabled = var.auto_software_update_enabled
+  # }
 
   vpc_options {
     subnet_ids         = var.subnet_ids
