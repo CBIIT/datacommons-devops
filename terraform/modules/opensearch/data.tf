@@ -23,7 +23,7 @@ data "aws_iam_policy_document" "logs" {
 }
 
 data "aws_iam_policy_document" "access_policy" {
-  #count = var.create_access_policies ? 1 : 0
+  count = var.create_access_policies ? 1 : 0
 
   statement {
     effect = "Allow"

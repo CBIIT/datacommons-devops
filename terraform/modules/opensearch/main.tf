@@ -109,7 +109,7 @@ resource "aws_cloudwatch_log_resource_policy" "this" {
   count = var.create_cloudwatch_log_policy ? 1 : 0
 
   policy_name     = "${var.resource_prefix}-opensearch-log-policy"
-  policy_document = data.aws_iam_policy_document.logs.json
+  policy_document = data.aws_iam_policy_document.logs[0].json
 }
 
 resource "aws_iam_role" "snapshot" {
