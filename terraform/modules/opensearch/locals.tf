@@ -2,7 +2,8 @@ locals {
   access_policies       = var.create_access_policies ? data.aws_iam_policy_document.access_policy[0].json : var.access_policies
   #access_policies       = var.create_access_policies ? data.aws_iam_policy_document.access_policy.json : var.access_policies
   permissions_boundary  = var.attach_permissions_boundary ? "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser" : null
-  security_group_ids    = var.create_security_group ? aws_security_group.this[0].id : var.security_group_ids
+  #security_group_ids    = var.create_security_group ? aws_security_group.this[0].id : var.security_group_ids
+  security_group_ids    = var.create_security_group ? aws_security_group.this.id : var.security_group_ids
   custom_instance_type  = var.instance_type == null && var.cluster_tshirt_size != null ? lookup(local.instance_type_lookup, var.cluster_tshirt_size, null) : var.instance_type
   custom_instance_count = var.instance_count == null ? 1 : var.instance_count
   custom_volume_size    = var.volume_size == null && var.cluster_tshirt_size != null ? lookup(local.volume_size_lookup, var.cluster_tshirt_size, null) : var.volume_size
