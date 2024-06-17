@@ -71,7 +71,7 @@ resource "aws_opensearch_domain" "this" {
 
   vpc_options {
     subnet_ids         = var.subnet_ids
-    security_group_ids = [local.security_group_ids]
+    security_group_ids = local.security_group_ids
   }
 }
 
