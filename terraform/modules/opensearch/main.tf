@@ -19,7 +19,8 @@ resource "aws_opensearch_domain" "this" {
     dedicated_master_type    = var.dedicated_master_enabled ? local.custom_instance_type : null
 
     warm_enabled = var.warm_enabled
-    warm_count   = var.warm_enabled ? 2 : 0
+    #warm_count   = var.warm_enabled ? 2 : 0
+    warm_count   = var.warm_enabled ? 2 : null
     warm_type    = var.warm_enabled ? local.custom_instance_type : null
 
     cold_storage_options {
