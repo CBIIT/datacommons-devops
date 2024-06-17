@@ -168,10 +168,17 @@ variable "s3_snapshot_bucket_arn" {
   sensitive   = false
 }
 
-variable "security_group_ids" {
-  type        = set(string)
-  description = "A set of one or more Security Group IDs to associate with the cluster"
-  default     = []
+# variable "security_group_ids" {
+#   type        = set(string)
+#   description = "A set of one or more Security Group IDs to associate with the cluster"
+#   default     = []
+#   sensitive   = false
+# }
+
+variable "security_group_id" {
+  type        = string
+  description = "A Security Group ID to associate with the cluster"
+  default     = ""
   sensitive   = false
 }
 
