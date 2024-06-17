@@ -4,11 +4,11 @@ output "arn" {
   sensitive   = false
 }
 
-output "dashboard_endpoint" {
-  value       = aws_opensearch_domain.this.dashboard_endpoint
-  description = "The endpoint of the OpenSearch domain dashboard"
-  sensitive   = false
-}
+# output "dashboard_endpoint" {
+#   value       = aws_opensearch_domain.this.dashboard_endpoint
+#   description = "The endpoint of the OpenSearch domain dashboard"
+#   sensitive   = false
+# }
 
 output "domain_id" {
   value       = aws_opensearch_domain.this.domain_id
