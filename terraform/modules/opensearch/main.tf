@@ -19,7 +19,6 @@ resource "aws_opensearch_domain" "this" {
     dedicated_master_type    = var.dedicated_master_enabled ? local.custom_instance_type : null
 
     warm_enabled = var.warm_enabled
-    #warm_count   = var.warm_enabled ? 2 : 0
     warm_count   = var.warm_enabled ? 2 : null
     warm_type    = var.warm_enabled ? local.custom_instance_type : null
 
@@ -53,7 +52,6 @@ resource "aws_opensearch_domain" "this" {
     content {
       enabled                  = true
       cloudwatch_log_group_arn = aws_cloudwatch_log_group.this[0].arn
-      #log_type                 = each.value
       log_type                 = log_publishing_options.value
     }
   }
@@ -66,9 +64,9 @@ resource "aws_opensearch_domain" "this" {
     automated_snapshot_start_hour = var.automated_snapshot_start_hour
   }
 
-  # software_update_options {
-  #   auto_software_update_enabled = var.auto_software_update_enabled
-  # }
+  software_update_options {
+    auto_software_update_enabled = var.auto_software_update_enabled
+  }
 
   vpc_options {
     subnet_ids         = var.subnet_ids
