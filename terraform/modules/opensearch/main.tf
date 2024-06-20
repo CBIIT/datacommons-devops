@@ -11,7 +11,8 @@ resource "aws_opensearch_domain" "this" {
     zone_awareness_enabled = var.zone_awareness_enabled
 
     zone_awareness_config {
-      availability_zone_count = var.zone_awareness_enabled ? 2 : null
+      #availability_zone_count = var.zone_awareness_enabled ? 2 : null
+      availability_zone_count = var.zone_awareness_enabled ? 2 : 1
     }
 
     dedicated_master_enabled = var.dedicated_master_enabled
