@@ -5,6 +5,7 @@ locals {
   security_group_ids    = var.create_security_group ? [aws_security_group.this[0].id] : var.security_group_ids
   #security_group_ids    = var.create_security_group ? aws_security_group.this[0].id : var.security_group_id
   custom_instance_type  = var.instance_type == null && var.cluster_tshirt_size != null ? lookup(local.instance_type_lookup, var.cluster_tshirt_size, null) : var.instance_type
+  auto_tune_enabled     = var.auto_tune_enabled && (!contains(local.custom_instance_type, "t2") || !contains(local.custom_instance_type, "t3")) ? "ENABLED" : "DISABLED"
   custom_instance_count = var.instance_count == null ? 1 : var.instance_count
   custom_volume_size    = var.volume_size == null && var.cluster_tshirt_size != null ? lookup(local.volume_size_lookup, var.cluster_tshirt_size, null) : var.volume_size
   cluster_subnet_ids    = local.custom_instance_count == 1 ? [tolist(var.subnet_ids)[0]] : var.subnet_ids

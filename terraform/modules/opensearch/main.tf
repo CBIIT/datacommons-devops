@@ -28,7 +28,7 @@ resource "aws_opensearch_domain" "this" {
   }
 
   auto_tune_options {
-    desired_state = var.auto_tune_enabled ? "ENABLED" : "DISABLED"
+    desired_state = local.auto_tune_enabled
   }
 
   domain_endpoint_options {
