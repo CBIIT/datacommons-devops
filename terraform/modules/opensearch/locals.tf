@@ -7,7 +7,7 @@ locals {
   custom_instance_type  = var.instance_type == null && var.cluster_tshirt_size != null ? lookup(local.instance_type_lookup, var.cluster_tshirt_size, null) : var.instance_type
   custom_instance_count = var.instance_count == null ? 1 : var.instance_count
   custom_volume_size    = var.volume_size == null && var.cluster_tshirt_size != null ? lookup(local.volume_size_lookup, var.cluster_tshirt_size, null) : var.volume_size
-  cluster_subnet_ids    = local.custom_instance_count == 1 ? tolist(var.subnet_ids)[0] : var.subnet_ids
+  cluster_subnet_ids    = local.custom_instance_count == 1 ? [tolist(var.subnet_ids)[0]] : var.subnet_ids
 
 
   instance_type_lookup = {
