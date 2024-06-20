@@ -39,7 +39,6 @@ data "aws_iam_policy_document" "access_policy" {
       type        = "AWS"
       identifiers = ["*"]
     }
-    #resources = ["${aws_opensearch_domain.this.arn}/*"]
     resources = ["arn:aws:es:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:domain/${var.resource_prefix}-opensearch/*"]
   }
 }
@@ -90,9 +89,7 @@ data "aws_iam_policy_document" "snapshot" {
     effect  = "Allow"
     actions = ["es:ESHttpPut"]
     resources = [
-      #"${aws_opensearch_domain.this.arn}/*",
       "arn:aws:es:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:domain/${var.resource_prefix}-opensearch/*",
-      #"${aws_opensearch_domain.this.arn}/*/*"
       "arn:aws:es:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:domain/${var.resource_prefix}-opensearch/*/*"
     ]
   }
