@@ -8,16 +8,17 @@ resource "aws_lb_target_group" "target_group" {
   vpc_id      = var.vpc_id
   target_type = var.alb_target_type
   stickiness {
-    type            = "lb_cookie"
+    #type            = "lb_cookie"
+    type            = local.lb_stickiness_type
     cookie_duration = 1800
     enabled         = true
   }
   health_check {
     #path                = each.value.health_check_path
-    path                = each.value.protocol == "TCP" ? null : each.value.health_check_path
+    path                = local.lb_health_check_path
     #protocol            = "HTTP"
     protocol            = each.value.protocol
-    matcher             = each.value.protocol == "TCP" ? null : "200"
+    matcher             = local.lb_health_check_matcher
     #matcher             = "200"
     port                = each.value.port
     interval            = 45

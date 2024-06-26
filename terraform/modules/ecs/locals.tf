@@ -10,4 +10,9 @@ locals {
   os_domain_name                  = var.add_opensearch_permission ? "${var.resource_prefix}-opensearch" : "*"
   permission_boundary_arn         = terraform.workspace == "stage" || terraform.workspace == "prod" ? null : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/PermissionBoundary_PowerUser"
   ecr_account                     =  var.central_ecr_account_id
+
+  # target group values
+  lb_stickiness_type              = each.value.protocol == "TCP" ? "source_ip" : "lb_cookie"
+  lb_health_check_path            = each.value.protocol == "TCP" ? null : each.value.health_check_path
+  lb_health_check_matcher         = each.value.protocol == "TCP" ? null : "200"
 }
