@@ -66,6 +66,7 @@ variable "microservices" {
   type = map(object({
     name                      = string
     port                      = number
+    protocol                      = string
     health_check_path         = string
     priority_rule_number      = number
     image_url                 = string
