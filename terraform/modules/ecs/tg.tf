@@ -3,7 +3,8 @@ resource "aws_lb_target_group" "target_group" {
   for_each    = var.microservices
   name        = "${var.resource_prefix}-${each.value.name}"
   port        = each.value.port
-  protocol    = "HTTP"
+  #protocol    = "HTTP"
+  protocol    = each.value.protocol
   vpc_id      = var.vpc_id
   target_type = var.alb_target_type
   stickiness {
