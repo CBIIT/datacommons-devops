@@ -17,8 +17,8 @@ resource "aws_lb_target_group" "target_group" {
     path                = each.value.protocol == "TCP" ? null : each.value.health_check_path
     #protocol            = "HTTP"
     protocol            = each.value.protocol
-    #matcher             = each.value.protocol == "TCP" ? null : "200"
-    matcher             = "200"
+    matcher             = each.value.protocol == "TCP" ? null : "200"
+    #matcher             = "200"
     port                = each.value.port
     interval            = 45
     timeout             = 40
