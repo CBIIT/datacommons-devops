@@ -6,7 +6,7 @@ resource "aws_opensearch_domain" "this" {
 
   cluster_config {
     instance_type  = local.custom_instance_type
-    instance_count = var.zone_awareness_enabled ? local.custom_instance_count : (local.custom_instance_count * 2)
+    instance_count = var.zone_awareness_enabled ? (local.custom_instance_count * 2) : local.custom_instance_count
 
     zone_awareness_enabled = var.zone_awareness_enabled
 
@@ -19,7 +19,7 @@ resource "aws_opensearch_domain" "this" {
     dedicated_master_type    = var.dedicated_master_enabled ? local.custom_instance_type : null
 
     warm_enabled = var.warm_enabled
-    warm_count   = var.warm_enabled ? 2 : 0
+    warm_count   = var.warm_enabled ? 2 : null
     warm_type    = var.warm_enabled ? local.custom_instance_type : null
 
     cold_storage_options {
@@ -28,7 +28,7 @@ resource "aws_opensearch_domain" "this" {
   }
 
   auto_tune_options {
-    desired_state = var.auto_tune_enabled ? "ENABLED" : "DISABLED"
+    desired_state = local.auto_tune_enabled
   }
 
   domain_endpoint_options {
@@ -52,7 +52,7 @@ resource "aws_opensearch_domain" "this" {
     content {
       enabled                  = true
       cloudwatch_log_group_arn = aws_cloudwatch_log_group.this[0].arn
-      log_type                 = each.value
+      log_type                 = log_publishing_options.value
     }
   }
 
@@ -69,7 +69,7 @@ resource "aws_opensearch_domain" "this" {
   }
 
   vpc_options {
-    subnet_ids         = var.subnet_ids
+    subnet_ids         = local.cluster_subnet_ids
     security_group_ids = local.security_group_ids
   }
 }
@@ -109,7 +109,7 @@ resource "aws_cloudwatch_log_resource_policy" "this" {
   count = var.create_cloudwatch_log_policy ? 1 : 0
 
   policy_name     = "${var.resource_prefix}-opensearch-log-policy"
-  policy_document = data.aws_iam_policy_document.logs.json
+  policy_document = data.aws_iam_policy_document.logs[0].json
 }
 
 resource "aws_iam_role" "snapshot" {
