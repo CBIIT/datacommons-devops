@@ -9,16 +9,16 @@ resource "aws_lb_target_group" "target_group" {
   target_type = var.alb_target_type
   stickiness {
     #type            = "lb_cookie"
-    type            = local.lb_stickiness_type
+    type            = each.value.protocol == "TCP" ? "source_ip" : "lb_cookie"
     cookie_duration = 1800
     enabled         = true
   }
   health_check {
     #path                = each.value.health_check_path
-    path                = local.lb_health_check_path
+    path                = each.value.protocol == "TCP" ? null : each.value.health_check_path
     #protocol            = "HTTP"
     protocol            = each.value.protocol
-    matcher             = local.lb_health_check_matcher
+    matcher             = each.value.protocol == "TCP" ? null : "200"
     #matcher             = "200"
     port                = each.value.port
     interval            = 45
