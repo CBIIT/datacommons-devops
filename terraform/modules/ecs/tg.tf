@@ -13,7 +13,8 @@ resource "aws_lb_target_group" "target_group" {
   }
   health_check {
     path                = each.value.health_check_path
-    protocol            = "HTTP"
+    #protocol            = "HTTP"
+    protocol            = each.value.protocol
     matcher             = "200"
     port                = each.value.port
     interval            = 45
