@@ -16,5 +16,10 @@ locals {
     for x, v in var.microservices : x => v
     if v.protocol == "HTTP"
     }
+  
+  tcp_microservices = {
+    for x, v in var.microservices : x => v
+    if v.protocol == "TCP"
+    }
 
 }
