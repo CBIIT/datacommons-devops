@@ -14,7 +14,7 @@ locals {
   # target group values
   http_microservices = {
     for x, v in var.microservices : x => v
-    if v.value.protocol == "HTTP"
+    if v.protocol == "HTTP"
     }
 
 }
