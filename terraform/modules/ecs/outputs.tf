@@ -22,6 +22,15 @@ output "ecs_cluster_name" {
   value = aws_ecs_cluster.ecs_cluster.name
 }
 
+output "ecs_exec_key_id" {
+  value = aws_kms_key.ecs_exec.key_id
+}
+
+output "ecs_exec_log_group_name" {
+  value = aws_cloudwatch_log_group.ecs_execute_command_log_group.name
+}
+
+
 # IAM Outputs: 
 output "ecs_task_execution_role_name" {
   value = aws_iam_role.ecs_task_execution_role.name
