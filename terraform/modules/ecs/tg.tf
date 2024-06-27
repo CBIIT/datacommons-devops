@@ -35,7 +35,9 @@ resource "aws_lb_target_group" "target_group" {
 }
 
 resource "aws_lb_listener_rule" "alb_listener" {
-  for_each     = var.microservices
+  #for_each     = var.microservices
+  for_each     = local.http_microservices
+
   listener_arn = var.alb_https_listener_arn
   priority     = each.value.priority_rule_number
   action {
