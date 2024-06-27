@@ -56,8 +56,7 @@ resource "aws_ecs_service" "service" {
   }
 
   load_balancer {
-    #target_group_arn = aws_lb_target_group.target_group[each.key].arn
-    target_group_arn = each.value.protocol == "TCP" ? null : aws_lb_target_group.target_group[each.key].arn
+    target_group_arn = aws_lb_target_group.target_group[each.key].arn
     container_name   = each.value.name
     container_port   = each.value.port
   }
