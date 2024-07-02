@@ -20,7 +20,7 @@
   command: "{{ item }}"
   args:
     #chdir: "{{ container_build_path }}"
-    chdir: ""{{ workspace }}/crdc-popsci-ui""
+    chdir: "{{ workspace }}/crdc-popsci-ui"
     warn: false
   loop:
     - npm set progress=false
