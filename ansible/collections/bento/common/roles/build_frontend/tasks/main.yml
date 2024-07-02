@@ -16,11 +16,10 @@
     mode: 0755
 
 
-- name: run npm install in {{ workspace }}/crdc-popsci-ui/
+- name: run npm install in {{ workspace }}/crdc-popsci-ui
   command: "{{ item }}"
   args:
-    #chdir: "{{ container_build_path }}"
-    chdir: "{{ workspace }}/crdc-popsci-ui"
+    chdir: "{{ container_build_path }}"
     warn: false
   loop:
     - npm set progress=false
