@@ -23,8 +23,8 @@
     warn: false
   loop:
     - npm set progress=false
-    - npm install --silent
-    - npm run build --silent
+    - npm install --legacy-peer-deps
+    - npm run build 
 
 - name: move dist from frontend to temp build
   copy: 
@@ -80,6 +80,15 @@
     name: "{{ project_name }}-{{ container_name }}"
     repository: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}"
     tag: "{{ image_version }}.{{ build_number }}"
+    force_tag: yes
+    push: yes
+    source: local
+
+
+- name: Add tag latest to {{ project_name }}-{{container_name}} image
+  community.docker.docker_image:
+    name: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:{{ image_version }}.{{build_number}}"
+    repository: "{{ container_registry_url }}/{{ project_name }}-{{ container_name }}:latest"
     force_tag: yes
     push: yes
     source: local
