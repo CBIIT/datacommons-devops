@@ -6,6 +6,16 @@
     dest: "{{workspace}}/opensearch-backup.py"
     mode: 0755
 
+- name: install dependencies
+  shell:
+    cmd: >
+      pip3 install -r {{workspace}}/requirements.txt
+  register: pip_reqs
+
+- name: show pip output
+  debug:
+    msg: "{{ pip_reqs }}"
+
 - name: backup Opensearch data
   shell:
     cmd: >
