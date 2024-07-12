@@ -1,35 +1,36 @@
-- name: create docker build directory
-  file: 
-    path: "{{workspace}}/build"
-    state : directory
+#- name: create docker build directory
+  #file: 
+    #path: "{{workspace}}/build"
+    #state : directory
 
-- name: copy  nginx conf
-  copy:
-    remote_src: yes
-    src: '{{workspace}}/playbooks/docker/dockerfiles/nginx.conf'
-    dest: '{{workspace}}/build/nginx.conf'
+#- name: copy  nginx conf
+  #copy:
+    #remote_src: yes
+    #src: '{{workspace}}/playbooks/docker/dockerfiles/nginx.conf'
+    #dest: '{{workspace}}/build/nginx.conf'
 
-- name: copy entrypoint.sh to workspace
-  copy:
-    src: "nginx-entrypoint.sh"
-    dest: "{{workspace}}/build/nginx-entrypoint.sh"
-    mode: 0755
+#- name: copy entrypoint.sh to workspace
+  #copy:
+    #src: "nginx-entrypoint.sh"
+    #dest: "{{workspace}}/build/nginx-entrypoint.sh"
+    #mode: 0755
 
 
-- name: run npm install in {{ workspace }}/crdc-popsci-ui/
-  command: "{{ item }}"
-  args:
-    chdir: "{{ container_build_path }}"
-    warn: false
-  loop:
-    - npm set progress=false
-    - npm install --legacy-peer-deps
-    - npm run build 
+#- name: run npm install in {{ workspace }}/crdc-popsci-ui/
+  #command: "{{ item }}"
+  #args:
+    #chdir: "{{ container_build_path }}"
+    #warn: false
+  #loop:
+    #- npm set progress=false
+    #- npm install --legacy-peer-deps
+    #- npm run build 
 
 - name: move dist from frontend to temp build
   copy: 
     src: "{{ container_build_path }}/dist" 
-    dest: "{{workspace}}/build" 
+    #dest: "{{workspace}}/build" 
+    dest: "{{ dockerfile_path }}" 
     remote_src: yes 
     directory_mode: yes
 
