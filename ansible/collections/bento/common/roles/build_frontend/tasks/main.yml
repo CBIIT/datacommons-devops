@@ -29,7 +29,7 @@
   copy:
     remote_src: yes
     src: '{{ dockerfile_path }}'
-    dest: '{{workspace}}/build/Dockerfile'
+    dest: '{{workspace}}/build'
 
 #- name: move dist from frontend to temp build
   #copy: 
