@@ -1,9 +1,15 @@
 ---
 
-- name: copy env to build
+- name: copy script to workspace
   copy:
     src: opensearch-backup.py
     dest: "{{workspace}}/opensearch-backup.py"
+    mode: 0755
+
+- name: copy requirements to workspace
+  copy:
+    src: requirements.txt
+    dest: "{{workspace}}/requirements.txt"
     mode: 0755
 
 - name: install dependencies
