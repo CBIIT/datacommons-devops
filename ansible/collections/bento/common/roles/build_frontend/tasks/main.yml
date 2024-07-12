@@ -26,12 +26,12 @@
     #- npm install --legacy-peer-deps
     #- npm run build 
 
-- name: move dist from frontend to temp build
-  copy: 
-    src: "{{ container_build_path }}/dist" 
-    dest: "{{workspace}}"  
-    remote_src: yes 
-    directory_mode: yes
+#- name: move dist from frontend to temp build
+  #copy: 
+    #src: "{{ container_build_path }}/dist" 
+    #dest: "{{workspace}}"  
+    #remote_src: yes 
+    #directory_mode: yes
 
 #- name: copy env to dist
   #copy:
