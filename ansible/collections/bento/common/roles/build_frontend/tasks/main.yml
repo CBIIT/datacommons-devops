@@ -43,7 +43,7 @@
   copy:
     remote_src: yes
     src: '{{ dockerfile_path }}'
-    dest: '{{workspace}}/build/Dockerfile'
+    dest: '{{workspace}}'
 
 - name: build {{ project_name }}-{{container_name}} image
   community.docker.docker_image:
