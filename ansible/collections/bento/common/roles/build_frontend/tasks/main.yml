@@ -25,11 +25,6 @@
     #- npm set progress=false
     #- npm install --legacy-peer-deps
     #- npm run build 
-- name: copy docker file to build path
-  copy:
-    remote_src: yes
-    src: '{{ dockerfile_path }}'
-    dest: '{{workspace}}/build'
 
 #- name: move dist from frontend to temp build
   #copy: 
