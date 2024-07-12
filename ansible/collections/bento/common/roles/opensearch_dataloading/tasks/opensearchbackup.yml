@@ -1,6 +1,6 @@
 ---
 
-- name: copy script to workspace
+- name: copy opensearch backup script to workspace
   copy:
     src: opensearch-backup.py
     dest: "{{workspace}}/opensearch-backup.py"
