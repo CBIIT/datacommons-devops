@@ -6,12 +6,12 @@
     dest: "{{workspace}}/opensearch-backup.py"
     mode: 0755
 
-- name: load data
+- name: backup Opensearch data
   shell:
     cmd: >
       python3 {{workspace}}/opensearch-backup.py --oshost {{opensearch_host}} --repo {{snapshot_repo}}  --s3bucket {{s3_bucket}} --indices {{indices}} --snapshot {{snapshot_value}} --basepath {{base_path}} --region {{region}} --rolearn {{role_arn}}
-  register: data_loader
+  register: data_backup
 
-- name: show dataloader output
+- name: show backup output
   debug:
-    msg: "{{ data_loader }}"
+    msg: "{{ data_backup }}"
