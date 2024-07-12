@@ -28,16 +28,16 @@
 
 #- name: move dist from frontend to temp build
   #copy: 
-    #src: "{{ dockerfile_path }}/dist" 
+    #src: "{{ container_build_path }}/dist" 
     #dest: "{{workspace}}/build"  
     #remote_src: yes 
     #directory_mode: yes
 
-- name: copy env to dist
-  copy:
-    src: inject.template.js
-    dest: "{{workspace}}/build/dist/inject.template.js"
-    mode: 0755
+#- name: copy env to dist
+  #copy:
+    #src: inject.template.js
+    #dest: "{{workspace}}/build/dist/inject.template.js"
+    #mode: 0755
 
 - name: copy docker file to build path
   copy:
