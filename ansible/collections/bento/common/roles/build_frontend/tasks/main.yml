@@ -50,7 +50,7 @@
     build:
       args:
         ECR_REPO: "{{ container_registry_url }}"
-      path: "{{workspace}}/build"
+      path: "{{workspace}}"
       pull: yes
 #      nocache: yes
     name: "{{ project_name }}-{{ container_name }}"
