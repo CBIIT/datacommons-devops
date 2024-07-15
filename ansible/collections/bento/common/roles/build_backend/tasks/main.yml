@@ -9,7 +9,7 @@
 
 - name: copy application.properties file to /src/main/resources/
   template:
-    src: "{{ workspace }}/src/main/resources/application.properties.j2"
+    src: "{{ workspace }}/crdc-popsci-backend/src/main/resources/application.properties.j2"
     dest: "{{ workspace }}/src/main/resources/application.properties"
 
 - name: create graphql directory in backend
