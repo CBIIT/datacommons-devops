@@ -12,7 +12,7 @@
     build:
       args:
         ECR_REPO: "{{ container_registry_url }}"
-      path: "{{ dockerfile_path }}"
+      path: "{{workspace}}/{{ dockerfile_path }}"
       pull: yes
       nocache: yes
     name: "{{ project_name }}-{{ container_name }}"
