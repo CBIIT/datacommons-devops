@@ -12,7 +12,8 @@
     build:
       args:
         ECR_REPO: "{{ container_registry_url }}"
-      path: "{{workspace}}/{{ dockerfile_path }}"
+      path: "{{workspace}}/crdc-popsci-backend"
+      dockerfile: "{{ dockerfile_path }}"
       pull: yes
       nocache: yes
     name: "{{ project_name }}-{{ container_name }}"
