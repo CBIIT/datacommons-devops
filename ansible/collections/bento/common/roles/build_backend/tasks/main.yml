@@ -4,13 +4,13 @@
 
 - name: remove the application_example.properties file
   file:
-    path: "{{ workspace }}/src/main/resources/application_example.properties"
+    path: "{{ workspace }}/crdc-popsci-backend/src/main/resources/application_example.properties"
     state: absent
 
 - name: copy application.properties file to /src/main/resources/
   template:
     src: "{{ workspace }}/crdc-popsci-backend/src/main/resources/application.properties.j2"
-    dest: "{{ workspace }}/src/main/resources/application.properties"
+    dest: "{{ workspace }}/crdc-popsci-backend/src/main/resources/application.properties"
 
 - name: create graphql directory in backend
   file:
