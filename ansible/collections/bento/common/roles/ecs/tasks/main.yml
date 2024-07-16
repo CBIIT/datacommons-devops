@@ -62,6 +62,10 @@
     region: "{{ region }}"
   register: task_output
 
+- name: show task
+  debug:
+    msg: "{{ task_output }}"
+
 ############################################################################################################################
 #     Task Definition Queries
 ############################################################################################################################
@@ -81,6 +85,10 @@
     details: true
     region: "{{ region }}"
   register: service
+
+- name: show service definition
+  debug:
+    msg: "{{ service }}"
 
 - name: set facts
   set_fact:
