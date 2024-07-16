@@ -42,10 +42,13 @@ pipeline {
             defaultValue: true,
             name: 'RunDeployStage')
 
+		booleanParam(
+            defaultValue: true,
+            name: 'TrivyTestScan')
+
   }
 
   options {
-  	ansiColor('xterm')
 	timestamps()
   }
 
@@ -132,6 +135,9 @@ pipeline {
   	}
 
   	stage('Test'){
+		when {
+                expression { params.TrivyTestScan }
+              }
 
  		steps {
 
