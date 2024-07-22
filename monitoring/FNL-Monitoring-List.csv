@@ -1,4 +1,4 @@
-Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Validation_Text,Private_Location,Slack_Channel,,Monitored_Resources
+Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Validation_Text,Private_Location,Slack_Channel,Alert_Email,Monitored_Resources
 Clinical Trial Data Commons,ctdc,CRDC,Dev,Portal,https://trialcommons-dev.cancer.gov,,,TRUE,C051XGDRQG6,,opensearch
 Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://trialcommons-dev.cancer.gov/v1/graphql,"var assert = require('assert');
 
@@ -566,3 +566,7 @@ $http.post('https://bento-tools.org/v1/public-graphql/',
 
   }
 );",,FALSE,C06AYDW6S2Z,,
+Computation Resources for Cancer Research,CRCR,DOERC,dev,Portal,https://computational-dev.cancer.gov/,,,TRUE,C071J4NEJJ3,NCI-CRCR-development@mail.nih.gov,
+Computation Resources for Cancer Research,CRCR,DOERC,qa,Portal,https://computational-qa.cancer.gov/,,,TRUE,C071J4NEJJ3,NCI-CRCR-development@mail.nih.gov,
+Computation Resources for Cancer Research,CRCR,DOERC,stage,Portal,https://computational-stage.cancer.gov/,,,TRUE,C071J5E4RU7,NCI-CRCR-development@mail.nih.gov,
+Computation Resources for Cancer Research,CRCR,DOERC,prod,Portal,https://computational.cancer.gov/,,,FALSE,C071J5E4RU7,NCI-CRCR-development@mail.nih.gov,

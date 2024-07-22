@@ -72,6 +72,13 @@ def setMonitors(input_url, policyList):
        global key
        key = os.getenv('KEY')
        slack_channel = row["Slack_Channel"]
+       alert_email = row["Alert_Email"]
+       if alert_email:
+         dest_name = project + '-' + tier
+       else:
+         alert_email = os.getenv('EMAIL')
+         dest_name = "DevOps-FNL"
+
        resources = row["Monitored_Resources"].split(",")
 
        if project + '-' + tier not in tiersSet:
@@ -79,7 +86,7 @@ def setMonitors(input_url, policyList):
          print('Adding Monitor Configuration For: {} {}'.format(project, tier))
          print()
 
-         email_id = set_email_destination.setalertemail("DevOps-FNL", project, tier, key)
+         email_id = set_email_destination.setalertemail(dest_name, project, tier, key, alert_email)
          slack_id = set_slack_destination.setalertslack("Expand Data Commons", project, tier, key, slack_channel)
          workflow_id = set_workflow.setalertworkflow(project + " " + tier + " Notifications", email_id, slack_id, project, tier, key)
 

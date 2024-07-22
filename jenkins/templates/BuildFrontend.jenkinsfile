@@ -42,10 +42,13 @@ pipeline {
             defaultValue: true,
             name: 'RunDeployStage')
 
+		booleanParam(
+            defaultValue: true,
+            name: 'TrivyTestScan')
+
   }
 
   options {
-  	ansiColor('xterm')
 	timestamps()
   }
 
@@ -80,7 +83,7 @@ pipeline {
 			[[url: "https://github.com/CBIIT/${env.CODE_REPO}"]]])
 
   		checkout([$class: 'GitSCM',
-			branches: [[name: "${params.Environment}"]],
+			branches: [[name: "${env.ENV}"]],
 			extensions: [[$class: 'SubmoduleOption', 
 			recursiveSubmodules: true],
 			[$class: 'RelativeTargetDirectory',
@@ -132,8 +135,11 @@ pipeline {
   	}
 
   	stage('Test'){
+ 		when {
+                expression { params.TrivyTestScan }
+              }
 
- 		steps {
+		steps {
 
  			script {
 
@@ -185,7 +191,7 @@ pipeline {
                     writeDeployment(
                         version: "${env.CODE_BRANCH}.${BUILD_NUMBER}",
                         image:  "${env.CODE_BRANCH}.${BUILD_NUMBER}",
-                        service: "${env.APP}",
+                        service: "${env.SERVICE}",
                         deploymentFile: "${env.PROJECT}-deployments/deployments.yaml",
                         deploymentRepoUrl: "https://github.com/CBIIT/${env.DEPLOY_REPO}",
                         deploymentCheckoutDirectory: "${env.PROJECT}-deployments"
