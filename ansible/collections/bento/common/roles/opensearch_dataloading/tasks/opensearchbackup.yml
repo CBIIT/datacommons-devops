@@ -1,17 +1,33 @@
 ---
 
-- name: copy env to build
+- name: copy opensearch backup script to workspace
   copy:
     src: opensearch-backup.py
     dest: "{{workspace}}/opensearch-backup.py"
     mode: 0755
 
-- name: load data
+- name: copy requirements to workspace
+  copy:
+    src: requirements.txt
+    dest: "{{workspace}}/requirements.txt"
+    mode: 0755
+
+- name: install dependencies
   shell:
     cmd: >
-      python3 {{workspace}}/opensearch-backup.py --oshost {{opensearch_host}} --repo {{snapshot_repo}}  --s3bucket {{s3_bucket}} --snapshot {{snapshot_value}} --basePath {{base_path}} --region {{region}} --rolearn {{role_arn}}
-  register: data_loader
+      pip3 install -r {{workspace}}/requirements.txt
+  register: pip_reqs
 
-- name: show dataloader output
+- name: show pip output
   debug:
-    msg: "{{ data_loader }}"
+    msg: "{{ pip_reqs }}"
+
+- name: backup Opensearch data
+  shell:
+    cmd: >
+      python3 {{workspace}}/opensearch-backup.py --oshost {{opensearch_host}} --repo {{snapshot_repo}}  --s3bucket {{s3_bucket}} --indices {{indices}} --snapshot {{snapshot_value}} --basepath {{base_path}} --region {{region}} --rolearn {{role_arn}}
+  register: data_backup
+
+- name: show backup output
+  debug:
+    msg: "{{ data_backup }}"
