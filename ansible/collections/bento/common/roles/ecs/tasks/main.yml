@@ -34,6 +34,8 @@
       - name: "{{ container_name }}"
         essential: true
         image: "{{ container_image_url }}:{{ image_version }}"
+        #repositoryCredentials:
+          #credentialsParameter: "{{ credentialsParameter }}"
         environment: "{{ container_env }}"
         entryPoint: "{% if container_entrypoint is defined %}{{ container_entrypoint }}{% else %}[]{% endif %}"
         portMappings:
@@ -67,7 +69,7 @@
 ############################################################################################################################
 - name: query task definition - {{ container_name }}
   ecs_taskdefinition_info:
-    task_definition: "{{ program }}-{{ tier }}-{{ project_name }}-{{ container_name }}"
+    task_definition: "{{ service_name }}"
     region: "{{ region }}"
   register: task
 
