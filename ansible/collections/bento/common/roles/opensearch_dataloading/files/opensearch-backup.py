@@ -74,7 +74,7 @@ def createSnapshot(argList, awsauth):
     indices = '-.*,' + argList['indices']
   else:
     print("setting backup to use all indices")
-    indices = '-.*,*'
+    indices = '*,-.*'
   
   # Create Snapshot
   snapshot_url = argList['oshost'] + '_snapshot/' + argList['repo'] + '/' + argList['snapshot'] + '/'
