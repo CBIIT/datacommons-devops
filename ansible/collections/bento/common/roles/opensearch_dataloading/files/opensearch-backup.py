@@ -68,13 +68,22 @@ def registerRepo(argList, awsauth):
   
 
 def createSnapshot(argList, awsauth):
+  # Create Index list to exclude hidden (default) indices
+  if argList['indices']:
+    print("setting backup to use listed indices")
+    indices = '-.*,' + argList['indices']
+  else:
+    print("setting backup to use all indices")
+    indices = '*,-.*'
+  
   # Create Snapshot
   snapshot_url = argList['oshost'] + '_snapshot/' + argList['repo'] + '/' + argList['snapshot'] + '/'
   print(snapshot_url)
 
   headers = {"Content-Type": "application/json"}
   payload = {
-    "indices": argList['indices'],
+    "indices": indices,
+    "include_global_state": False
   }
 
   print("taking opensearch snapshot")
