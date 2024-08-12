@@ -102,6 +102,7 @@ def restoreIndexes(argList, awsauth):
   # Restoring Indexes
   print("started restore the indices")
   
+  # Create Index list to exclude hidden (default) indices
   if argList['indices']:
     print("setting restore to use listed indices")
     indices = '-.*,' + argList['indices']
@@ -112,7 +113,6 @@ def restoreIndexes(argList, awsauth):
   headers = {"Content-Type": "application/json"}
 
   payload = {
-    #"indices": argList['indices'],
     "indices": indices,
     "include_global_state": False,
   }
