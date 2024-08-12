@@ -84,6 +84,7 @@ def createSnapshot(argList, awsauth):
   payload = {
     #"indices": argList['indices'],
     "indices": indices,
+    "include_global_state": False
   }
 
   print("taking opensearch snapshot")
