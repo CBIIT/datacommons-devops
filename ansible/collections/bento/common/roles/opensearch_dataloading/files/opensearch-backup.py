@@ -82,7 +82,6 @@ def createSnapshot(argList, awsauth):
 
   headers = {"Content-Type": "application/json"}
   payload = {
-    #"indices": argList['indices'],
     "indices": indices,
     "include_global_state": False
   }

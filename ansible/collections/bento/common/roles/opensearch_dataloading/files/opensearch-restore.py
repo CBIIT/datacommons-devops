@@ -107,7 +107,7 @@ def restoreIndexes(argList, awsauth):
     indices = '-.*,' + argList['indices']
   else:
     print("setting restore to use all indices")
-    indices = '-.*'
+    indices = '*,-.*'
   
   headers = {"Content-Type": "application/json"}
 
