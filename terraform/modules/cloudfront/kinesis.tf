@@ -25,6 +25,17 @@ resource "aws_iam_role_policy_attachment" "firehose_policy_attachment" {
 }
 
 resource "aws_kinesis_firehose_delivery_stream" "firehose_stream" {
+  count       = var.create_kinesis ? 1 : 0
+  name        = "aws-waf-logs-${var.stack_name}-${var.env}-kinesis-firehose-stream"
+  destination = "extended_s3"
+
+  extended_s3_configuration {
+    role_arn   = aws_iam_role.firehose_role[0].arn
+    bucket_arn = aws_s3_bucket.kinesis_log[0].arn
+  }
+}
+
+/*resource "aws_kinesis_firehose_delivery_stream" "firehose_stream" {
   count  = var.create_kinesis ? 1:0
   name        = "aws-waf-logs-${var.stack_name}-${var.env}-kinesis-firehose-stream"
   destination = "s3"
@@ -32,4 +43,4 @@ resource "aws_kinesis_firehose_delivery_stream" "firehose_stream" {
     role_arn   = aws_iam_role.firehose_role[0].arn
     bucket_arn = aws_s3_bucket.kinesis_log[0].arn
   }
-}
+}*/
