@@ -24,7 +24,7 @@ resource "aws_iam_role_policy_attachment" "firehose_policy_attachment" {
   role       = aws_iam_role.firehose_role[0].name
 }
 
-resource "aws_kinesis_firehose_delivery_stream" "firehose_stream" {
+/*resource "aws_kinesis_firehose_delivery_stream" "firehose_stream" {
   name        = "aws-waf-logs-kinesis-firehose-stream"
   destination = "extended_s3"
   
@@ -32,4 +32,4 @@ resource "aws_kinesis_firehose_delivery_stream" "firehose_stream" {
     role_arn   = aws_iam_role.firehose_role[0].arn
     bucket_arn = aws_s3_bucket.kinesis_log[0].arn
   }
-}
+}*/
