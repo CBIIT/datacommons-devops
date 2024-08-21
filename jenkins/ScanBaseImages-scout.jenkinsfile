@@ -60,7 +60,7 @@ pipeline {
 				
 				// get list of all base images found in CBIIT repos
 				maskPasswords(varPasswordPairs: [[password: "${env.GITHUB_PAT}"]]){
-					headers = "{'Authorization': 'token ' + $GITHUB_PAT}"
+					headers = {'Authorization': 'token $GITHUB_PAT'}
 					println "$headers"
 
 					//REPO_NB_PAGES=sh(label: 'Get repo pages', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -I -s $API_URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'").trim()
