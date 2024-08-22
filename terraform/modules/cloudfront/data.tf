@@ -69,6 +69,7 @@ data "aws_secretsmanager_secret_version" "slack_url" {
 }
 data "aws_secretsmanager_secret_version" "cloudfront" {
   secret_id = "cloudfront"
+  version_stage = "AWSCURRENT"
 }
 
 data "aws_iam_policy_document" "lambda_assume_policy" {
