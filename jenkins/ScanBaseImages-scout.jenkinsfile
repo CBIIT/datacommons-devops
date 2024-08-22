@@ -64,7 +64,7 @@ pipeline {
 					println "$headers"
 
 					// check rate limit
-				    REPO_RATE_LIMIT=sh(label: 'Get rate limit', returnStdout: true, script: "curl -H $headers -X GET https://api.github.com/rate_limit").trim()
+				    REPO_RATE_LIMIT=sh(label: 'Get rate limit', returnStdout: true, script: "curl -H '$headers' -X GET https://api.github.com/rate_limit").trim()
 					println "Rate Limit:     $REPO_RATE_LIMIT"
 
 					//REPO_NB_PAGES=sh(label: 'Get repo pages', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -I -s $API_URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'").trim()
