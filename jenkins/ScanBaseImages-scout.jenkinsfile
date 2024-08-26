@@ -54,9 +54,10 @@ pipeline {
  		steps {
 
  			script {
-				// // set ECR account number
+				// set Github Token
 				// env.GITHUB_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.user'").trim()
 				// env.GITHUB_PAT = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.token'").trim()
+				env.GITHUB_ACCESS_TOKEN = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.token'").trim()
 				
 				// // get list of all base images found in CBIIT repos
 				// maskPasswords(varPasswordPairs: [[password: "${env.GITHUB_PAT}"]]){
