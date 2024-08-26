@@ -122,10 +122,14 @@ pipeline {
 				// 	}
 
 					def baseImages = sh(script: "python3 $WORKSPACE/$CODE_FOLDER/jenkins/scripts/check_dockerfiles.py", returnStdout: true)
+					println '###################################################################################'
+					println baseImages
+					println '###################################################################################'
 					
 					// consolidate base image list to remove duplicate entries
 					imageList = []
 					baseImages.each { image ->
+					  println image
 					  def currentImage = imageList.find{ it.Name == image.Name }
 					  if( !(currentImage == null) ) {
 						currentImage.Projects += ", $image.Projects"
