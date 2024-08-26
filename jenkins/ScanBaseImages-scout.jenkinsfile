@@ -121,7 +121,7 @@ pipeline {
 				// 		page++
 				// 	}
 
-					def baseImages = sh(script: 'python3 scripts/check_dockerfiles.py', returnStdout: true)
+					def baseImages = sh(script: "python3 $WORKSPACE/$CODE_FOLDER/scripts/check_dockerfiles.py", returnStdout: true)
 					
 					// consolidate base image list to remove duplicate entries
 					imageList = []
