@@ -122,9 +122,9 @@ pipeline {
 				// 	}
 
 					def baseImages = sh(script: "python3 $WORKSPACE/$CODE_FOLDER/jenkins/scripts/check_dockerfiles.py", returnStdout: true)
-					println '###################################################################################'
-					println baseImages
-					println '###################################################################################'
+					println "###################################################################################"
+					println "Base Images:     $baseImages"
+					println "###################################################################################"
 					
 					// consolidate base image list to remove duplicate entries
 					imageList = []
