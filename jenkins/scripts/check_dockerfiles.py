@@ -2,6 +2,7 @@ import requests
 import os
 import re
 import sys
+import json
 
 # Set constants
 GITHUB_ACCESS_TOKEN = os.environ["GITHUB_ACCESS_TOKEN"]
@@ -86,7 +87,10 @@ if __name__ == "__main__":
       repo_images = getFiles(ORG_NAME, r['name'], b['name'])
       image_list.extend(repo_images)
 
-  print(image_list)
-  sys.stdout.write(str(image_list))
+  print(f"Image List: {image_list}")
+
+  result = json.dumps({'images': image_list})
+  print(f"Results: {result}")
+  sys.stdout.write(str(result))
   sys.stdout.flush()
   sys.exit(0)
