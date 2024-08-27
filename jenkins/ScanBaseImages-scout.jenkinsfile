@@ -125,10 +125,14 @@ pipeline {
 					println "###################################################################################"
 					println "Base Images:     $baseImages"
 					println "###################################################################################"
+
+                    def base_images = readJSON text: baseImages
+                    def images = base_images['images']
+                    echo "$images"
 					
 					// consolidate base image list to remove duplicate entries
 					imageList = []
-					baseImages.each { image ->
+					images.each { image ->
 					  println image
 					  def currentImage = imageList.find{ it.Name == image.Name }
 					  if( !(currentImage == null) ) {
