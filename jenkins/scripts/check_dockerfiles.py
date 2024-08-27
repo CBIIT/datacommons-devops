@@ -90,7 +90,8 @@ if __name__ == "__main__":
 
   #print(f"Image List: {image_list}")
 
-  result = json.dumps({'repo_count': num_repos})
+  count = '{ "repo_count": "' + num_repos + '"}'
+  result = json.loads(count)
   result.update(json.dumps({'images': image_list}))
   #print(f"Results: {result}")
   sys.stdout.write(str(result))
