@@ -87,6 +87,6 @@ if __name__ == "__main__":
       image_list.extend(repo_images)
 
   print(image_list)
-  sys.stdout.write(image_list)
+  sys.stdout.write(str(image_list))
   sys.stdout.flush()
   sys.exit(0)
