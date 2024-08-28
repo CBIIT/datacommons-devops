@@ -96,7 +96,7 @@ pipeline {
 				IMAGES = ""
 
 				// Add image list to RESULTS
-				IMAGES += "Images Scanned:\n\n"
+				IMAGES += "Images Scanned (total repos checked:  ${baseImages['repo_count']}):\n\n"
 				println imageList
 				imageList.each { image ->
 				    println image
