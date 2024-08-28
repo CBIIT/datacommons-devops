@@ -56,9 +56,7 @@ def getFiles(orgName, repo, branch):
       if 'dockerfile' in f['path'].lower():
         image = getImages(orgName, repo, branch, f['path'])
         if image:
-          #print(f"Image is:     {image}")
           image_dict = {"Name":image, "Projects":f"{repo}:{branch}"}
-          #print(f"Image dict is:     {image_dict}")
           repo_images.append(image_dict)
 
   return repo_images
@@ -79,7 +77,6 @@ def getImages(orgName, repo, branch, file):
 if __name__ == "__main__":
   image_list = []
   repos = getRepos(ORG_NAME)
-  #print(f"Number of Repos Found:   {len(repos)}")
   num_repos = len(repos)
 
   for r in repos:
@@ -88,8 +85,6 @@ if __name__ == "__main__":
       repo_images = getFiles(ORG_NAME, r['name'], b['name'])
       image_list.extend(repo_images)
 
-  #print(f"Image List: {image_list}")
-
   count = '{ "repo_count": "' + str(num_repos) + '"}'
   result = json.loads(count)
 
@@ -97,7 +92,6 @@ if __name__ == "__main__":
   loaded_images = json.loads(images)
 
   result.update(loaded_images)
-  #print(f"Results: {result}")
   sys.stdout.write(str(result))
   sys.stdout.flush()
   sys.exit(0)

@@ -62,10 +62,6 @@ pipeline {
                 def baseImages = readJSON text: imageResults
                 def imageJson = baseImages['images']
 
-				println "###################################################################################"
-				println "Base Images:     $baseImages"
-				println "###################################################################################"
-
 				// consolidate base image list to remove duplicate entries
 				imageList = []
 				imageJson.each { image ->
@@ -88,26 +84,15 @@ pipeline {
  		steps {
 
  			script {
-				// get docker creds
-				// env.DOCKER_SCOUT_REGISTRY_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id docker/pat --query SecretString --output text | jq -r '.user'").trim()
-				// env.DOCKER_SCOUT_REGISTRY_PASSWORD = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id docker/pat --query SecretString --output text | jq -r '.token'").trim()
-
 				RESULTS = ""
 				IMAGES = ""
 
 				// Add image list to RESULTS
 				IMAGES += "Images Scanned (total repos checked:  ${baseImages['repo_count']}):\n\n"
-				println imageList
 				imageList.each { image ->
-				    println image
 					IMAGES += "Name:  $image.Name     Projects:  $image.Projects\n"
 
 				}
-				//println IMAGES
-
-				//docker_login=sh(label: 'Get scan results', returnStdout: true, script: "docker login -u $DOCKER_USER -p $DOCKER_PAT").trim()
-				//docker_login=sh(label: 'log in to docker hub', returnStdout: true, script: "echo $DOCKER_SCOUT_REGISTRY_PASSWORD | docker login -u $DOCKER_SCOUT_REGISTRY_USER --password-stdin").trim()
-				// println docker_login
 
 				imageList.each { image ->
 					scout_out=sh(label: 'Get scan results', returnStdout: true, script: "docker scout cves --only-severity critical,high $image.Name").trim()

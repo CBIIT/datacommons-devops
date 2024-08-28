@@ -62,10 +62,6 @@ pipeline {
                 baseImages = readJSON text: imageResults
                 def imageJson = baseImages['images']
 
-				println "###################################################################################"
-				println "Base Images:     $baseImages"
-				println "###################################################################################"
-					
 				// consolidate base image list to remove duplicate entries
 				imageList = []
 				imageJson.each { image ->
@@ -93,19 +89,11 @@ pipeline {
 
 				// Add image list to RESULTS
 				IMAGES += "Images Scanned (total repos checked:  ${baseImages['repo_count']}):\n\n"
-				println imageList
 				imageList.each { image ->
-				    println image
 					IMAGES += "Name:  $image.Name     Projects:  $image.Projects\n"
 
 				}
 
-				// get docker creds
-				// env.DOCKER_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id docker/pat --query SecretString --output text | jq -r '.user'").trim()
-				// env.DOCKER_PASSWORD = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id docker/pat --query SecretString --output text | jq -r '.token'").trim()
-
-				// docker_login=sh(label: 'log in to docker hub', returnStdout: true, script: "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin").trim()
-				
 				imageList.each { image ->
 					trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image.Name").trim()
 					if (!(trivy_out.contains("Total: 0"))) {
