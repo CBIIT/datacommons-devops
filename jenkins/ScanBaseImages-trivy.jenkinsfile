@@ -101,10 +101,10 @@ pipeline {
 				}
 
 				// get docker creds
-				env.DOCKER_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id docker/pat --query SecretString --output text | jq -r '.user'").trim()
-				env.DOCKER_PASSWORD = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id docker/pat --query SecretString --output text | jq -r '.token'").trim()
+				// env.DOCKER_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id docker/pat --query SecretString --output text | jq -r '.user'").trim()
+				// env.DOCKER_PASSWORD = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id docker/pat --query SecretString --output text | jq -r '.token'").trim()
 
-				docker_login=sh(label: 'log in to docker hub', returnStdout: true, script: "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin").trim()
+				// docker_login=sh(label: 'log in to docker hub', returnStdout: true, script: "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin").trim()
 				
 				imageList.each { image ->
 					trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image.Name").trim()
