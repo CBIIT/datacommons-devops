@@ -56,97 +56,32 @@ pipeline {
 
  			script {
 				// set Github Token
-				// env.GITHUB_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.user'").trim()
-				// env.GITHUB_PAT = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.token'").trim()
 				env.GITHUB_ACCESS_TOKEN = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.all_repos'").trim()
-				
-				// // get list of all base images found in CBIIT repos
-				// maskPasswords(varPasswordPairs: [[password: "${env.GITHUB_PAT}"]]){
-				// 	headers = "Authorization: token $GITHUB_PAT"
-				// 	println "$headers"
 
-				// 	// check rate limit
-				//     REPO_RATE_LIMIT=sh(label: 'Get rate limit', returnStdout: true, script: "curl -H '$headers' -X GET https://api.github.com/rate_limit").trim()
-				// 	println "Rate Limit:     $REPO_RATE_LIMIT"
+				def imageResults = sh(script: "python3 $WORKSPACE/$CODE_FOLDER/jenkins/scripts/check_dockerfiles.py", returnStdout: true)
+                def baseImages = readJSON text: imageResults
+                def imageJson = baseImages['images']
 
-				// 	//REPO_NB_PAGES=sh(label: 'Get repo pages', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -I -s $API_URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'").trim()
-				// 	REPO_NB_PAGES=sh(label: 'Get repo pages', returnStdout: true, script: "curl -H '$headers' -I -s $API_URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'").trim()
-				// 	println "Repo Pages:  ${REPO_NB_PAGES}"
+				println "###################################################################################"
+				println "Base Images:     $baseImages"
+				println "###################################################################################"
 
-				// 	def dockerFiles = []
-				// 	def baseImages = []
-
-				// 	def page = 1
-				// 	while(page <= REPO_NB_PAGES) {
-				// 		//repos = sh(label: 'get repo names', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/orgs/$ORG/repos\\?page=$page\\&per_page\\=\\100  | jq -r -c '.[].name'").trim().split()
-				// 		repos = sh(label: 'get repo names', returnStdout: true, script: "curl -H '$headers' -s $API_URI/orgs/$ORG/repos\\?page=$page\\&per_page\\=\\100  | jq -r -c '.[].name'").trim().split()
-
-				// 		repos.each() {
-				// 			println "Repo:     $it"
-							
-				// 			//tree = sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m1 trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
-				// 			tree = sh(label: 'get tree url', returnStdout: true, script: "curl -H '$headers' -s $API_URI/repos/$ORG/$it | grep -m1 trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
-							
-				// 			// get all branches for this repo
-				// 			//branch_list = sh(label: 'get default branch', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it/branches | jq -r -c '.[].name' | sed 's:\\([()]\\+\\):\\\1:g'").trim().split()
-				// 			branch_list = sh(label: 'get default branch', returnStdout: true, script: "curl -H '$headers' -s $API_URI/repos/$ORG/$it/branches | jq -r -c '.[].name' | sed 's:\\([()]\\+\\):\\\1:g'").trim().split()
-				// 			branch_list.each { branch ->
-
-				// 				//repo_empty = sh(label: 'check repo status', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'Git Repository is empty' || true")
-				// 				repo_empty = sh(label: 'check repo status', returnStdout: true, script: "curl -H '$headers' -s $tree/$branch\\?recursive\\=1 | grep -i 'Git Repository is empty' || true")
-
-				// 				if (! repo_empty) {
-								
-				// 				//dockerfilePath = sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | ascii_downcase | contains(\"dockerfile\"))? |.path' || echo 'NOT_FOUND'").trim().split()
-				// 				dockerfilePath = sh(label: 'get dockerfile url', returnStdout: true, script: "curl -H '$headers' -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | ascii_downcase | contains(\"dockerfile\"))? |.path' || echo 'NOT_FOUND'").trim().split()
-				// 				rawUrl =  "https://raw.githubusercontent.com/$ORG/$it/$branch"
-
-				// 				if (!(dockerfilePath == 'NOT_FOUND')) {
-				// 					repo_name = it
-				// 					dockerfilePath.each() {
-				// 						base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM | grep $BASE_IMAGE_TAG || echo 'NOT_FOUND'").trim()
-				// 						if (!(base_image == 'NOT_FOUND')) {
-				// 							base_image = base_image.substring(base_image.indexOf(" ") + 1).trim()
-				// 							base_image = base_image.substring(0, base_image.indexOf(" ")).trim()
-				// 							image_info = [Name:base_image, Projects:"$repo_name:$branch"]
-				// 							println "Base Image:   $base_image"
-				// 							baseImages.add(image_info)
-				// 						}
-				// 					}
-				// 				}
-								
-				// 				}
-				// 			}
-				// 		}
-				// 		page++
-				// 	}
-
-					def imageResults = sh(script: "python3 $WORKSPACE/$CODE_FOLDER/jenkins/scripts/check_dockerfiles.py", returnStdout: true)
-                    def baseImages = readJSON text: imageResults
-                    def imageJson = baseImages['images']
-
-					println "###################################################################################"
-					println "Base Images:     $baseImages"
-					println "###################################################################################"
-					
-					// consolidate base image list to remove duplicate entries
-					imageList = []
-					imageJson.each { image ->
-					  def currentImage = imageList.find{ it.Name == image.Name }
-					  if( !(currentImage == null) ) {
-						currentImage.Projects += ", $image.Projects"
-					  } else {
-						imageList.add(image)
-					  }
-					}
-
+				// consolidate base image list to remove duplicate entries
+				imageList = []
+				imageJson.each { image ->
+				  def currentImage = imageList.find{ it.Name == image.Name }
+				  if( !(currentImage == null) ) {
+					currentImage.Projects += ", $image.Projects"
+				  } else {
+					imageList.add(image)
+				  }
 				}
 
 			}
 
- 		}
+		}
 
-  	//}
+ 	}
 
 	stage('Image Scans'){
 
@@ -172,7 +107,7 @@ pipeline {
 
 				//docker_login=sh(label: 'Get scan results', returnStdout: true, script: "docker login -u $DOCKER_USER -p $DOCKER_PAT").trim()
 				docker_login=sh(label: 'log in to docker hub', returnStdout: true, script: "echo $DOCKER_SCOUT_REGISTRY_PASSWORD | docker login -u $DOCKER_SCOUT_REGISTRY_USER --password-stdin").trim()
-				println docker_login
+				// println docker_login
 
 				imageList.each { image ->
 					scout_out=sh(label: 'Get scan results', returnStdout: true, script: "docker scout cves --only-severity critical,high $image.Name").trim()
