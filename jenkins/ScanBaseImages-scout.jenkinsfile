@@ -20,8 +20,7 @@ pipeline {
 
 	CODE_REPO      = "datacommons-devops"
 	CODE_FOLDER    = "datacommons-devops"
-	//CODE_BRANCH    = "main"
-	CODE_BRANCH    = "scout_new"
+	CODE_BRANCH    = "main"
 
 	ECR_REPO       = "cbiit-base-docker-images"
 	REGION         = "us-east-1"
