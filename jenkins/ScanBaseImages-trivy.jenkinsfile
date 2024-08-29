@@ -54,88 +54,40 @@ pipeline {
  		steps {
 
  			script {
-				// set ECR account number
-				env.GITHUB_USER = sh(label: 'Get User', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.user'").trim()
-				env.GITHUB_PAT = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.token'").trim()
-				
-				// get list of all base images found in CBIIT repos
-				maskPasswords(varPasswordPairs: [[password: "${env.GITHUB_PAT}"]]){
-					REPO_NB_PAGES=sh(label: 'Get repo pages', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -I -s $API_URI/orgs/$ORG/repos\\?page\\=1\\&per_page\\=\\100 | sed -nr 's/^Link:.*page=([0-9]+)&per_page=100.*/\\1/p'").trim()
-					println "Repo Pages:  ${REPO_NB_PAGES}"
+				// set Github Token
+				env.GITHUB_ACCESS_TOKEN = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.all_repos'").trim()
 
-					def dockerFiles = []
-					def baseImages = []
+				def imageResults = sh(script: "python3 $WORKSPACE/$CODE_FOLDER/jenkins/scripts/check_dockerfiles.py", returnStdout: true)
+                baseImages = readJSON text: imageResults
+                def imageJson = baseImages['images']
 
-					def page = 1
-					while(page <= REPO_NB_PAGES) {
-						repos = sh(label: 'get repo names', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/orgs/$ORG/repos\\?page=$page\\&per_page\\=\\100  | jq -r -c '.[].name'").trim().split()
-						
-						repos.each() {
-							println "Repo:     $it"
-							
-							tree = sh(label: 'get tree url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it | grep -m1 trees_url | grep $ORG | sed 's/^.*\\(https.*trees\\).*\$/\\1/'").trim()
-							
-							// get all branches for this repo
-							branch_list = sh(label: 'get default branch', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $API_URI/repos/$ORG/$it/branches | jq -r -c '.[].name' | sed 's:\\([()]\\+\\):\\\1:g'").trim().split()
-							branch_list.each { branch ->
-
-								repo_empty = sh(label: 'check repo status', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | grep -i 'Git Repository is empty' || true")
-
-								if (! repo_empty) {
-								
-								dockerfilePath = sh(label: 'get dockerfile url', returnStdout: true, script: "curl -u $GITHUB_USER:$GITHUB_PAT -s $tree/$branch\\?recursive\\=1 | jq -r '.tree[] | select(.path | ascii_downcase | contains(\"dockerfile\"))? |.path' || echo 'NOT_FOUND'").trim().split()
-								rawUrl =  "https://raw.githubusercontent.com/$ORG/$it/$branch"
-
-								if (!(dockerfilePath == 'NOT_FOUND')) {
-									repo_name = it
-									dockerfilePath.each() {
-										base_image = sh(label: 'get dockerfile base image', returnStdout: true, script: "curl -s -J $rawUrl/$it | grep FROM | grep $BASE_IMAGE_TAG || echo 'NOT_FOUND'").trim()
-										if (!(base_image == 'NOT_FOUND')) {
-											base_image = base_image.substring(base_image.indexOf(" ") + 1).trim()
-											base_image = base_image.substring(0, base_image.indexOf(" ")).trim()
-											image_info = [Name:base_image, Projects:"$repo_name:$branch"]
-											println "Base Image:   $base_image"
-											baseImages.add(image_info)
-										}
-									}
-								}
-								
-								}
-							}
-						}
-						page++
-					}
-
-					// consolidate base image list to remove duplicate entries
-					imageList = []
-					baseImages.each { image ->
-					  def currentImage = imageList.find{ it.Name == image.Name }
-					  if( !(currentImage == null) ) {
-						currentImage.Projects += ", $image.Projects"
-					  } else {
-						imageList.add(image)
-					  }
-					}
-
+				// consolidate base image list to remove duplicate entries
+				imageList = []
+				imageJson.each { image ->
+				  def currentImage = imageList.find{ it.Name == image.Name }
+				  if( !(currentImage == null) ) {
+					currentImage.Projects += ", $image.Projects"
+				  } else {
+					imageList.add(image)
+				  }
 				}
 
 			}
 
- 		}
+		}
 
-  	}
+ 	}
 
 	stage('Image Scans'){
 
  		steps {
 
  			script {
-
 				RESULTS = ""
 				IMAGES = ""
 
 				// Add image list to RESULTS
-				IMAGES += "Images Scanned:\n\n"
+				IMAGES += "Images Scanned (total repos checked:  ${baseImages['repo_count']}):\n\n"
 				imageList.each { image ->
 					IMAGES += "Name:  $image.Name     Projects:  $image.Projects\n"
 
