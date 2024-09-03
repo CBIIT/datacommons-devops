@@ -22,9 +22,6 @@ pipeline {
 	CODE_FOLDER    = "datacommons-devops"
 	CODE_BRANCH    = "main"
 
-	ECR_REPO       = "cbiit-base-docker-images"
-	REGION         = "us-east-1"
-
 	API_URI        = "https://api.github.com"
 	ORG            = "CBIIT"
 
