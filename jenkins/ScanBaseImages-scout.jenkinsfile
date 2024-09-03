@@ -93,6 +93,13 @@ pipeline {
 
 				}
 
+				println "##############################################################################################################################################"
+				println IMAGES
+				println "##############################################################################################################################################"
+				println imageList
+				println "##############################################################################################################################################"
+
+				
 				imageList.each { image ->
 					scout_out=sh(label: 'Get scan results', returnStdout: true, script: "docker scout cves --only-severity critical,high $image.Name").trim()
 					if (!(scout_out.contains("No vulnerable packages detected"))) {
