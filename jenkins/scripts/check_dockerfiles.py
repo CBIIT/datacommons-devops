@@ -77,14 +77,15 @@ def getImages(orgName, repo, branch, file):
 if __name__ == "__main__":
   image_list = []
   repos = getRepos(ORG_NAME)
+  repos.remove('datacommons-devops')
   num_repos = len(repos)
 
   for r in repos:
-    if r != 'datacommons-devops':
-      branch_list = getBranches(ORG_NAME, r['name'])
-      for b in branch_list:
-        repo_images = getFiles(ORG_NAME, r['name'], b['name'])
-        image_list.extend(repo_images)
+    #if r != 'datacommons-devops':
+    branch_list = getBranches(ORG_NAME, r['name'])
+    for b in branch_list:
+      repo_images = getFiles(ORG_NAME, r['name'], b['name'])
+      image_list.extend(repo_images)
 
   count = '{ "repo_count": "' + str(num_repos) + '"}'
   result = json.loads(count)
