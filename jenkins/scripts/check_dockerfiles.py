@@ -77,8 +77,6 @@ def getImages(orgName, repo, branch, file):
 if __name__ == "__main__":
   image_list = []
   repos = getRepos(ORG_NAME)
-  #print(repos)
-  #repos.remove('datacommons-devops')
   num_repos = len(repos)
 
   for r in repos:
