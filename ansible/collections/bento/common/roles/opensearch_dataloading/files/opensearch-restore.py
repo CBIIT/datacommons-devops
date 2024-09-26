@@ -136,4 +136,4 @@ if __name__ == "__main__":
    result = restoreIndexes(argList, awsauth)
    print(result.text)
    if result.status_code!=200:
-    raise Exception("Sorry, pipeline does not run successfully")
+    raise Exception("Pipeline failed:\n\n" + result.text)
