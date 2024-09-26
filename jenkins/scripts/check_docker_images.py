@@ -69,7 +69,7 @@ def getImages(orgName, repo, branch, file):
 
   res=requests.get(raw_url,headers=headers)
 
-  image = re.search('from (.*) as fnl_base_image', res.text, re.IGNORECASE)
+  image = re.search('from\s*(.*)\s*as\s*fnl_base_image', res.text, re.IGNORECASE)
   if image:
     return image.group(1)
 
