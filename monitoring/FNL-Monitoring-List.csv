@@ -53,6 +53,60 @@ $http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
   }
 );",,TRUE,C051XGDRQG6,,opensearch
 Clinical Trial Data Commons,ctdc,CRDC,QA,Files,https://trialcommons-qa.cancer.gov/api/files,,,TRUE,C051XGDRQG6,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,Stage,Portal,https://clinical-stage.datacommons.cancer.gov,,,TRUE,C07PLM910KT,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,Stage,API,https://clinical-stage.datacommons.cancer.gov/v1/graphql,"var assert = require('assert');
+
+$http.post('https://clinical-stage.datacommons.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: '{ idsLists { case_ids } }',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('case_ids' in body.data.idsLists);
+    assert.match(body.data.idsLists.case_ids[0], /CTDC-/);
+
+  }
+);",,TRUE,C07PLM910KT,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,Stage,Files,https://clinical-stage.datacommons.cancer.gov/api/files,,,TRUE,C07PLM910KT,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,Prod,Portal,https://clinical.datacommons.cancer.gov/,,,TRUE,C07PLM910KT,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,Prod,API,https://clinical.datacommons.cancer.gov/v1/graphql,"var assert = require('assert');
+
+$http.post('https://clinical.datacommons.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: '{ idsLists { case_ids } }',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('case_ids' in body.data.idsLists);
+    assert.match(body.data.idsLists.case_ids[0], /CTDC-/);
+
+  }
+);",,TRUE,C07PLM910KT,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,Prod,Files,https://clinical.datacommons.cancer.gov/api/files,,,TRUE,C07PLM910KT,,opensearch
 Canine Data Commons,icdc,CRDC,Dev,Portal,https://caninecommons-dev.cancer.gov,,,TRUE,C04DYU071MG,,opensearch
 Canine Data Commons,icdc,CRDC,Dev,API,https://caninecommons-dev.cancer.gov/v1/graphql/,"var assert = require('assert');
 
