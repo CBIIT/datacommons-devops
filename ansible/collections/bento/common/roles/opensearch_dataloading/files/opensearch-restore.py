@@ -62,10 +62,11 @@ def registerRepo(argList, awsauth):
   }
 
   headers = {"Content-Type": "application/json"}
-  print("registering repo")
+  print("registering repo" + argList['repo'])
   try:
     r = requests.put(url, auth=awsauth, json=payload, headers=headers)
     time.sleep(100)
+    print(r)
   except requests.exceptions.RequestException as e:
     raise SystemExit(e)
 
@@ -100,7 +101,7 @@ def deleteIndexes(argList, awsauth):
 def restoreIndexes(argList, awsauth):
 
   # Restoring Indexes
-  print("started restore the indices")
+  print("started restore of indices")
   
   # Create Index list to exclude hidden (default) indices
   if argList['indices']:
