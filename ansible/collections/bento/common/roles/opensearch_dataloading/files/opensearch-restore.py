@@ -62,7 +62,7 @@ def registerRepo(argList, awsauth):
   }
 
   headers = {"Content-Type": "application/json"}
-  print("registering repo" + argList['repo'])
+  print("registering repo: " + argList['repo'] + "   basepath: " + argList['basepath'])
   try:
     r = requests.put(url, auth=awsauth, json=payload, headers=headers)
     time.sleep(100)
