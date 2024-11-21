@@ -14,16 +14,15 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis" {
     request_configuration {
       content_encoding = var.content_encoding
     }
-
-    s3_configuration {
-      role_arn            = var.role_arn
-      bucket_arn          = var.s3_bucket_arn
-      prefix              = var.s3_object_prefix
-      error_output_prefix = var.s3_error_output_prefix
-      #buffer_size         = var.buffer_size
-      #buffer_interval     = var.buffer_interval
-      compression_format  = var.s3_compression_format
-    }
+  }
+  s3_configuration {
+    role_arn            = var.role_arn
+    bucket_arn          = var.s3_bucket_arn
+    prefix              = var.s3_object_prefix
+    error_output_prefix = var.s3_error_output_prefix
+    #buffer_size         = var.buffer_size
+    #buffer_interval     = var.buffer_interval
+    compression_format  = var.s3_compression_format
   }
 }
 
