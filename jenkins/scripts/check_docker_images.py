@@ -79,6 +79,9 @@ if __name__ == "__main__":
   repos = getRepos(ORG_NAME)
   num_repos = len(repos)
 
+  print(repos)
+  print(num_repos)
+
   for r in repos:
     #if r['name'] != 'datacommons-devops':
     branch_list = getBranches(ORG_NAME, r['name'])
