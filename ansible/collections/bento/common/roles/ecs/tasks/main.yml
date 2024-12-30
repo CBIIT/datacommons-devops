@@ -54,7 +54,7 @@
     network_mode: awsvpc
     execution_role_arn: "arn:aws:iam::{{ account }}:role/{{ execution_role }}"
     task_role_arn: "arn:aws:iam::{{ account }}:role/{{ task_role }}"
-    family: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    family: "{{ service_name }}"
     memory: "{{ container_memory }}"
     cpu: "{{ container_cpu }}"
     state: present
@@ -67,7 +67,7 @@
 ############################################################################################################################
 - name: query task definition - {{ container_name }}
   ecs_taskdefinition_info:
-    task_definition: "{{ project_name }}-{{ tier }}-{{ container_name }}"
+    task_definition: "{{ service_name }}"
     region: "{{ region }}"
   register: task
 
