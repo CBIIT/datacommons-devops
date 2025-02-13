@@ -17,8 +17,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Dependencies
-        run: pip install -r jenkins/scripts/requirements.txt
+      # - name: Install Dependencies
+      #   run: pip install -r jenkins/scripts/requirements.txt
 
       - name: Run Python Script to Check Docker Images
         id: check_images
