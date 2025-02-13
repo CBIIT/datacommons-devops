@@ -5,7 +5,7 @@ import sys
 import json
 
 # Set constants
-GITHUB_ACCESS_TOKEN = os.environ["GITHUB_ACCESS_TOKEN"]
+GITHUB_ACCESS_TOKEN = os.environ.get("GITHUB_ACCESS_TOKEN")
 GITHUB_BASE_URL = 'https://api.github.com'
 ORG_NAME = 'CBIIT'
 IMAGE_TAG = 'fnl_base_image'
