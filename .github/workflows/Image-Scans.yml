@@ -1,0 +1,75 @@
+name: Scans for Base Image
+run-name: Scans for Base Image
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch: # update later
+
+jobs:
+  scan_images:
+    runs-on: ubuntu-latest
+
+    env:
+      CODE_FOLDER: "datacommons-devops"
+      BASE_IMAGE_TAG: "fnl_base_image"
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: pip install -r jenkins/scripts/requirements.txt
+
+      - name: Run Python Script to Check Docker Images
+        id: check_images
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          image_results=$(python3 jenkins/scripts/check_docker_images.py)
+          echo "IMAGE_RESULTS=$image_results" >> $GITHUB_ENV
+
+      - name: Parse and Consolidate Image List
+        run: |
+          echo "$IMAGE_RESULTS" > image_results.json
+          jq '[.images | unique_by(.Name)]' image_results.json > unique_images.json
+          cat unique_images.json
+
+      - name: Run Docker Scout CVE Scans
+        id: scan_images
+        run: |
+          RESULTS=""
+          IMAGES="Images Scanned (total repos checked: $(jq -r '.repo_count' image_results.json)):\n\n"
+
+          for image in $(jq -r '.[].Name' unique_images.json); do
+            scan_result=$(docker scout cves --only-severity critical,high $image)
+            IMAGES+="$image\n"
+
+            if [[ "$scan_result" != *"No vulnerable packages detected"* ]]; then
+              RESULTS+="\n\nResults: $image\n$scan_result\n\n"
+              RESULTS+="############################################################################################################################"
+            fi
+          done
+
+          echo -e "$IMAGES" | tee scanned_images.txt
+          echo -e "$RESULTS" | tee vulnerabilities.txt
+
+          if [[ -s vulnerabilities.txt ]]; then
+            echo "Vulnerabilities found!"
+            exit 1
+          fi
+
+      # - name: Send Email on Failure
+      #   if: failure()
+      #   uses: dawidd6/action-send-mail@v3
+      #   with:
+      #     server_address: smtp.example.com  # Replace with actual SMTP server
+      #     server_port: 587
+      #     username: ${{ secrets.SMTP_USERNAME }}
+      #     password: ${{ secrets.SMTP_PASSWORD }}
+      #     subject: "Base Image Vulnerabilities Found"
+      #     body: "Base Image scan results attached"
+      #     to: "michael.fleming@nih.gov,zhengwu.lu@nih.gov,cole.devries@nih.gov,amit.mukherjee@nih.gov"
+      #     attachments: "vulnerabilities.txt"
+
+      - name: Cleanup Workspace
+        run: rm -rf $GITHUB_WORKSPACE
