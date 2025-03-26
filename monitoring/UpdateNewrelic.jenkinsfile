@@ -3,7 +3,9 @@
 pipeline {
 	agent {
 		node {
-			label 'cicd_ansible_4.0'
+			// label 'cicd_ansible_4.0'
+			label 'slave-ncias-d2940-c'
+			// label 'management-deploy-agent'
 		}
 	}
 
@@ -86,7 +88,7 @@ pipeline {
     always {
 
         notify(
-            secretPath: "notification/slack",
+            secretPath: "notifications/slack",
             secretName: "bento_slack_url"
         ) 
 

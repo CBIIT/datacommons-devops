@@ -5,7 +5,7 @@ import sys
 import json
 
 # Set constants
-GITHUB_ACCESS_TOKEN = os.environ["GITHUB_ACCESS_TOKEN"]
+GITHUB_ACCESS_TOKEN = os.environ.get("GITHUB_ACCESS_TOKEN")
 GITHUB_BASE_URL = 'https://api.github.com'
 ORG_NAME = 'CBIIT'
 IMAGE_TAG = 'fnl_base_image'
@@ -69,7 +69,7 @@ def getImages(orgName, repo, branch, file):
 
   res=requests.get(raw_url,headers=headers)
 
-  image = re.search('from (.*) as fnl_base_image', res.text, re.IGNORECASE)
+  image = re.search('from\s*(.*)\s*as\s*fnl_base_image', res.text, re.IGNORECASE)
   if image:
     return image.group(1)
 
@@ -80,6 +80,7 @@ if __name__ == "__main__":
   num_repos = len(repos)
 
   for r in repos:
+    #if r['name'] != 'datacommons-devops':
     branch_list = getBranches(ORG_NAME, r['name'])
     for b in branch_list:
       repo_images = getFiles(ORG_NAME, r['name'], b['name'])

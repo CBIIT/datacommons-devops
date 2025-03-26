@@ -22,9 +22,6 @@ pipeline {
 	CODE_FOLDER    = "datacommons-devops"
 	CODE_BRANCH    = "main"
 
-	ECR_REPO       = "cbiit-base-docker-images"
-	REGION         = "us-east-1"
-
 	API_URI        = "https://api.github.com"
 	ORG            = "CBIIT"
 
@@ -57,7 +54,7 @@ pipeline {
 				// set Github Token
 				env.GITHUB_ACCESS_TOKEN = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.all_repos'").trim()
 
-				def imageResults = sh(script: "python3 $WORKSPACE/$CODE_FOLDER/jenkins/scripts/check_dockerfiles.py", returnStdout: true)
+				def imageResults = sh(script: "python3 $WORKSPACE/$CODE_FOLDER/jenkins/scripts/check_docker_images.py", returnStdout: true)
                 baseImages = readJSON text: imageResults
                 def imageJson = baseImages['images']
 
