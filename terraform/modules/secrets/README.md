@@ -3,13 +3,13 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 4.66.1 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >=4.66.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.66.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >=4.66.1 |
 
 ## Modules
 
@@ -19,8 +19,8 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_secretsmanager_secret.secrets](https://registry.terraform.io/providers/hashicorp/aws/4.66.1/docs/resources/secretsmanager_secret) | resource |
-| [aws_secretsmanager_secret_version.secrets_value](https://registry.terraform.io/providers/hashicorp/aws/4.66.1/docs/resources/secretsmanager_secret_version) | resource |
+| [aws_secretsmanager_secret.secrets](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
+| [aws_secretsmanager_secret_version.secrets_value](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
 
 ## Inputs
 

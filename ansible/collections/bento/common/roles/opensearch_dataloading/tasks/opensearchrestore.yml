@@ -1,0 +1,29 @@
+---
+
+- name: copy opensearch restore script to workspace
+  copy:
+    src: opensearch-restore.py
+    dest: "{{workspace}}/opensearch-restore.py"
+    mode: 0755
+
+- name: copy requirements to workspace
+  copy:
+    src: requirements.txt
+    dest: "{{workspace}}/requirements.txt"
+    mode: 0755
+
+- name: install dependencies
+  shell:
+    cmd: >
+      pip3 install -r {{workspace}}/requirements.txt
+  register: pip_reqs
+
+- name: restore snapshot
+  shell:
+    cmd: >
+      python3 {{workspace}}/opensearch-restore.py --oshost {{opensearch_host}} --repo {{snapshot_repo}} --snapshot {{snapshot_value}}  --s3bucket {{s3_bucket}} --indices {{indices}} --rolearn {{role_arn}} --basepath {{base_path}} --region {{region}}
+  register: data_restore
+
+- name: show restore output
+  debug:
+    msg: "{{ data_restore }}"

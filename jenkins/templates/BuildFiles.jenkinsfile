@@ -42,10 +42,13 @@ pipeline {
             defaultValue: true,
             name: 'RunDeployStage')
 
+		booleanParam(
+            defaultValue: true,
+            name: 'TrivyTestScan')
+
   }
 
   options {
-  	ansiColor('xterm')
 	timestamps()
   }
 
@@ -137,13 +140,19 @@ pipeline {
 
  			script {
 
+				// Check to see if scanning is enabled and set exit code properly
+				if (params.TrivyTestScan) { 
+					env.EXIT_CODE = 1
+				} else { 
+					env.EXIT_CODE = 0
+				} 
+
 			    sh label: 'Trivy-Test', script: '''#!/bin/bash
 
 				# Test image for vulnerabilities
                 echo "Testing Image with Trivy: $ECR_REPO:$CODE_BRANCH.$BUILD_NUMBER"
 
-				#docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code 1 --timeout 15m --severity HIGH,CRITICAL $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER
-				docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER
+				docker run --rm --name trivy -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --exit-code $EXIT_CODE --timeout 15m --severity HIGH,CRITICAL $REPO_URL:$CODE_BRANCH.$BUILD_NUMBER
 
 				'''
 
@@ -185,7 +194,7 @@ pipeline {
                     writeDeployment(
                         version: "${env.CODE_BRANCH}.${BUILD_NUMBER}",
                         image:  "${env.CODE_BRANCH}.${BUILD_NUMBER}",
-                        service: "${env.APP}",
+                        service: "${env.SERVICE}",
                         deploymentFile: "${env.PROJECT}-deployments/deployments.yaml",
                         deploymentRepoUrl: "https://github.com/CBIIT/${env.DEPLOY_REPO}",
                         deploymentCheckoutDirectory: "${env.PROJECT}-deployments"

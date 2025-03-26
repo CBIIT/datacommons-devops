@@ -10,7 +10,7 @@ pipeline {
 
   parameters {
 
-  string(defaultValue: "michael.fleming@nih.gov,zhengwu.lu@nih.gov,cole.devries@nih.gov", 
+  string(defaultValue: "michael.fleming@nih.gov,zhengwu.lu@nih.gov,cole.devries@nih.gov,amit.mukherjee@nih.gov", 
         description: 'Enter a list of email addresses to notify with results:', 
         name: 'EmailRecipients')
 
@@ -21,9 +21,6 @@ pipeline {
 	CODE_REPO      = "datacommons-devops"
 	CODE_FOLDER    = "datacommons-devops"
 	CODE_BRANCH    = "main"
-
-	ECR_REPO       = "cbiit-base-docker-images"
-	REGION         = "us-east-1"
 
 	API_URI        = "https://api.github.com"
 	ORG            = "CBIIT"
@@ -94,9 +91,10 @@ pipeline {
 				}
 
 				imageList.each { image ->
-					trivy_out=sh(label: 'Get scan results', returnStdout: true, script: "docker run --rm --name trivy -u root -v /var/run/docker.sock:/var/run/docker.sock bitnami/trivy:latest image --timeout 15m --severity HIGH,CRITICAL $image.Name").trim()
-					if (!(trivy_out.contains("Total: 0"))) {
-					    RESULTS += "\n\n\nTrivy Results: $image.Projects\n$trivy_out\n"
+					scout_out=sh(label: 'Get scan results', returnStdout: true, script: "docker scout cves --only-severity critical,high $image.Name").trim()
+					if (!(scout_out.contains("No vulnerable packages detected"))) {
+					    RESULTS += "\n\nResults: $image.Projects\n$scout_out\n\n"
+						RESULTS += "############################################################################################################################"
 					}
 
 				}

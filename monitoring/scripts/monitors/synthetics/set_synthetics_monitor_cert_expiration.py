@@ -72,6 +72,10 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
              "domain: \"" + domain + "\","
              "numberDaysToFailBeforeCertExpires: " + daysToFail + ","
              "status: ENABLED,"
+             "runtime: {"
+               "runtimeType: \"NODE_API\","
+               "runtimeTypeVersion: \"16.10\","
+             "},"
              "tags: ["
                "{"
                  "key: \"Project\","
@@ -109,6 +113,10 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
            "domain: \"" + domain + "\","
            "numberDaysToFailBeforeCertExpires: " + daysToFail + ","
            "status: ENABLED,"
+           "runtime: {"
+             "runtimeType: \"NODE_API\","
+             "runtimeTypeVersion: \"16.10\","
+           "},"
            "tags: ["
              "{"
                "key: \"Project\","
@@ -133,7 +141,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
      except (requests.exceptions.RequestException, ValueError) as e:
        raise SystemExit(e)
      print("{} was created".format(monitor_name))
-
+     
      # get the newly created monitor
      # pause to allow it to be created
      time.sleep(15)
