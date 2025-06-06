@@ -68,9 +68,9 @@ def setalertslackchannel(channel_name, destination_id, tier, key, slack_channel)
                "}"
              "]"
            "}) {"
-             "destination {"
-               "id\n"
-               "name"
+             "error {"
+               "... on AiNotificationsResponseError {"
+                 "description"
              "}"
            "}"
        "}", "variables":""}
