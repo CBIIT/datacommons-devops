@@ -82,7 +82,8 @@ def setalertslackchannel(channel_name, destination_id, tier, key, slack_channel)
                    "name"
                  "}"
                "}"
-           "}"
+             "}"
+          "}"
        "}", "variables":""}
 
        ### DEBUG
