@@ -77,6 +77,7 @@ def setalertslackchannel(channel_name, destination_id, tier, key, slack_channel)
 
        try:
          response = requests.post(API_ENDPOINT, headers=headers, data=json.dumps(data), allow_redirects=False)
+         print("Update Output: {}".format(response))
        except requests.exceptions.RequestException as e:
          raise SystemExit(e)
 
