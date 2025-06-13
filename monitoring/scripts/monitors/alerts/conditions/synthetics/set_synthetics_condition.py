@@ -9,6 +9,7 @@ def setcondition(project, tier, key, api_name, synthetics_id, policy_id):
    condition_name = '{} {} {} Condition'.format(project, tier, api_name)
    condition_found = False
    headers = {'Api-Key': key}
+   print('Checking for policy: {}'.format(policy_id))
    data = {'policy_id': policy_id}
 
    try:
