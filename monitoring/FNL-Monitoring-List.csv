@@ -624,3 +624,53 @@ Computation Resources for Cancer Research,CRCR,DOERC,dev,Portal,https://computat
 Computation Resources for Cancer Research,CRCR,DOERC,qa,Portal,https://computational-qa.cancer.gov/,,,TRUE,C071J4NEJJ3,NCI-CRCR-development@mail.nih.gov,
 Computation Resources for Cancer Research,CRCR,DOERC,stage,Portal,https://computational-stage.cancer.gov/,,,TRUE,C071J5E4RU7,NCI-CRCR-development@mail.nih.gov,
 Computation Resources for Cancer Research,CRCR,DOERC,prod,Portal,https://computational.cancer.gov/,,,FALSE,C071J5E4RU7,NCI-CRCR-development@mail.nih.gov,
+Populatioin Sciences Data Commons,Popsci,CRDC,dev,Portal,https://populationsciences-dev.datacommons.cancer.gov/,,Population,TRUE,C07E28M8R7T,,
+Populatioin Sciences Data Commons,Popsci,CRDC,dev,API-OS,https://populationsciences-dev.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://populationsciences-dev.datacommons.cancer.gov/v1/public-graphql/',
+  {
+    json: {
+    query: '{numberOfPrograms}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfPrograms' in body.data);
+
+  }
+);",,TRUE,C07E28M8R7T,,
+Populatioin Sciences Data Commons,Popsci,CRDC,qa,Portal,https://populationsciences-qa.datacommons.cancer.gov/,,Population,TRUE,C07E28M8R7T,,
+Populatioin Sciences Data Commons,Popsci,CRDC,qa,API-OS,https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/',
+  {
+    json: {
+    query: '{numberOfPrograms}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfPrograms' in body.data);
+
+  }
+);",,TRUE,C07E28M8R7T,,
