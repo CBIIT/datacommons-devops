@@ -679,3 +679,15 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/public-graph
 
   }
 );",,TRUE,C07E28M8R7T,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,,TRUE,B0920R3SETE,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,,TRUE,B0920R3SETE,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,API,https://cbioportal-api-dev.ccdi.cancer.gov,,,TRUE,B0920R3SETE,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,QA,Portal,https://cbioportal-qa.ccdi.cancer.gov,,,TRUE,C049VAP8DEJ,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,QA,Content,https://cbioportal-qa-content.ccdi.cancer.gov,,,TRUE,C049VAP8DEJ,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,QA,API,https://cbioportal-api-qa.ccdi.cancer.gov,,,TRUE,C049VAP8DEJ,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Portal,https://cbioportal-stage.ccdi.cancer.gov,,,TRUE,C049VAP8DEJ,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Content,https://cbioportal-stage-content.ccdi.cancer.gov,,,TRUE,C049VAP8DEJ,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,API,https://cbioportal-api-stage.ccdi.cancer.gov,,,TRUE,C049VAP8DEJ,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Portal,https://cbioportal.ccdi.cancer.gov,,,FALSE,C049VAP8DEJ,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Content,https://cbioportal-content.ccdi.cancer.gov,,,FALSE,C049VAP8DEJ,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,API,https://cbioportal-api.ccdi.cancer.gov,,,FALSE,C049VAP8DEJ,,
