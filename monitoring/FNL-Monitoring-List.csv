@@ -654,7 +654,6 @@ $http.post('https://populationsciences-dev.datacommons.cancer.gov/v1/public-grap
   }
 );",,TRUE,C07E28M8R7T,,
 Population Sciences Data Commons,Popsci,CRDC,qa,Portal,https://populationsciences-qa.datacommons.cancer.gov/,,Population,TRUE,C07E28M8R7T,,
-
 Population Sciences Data Commons,Popsci,CRDC,qa,API-OS,https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/',
