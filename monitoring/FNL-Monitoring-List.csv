@@ -336,10 +336,6 @@ Childhood Cancer Data Catalog,ccdc,CCDI,Dev,Portal,https://datacatalog-dev.ccdi.
 Childhood Cancer Data Catalog,ccdc,CCDI,QA,Portal,https://datacatalog-qa.ccdi.cancer.gov,,,TRUE,C049VAP8DEJ,,opensearch
 Childhood Cancer Data Catalog,ccdc,CCDI,Stage,Portal,https://datacatalog-stage.ccdi.cancer.gov,,,TRUE,C049VAP8DEJ,,opensearch
 Childhood Cancer Data Catalog,ccdc,CCDI,Prod,Portal,https://datacatalog.ccdi.cancer.gov,,,TRUE,C049VAP8DEJ,,opensearch
-Metamodel Database,mdb,CCDI,Dev,Portal,https://sts-dev.cancer.gov,,STS,TRUE,C09CQQ3ALGP,,
-Metamodel Database,mdb,CCDI,QA,Portal,https://sts-qa.cancer.gov,,STS,TRUE,C09CQQ3ALGP,,
-Metamodel Database,mdb,CCDI,Stage,Portal,https://sts-stage.cancer.gov,,STS,TRUE,C09CQQ3ALGP,,
-Metamodel Database,mdb,CCDI,Prod,Portal,https://sts.cancer.gov,,STS,TRUE,C09DEANF1RC,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,Portal,https://hub-dev.datacommons.cancer.gov,,CRDC,TRUE,C05KUCFPV50,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,API,https://hub-dev.datacommons.cancer.gov/version,"var assert = require('assert');
 
@@ -378,7 +374,7 @@ dateObject = new Date();
 assert.ok(dateObject.getTime() === dateObject.getTime()); 
 
 } );",,TRUE,C05KUCFPV50,,
-Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,Portal,https://hub-stage.datacommons.cancer.gov,,CRDC,FALSE,C05KUCFPV50,,
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,Portal,https://hub-stage.datacommons.cancer.gov,,CRDC,TRUE,C05KUCFPV50,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,API,https://hub-stage.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://hub-stage.datacommons.cancer.gov/version',
@@ -396,7 +392,7 @@ assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
 dateObject = new Date();
 assert.ok(dateObject.getTime() === dateObject.getTime());
 
-} );",,FALSE,C05KUCFPV50,,
+} );",,TRUE,C05KUCFPV50,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,Portal,https://hub.datacommons.cancer.gov,,CRDC,FALSE,C05LJ3E72V6,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,API,https://hub.datacommons.cancer.gov/version,"var assert = require('assert');
 
@@ -628,13 +624,43 @@ Computation Resources for Cancer Research,CRCR,DOERC,dev,Portal,https://computat
 Computation Resources for Cancer Research,CRCR,DOERC,qa,Portal,https://computational-qa.cancer.gov/,,,TRUE,C071J4NEJJ3,NCI-CRCR-development@mail.nih.gov,
 Computation Resources for Cancer Research,CRCR,DOERC,stage,Portal,https://computational-stage.cancer.gov/,,,TRUE,C071J5E4RU7,NCI-CRCR-development@mail.nih.gov,
 Computation Resources for Cancer Research,CRCR,DOERC,prod,Portal,https://computational.cancer.gov/,,,FALSE,C071J5E4RU7,NCI-CRCR-development@mail.nih.gov,
-Population Sciences Data Commons,Popsci,CRDC,dev,Portal,https://populationsciences-dev.datacommons.cancer.gov/,,Population,TRUE,C07E28M8R7T,,
-Population Sciences Data Commons,Popsci,CRDC,dev,API-OS,https://populationsciences-dev.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+Populatioin Sciences Data Commons,Popsci,CRDC,dev,Portal,https://populationsciences-dev.datacommons.cancer.gov/,,Population,TRUE,C07E28M8R7T,,
+Populatioin Sciences Data Commons,Popsci,CRDC,dev,API-OS,https://populationsciences-dev.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://populationsciences-dev.datacommons.cancer.gov/v1/public-graphql/',
   {
     json: {
-    query: '{numberOfPrograms}',
+    query studyFiles(
+  $study_short_name: [String]
+  $data_file_uuid: [String]
+  $first: Int
+  $offset: Int
+  $order_by: String
+  $sort_direction: String
+) {
+  studyFiles(
+    study_short_name: $study_short_name
+    data_file_uuid: $data_file_uuid
+    first: $first
+    offset: $offset
+    order_by: $order_by
+    sort_direction: $sort_direction
+  ) {
+    study_short_name
+    data_file_name
+    data_file_uuid
+    data_file_type
+    data_file_description
+    data_file_format
+    data_file_checksum_value
+    drs_uri
+    data_file_access_control
+    data_volume
+    data_file_checksum_value
+    study_short_name
+ 
+  }
+},
     variables: {}
     }
   },
@@ -649,18 +675,47 @@ $http.post('https://populationsciences-dev.datacommons.cancer.gov/v1/public-grap
     console.log('Response:', response.statusCode);
     
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('numberOfPrograms' in body.data);
+    assert.ok('studyFiles' in body.data);
 
   }
 );",,TRUE,C07E28M8R7T,,
-Population Sciences Data Commons,Popsci,CRDC,qa,Portal,https://populationsciences-qa.datacommons.cancer.gov/,,Population,TRUE,C07E28M8R7T,,
-
-Population Sciences Data Commons,Popsci,CRDC,qa,API-OS,https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+Populatioin Sciences Data Commons,Popsci,CRDC,qa,Portal,https://populationsciences-qa.datacommons.cancer.gov/,,Population,TRUE,C07E28M8R7T,,
+Populatioin Sciences Data Commons,Popsci,CRDC,qa,API-OS,https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/',
   {
     json: {
-    query: '{numberOfPrograms}',
+    query studyFiles(
+  $study_short_name: [String]
+  $data_file_uuid: [String]
+  $first: Int
+  $offset: Int
+  $order_by: String
+  $sort_direction: String
+) {
+  studyFiles(
+    study_short_name: $study_short_name
+    data_file_uuid: $data_file_uuid
+    first: $first
+    offset: $offset
+    order_by: $order_by
+    sort_direction: $sort_direction
+  ) {
+    study_short_name
+    data_file_name
+    data_file_uuid
+    data_file_type
+    data_file_description
+    data_file_format
+    data_file_checksum_value
+    drs_uri
+    data_file_access_control
+    data_volume
+    data_file_checksum_value
+    study_short_name
+ 
+  }
+},
     variables: {}
     }
   },
@@ -675,7 +730,7 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/public-graph
     console.log('Response:', response.statusCode);
     
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
-    assert.ok('numberOfPrograms' in body.data);
+    assert.ok('studyFiles' in body.data);
 
   }
 );",,TRUE,C07E28M8R7T,,
