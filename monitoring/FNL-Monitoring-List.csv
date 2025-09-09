@@ -627,40 +627,10 @@ Computation Resources for Cancer Research,CRCR,DOERC,prod,Portal,https://computa
 Populatioin Sciences Data Commons,Popsci,CRDC,dev,Portal,https://populationsciences-dev.datacommons.cancer.gov/,,Population,TRUE,C07E28M8R7T,,
 Populatioin Sciences Data Commons,Popsci,CRDC,dev,API-OS,https://populationsciences-dev.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
 
-$http.post('https://populationsciences-dev.datacommons.cancer.gov/v1/public-graphql/',
+$http.post('https://populationsciences-dev.datacommons.cancer.gov/v1/graphql/',
   {
     json: {
-    query studyFiles(
-  $study_short_name: [String]
-  $data_file_uuid: [String]
-  $first: Int
-  $offset: Int
-  $order_by: String
-  $sort_direction: String
-) {
-  studyFiles(
-    study_short_name: $study_short_name
-    data_file_uuid: $data_file_uuid
-    first: $first
-    offset: $offset
-    order_by: $order_by
-    sort_direction: $sort_direction
-  ) {
-    study_short_name
-    data_file_name
-    data_file_uuid
-    data_file_type
-    data_file_description
-    data_file_format
-    data_file_checksum_value
-    drs_uri
-    data_file_access_control
-    data_volume
-    data_file_checksum_value
-    study_short_name
- 
-  }
-},
+    query: 'query studyFiles($data_file_uuid: [String]){studyFiles(data_file_uuid: $data_file_uuid){data_file_uuid}}',
     variables: {}
     }
   },
@@ -682,40 +652,10 @@ $http.post('https://populationsciences-dev.datacommons.cancer.gov/v1/public-grap
 Populatioin Sciences Data Commons,Popsci,CRDC,qa,Portal,https://populationsciences-qa.datacommons.cancer.gov/,,Population,TRUE,C07E28M8R7T,,
 Populatioin Sciences Data Commons,Popsci,CRDC,qa,API-OS,https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
 
-$http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/',
+$http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
   {
     json: {
-    query studyFiles(
-  $study_short_name: [String]
-  $data_file_uuid: [String]
-  $first: Int
-  $offset: Int
-  $order_by: String
-  $sort_direction: String
-) {
-  studyFiles(
-    study_short_name: $study_short_name
-    data_file_uuid: $data_file_uuid
-    first: $first
-    offset: $offset
-    order_by: $order_by
-    sort_direction: $sort_direction
-  ) {
-    study_short_name
-    data_file_name
-    data_file_uuid
-    data_file_type
-    data_file_description
-    data_file_format
-    data_file_checksum_value
-    drs_uri
-    data_file_access_control
-    data_volume
-    data_file_checksum_value
-    study_short_name
- 
-  }
-},
+    query: 'query studyFiles($data_file_uuid: [String]){studyFiles(data_file_uuid: $data_file_uuid){data_file_uuid}}',
     variables: {}
     }
   },
