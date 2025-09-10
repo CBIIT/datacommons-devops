@@ -2,7 +2,7 @@ Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Valid
 Clinical Trial Data Commons,ctdc,CRDC,Dev,Portal,https://clinical-dev.datacommons.cancer.gov,,,TRUE,C051XGDRQG6,,opensearch
 Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://clinical-dev.datacommons.cancer.gov/v1/graphql,"var assert = require('assert');
 
-$http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
+$http.post('https://clinical-dev.datacommons.cancer.gov/v1/graphql',
   {
     json: {
     query: '{ idsLists { case_ids } }',
@@ -29,7 +29,7 @@ Clinical Trial Data Commons,ctdc,CRDC,Dev,Files,https://clinical-dev.datacommons
 Clinical Trial Data Commons,ctdc,CRDC,QA,Portal,https://clinical-qa.datacommons.cancer.gov,,,TRUE,C051XGDRQG6,,opensearch
 Clinical Trial Data Commons,ctdc,CRDC,QA,API,https://clinical-qa.datacommons.cancer.gov/v1/graphql,"var assert = require('assert');
 
-$http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
+$http.post('https://clinical-qa.datacommons.cancer.gov/v1/graphql',
   {
     json: {
     query: '{ idsLists { case_ids } }',
