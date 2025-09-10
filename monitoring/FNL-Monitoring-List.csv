@@ -1,6 +1,6 @@
 Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Validation_Text,Private_Location,Slack_Channel,Alert_Email,Monitored_Resources
-Clinical Trial Data Commons,ctdc,CRDC,Dev,Portal,https://trialcommons-dev.cancer.gov,,,TRUE,C051XGDRQG6,,opensearch
-Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://trialcommons-dev.cancer.gov/v1/graphql,"var assert = require('assert');
+Clinical Trial Data Commons,ctdc,CRDC,Dev,Portal,https://clinical-dev.datacommons.cancer.gov,,,TRUE,C051XGDRQG6,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://clinical-dev.datacommons.cancer.gov/v1/graphql,"var assert = require('assert');
 
 $http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
   {
@@ -25,9 +25,9 @@ $http.post('https://trialcommons-dev.cancer.gov/v1/graphql/',
 
   }
 );",,TRUE,C051XGDRQG6,,opensearch
-Clinical Trial Data Commons,ctdc,CRDC,Dev,Files,https://trialcommons-dev.cancer.gov/api/files,,,TRUE,C051XGDRQG6,,opensearch
-Clinical Trial Data Commons,ctdc,CRDC,QA,Portal,https://trialcommons-qa.cancer.gov,,,TRUE,C051XGDRQG6,,opensearch
-Clinical Trial Data Commons,ctdc,CRDC,QA,API,https://trialcommons-qa.cancer.gov/v1/graphql,"var assert = require('assert');
+Clinical Trial Data Commons,ctdc,CRDC,Dev,Files,https://clinical-dev.datacommons.cancer.gov/api/files,,,TRUE,C051XGDRQG6,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,QA,Portal,https://clinical-qa.datacommons.cancer.gov,,,TRUE,C051XGDRQG6,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,QA,API,https://clinical-qa.datacommons.cancer.gov/v1/graphql,"var assert = require('assert');
 
 $http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
   {
@@ -52,7 +52,7 @@ $http.post('https://trialcommons-qa.cancer.gov/v1/graphql/',
 
   }
 );",,TRUE,C051XGDRQG6,,opensearch
-Clinical Trial Data Commons,ctdc,CRDC,QA,Files,https://trialcommons-qa.cancer.gov/api/files,,,TRUE,C051XGDRQG6,,opensearch
+Clinical Trial Data Commons,ctdc,CRDC,QA,Files,https://clinical-qa.datacommons.cancer.gov/api/files,,,TRUE,C051XGDRQG6,,opensearch
 Clinical Trial Data Commons,ctdc,CRDC,Stage,Portal,https://clinical-stage.datacommons.cancer.gov,,,TRUE,C07PLM910KT,,opensearch
 Clinical Trial Data Commons,ctdc,CRDC,Stage,API,https://clinical-stage.datacommons.cancer.gov/v1/graphql,"var assert = require('assert');
 
