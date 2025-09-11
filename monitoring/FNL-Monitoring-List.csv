@@ -336,6 +336,10 @@ Childhood Cancer Data Catalog,ccdc,CCDI,Dev,Portal,https://datacatalog-dev.ccdi.
 Childhood Cancer Data Catalog,ccdc,CCDI,QA,Portal,https://datacatalog-qa.ccdi.cancer.gov,,,TRUE,C049VAP8DEJ,,opensearch
 Childhood Cancer Data Catalog,ccdc,CCDI,Stage,Portal,https://datacatalog-stage.ccdi.cancer.gov,,,TRUE,C049VAP8DEJ,,opensearch
 Childhood Cancer Data Catalog,ccdc,CCDI,Prod,Portal,https://datacatalog.ccdi.cancer.gov,,,TRUE,C049VAP8DEJ,,opensearch
+Metamodel Database,mdb,CCDI,Dev,Portal,https://sts-dev.cancer.gov,,STS,TRUE,C09CQQ3ALGP,,
+Metamodel Database,mdb,CCDI,QA,Portal,https://sts-qa.cancer.gov,,STS,TRUE,C09CQQ3ALGP,,
+Metamodel Database,mdb,CCDI,Stage,Portal,https://sts-stage.cancer.gov,,STS,TRUE,C09CQQ3ALGP,,
+Metamodel Database,mdb,CCDI,Prod,Portal,https://sts.cancer.gov,,STS,TRUE,C09DEANF1RC,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,Portal,https://hub-dev.datacommons.cancer.gov,,CRDC,TRUE,C05KUCFPV50,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,API,https://hub-dev.datacommons.cancer.gov/version,"var assert = require('assert');
 
