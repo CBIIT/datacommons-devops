@@ -348,8 +348,9 @@ console.log('Raw Body:', body);
 console.log('Status Code:', response.statusCode);
 
 assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-var data = JSON.parse(body);
+var data = (typeof body === "string") ? JSON.parse(body) : body;
 assert.ok('count' in data, 'Response should contain count');
+assert.ok(typeof data.count === 'number', 'Count should be a number');
 assert.ok(Array.isArray(data.models), 'Response should contain models array');
 assert.ok(data.models.length > 0, 'Models array should not be empty');
 });",,TRUE,C09CQQ3ALGP,,
@@ -365,8 +366,9 @@ console.log('Raw Body:', body);
 console.log('Status Code:', response.statusCode);
 
 assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-var data = JSON.parse(body);
+var data = (typeof body === "string") ? JSON.parse(body) : body;
 assert.ok('count' in data, 'Response should contain count');
+assert.ok(typeof data.count === 'number', 'Count should be a number');
 assert.ok(Array.isArray(data.models), 'Response should contain models array');
 assert.ok(data.models.length > 0, 'Models array should not be empty');
 });",,TRUE,C09CQQ3ALGP,,
