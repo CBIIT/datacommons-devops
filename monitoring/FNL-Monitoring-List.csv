@@ -344,8 +344,8 @@ function (err, response, body) {
         throw new Error(err);
     }
 
-console.log('Response:', body);
-console.log('Response:', response.statusCode);
+console.log('Raw Body:', body);
+console.log('Status Code:', response.statusCode);
 
 assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
 var data = JSON.parse(body);
@@ -361,8 +361,8 @@ function (err, response, body) {
         throw new Error(err);
     }
 
-console.log('Response:', body);
-console.log('Response:', response.statusCode);
+console.log('Raw Body:', body);
+console.log('Status Code:', response.statusCode);
 
 assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
 var data = JSON.parse(body);
