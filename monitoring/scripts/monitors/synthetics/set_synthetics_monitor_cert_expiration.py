@@ -15,7 +15,6 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
    period = "EVERY_DAY"
    daysToFail = "30"
 
-   #  if api['location'].lower() in ['true'] and tier.lower() != 'prod':
    if api['location'].lower() in ['true']:
      location = "private: [\"" + os.getenv('LOCATION') + "\"]"
    else:

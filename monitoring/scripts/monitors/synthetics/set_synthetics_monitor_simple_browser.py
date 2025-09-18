@@ -15,8 +15,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
      freq = 'EVERY_10_MINUTES'
    else:
      freq = 'EVERY_30_MINUTES'
-   
-   #  if api['location'].lower() in ['true'] and tier.lower() != 'prod':
+
    if api['location'].lower() in ['true']:
      location = "private: [\"" + os.getenv('LOCATION') + "\"]"
    else:
