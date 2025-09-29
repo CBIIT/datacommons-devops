@@ -66,6 +66,8 @@ def registerRepo(argList, awsauth):
   try:
     r = requests.put(url, auth=awsauth, json=payload, headers=headers)
     time.sleep(100)
+    print(r.status_code)
+    print(r.text)
   except requests.exceptions.RequestException as e:
     raise SystemExit(e)
 
