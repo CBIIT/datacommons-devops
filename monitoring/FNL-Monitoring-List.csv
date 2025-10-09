@@ -738,8 +738,8 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
 
   }
 );",,TRUE,C07E28M8R7T,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,cBioPortal,TRUE,B0920R3SETE,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,,TRUE,B0920R3SETE,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,API,https://cbioportal-api-dev.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
@@ -760,4 +760,4 @@ $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
     assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key')
 
   }
-);",,TRUE,B0920R3SETE,,
+);",,TRUE,C09KQ60AGRY,,
