@@ -760,3 +760,7 @@ $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
 
   }
 );",,TRUE,C09KQ60AGRY,,
+CCDI Datasharing,Datasharing Hub,CCDI,Dev,Portal,https://datasharing-dev.cancer.gov/post/Data/cancer-data-resources/,,,TRUE,C09LV13BR7F,,
+CCDI Datasharing,Datasharing Hub,CCDI,QA,Portal,https://datasharing-qa.cancer.gov/post/Data/cancer-data-resources/,,,TRUE,C09LV13BR7F,,
+CCDI Datasharing,Datasharing Hub,CCDI,Stage,Portal,https://datasharing-stage.cancer.gov/post/Data/cancer-data-resources/,,,TRUE,C09MSJJRD16,,
+CCDI Datasharing,Datasharing Hub,CCDI,Prod,Portal,https://datasharing.cancer.gov/post/Data/cancer-data-resources/,,,FALSE,C09MSJJRD16,,
