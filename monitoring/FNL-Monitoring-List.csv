@@ -739,9 +739,54 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
 );",,TRUE,C07E28M8R7T,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,About,https://cbioportal-dev-about.ccdi.cancer.gov,"var assert = require('assert');
+
+$http.get('https://cbioportal-dev-about.ccdi.cancer.gov/version.json',
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+
+    const responseObject = JSON.parse(body);
+    assert.ok('version' in responseObject, "Expected object to have 'version' key");
+
+    console.log('API Version:', responseObject.version);
+  }
+);",,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,API,https://cbioportal-api-dev.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');    
+    assert.ok(Array.isArray(body), 'Expected response body to be an array.');
+
+    const firstObj = body[0]
+    assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key')
+
+  }
+);",,TRUE,C09KQ60AGRY,,
+
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,API,https://cbioportal-api-qa.ccdi.cancer.gov,"var assert = require('assert');
+
+$http.get('https://cbioportal-api-qa.ccdi.cancer.gov/api/cancer-types',
 
   function (err, response, body) {
 
