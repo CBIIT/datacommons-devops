@@ -784,6 +784,27 @@ $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
 
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,About,https://cbioportal-qa-about.ccdi.cancer.gov,"var assert = require('assert');
+
+$http.get('https://cbioportal-qa-about.ccdi.cancer.gov/version.json',
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+
+    const responseObject = JSON.parse(body);
+    assert.ok('version' in responseObject, "Expected object to have 'version' key");
+
+    console.log('API Version:', responseObject.version);
+  }
+);",,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,API,https://cbioportal-api-qa.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api-qa.ccdi.cancer.gov/api/cancer-types',
