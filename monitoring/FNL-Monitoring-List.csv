@@ -755,7 +755,7 @@ $http.get('https://cbioportal-dev-about.ccdi.cancer.gov/version.json',
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
 
     const responseObject = JSON.parse(body);
-    assert.ok('version' in responseObject, "Expected object to have 'version' key");
+    assert.ok('version' in responseObject, 'Expected object to have version key');
 
     console.log('API Version:', responseObject.version);
   }
@@ -800,7 +800,7 @@ $http.get('https://cbioportal-qa-about.ccdi.cancer.gov/version.json',
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
 
     const responseObject = JSON.parse(body);
-    assert.ok('version' in responseObject, "Expected object to have 'version' key");
+    assert.ok('version' in responseObject, 'Expected object to have version key');
 
     console.log('API Version:', responseObject.version);
   }
