@@ -781,7 +781,6 @@ $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
 
   }
 );",,TRUE,C09KQ60AGRY,,
-
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,About,https://cbioportal-qa-about.ccdi.cancer.gov,"var assert = require('assert');
