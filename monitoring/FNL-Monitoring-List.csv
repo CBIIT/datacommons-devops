@@ -774,7 +774,7 @@ $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
     assert.ok(Array.isArray(body), 'Expected response body to be an array.');
 
     const firstObj = body[0];
-    assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key')
+    assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
   }
 );",,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
@@ -814,7 +814,7 @@ $http.get('https://cbioportal-api-qa.ccdi.cancer.gov/api/cancer-types',
     assert.ok(Array.isArray(body), 'Expected response body to be an array.');
 
     const firstObj = body[0];
-    assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key')
+    assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
 
   }
 );",,TRUE,C09KQ60AGRY,,
