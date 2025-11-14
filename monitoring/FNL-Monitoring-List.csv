@@ -818,3 +818,85 @@ $http.get('https://cbioportal-api-qa.ccdi.cancer.gov/api/cancer-types',
 
   }
 );",,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Portal,https://cbioportal-stage.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Content,https://cbioportal-stage-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,About,https://cbioportal-stage-about.ccdi.cancer.gov,"var assert = require('assert');
+
+$http.get('https://cbioportal-stage-about.ccdi.cancer.gov/version.json',
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+
+    assert.ok('version' in body, 'Expected object to have version key');
+  }
+);",,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,API,https://cbioportal-api-stage.ccdi.cancer.gov,"var assert = require('assert');
+
+$http.get('https://cbioportal-api-stage.ccdi.cancer.gov/api/cancer-types',
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');    
+    assert.ok(Array.isArray(body), 'Expected response body to be an array.');
+
+    const firstObj = body[0];
+    assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
+
+  }
+);",,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Portal,https://cbioportal.ccdi.cancer.gov,,cBioPortal,TRUE,C09TVCQB108,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Content,https://cbioportal-content.ccdi.cancer.gov,,,TRUE,C09TVCQB108,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,About,https://cbioportal-about.ccdi.cancer.gov,"var assert = require('assert');
+
+$http.get('https://cbioportal-about.ccdi.cancer.gov/version.json',
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+
+    assert.ok('version' in body, 'Expected object to have version key');
+  }
+);",,TRUE,C09TVCQB108,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,API,https://cbioportal-api.ccdi.cancer.gov,"var assert = require('assert');
+
+$http.get('https://cbioportal-api.ccdi.cancer.gov/api/cancer-types',
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');    
+    assert.ok(Array.isArray(body), 'Expected response body to be an array.');
+
+    const firstObj = body[0];
+    assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
+
+  }
+);",,TRUE,C09TVCQB108,,
