@@ -737,8 +737,8 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
 
   }
 );",,TRUE,C07E28M8R7T,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,Visualization,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,Visualization,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,About,https://cbioportal-dev-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-dev-about.ccdi.cancer.gov/version.json',
@@ -777,8 +777,8 @@ $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
     assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
   }
 );",,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,Visualization,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,,Visualization,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,About,https://cbioportal-qa-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-qa-about.ccdi.cancer.gov/version.json',
@@ -818,26 +818,8 @@ $http.get('https://cbioportal-api-qa.ccdi.cancer.gov/api/cancer-types',
 
   }
 );",,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Portal,https://cbioportal-stage.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Content,https://cbioportal-stage-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,About,https://cbioportal-stage-about.ccdi.cancer.gov,"var assert = require('assert');
-
-$http.get('https://cbioportal-stage-about.ccdi.cancer.gov/version.json',
-
-  function (err, response, body) {
-
-    if (err) {
-        throw new Error(err);
-    }
-
-    console.log('Response:', body);
-    console.log('Response:', response.statusCode);
-    
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
-
-    assert.ok('version' in body, 'Expected object to have version key');
-  }
-);",,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Portal,https://cbioportal-stage.ccdi.cancer.gov,,Visualization,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Content,https://cbioportal-stage-content.ccdi.cancer.gov,,Visualization,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,API,https://cbioportal-api-stage.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api-stage.ccdi.cancer.gov/api/cancer-types',
@@ -859,26 +841,8 @@ $http.get('https://cbioportal-api-stage.ccdi.cancer.gov/api/cancer-types',
 
   }
 );",,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Portal,https://cbioportal.ccdi.cancer.gov,,cBioPortal,TRUE,C09TVCQB108,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Content,https://cbioportal-content.ccdi.cancer.gov,,,TRUE,C09TVCQB108,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,About,https://cbioportal-about.ccdi.cancer.gov,"var assert = require('assert');
-
-$http.get('https://cbioportal-about.ccdi.cancer.gov/version.json',
-
-  function (err, response, body) {
-
-    if (err) {
-        throw new Error(err);
-    }
-
-    console.log('Response:', body);
-    console.log('Response:', response.statusCode);
-    
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
-
-    assert.ok('version' in body, 'Expected object to have version key');
-  }
-);",,TRUE,C09TVCQB108,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Portal,https://cbioportal.ccdi.cancer.gov,,Visualization,TRUE,C09TVCQB108,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Content,https://cbioportal-content.ccdi.cancer.gov,,Visualization,TRUE,C09TVCQB108,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,API,https://cbioportal-api.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api.ccdi.cancer.gov/api/cancer-types',
