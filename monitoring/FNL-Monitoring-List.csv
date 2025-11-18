@@ -738,7 +738,7 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
   }
 );",,TRUE,C07E28M8R7T,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,Please,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,About,https://cbioportal-dev-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-dev-about.ccdi.cancer.gov/version.json',
