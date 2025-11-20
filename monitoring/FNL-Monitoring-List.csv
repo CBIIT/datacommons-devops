@@ -738,7 +738,32 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
   }
 );",,TRUE,C07E28M8R7T,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,studies available,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,"var assert = require('assert');
+
+var WEBSITE_URL='https://cbioportal-dev-content.ccdi.cancer.gov/';
+var QUERY_TEXT_LOCATOR = $selenium.By.xpath('//h2[contains(normalize-space(.), ""Visualization & Analysis"")]');
+
+async function waitForElementToContainText(locator, expectedText, timeoutMs) {
+    const element = await $webDriver.wait(
+        $selenium.until.elementLocated(locator),
+        timeoutMs,
+        'Timed out waiting for element to be located: ' + locator.toString()
+    );
+    await $webDriver.wait(
+        $selenium.until.elementTextContains(element, expectedText),
+        timeoutMs,
+        'Timed out waiting for element to contain text: ' + expectedText
+    );
+    return element;
+}
+await $webDriver.get(WEBSITE_URL);
+console.log('Waiting for the dynamic text Visualization & Analysis to appear...');
+var queryElement = await waitForElementToContainText(
+    QUERY_TEXT_LOCATOR,
+    'Query',
+    45000
+);
+console.log('Successfully found element containing Visualization & Analysis. Monitor is successful.');",,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,About,https://cbioportal-dev-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-dev-about.ccdi.cancer.gov/version.json',
