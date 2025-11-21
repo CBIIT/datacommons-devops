@@ -741,29 +741,39 @@ cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,"var assert = require('assert');
 
 var WEBSITE_URL='https://cbioportal-dev-content.ccdi.cancer.gov/';
-var QUERY_TEXT_LOCATOR = $webDriver.By.xpath('//h2[contains(normalize-space(.), ""Visualization & Analysis"")]');
 
-async function waitForElementToContainText(locator, expectedText, timeoutMs) {
-    const element = await $webDriver.wait(
-        $webDriver.until.elementLocated(locator),
-        timeoutMs,
-        'Timed out waiting for element to be located: ' + locator.toString()
+var QUERY_TEXT_LOCATOR = $driver.By.xpath('//h2[contains(normalize-space(.), "Visualization & Analysis")]');
+
+// Define timeout (in milliseconds)
+var TIMEOUT = 45000; 
+
+// Start the promise chain with $browser
+$browser.get(WEBSITE_URL)
+.then(function() {
+    console.log('Successfully navigated to the URL.');
+    
+    // 2. Wait for the element to be located and visible
+    return $browser.waitForAndFindElement(
+        QUERY_TEXT_LOCATOR, 
+        TIMEOUT
     );
-    await $webDriver.wait(
-        $webDriver.until.elementTextContains(element, expectedText),
-        timeoutMs,
-        'Timed out waiting for element to contain text: ' + expectedText
+})
+.then(function(element) {
+    // 3. Get the text of the element
+    return element.getText();
+})
+.then(function(text) {
+    // 4. Assert that the text contains the required phrase
+    assert.ok(
+        text.includes("Visualization & Analysis"), 
+        'Validation failed: Text "Visualization & Analysis" not found in element.'
     );
-    return element;
-}
-await $webDriver.get(WEBSITE_URL);
-console.log('Waiting for the dynamic text Visualization & Analysis to appear...');
-var queryElement = await waitForElementToContainText(
-    QUERY_TEXT_LOCATOR,
-    'Query',
-    45000
-);
-console.log('Successfully found element containing Visualization & Analysis. Monitor is successful.');",,TRUE,C09KQ60AGRY,,
+    console.log('Successfully validated text: ' + text);
+})
+.catch(function(err) {
+    // If any step fails, catch the error and throw a clear message
+    throw new Error('Monitor failed: ' + err.message);
+});",,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,About,https://cbioportal-dev-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-dev-about.ccdi.cancer.gov/version.json',
