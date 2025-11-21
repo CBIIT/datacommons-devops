@@ -742,7 +742,7 @@ cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-de
 
 var WEBSITE_URL='https://cbioportal-dev-content.ccdi.cancer.gov/';
 
-var QUERY_TEXT_LOCATOR = $driver.By.xpath('//h2[contains(normalize-space(.), "Visualization & Analysis")]');
+var QUERY_TEXT_LOCATOR = $driver.By.xpath('//h2[contains(normalize-space(.), ""Visualization & Analysis"")]');
 
 // Define timeout (in milliseconds)
 var TIMEOUT = 45000; 
@@ -765,8 +765,8 @@ $browser.get(WEBSITE_URL)
 .then(function(text) {
     // 4. Assert that the text contains the required phrase
     assert.ok(
-        text.includes("Visualization & Analysis"), 
-        'Validation failed: Text "Visualization & Analysis" not found in element.'
+        text.includes('Visualization & Analysis'), 
+        'Validation failed: Text Visualization & Analysis not found in element.'
     );
     console.log('Successfully validated text: ' + text);
 })
