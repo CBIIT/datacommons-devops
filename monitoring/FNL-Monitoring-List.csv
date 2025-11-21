@@ -741,16 +741,16 @@ cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,"var assert = require('assert');
 
 var WEBSITE_URL='https://cbioportal-dev-content.ccdi.cancer.gov/';
-var QUERY_TEXT_LOCATOR = $selenium.By.xpath('//h2[contains(normalize-space(.), ""Visualization & Analysis"")]');
+var QUERY_TEXT_LOCATOR = $webDriver.By.xpath('//h2[contains(normalize-space(.), ""Visualization & Analysis"")]');
 
 async function waitForElementToContainText(locator, expectedText, timeoutMs) {
     const element = await $webDriver.wait(
-        $selenium.until.elementLocated(locator),
+        $webDriver.until.elementLocated(locator),
         timeoutMs,
         'Timed out waiting for element to be located: ' + locator.toString()
     );
     await $webDriver.wait(
-        $selenium.until.elementTextContains(element, expectedText),
+        $webDriver.until.elementTextContains(element, expectedText),
         timeoutMs,
         'Timed out waiting for element to contain text: ' + expectedText
     );
