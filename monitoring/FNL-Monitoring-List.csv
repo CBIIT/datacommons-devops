@@ -737,8 +737,35 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
 
   }
 );",,TRUE,C07E28M8R7T,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,Visualization,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,Visualization,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,Datasets,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,"const assert = require('assert');
+
+const URL_TO_TEST = "https://cbioportal-dev-content.ccdi.cancer.gov/";
+
+const locator = $driver.By.xpath("//h2[contains(text(), 'Visualization')]");
+
+$browser.get(URL_TO_TEST)
+  .then(() => $browser.sleep(3000))  // initial render wait
+  .then(() => {
+
+    // Wait up to 20 seconds for the element to exist
+    return $browser.waitForAndFindElement(locator, 20000);
+  })
+  .then(element => {
+
+    // Wait until the element's text actually contains 'Visualization'
+    return $browser.wait(() => 
+      element.getText().then(text => text.toLowerCase().includes('visualization'))
+    , 15000, "Timed out waiting for 'Visualization' text to appear");
+  })
+  .then(() => {
+    console.log("✔ 'Visualization' text is present!");
+  })
+  .catch(err => {
+    console.log("❌ Monitor failed:", err.message);
+    throw err;
+  });
+",,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,About,https://cbioportal-dev-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-dev-about.ccdi.cancer.gov/version.json',
@@ -777,8 +804,35 @@ $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
     assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
   }
 );",,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,Datasets,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,"const assert = require('assert');
+
+const URL_TO_TEST = "https://cbioportal-qa-content.ccdi.cancer.gov/";
+
+const locator = $driver.By.xpath("//h2[contains(text(), 'Visualization')]");
+
+$browser.get(URL_TO_TEST)
+  .then(() => $browser.sleep(3000))  // initial render wait
+  .then(() => {
+
+    // Wait up to 20 seconds for the element to exist
+    return $browser.waitForAndFindElement(locator, 20000);
+  })
+  .then(element => {
+
+    // Wait until the element's text actually contains 'Visualization'
+    return $browser.wait(() => 
+      element.getText().then(text => text.toLowerCase().includes('visualization'))
+    , 15000, "Timed out waiting for 'Visualization' text to appear");
+  })
+  .then(() => {
+    console.log("✔ 'Visualization' text is present!");
+  })
+  .catch(err => {
+    console.log("❌ Monitor failed:", err.message);
+    throw err;
+  });
+",,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,About,https://cbioportal-qa-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-qa-about.ccdi.cancer.gov/version.json',
