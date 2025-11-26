@@ -740,9 +740,9 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,Datasets,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,"const assert = require('assert');
 
-const URL_TO_TEST = "https://cbioportal-dev-content.ccdi.cancer.gov/";
+const URL_TO_TEST = ""https://cbioportal-dev-content.ccdi.cancer.gov/"";
 
-const locator = $driver.By.xpath("//h2[contains(text(), 'Visualization')]");
+const locator = $driver.By.xpath(""//h2[contains(text(), 'Visualization')]"");
 
 $browser.get(URL_TO_TEST)
   .then(() => $browser.sleep(3000))  // initial render wait
@@ -756,13 +756,13 @@ $browser.get(URL_TO_TEST)
     // Wait until the element's text actually contains 'Visualization'
     return $browser.wait(() => 
       element.getText().then(text => text.toLowerCase().includes('visualization'))
-    , 15000, "Timed out waiting for 'Visualization' text to appear");
+    , 15000, ""Timed out waiting for 'Visualization' text to appear"");
   })
   .then(() => {
-    console.log("✔ 'Visualization' text is present!");
+    console.log(""✔ 'Visualization' text is present!"");
   })
   .catch(err => {
-    console.log("❌ Monitor failed:", err.message);
+    console.log('❌ Monitor failed:', err.message);
     throw err;
   });
 ",,TRUE,C09KQ60AGRY,,
@@ -807,9 +807,9 @@ $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,Datasets,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,"const assert = require('assert');
 
-const URL_TO_TEST = "https://cbioportal-qa-content.ccdi.cancer.gov/";
+const URL_TO_TEST = 'https://cbioportal-qa-content.ccdi.cancer.gov/';
 
-const locator = $driver.By.xpath("//h2[contains(text(), 'Visualization')]");
+const locator = $driver.By.xpath(""//h2[contains(text(), 'Visualization')]"");
 
 $browser.get(URL_TO_TEST)
   .then(() => $browser.sleep(3000))  // initial render wait
@@ -823,13 +823,13 @@ $browser.get(URL_TO_TEST)
     // Wait until the element's text actually contains 'Visualization'
     return $browser.wait(() => 
       element.getText().then(text => text.toLowerCase().includes('visualization'))
-    , 15000, "Timed out waiting for 'Visualization' text to appear");
+    , 15000, ""Timed out waiting for 'Visualization' text to appear"");
   })
   .then(() => {
-    console.log("✔ 'Visualization' text is present!");
+    console.log(""✔ 'Visualization' text is present!"");
   })
   .catch(err => {
-    console.log("❌ Monitor failed:", err.message);
+    console.log(""❌ Monitor failed:"", err.message);
     throw err;
   });
 ",,TRUE,C09KQ60AGRY,,
