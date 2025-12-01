@@ -832,10 +832,8 @@ $http.get('https://cda-dev.datacommons.cancer.gov/columns/',
     console.log('Response:', response.statusCode);
     
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');    
-    assert.ok(Array.isArray(body), 'Expected response body to be an array.');
 
     const firstObj = body.result[0];
-
     assert.ok('table' in firstObj, 'Expected object to have table key.');
     assert.ok('column' in firstObj, 'Expected object to have column key.');
     assert.ok('data_type' in firstObj, 'Expected object to have data_type key.');
