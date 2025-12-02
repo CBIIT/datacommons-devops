@@ -840,7 +840,7 @@ $http.get('https://cda-dev.datacommons.cancer.gov/columns/',
     assert.ok('nullable' in firstObj, 'Expected object to have nullable key.');
     assert.ok('description' in firstObj, 'Expected object to have description key.');
   }
-);",,TRUE,C09KQ60AGRY,,
+);",,TRUE,C0A1A7C3Z09,,
 Cancer Data Aggregator,CDA,CRDC,Qa,API,https://cda-qa.datacommons.cancer.gov/,"var assert = require('assert');
 
 $http.get('https://cda-qa.datacommons.cancer.gov/columns/',
@@ -863,7 +863,7 @@ $http.get('https://cda-qa.datacommons.cancer.gov/columns/',
     assert.ok('nullable' in firstObj, 'Expected object to have nullable key.');
     assert.ok('description' in firstObj, 'Expected object to have description key.');
   }
-);",,TRUE,C09KQ60AGRY,,
+);",,TRUE,C0A1A7C3Z09,,
 Cancer Data Aggregator,CDA,CRDC,Stage,API,https://cda-stage.datacommons.cancer.gov/,"var assert = require('assert');
 
 $http.get('https://cda-stage.datacommons.cancer.gov/columns/',
@@ -886,7 +886,7 @@ $http.get('https://cda-stage.datacommons.cancer.gov/columns/',
     assert.ok('nullable' in firstObj, 'Expected object to have nullable key.');
     assert.ok('description' in firstObj, 'Expected object to have description key.');
   }
-);",,TRUE,C09KQ60AGRY,,
+);",,TRUE,C0A1A7C3Z09,,
 Cancer Data Aggregator,CDA,CRDC,Prod,API,https://cda.datacommons.cancer.gov/,"var assert = require('assert');
 
 $http.get('https://cda.datacommons.cancer.gov/columns/',
@@ -909,4 +909,4 @@ $http.get('https://cda.datacommons.cancer.gov/columns/',
     assert.ok('nullable' in firstObj, 'Expected object to have nullable key.');
     assert.ok('description' in firstObj, 'Expected object to have description key.');
   }
-);",,TRUE,C09KQ60AGRY,,
+);",,TRUE,C0A10T19JNQ,,
