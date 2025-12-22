@@ -2,7 +2,7 @@
 
 import sys, getopt, json, os, csv, codecs, requests, contextlib
 from monitors.alerts.policies import set_fargate_policy, set_alb_policy, set_opensearch_policy, set_synthetics_policy
-from monitors.synthetics import set_synthetics_monitor_simple_browser, set_synthetics_monitor_scripted_api, set_synthetics_monitor_cert_expiration
+from monitors.synthetics import set_synthetics_monitor_simple_browser, set_synthetics_monitor_scripted_api, set_synthetics_monitor_scripted_browser, set_synthetics_monitor_cert_expiration
 from monitors.alerts.destinations import set_email_destination, set_slack_destination
 from monitors.alerts.workflows import set_workflow
 
@@ -132,10 +132,13 @@ def setSynthetics(input_url, policyList):
        api = json.loads(json.dumps(api_data))
        api.update({"location": row["Private_Location"]})
        api.update({"query": row["Endpoint_Query"]})
+       api.update({"browser_query": row["Browser_Query"]})
        api.update({"text": row["Validation_Text"]})
 
        if api['query']:
          set_synthetics_monitor_scripted_api.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
+       elif api['browser_query']:
+         set_synthetics_monitor_scripted_browser.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
        elif tier.lower() == 'prod' and api['name'].lower() == 'portal':
          set_synthetics_monitor_simple_browser.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
          set_synthetics_monitor_cert_expiration.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
