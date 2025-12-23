@@ -6,7 +6,7 @@ import requests
 import time
 from monitors.alerts.conditions.synthetics import set_synthetics_condition
 
-def setsyntheticsmonitor(project, tier, key, api, policy_id):
+def setSyntheticsMonitor(project, tier, key, api, policy_id):
    API_ENDPOINT = 'https://api.newrelic.com/graphql'
    NR_ACCT_ID = os.getenv('NR_ACCT_ID')
    monitor_name = '{} {} {} Monitor'.format(project, tier, api['name'])
@@ -58,7 +58,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
             yield from find_by_key(value, target)
         elif key == target:
             yield value
-   
+
    for x in find_by_key(response.json(), 'entities'):
      entities = x
 
