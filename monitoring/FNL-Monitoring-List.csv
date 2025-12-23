@@ -1,4 +1,4 @@
-Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Validation_Text,Private_Location,Slack_Channel,Alert_Email,Monitored_Resources
+Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Validation_Text,Private_Location,Slack_Channel,Alert_Email,Monitored_Resources,Browser_Query
 Clinical Trial Data Commons,ctdc,CRDC,Dev,Portal,https://clinical-dev.datacommons.cancer.gov,,,TRUE,C051XGDRQG6,,opensearch
 Clinical Trial Data Commons,ctdc,CRDC,Dev,API,https://clinical-dev.datacommons.cancer.gov/v1/graphql,"var assert = require('assert');
 
@@ -738,34 +738,34 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
   }
 );",,TRUE,C07E28M8R7T,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,Datasets,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,"const assert = require('assert');
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,,"const assert = require('assert');
 
-const URL_TO_TEST = ""https://cbioportal-dev-content.ccdi.cancer.gov/"";
+const CONFIG = {
+    URL: 'https://cbioportal-dev-content.ccdi.cancer.gov/',
+    XPATH: ""//h2[contains(text(), 'Visualization')]"",
+    EXPECTED_TEXT: 'visualization' // Lowercase for easier comparison
+};
 
-const locator = $driver.By.xpath(""//h2[contains(text(), 'Visualization')]"");
+async function runMonitor() {
+    console.log(`Starting monitor for: ${CONFIG.URL}`);
+    await $browser.get(CONFIG.URL);
+    
+    console.log(`Waiting for element: ${CONFIG.XPATH}`);
+    const element = await $browser.waitForAndFindElement($driver.By.xpath(CONFIG.XPATH), 20000);
+    
+    const actualText = await element.getText();
+    console.log(`Found text: ${actualText}`);
+    
+    assert.ok(
+        actualText.toLowerCase().includes(CONFIG.EXPECTED_TEXT), 
+        `Verification Failed: Expected ${CONFIG.EXPECTED_TEXT} but found ${actualText}`
+    );
+}
 
-$browser.get(URL_TO_TEST)
-  .then(() => $browser.sleep(3000))  // initial render wait
-  .then(() => {
-
-    // Wait up to 20 seconds for the element to exist
-    return $browser.waitForAndFindElement(locator, 20000);
-  })
-  .then(element => {
-
-    // Wait until the element's text actually contains 'Visualization'
-    return $browser.wait(() => 
-      element.getText().then(text => text.toLowerCase().includes('visualization'))
-    , 15000, ""Timed out waiting for 'Visualization' text to appear"");
-  })
-  .then(() => {
-    console.log(""✔ 'Visualization' text is present!"");
-  })
-  .catch(err => {
-    console.log('❌ Monitor failed:', err.message);
+runMonitor().catch(err => {
+    console.error('Monitor Failed:'', err.message);
     throw err;
-  });
-",,TRUE,C09KQ60AGRY,,
+});"
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,About,https://cbioportal-dev-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-dev-about.ccdi.cancer.gov/version.json',
@@ -805,34 +805,34 @@ $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
   }
 );",,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,Datasets,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,"const assert = require('assert');
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,,"const assert = require('assert');
 
-const URL_TO_TEST = 'https://cbioportal-qa-content.ccdi.cancer.gov/';
+const CONFIG = {
+    URL: 'https://cbioportal-qa-content.ccdi.cancer.gov/',
+    XPATH: ""//h2[contains(text(), 'Visualization')]"",
+    EXPECTED_TEXT: 'visualization' // Lowercase for easier comparison
+};
 
-const locator = $driver.By.xpath(""//h2[contains(text(), 'Visualization')]"");
+async function runMonitor() {
+    console.log(`Starting monitor for: ${CONFIG.URL}`);
+    await $browser.get(CONFIG.URL);
+    
+    console.log(`Waiting for element: ${CONFIG.XPATH}`);
+    const element = await $browser.waitForAndFindElement($driver.By.xpath(CONFIG.XPATH), 20000);
+    
+    const actualText = await element.getText();
+    console.log(`Found text: ${actualText}`);
+    
+    assert.ok(
+        actualText.toLowerCase().includes(CONFIG.EXPECTED_TEXT), 
+        `Verification Failed: Expected ${CONFIG.EXPECTED_TEXT} but found ${actualText}`
+    );
+}
 
-$browser.get(URL_TO_TEST)
-  .then(() => $browser.sleep(3000))  // initial render wait
-  .then(() => {
-
-    // Wait up to 20 seconds for the element to exist
-    return $browser.waitForAndFindElement(locator, 20000);
-  })
-  .then(element => {
-
-    // Wait until the element's text actually contains 'Visualization'
-    return $browser.wait(() => 
-      element.getText().then(text => text.toLowerCase().includes('visualization'))
-    , 15000, ""Timed out waiting for 'Visualization' text to appear"");
-  })
-  .then(() => {
-    console.log(""✔ 'Visualization' text is present!"");
-  })
-  .catch(err => {
-    console.log(""❌ Monitor failed:"", err.message);
+runMonitor().catch(err => {
+    console.error('Monitor Failed:'', err.message);
     throw err;
-  });
-",,TRUE,C09KQ60AGRY,,
+});"
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,About,https://cbioportal-qa-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-qa-about.ccdi.cancer.gov/version.json',
@@ -872,8 +872,53 @@ $http.get('https://cbioportal-api-qa.ccdi.cancer.gov/api/cancer-types',
 
   }
 );",,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Portal,https://cbioportal-stage.ccdi.cancer.gov,,cBioPortal,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Content,https://cbioportal-stage-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Portal,https://cbioportal-stage.ccdi.cancer.gov,,Datasets,TRUE,C09KQ60AGRY,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Content,https://cbioportal-stage-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,,"const assert = require('assert');
+
+const CONFIG = {
+    URL: 'https://cbioportal-stage-content.ccdi.cancer.gov/',
+    XPATH: ""//h2[contains(text(), 'Visualization')]"",
+    EXPECTED_TEXT: 'visualization' // Lowercase for easier comparison
+};
+
+async function runMonitor() {
+    console.log(`Starting monitor for: ${CONFIG.URL}`);
+    await $browser.get(CONFIG.URL);
+    
+    console.log(`Waiting for element: ${CONFIG.XPATH}`);
+    const element = await $browser.waitForAndFindElement($driver.By.xpath(CONFIG.XPATH), 20000);
+    
+    const actualText = await element.getText();
+    console.log(`Found text: ${actualText}`);
+    
+    assert.ok(
+        actualText.toLowerCase().includes(CONFIG.EXPECTED_TEXT), 
+        `Verification Failed: Expected ${CONFIG.EXPECTED_TEXT} but found ${actualText}`
+    );
+}
+
+runMonitor().catch(err => {
+    console.error('Monitor Failed:'', err.message);
+    throw err;
+});"
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,About,https://cbioportal-stage-about.ccdi.cancer.gov,"var assert = require('assert');
+
+$http.get('https://cbioportal-stage-about.ccdi.cancer.gov/version.json',
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+
+    assert.ok('version' in body, 'Expected object to have version key');
+  }
+);",,TRUE,C09KQ60AGRY,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,API,https://cbioportal-api-stage.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api-stage.ccdi.cancer.gov/api/cancer-types',
@@ -895,8 +940,53 @@ $http.get('https://cbioportal-api-stage.ccdi.cancer.gov/api/cancer-types',
 
   }
 );",,TRUE,C09KQ60AGRY,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Portal,https://cbioportal.ccdi.cancer.gov,,cBioPortal,TRUE,C09TVCQB108,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Content,https://cbioportal-content.ccdi.cancer.gov,,,TRUE,C09TVCQB108,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Portal,https://cbioportal.ccdi.cancer.gov,,Datasets,TRUE,C09TVCQB108,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Content,https://cbioportal-content.ccdi.cancer.gov,,,TRUE,C09TVCQB108,,,"const assert = require('assert');
+
+const CONFIG = {
+    URL: 'https://cbioportal-content.ccdi.cancer.gov/',
+    XPATH: ""//h2[contains(text(), 'Visualization')]"",
+    EXPECTED_TEXT: 'visualization' // Lowercase for easier comparison
+};
+
+async function runMonitor() {
+    console.log(`Starting monitor for: ${CONFIG.URL}`);
+    await $browser.get(CONFIG.URL);
+    
+    console.log(`Waiting for element: ${CONFIG.XPATH}`);
+    const element = await $browser.waitForAndFindElement($driver.By.xpath(CONFIG.XPATH), 20000);
+    
+    const actualText = await element.getText();
+    console.log(`Found text: ${actualText}`);
+    
+    assert.ok(
+        actualText.toLowerCase().includes(CONFIG.EXPECTED_TEXT), 
+        `Verification Failed: Expected ${CONFIG.EXPECTED_TEXT} but found ${actualText}`
+    );
+}
+
+runMonitor().catch(err => {
+    console.error('Monitor Failed:'', err.message);
+    throw err;
+});"
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,About,https://cbioportal-about.ccdi.cancer.gov,"var assert = require('assert');
+
+$http.get('https://cbioportal-about.ccdi.cancer.gov/version.json',
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+
+    assert.ok('version' in body, 'Expected object to have version key');
+  }
+);",,TRUE,C09TVCQB108,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,API,https://cbioportal-api.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api.ccdi.cancer.gov/api/cancer-types',
