@@ -70,7 +70,7 @@ def setSyntheticsMonitor(project, tier, key, api, policy_id):
        print('{} already exists, updating with the latest configuration.'.format(monitor_name))
 
        data = {"query":"mutation {"
-         "syntheticsUpdateScriptedBrowserMonitor ("
+         "syntheticsUpdateScriptBrowserMonitor ("
            "guid: \"" + monitor_guid + "\","
            "monitor: {"
              "locations: {"
@@ -111,7 +111,7 @@ def setSyntheticsMonitor(project, tier, key, api, policy_id):
 
    if not monitor_found:
      data = {"query":"mutation {"
-       "syntheticsCreateScriptedBrowserMonitor ("
+       "syntheticsCreateScriptBrowserMonitor ("
          "accountId: " + NR_ACCT_ID + ","
          "monitor: {"
            "locations: {"
