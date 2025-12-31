@@ -34,7 +34,7 @@ pipeline {
   		steps {
 
   		checkout([$class: 'GitSCM',
-			branches: [[name: '*/cbioportal-synthetic-monitors']],
+			branches: [[name: '*/main']],
 			userRemoteConfigs:
 			[[url: 'https://github.com/CBIIT/datacommons-devops']]])
 
