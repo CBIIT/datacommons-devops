@@ -743,7 +743,7 @@ cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-de
 const CONFIG = {
     URL: 'https://cbioportal-dev-content.ccdi.cancer.gov/',
     XPATH: ""//h2[contains(text(), 'Visualization')]"",
-    EXPECTED_TEXT: 'visualization' // Lowercase for easier comparison
+    EXPECTED_TEXT: 'visualization'
 };
 
 async function runMonitor() {
@@ -763,7 +763,7 @@ async function runMonitor() {
 }
 
 runMonitor().catch(err => {
-    console.error('Monitor Failed:'', err.message);
+    console.error('Monitor Failed:', err.message);
     throw err;
 });"
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,About,https://cbioportal-dev-about.ccdi.cancer.gov,"var assert = require('assert');
@@ -810,7 +810,7 @@ cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-
 const CONFIG = {
     URL: 'https://cbioportal-qa-content.ccdi.cancer.gov/',
     XPATH: ""//h2[contains(text(), 'Visualization')]"",
-    EXPECTED_TEXT: 'visualization' // Lowercase for easier comparison
+    EXPECTED_TEXT: 'visualization'
 };
 
 async function runMonitor() {
@@ -830,7 +830,7 @@ async function runMonitor() {
 }
 
 runMonitor().catch(err => {
-    console.error('Monitor Failed:'', err.message);
+    console.error('Monitor Failed:', err.message);
     throw err;
 });"
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,About,https://cbioportal-qa-about.ccdi.cancer.gov,"var assert = require('assert');
@@ -878,7 +878,7 @@ cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Content,https://cbioportal-
 const CONFIG = {
     URL: 'https://cbioportal-stage-content.ccdi.cancer.gov/',
     XPATH: ""//h2[contains(text(), 'Visualization')]"",
-    EXPECTED_TEXT: 'visualization' // Lowercase for easier comparison
+    EXPECTED_TEXT: 'visualization'
 };
 
 async function runMonitor() {
@@ -898,7 +898,7 @@ async function runMonitor() {
 }
 
 runMonitor().catch(err => {
-    console.error('Monitor Failed:'', err.message);
+    console.error('Monitor Failed:', err.message);
     throw err;
 });"
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,About,https://cbioportal-stage-about.ccdi.cancer.gov,"var assert = require('assert');
@@ -946,7 +946,7 @@ cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Content,https://cbioportal-c
 const CONFIG = {
     URL: 'https://cbioportal-content.ccdi.cancer.gov/',
     XPATH: ""//h2[contains(text(), 'Visualization')]"",
-    EXPECTED_TEXT: 'visualization' // Lowercase for easier comparison
+    EXPECTED_TEXT: 'visualization'
 };
 
 async function runMonitor() {
@@ -966,7 +966,7 @@ async function runMonitor() {
 }
 
 runMonitor().catch(err => {
-    console.error('Monitor Failed:'', err.message);
+    console.error('Monitor Failed:', err.message);
     throw err;
 });"
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,About,https://cbioportal-about.ccdi.cancer.gov,"var assert = require('assert');
