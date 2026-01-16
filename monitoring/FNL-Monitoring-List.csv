@@ -352,39 +352,9 @@ assert.ok('count' in body, 'Response should contain count');
 assert.ok(Array.isArray(body.models), 'Response should contain models array');
 assert.ok(body.models.length > 0, 'Models array should not be empty');
 });",,TRUE,C09CQQ3ALGP,,
-Metamodel Database,mdb,CCDI,Dev,API,https://sts-dev.cancer.gov/v2/models,"var assert = require('assert');
-$http.get('https://sts-dev.cancer.gov/v2/models',
-function (err, response, body) {
-    if (err) {
-        throw new Error(err);
-    }
-
-console.log('Raw Body:', body);
-console.log('Status Code:', response.statusCode);
-
-assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-assert.ok('count' in body, 'Response should contain count');
-assert.ok(Array.isArray(body.models), 'Response should contain models array');
-assert.ok(body.models.length > 0, 'Models array should not be empty');
-});",,TRUE,C09CQQ3ALGP,,
 Metamodel Database,mdb,CCDI,QA,Portal,https://sts-qa.cancer.gov,,STS,TRUE,C09CQQ3ALGP,,
 Metamodel Database,mdb,CCDI,QA,API,https://sts-qa.cancer.gov/v1/models,"var assert = require('assert');
 $http.get('https://sts-qa.cancer.gov/v1/models',
-function (err, response, body) {
-    if (err) {
-        throw new Error(err);
-    }
-
-console.log('Raw Body:', body);
-console.log('Status Code:', response.statusCode);
-
-assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-assert.ok('count' in body, 'Response should contain count');
-assert.ok(Array.isArray(body.models), 'Response should contain models array');
-assert.ok(body.models.length > 0, 'Models array should not be empty');
-});",,TRUE,C09CQQ3ALGP,,
-Metamodel Database,mdb,CCDI,QA,API,https://sts-qa.cancer.gov/v2/models,"var assert = require('assert');
-$http.get('https://sts-qa.cancer.gov/v2/models',
 function (err, response, body) {
     if (err) {
         throw new Error(err);
@@ -414,39 +384,9 @@ assert.ok('count' in body, 'Response should contain count');
 assert.ok(Array.isArray(body.models), 'Response should contain models array');
 assert.ok(body.models.length > 0, 'Models array should not be empty');
 });",,TRUE,C09CQQ3ALGP,,
-Metamodel Database,mdb,CCDI,Stage,API,https://sts-stage.cancer.gov/v2/models,"var assert = require('assert');
-$http.get('https://sts-stage.cancer.gov/v2/models',
-function (err, response, body) {
-    if (err) {
-        throw new Error(err);
-    }
-
-console.log('Raw Body:', body);
-console.log('Status Code:', response.statusCode);
-
-assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-assert.ok('count' in body, 'Response should contain count');
-assert.ok(Array.isArray(body.models), 'Response should contain models array');
-assert.ok(body.models.length > 0, 'Models array should not be empty');
-});",,TRUE,C09CQQ3ALGP,,
 Metamodel Database,mdb,CCDI,Prod,Portal,https://sts.cancer.gov,,STS,TRUE,C09DEANF1RC,,
 Metamodel Database,mdb,CCDI,Prod,API,https://sts.cancer.gov/v1/models,"var assert = require('assert');
 $http.get('https://sts.cancer.gov/v1/models',
-function (err, response, body) {
-    if (err) {
-        throw new Error(err);
-    }
-
-console.log('Raw Body:', body);
-console.log('Status Code:', response.statusCode);
-
-assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-assert.ok('count' in body, 'Response should contain count');
-assert.ok(Array.isArray(body.models), 'Response should contain models array');
-assert.ok(body.models.length > 0, 'Models array should not be empty');
-});",,TRUE,C09DEANF1RC,,
-Metamodel Database,mdb,CCDI,Prod,API,https://sts.cancer.gov/v2/models,"var assert = require('assert');
-$http.get('https://sts.cancer.gov/v2/models',
 function (err, response, body) {
     if (err) {
         throw new Error(err);
