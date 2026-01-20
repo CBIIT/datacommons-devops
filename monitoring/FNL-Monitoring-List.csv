@@ -352,6 +352,25 @@ assert.ok('count' in body, 'Response should contain count');
 assert.ok(Array.isArray(body.models), 'Response should contain models array');
 assert.ok(body.models.length > 0, 'Models array should not be empty');
 });",,TRUE,C09CQQ3ALGP,,
+Metamodel Database,mdb,CCDI,Dev,API2,https://sts-dev.cancer.gov/v2/models/count,"var assert = require('assert');
+$http.get('https://sts-dev.cancer.gov/v2/models/count',
+function (err, response, body) {
+    if (err) {
+        throw new Error(err);
+    }
+
+console.log('Raw Body:', body);
+console.log('Status Code:', response.statusCode);
+
+assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+var count = Number(body);
+assert.ok(!isNaN(count), 'Response should be a number');
+assert.ok(count > 0, 'Count should be greater than 0');
+console.log('Count:', count);
+//assert.ok('count' in body, 'Response should contain count');
+//assert.ok(Array.isArray(body.models), 'Response should contain models array');
+//assert.ok(body.models.length > 0, 'Models array should not be empty');
+});",,TRUE,C09CQQ3ALGP,,
 Metamodel Database,mdb,CCDI,QA,Portal,https://sts-qa.cancer.gov,,STS,TRUE,C09CQQ3ALGP,,
 Metamodel Database,mdb,CCDI,QA,API,https://sts-qa.cancer.gov/v1/models,"var assert = require('assert');
 $http.get('https://sts-qa.cancer.gov/v1/models',
