@@ -1,0 +1,45 @@
+name: Update monitor newrelic job
+run-name: Monitor Newrelic Update Job 
+on:
+  schedule:
+    - cron: '0 10 * * *'
+  workflow_dispatch: 
+    inputs:
+      csv_file:
+        description: 'CSV file to run'
+        required: true
+        default: FNL-Monitoring-List.csv
+
+jobs:
+  run-monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa     # v4.8.0
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r monitoring/scripts/requirements.txt
+
+      - name: Run the monitor update script
+        env:
+          NR_ACCT_ID: ${{ secrets.NR_ACCT_ID }}
+          EMAIL: ${{ secrets.EMAIL }}
+          KEY: ${{ secrets.KEY }}
+          LOCATION: ${{ secrets.LOCATION }}
+          LOCATION_KEY: ${{ secrets.LOCATION_KEY }}
+        run: |
+          CSV_FILE="FNL-Monitoring-List.csv"
+          if [ -n "${{ github.event.inputs.csv_file }}" ]; then
+            CSV_FILE="${{ github.event.inputs.csv_file }}"
+          fi
+
+          python3 monitoring/scripts/monitor_update_csv.py -f "$CSV_FILE"
+
