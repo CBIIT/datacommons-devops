@@ -8,7 +8,7 @@ on:
       csv_file:
         description: 'CSV file to run'
         required: true
-        default: FNL-Monitoring-List.csv
+        default: https://raw.githubusercontent.com/CBIIT/datacommons-devops/main/monitoring/FNL-Monitoring-List.csv
 
 jobs:
   run-monitor:
@@ -36,7 +36,7 @@ jobs:
           LOCATION: ${{ secrets.LOCATION }}
           LOCATION_KEY: ${{ secrets.LOCATION_KEY }}
         run: |
-          CSV_FILE="FNL-Monitoring-List.csv"
+          CSV_FILE="https://raw.githubusercontent.com/CBIIT/datacommons-devops/main/monitoring/FNL-Monitoring-List.csv"
           if [ -n "${{ github.event.inputs.csv_file }}" ]; then
             CSV_FILE="${{ github.event.inputs.csv_file }}"
           fi
