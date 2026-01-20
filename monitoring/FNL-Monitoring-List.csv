@@ -416,6 +416,22 @@ assert.ok('count' in body, 'Response should contain count');
 assert.ok(Array.isArray(body.models), 'Response should contain models array');
 assert.ok(body.models.length > 0, 'Models array should not be empty');
 });",,TRUE,C09CQQ3ALGP,,
+Metamodel Database,mdb,CCDI,Stage,API2,https://sts-stage.cancer.gov/v2/models/count,"var assert = require('assert');
+$http.get('https://sts-stage.cancer.gov/v2/models/count',
+function (err, response, body) {
+    if (err) {
+        throw new Error(err);
+    }
+
+console.log('Raw Body:', body);
+console.log('Status Code:', response.statusCode);
+
+assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+var count = Number(String(body));
+assert.ok(!isNaN(count), 'Response should be a number');
+assert.ok(count > 0, 'Count should be greater than 0');
+console.log('Count:', count);
+});",,TRUE,C09CQQ3ALGP,,
 Metamodel Database,mdb,CCDI,Prod,Portal,https://sts.cancer.gov,,STS,TRUE,C09DEANF1RC,,
 Metamodel Database,mdb,CCDI,Prod,API,https://sts.cancer.gov/v1/models,"var assert = require('assert');
 $http.get('https://sts.cancer.gov/v1/models',
@@ -431,6 +447,22 @@ assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
 assert.ok('count' in body, 'Response should contain count');
 assert.ok(Array.isArray(body.models), 'Response should contain models array');
 assert.ok(body.models.length > 0, 'Models array should not be empty');
+});",,TRUE,C09DEANF1RC,,
+Metamodel Database,mdb,CCDI,Prod,API2,https://sts.cancer.gov/v2/models/count,"var assert = require('assert');
+$http.get('https://sts.cancer.gov/v2/models/count',
+function (err, response, body) {
+    if (err) {
+        throw new Error(err);
+    }
+
+console.log('Raw Body:', body);
+console.log('Status Code:', response.statusCode);
+
+assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+var count = Number(String(body));
+assert.ok(!isNaN(count), 'Response should be a number');
+assert.ok(count > 0, 'Count should be greater than 0');
+console.log('Count:', count);
 });",,TRUE,C09DEANF1RC,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,Portal,https://hub-dev.datacommons.cancer.gov,,CRDC,TRUE,C05KUCFPV50,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,API,https://hub-dev.datacommons.cancer.gov/version,"var assert = require('assert');
