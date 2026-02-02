@@ -367,8 +367,8 @@ var count = Number(String(body));
 assert.ok(!isNaN(count), 'Response should be a number');
 assert.ok(count > 0, 'Count should be greater than 0');
 console.log('Count:', count);
-});",,TRUE,C09CQQ3ALGP,,,
-Metamodel Database,mdb,CCDI,QA,Portal,https://sts-qa.cancer.gov,,STS,TRUE,C09CQQ3ALGP,,,
+});",,TRUE,C09CQQ3ALGP,,
+Metamodel Database,mdb,CCDI,QA,Portal,https://sts-qa.cancer.gov,,STS,TRUE,C09CQQ3ALGP,,
 Metamodel Database,mdb,CCDI,QA,API,https://sts-qa.cancer.gov/v1/models,"var assert = require('assert');
 $http.get('https://sts-qa.cancer.gov/v1/models',
 function (err, response, body) {
@@ -598,8 +598,8 @@ $http.post('https://bento-dev.bento-tools.org/v1/public-graphql/',
 
   }
 );",,FALSE,C065PL460CW,,
-Bento,bento,FNL,QA,Portal,https://bento-qa.bento-tools.org/,,Bento,FALSE,C06AYDW6S2Z,,,
-Bento,bento,FNL,QA,Files,https://bento-qa.bento-tools.org/api/files/version,,version,FALSE,C06AYDW6S2Z,,,
+Bento,bento,FNL,QA,Portal,https://bento-qa.bento-tools.org/,,Bento,FALSE,C06AYDW6S2Z,,
+Bento,bento,FNL,QA,Files,https://bento-qa.bento-tools.org/api/files/version,,version,FALSE,C06AYDW6S2Z,,
 Bento,bento,FNL,QA,API,https://bento-qa.bento-tools.org//v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://bento-qa.bento-tools.org/v1/public-graphql/',
@@ -623,7 +623,7 @@ $http.post('https://bento-qa.bento-tools.org/v1/public-graphql/',
     assert.ok('program_count' in body.data.publicGlobalSearch);
 
   }
-);",,FALSE,C065PL460CW,,,
+);",,FALSE,C065PL460CW,,
 Bento,bento,FNL,QA,API-OS,https://bento-qa.bento-tools.org//v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://bento-qa.bento-tools.org/v1/public-graphql/',
@@ -673,7 +673,7 @@ $http.post('https://bento-perf.bento-tools.org/v1/public-graphql/',
     assert.ok('program_count' in body.data.publicGlobalSearch);
 
   }
-);",,FALSE,C065PL460CW,,,
+);",,FALSE,C065PL460CW,,
 Bento,bento,FNL,Perf,API-OS,https://bento-perf.bento-tools.org//v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://bento-perf.bento-tools.org/v1/public-graphql/',
