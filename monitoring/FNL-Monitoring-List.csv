@@ -1164,10 +1164,163 @@ $http.get('https://cda.datacommons.cancer.gov/columns/',
     assert.ok('description' in firstObj, 'Expected object to have description key.');
   }
 );",,TRUE,C0A1RL83C05,,,
-DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/subject?sex=M&page=1,,,TRUE,C09K0DDBMK8,,,
-DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/sample?page=1,,,TRUE,C09K0DDBMK8,,,
-DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/file?page=1,,,TRUE,C09K0DDBMK8,,,
-DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/metadata/fields/sample,,,TRUE,C09K0DDBMK8,,,
-DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/namespace,,,TRUE,C09K0DDBMK8,,,
-DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/sample-diagnosis?page=1,,,TRUE,C09K0DDBMK8,,,
-DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/subject-diagnosis?page=1,,,TRUE,C09K0DDBMK8,,,
+DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/subject?sex=M&page=1,"var assert = require('assert');
+
+function parseJson(body) {
+  if (body == null) throw new Error('Empty response body');
+  if (typeof body === 'object') return body;
+  return JSON.parse(body);
+}
+
+var url = 'https://dcc-qa.ccdi.cancer.gov/api/v1/subject?sex=M&page=1';
+var start = Date.now();
+
+$http.get({ url: url, timeout: 30000 }, function (err, response, body) {
+  if (err) throw new Error(err);
+
+  console.log('Status:', response.statusCode);
+  console.log('Subject response time (ms):', Date.now() - start);
+
+  assert.equal(response.statusCode, 200, 'Expected 200 OK');
+
+  var json = parseJson(body);
+  assert.ok(json.hasOwnProperty('data'), 'Expected top-level ""data""');
+  assert.ok(Array.isArray(json.data), '""data"" should be an array');
+});",,TRUE,C09K0DDBMK8,,,
+DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/sample?page=1,"var assert = require('assert');
+
+function parseJson(body) {
+  if (body == null) throw new Error('Empty response body');
+  if (typeof body === 'object') return body;
+  return JSON.parse(body);
+}
+
+var url = 'https://dcc-qa.ccdi.cancer.gov/api/v1/sample?page=1';
+var start = Date.now();
+
+$http.get({ url: url, timeout: 30000 }, function (err, response, body) {
+  if (err) throw new Error(err);
+
+  console.log('Status:', response.statusCode);
+  console.log('Sample response time (ms):', Date.now() - start);
+
+  assert.equal(response.statusCode, 200, 'Expected 200 OK');
+
+  var json = parseJson(body);
+  assert.ok(json.hasOwnProperty('data'), 'Expected top-level ""data""');
+  assert.ok(Array.isArray(json.data), '""data"" should be an array');
+});",,TRUE,C09K0DDBMK8,,,
+DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/file?page=1,"var assert = require('assert');
+
+function parseJson(body) {
+  if (body == null) throw new Error('Empty response body');
+  if (typeof body === 'object') return body;
+  return JSON.parse(body);
+}
+
+var url = 'https://dcc-qa.ccdi.cancer.gov/api/v1/file?page=1';
+var start = Date.now();
+
+$http.get({ url: url, timeout: 30000 }, function (err, response, body) {
+  if (err) throw new Error(err);
+
+  console.log('Status:', response.statusCode);
+  console.log('File response time (ms):', Date.now() - start);
+
+  assert.equal(response.statusCode, 200, 'Expected 200 OK');
+
+  var json = parseJson(body);
+  assert.ok(json.hasOwnProperty('data'), 'Expected top-level ""data""');
+  assert.ok(Array.isArray(json.data), '""data"" should be an array');
+});",,TRUE,C09K0DDBMK8,,,
+DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/metadata/fields/sample,"var assert = require('assert');
+
+function parseJson(body) {
+  if (body == null) throw new Error('Empty response body');
+  if (typeof body === 'object') return body;
+  return JSON.parse(body);
+}
+
+var url = 'https://dcc-qa.ccdi.cancer.gov/api/v1/metadata/fields/sample';
+var start = Date.now();
+
+$http.get({ url: url, timeout: 30000 }, function (err, response, body) {
+  if (err) throw new Error(err);
+
+  console.log('Status:', response.statusCode);
+  console.log('Metadata fields response time (ms):', Date.now() - start);
+
+  assert.equal(response.statusCode, 200, 'Expected 200 OK');
+
+  var json = parseJson(body);
+  assert.ok(json.hasOwnProperty('fields'), 'Expected top-level ""fields""');
+  assert.ok(Array.isArray(json.fields), '""fields"" should be an array');
+});",,TRUE,C09K0DDBMK8,,,
+DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/namespace,"var assert = require('assert');
+
+function parseJson(body) {
+  if (body == null) throw new Error('Empty response body');
+  if (typeof body === 'object') return body;
+  return JSON.parse(body);
+}
+
+var url = 'https://dcc-qa.ccdi.cancer.gov/api/v1/namespace';
+var start = Date.now();
+
+$http.get({ url: url, timeout: 30000 }, function (err, response, body) {
+  if (err) throw new Error(err);
+
+  console.log('Status:', response.statusCode);
+  console.log('Namespace response time (ms):', Date.now() - start);
+
+  assert.equal(response.statusCode, 200, 'Expected 200 OK');
+
+  var json = parseJson(body);
+  assert.ok(Array.isArray(json), 'Expected response to be an array');
+});",,TRUE,C09K0DDBMK8,,,
+DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/sample-diagnosis?page=1,"var assert = require('assert');
+
+function parseJson(body) {
+  if (body == null) throw new Error('Empty response body');
+  if (typeof body === 'object') return body;
+  return JSON.parse(body);
+}
+
+var url = 'https://dcc-qa.ccdi.cancer.gov/api/v1/sample-diagnosis?page=1';
+var start = Date.now();
+
+$http.get({ url: url, timeout: 30000 }, function (err, response, body) {
+  if (err) throw new Error(err);
+
+  console.log('Status:', response.statusCode);
+  console.log('Sample-diagnosis response time (ms):', Date.now() - start);
+
+  assert.equal(response.statusCode, 200, 'Expected 200 OK');
+
+  var json = parseJson(body);
+  assert.ok(json.hasOwnProperty('data'), 'Expected top-level ""data""');
+  assert.ok(Array.isArray(json.data), '""data"" should be an array');
+});",,TRUE,C09K0DDBMK8,,,
+DataCentric Federation,DCC,CCDI,Dev,API,https://dcc-qa.ccdi.cancer.gov/api/v1/subject-diagnosis?page=1,"var assert = require('assert');
+
+function parseJson(body) {
+  if (body == null) throw new Error('Empty response body');
+  if (typeof body === 'object') return body;
+  return JSON.parse(body);
+}
+
+var url = 'https://dcc-qa.ccdi.cancer.gov/api/v1/subject-diagnosis?page=1';
+var start = Date.now();
+
+$http.get({ url: url, timeout: 30000 }, function (err, response, body) {
+  if (err) throw new Error(err);
+
+  console.log('Status:', response.statusCode);
+  console.log('Subject-diagnosis response time (ms):', Date.now() - start);
+
+  assert.equal(response.statusCode, 200, 'Expected 200 OK');
+
+  var json = parseJson(body);
+  assert.ok(json.hasOwnProperty('data'), 'Expected top-level ""data""');
+  assert.ok(Array.isArray(json.data), '""data"" should be an array');
+});",,TRUE,C09K0DDBMK8,,,
