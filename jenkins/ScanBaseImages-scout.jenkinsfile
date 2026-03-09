@@ -57,7 +57,6 @@ pipeline {
 				def imageResults = sh(script: "python3 $WORKSPACE/$CODE_FOLDER/jenkins/scripts/check_docker_images.py", returnStdout: true)
                 baseImages = readJSON text: imageResults
                 def imageJson = baseImages['images']
-				imageJson.sort()
 
 				// consolidate base image list to remove duplicate entries
 				imageList = []
@@ -69,7 +68,7 @@ pipeline {
 					imageList.add(image)
 				  }
 				}
-
+				imageList.sort { it.Name?.toString()?.toLowerCase() }
 			}
 
 		}
