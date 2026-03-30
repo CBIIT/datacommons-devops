@@ -76,7 +76,6 @@ pipeline {
 				  }
 				}
 				sortImages(imageList)
-				println imageList
 			}
 
 		}
