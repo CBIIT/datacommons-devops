@@ -1,6 +1,13 @@
 @Library('datacommons-jenkins-shared-library@v1.2') _
 import groovy.json.JsonSlurper
 
+@NonCPS
+def sortImages(List imageList) {
+    imageList.sort { a, b ->
+        (a.Name?.toString()?.toLowerCase() ?: '') <=> (b.Name?.toString()?.toLowerCase() ?: '')
+    }
+}
+
 pipeline {
 	agent {
 		node {
@@ -68,7 +75,7 @@ pipeline {
 					imageList.add(image)
 				  }
 				}
-				imageList.sort { it.Name?.toString()?.toLowerCase() }
+				sortImages(imageList)
 			}
 
 		}
