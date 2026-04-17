@@ -96,17 +96,17 @@ class Stack(Stack):
         secrets={
             "PHOENIX_SECRET":ecs.Secret.from_secrets_manager(self.secret, 'phoenix_secret'),
             "PHOENIX_DEFAULT_ADMIN_INITIAL_PASSWORD":ecs.Secret.from_secrets_manager(self.secret, 'phoenix_admin_password'),
-            "PHOENIX_SQL_DATABASE_USER":ecs.Secret.from_secrets_manager(self.secret, 'username'),
-            "PHOENIX_SQL_DATABASE_PASSWORD":ecs.Secret.from_secrets_manager(self.secret, 'password'),
-            "PHOENIX_SQL_DATABASE_NAME":ecs.Secret.from_secrets_manager(self.secret, 'dbname')
+            "PHOENIX_POSTGRES_USER":ecs.Secret.from_secrets_manager(self.secret, 'username'),
+            "PHOENIX_POSTGRES_PASSWORD":ecs.Secret.from_secrets_manager(self.secret, 'password'),
+            "PHOENIX_POSTGRES_DB":ecs.Secret.from_secrets_manager(self.secret, 'dbname')
         }
 
         environment={
-            "PHOENIX_SQL_DATABASE_HOST": self.postgres.db_instance_endpoint_address,
+            "PHOENIX_POSTGRES_HOST": self.postgres.db_instance_endpoint_address,
             "PHOENIX_TELEMETRY_ENABLED": "false",
             "PHOENIX_ENABLE_AUTH": "true",
-            "PHOENIX_SQL_DATABASE_SCHEMA": "postgresql",
-            "PHOENIX_SQL_DATABASE_PORT": "5432"
+            # "PHOENIX_POSTGRES_SCHEMA": "postgresql",
+            "PHOENIX_POSTGRES_PORT": "5432"
         }
 
         taskDefinition = ecs.FargateTaskDefinition(self,
