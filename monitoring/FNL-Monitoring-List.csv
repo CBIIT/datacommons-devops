@@ -801,6 +801,10 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
 
   }
 );",,TRUE,C07E28M8R7T,,,
+CCDI Datasharing,Datasharing Hub,CCDI,Dev,Portal,https://datasharing-dev.cancer.gov/post/Data/cancer-data-resources/,,,TRUE,C09LV13BR7F,,,
+CCDI Datasharing,Datasharing Hub,CCDI,QA,Portal,https://datasharing-qa.cancer.gov/post/Data/cancer-data-resources/,,,TRUE,C09LV13BR7F,,,
+CCDI Datasharing,Datasharing Hub,CCDI,Stage,Portal,https://datasharing-stage.cancer.gov/post/Data/cancer-data-resources/,,,TRUE,C09MSJJRD16,,,
+CCDI Datasharing,Datasharing Hub,CCDI,Prod,Portal,https://datasharing.cancer.gov/post/Data/cancer-data-resources/,,,FALSE,C09MSJJRD16,,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,Datasets,TRUE,C09KQ60AGRY,,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,,"const assert = require('assert');
 
@@ -983,10 +987,6 @@ $http.get('https://cbioportal-stage-about.ccdi.cancer.gov/version.json',
     assert.ok('version' in body, 'Expected object to have version key');
   }
 );",,TRUE,C09KQ60AGRY,,,
-CCDI Datasharing,Datasharing Hub,CCDI,Dev,Portal,https://datasharing-dev.cancer.gov/post/Data/cancer-data-resources/,,,TRUE,C09LV13BR7F,,,
-CCDI Datasharing,Datasharing Hub,CCDI,QA,Portal,https://datasharing-qa.cancer.gov/post/Data/cancer-data-resources/,,,TRUE,C09LV13BR7F,,,
-CCDI Datasharing,Datasharing Hub,CCDI,Stage,Portal,https://datasharing-stage.cancer.gov/post/Data/cancer-data-resources/,,,TRUE,C09MSJJRD16,,,
-CCDI Datasharing,Datasharing Hub,CCDI,Prod,Portal,https://datasharing.cancer.gov/post/Data/cancer-data-resources/,,,FALSE,C09MSJJRD16,,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,API,https://cbioportal-api-stage.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api-stage.ccdi.cancer.gov/api/cancer-types',
