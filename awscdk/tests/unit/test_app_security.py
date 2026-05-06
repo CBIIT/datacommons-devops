@@ -1,45 +1,26 @@
 import aws_cdk as cdk
-from aws_cdk import aws_iam as iam
 from aws_cdk.assertions import Template, Match
 
 from configparser import ConfigParser
 
-from app.stack import Stack
-from app.aspects import MyAspect
+from app import build_stack
 
 
 def _create_test_stack():
-    """Helper function to create a test stack with consistent configuration"""
+    """Helper function to create a test stack with consistent configuration.
+
+    Stack creation steps are sourced from app/__init__.py (build_stack) to
+    keep the test in sync with the real deployment entrypoint (app.py).
+    The synthesizer is omitted here — it is only needed for CDK bootstrap
+    role resolution during actual deployments.
+    """
     outdir = "tests/cdk.out"
     app = cdk.App(outdir=str(outdir))
 
     config = ConfigParser(interpolation=None)
     config.read('config.ini')
 
-    stack_name = f"{config['main']['program']}-{config['main']['project']}-{config['main']['tier']}"
-    stack = Stack(
-        app,
-        stack_name,
-        env=cdk.Environment(
-            account=config['main']['account_id'],
-            region=config['main']['region']
-        ),
-    )
-
-    # Rename all roles to add role prefix
-    cdk.Aspects.of(stack).add(MyAspect())
-
-    # set permission boundary on all roles
-    if config.has_option('iam', 'permission_boundary'):
-        boundary = iam.ManagedPolicy.from_managed_policy_arn(stack, "Boundary", config['iam']['permission_boundary'])
-        iam.PermissionsBoundary.of(stack).apply(boundary)
-
-    config_tags = dict(s.split(':') for s in config['main']['tags'].split(","))
-    env_tags = {'Environment': config['main']['tier']}
-    tags = config_tags | env_tags
-
-    for tag, value in tags.items():
-        cdk.Tags.of(stack).add(tag, value)
+    stack = build_stack(app, config)
 
     return stack, Template.from_stack(stack), config
 
