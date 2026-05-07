@@ -600,7 +600,7 @@ def test_no_public_ingress_to_services():
 
 
 if __name__ == "__main__":
-    # Run all security tests
+    # Run all security tests, exclude test_cloudfront_distribution_uses_key_group
     security_test_functions = [
         test_opensearch_encryption,
         test_opensearch_access_policies,
@@ -626,7 +626,6 @@ if __name__ == "__main__":
         test_opensearch_slow_logging,
         test_removal_policies,
         test_cloudfront_https_enforcement,
-        # test_cloudfront_distribution_uses_key_group,
         test_no_public_ingress_to_services,
     ]
     
