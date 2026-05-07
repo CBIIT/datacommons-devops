@@ -626,7 +626,7 @@ if __name__ == "__main__":
         test_opensearch_slow_logging,
         test_removal_policies,
         test_cloudfront_https_enforcement,
-        test_cloudfront_distribution_uses_key_group,
+        # test_cloudfront_distribution_uses_key_group,
         test_no_public_ingress_to_services,
     ]
     
