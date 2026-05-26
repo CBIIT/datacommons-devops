@@ -555,6 +555,104 @@ def test_cloudfront_https_enforcement():
         }
     })
 
+# Application Load Balancer Security Configuration Tests
+ def test_alb_https_listener_uses_strong_tls_policy():
+    """Test that the ALB HTTPS listener uses the required strong TLS policy"""
+    stack, template, config = _create_test_stack()
+
+    template.has_resource_properties("AWS::ElasticLoadBalancingV2::Listener", {
+        "Port": 443,
+        "Protocol": "HTTPS",
+        "SslPolicy": "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
+    })
+
+
+def test_alb_listener_enforces_hsts_preload_header():
+    """Test that the ALB HTTPS listener injects the required HSTS preload header"""
+    stack, template, config = _create_test_stack()
+
+    template.has_resource_properties("AWS::ElasticLoadBalancingV2::Listener", {
+        "ListenerAttributes": [
+            {
+                "Key": "routing.http.response.strict_transport_security.header_value",
+                "Value": "max-age=31536000; includeSubDomains; preload"
+            },
+            {
+                "Key": "routing.http.response.x_content_type_options.header_value",
+                "Value": "nosniff"
+            },
+            {
+                "Key": "routing.http.response.server.enabled",
+                "Value": "false"
+            }
+        ]
+    })
+
+
+def test_alb_listener_enforces_x_content_type_options_header():
+    """Test that the ALB HTTPS listener injects X-Content-Type-Options nosniff"""
+    stack, template, config = _create_test_stack()
+
+    template.has_resource_properties("AWS::ElasticLoadBalancingV2::Listener", {
+        "ListenerAttributes": [
+            {
+                "Key": "routing.http.response.x_content_type_options.header_value",
+                "Value": "nosniff"
+            }
+        ]
+    })
+
+
+def test_alb_listener_disables_server_header():
+    """Test that the ALB Server response header is disabled"""
+    stack, template, config = _create_test_stack()
+
+    template.has_resource_properties("AWS::ElasticLoadBalancingV2::Listener", {
+        "ListenerAttributes": [
+            {
+                "Key": "routing.http.response.server.enabled",
+                "Value": "false"
+            }
+        ]
+    })
+
+
+def test_alb_http_redirects_to_https():
+    """Test that HTTP traffic is redirected to HTTPS"""
+    stack, template, config = _create_test_stack()
+
+    template.has_resource_properties("AWS::ElasticLoadBalancingV2::Listener", {
+        "Port": 80,
+        "Protocol": "HTTP",
+        "DefaultActions": [
+            {
+                "Type": "redirect",
+                "RedirectConfig": {
+                    "Protocol": "HTTPS",
+                    "Port": "443"
+                }
+            }
+        ]
+    })
+
+
+def test_alb_https_listener_has_safe_default_404_response():
+    """Test that the HTTPS listener default action returns 404 instead of exposing backend details"""
+    stack, template, config = _create_test_stack()
+
+    template.has_resource_properties("AWS::ElasticLoadBalancingV2::Listener", {
+        "Port": 443,
+        "DefaultActions": [
+            {
+                "Type": "fixed-response",
+                "FixedResponseConfig": {
+                    "StatusCode": "404",
+                    "ContentType": "text/plain",
+                    "MessageBody": "Not Found"
+                }
+            }
+        ]
+    })
 
 # def test_cloudfront_distribution_uses_key_group():
 #     """Test that the CloudFront distribution enforces signed URLs via a trusted key group if deployed"""
