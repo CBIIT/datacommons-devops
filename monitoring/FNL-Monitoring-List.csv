@@ -1328,3 +1328,5 @@ CCDI Datasharing,Datasharing Hub,CCDI,Dev,Portal,https://datasharing-dev.cancer.
 CCDI Datasharing,Datasharing Hub,CCDI,QA,Portal,https://datasharing-qa.cancer.gov/post/Data/cancer-data-resources/,,,TRUE,C09LV13BR7F,,,
 CCDI Datasharing,Datasharing Hub,CCDI,Stage,Portal,https://datasharing-stage.cancer.gov/post/Data/cancer-data-resources/,,,TRUE,C09LV13BR7F,,,
 CCDI Datasharing,Datasharing Hub,CCDI,Prod,Portal,https://datasharing.cancer.gov/post/Data/cancer-data-resources/,,,FALSE,C09MSJJRD16,,,
+CRDC Data Model Navigator,dmn,CRDC,Dev,Portal,https://dp2mdhy99qjlv.cloudfront.net/,,,FALSE,C08UECW5R98,,,
+CRDC Data Model Navigator,dmn,CRDC,Prod,Portal,https://d1bxc1yd643e0n.cloudfront.net/,,,FALSE,C08UECW5R98,,,
