@@ -424,16 +424,101 @@ def test_container_security_context():
     if not template.find_resources("AWS::ECS::TaskDefinition"):
         return
 
-    # Containers should not run as privileged
+    # Containers should not run as privileged and must have read-only root filesystem
     template.has_resource_properties("AWS::ECS::TaskDefinition", {
         "ContainerDefinitions": [
             {
                 "Privileged": Match.absent(),  # Should not be privileged
-                # "ReadonlyRootFilesystem": Match.any_value(),
-                # "User": Match.any_value()
+                "ReadonlyRootFilesystem": True,  # Root filesystem must be read-only
             }
         ]
     })
+
+
+def test_ecs_readonly_root_filesystem():
+    """Test that all ECS containers enforce a read-only root filesystem to prevent runtime tampering"""
+    stack, template, config = _create_test_stack()
+
+    # Only test if ECS task definitions are deployed
+    if not template.find_resources("AWS::ECS::TaskDefinition"):
+        return
+
+    # ReadonlyRootFilesystem must be True on every container — set via readonly_root_filesystem=True in service.py
+    template.has_resource_properties("AWS::ECS::TaskDefinition", {
+        "ContainerDefinitions": [
+            {
+                "ReadonlyRootFilesystem": True
+            }
+        ]
+    })
+
+
+def test_ecs_writable_paths_use_named_volumes():
+    """Test that containers with writable paths mount named volumes instead of writing to the root FS"""
+    stack, template, config = _create_test_stack()
+
+    # Only test if task definitions with mount points are deployed
+    task_def_resources = template.find_resources("AWS::ECS::TaskDefinition")
+    if not task_def_resources:
+        return
+
+    has_mount_points = any(
+        mp
+        for td in task_def_resources.values()
+        for c in td.get("Properties", {}).get("ContainerDefinitions", [])
+        for mp in c.get("MountPoints", [])
+    )
+    if not has_mount_points:
+        return
+
+    # Any container that has MountPoints must reference a named volume declared in the task Volumes list
+    template.has_resource_properties("AWS::ECS::TaskDefinition", {
+        "Volumes": Match.array_with([
+            {
+                "Name": Match.any_value()
+            }
+        ]),
+        "ContainerDefinitions": Match.array_with([
+            Match.object_like({
+                "MountPoints": Match.array_with([
+                    {
+                        "SourceVolume": Match.any_value(),
+                        "ContainerPath": Match.any_value(),
+                        "ReadOnly": False
+                    }
+                ])
+            })
+        ])
+    })
+
+
+def test_ecs_containers_run_as_non_root_user():
+    """Test that containers configured with container_user run as a non-root user"""
+    stack, template, config = _create_test_stack()
+
+    # Only test if task definitions with a User set are deployed
+    task_def_resources = template.find_resources("AWS::ECS::TaskDefinition")
+    if not task_def_resources:
+        return
+
+    has_user = any(
+        c.get("User")
+        for td in task_def_resources.values()
+        for c in td.get("Properties", {}).get("ContainerDefinitions", [])
+    )
+    if not has_user:
+        return
+
+    # Where a User is set it must not be root — checked against the three root forms: "root", "0", "0:*"
+    # Match.not_ is not available in this CDK version; verify via the raw resource properties
+    for task_id, task_def in task_def_resources.items():
+        for container in task_def.get("Properties", {}).get("ContainerDefinitions", []):
+            user = container.get("User")
+            if user is not None:
+                assert user not in ("root", "0") and not user.startswith("0:"), (
+                    f"Container '{container.get('Name', '(unnamed)')}' in {task_id} "
+                    f"runs as root user '{user}' — containers must use a non-root user"
+                )
 
 
 def test_fargate_security():
