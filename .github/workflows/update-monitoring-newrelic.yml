@@ -33,11 +33,11 @@ jobs:
       - name: Run the monitor update script
         id: monitor-update
         env:
-          NR_ACCT_ID: ${{ secrets.NR_ACCT_ID }}
-          EMAIL: ${{ secrets.EMAIL }}
-          KEY: ${{ secrets.KEY }}
-          LOCATION: ${{ secrets.LOCATION }}
-          LOCATION_KEY: ${{ secrets.LOCATION_KEY }}
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+          DD_APP_KEY: ${{ secrets.DD_APP_KEY }}
+          DD_ALERT_EMAIL: ${{ secrets.EMAIL }}
+          DD_PRIVATE_LOCATION_ID: ${{ secrets.LOCATION }}
+          DD_SITE: datadoghq.com
         run: |
           CSV_FILE="https://raw.githubusercontent.com/CBIIT/datacommons-devops/testing/datadog-monitors/monitoring/cbioPortal-Monitoring-List.csv"
           if [ -n "${{ github.event.inputs.csv_file }}" ]; then
