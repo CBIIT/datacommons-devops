@@ -37,7 +37,7 @@ jobs:
           DD_APP_KEY: ${{ secrets.DD_APP_KEY }}
           DD_ALERT_EMAIL: ${{ secrets.EMAIL }}
           DD_PRIVATE_LOCATION_ID: ${{ secrets.LOCATION }}
-          DD_SITE: datadoghq.com
+          DD_SITE: ddog-gov.com
         run: |
           set -x  # Enable bash command tracing
 
