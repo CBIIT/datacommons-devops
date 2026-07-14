@@ -39,12 +39,46 @@ jobs:
           DD_PRIVATE_LOCATION_ID: ${{ secrets.LOCATION }}
           DD_SITE: datadoghq.com
         run: |
+          set -x  # Enable bash command tracing
+
           CSV_FILE="https://raw.githubusercontent.com/CBIIT/datacommons-devops/testing/datadog-monitors/monitoring/cbioPortal-Monitoring-List.csv"
+
           if [ -n "${{ github.event.inputs.csv_file }}" ]; then
             CSV_FILE="${{ github.event.inputs.csv_file }}"
           fi
 
-          python3 monitoring/scripts/datadog/monitor_update_csv.py -f "$CSV_FILE"
+          echo "Using CSV file: $CSV_FILE"
+          echo "Datadog site: $DD_SITE"
+
+          # Validate secrets exist without printing values
+          if [ -z "$DD_API_KEY" ]; then
+            echo "ERROR: DD_API_KEY is empty"
+            exit 1
+          else
+            echo "DD_API_KEY is set"
+          fi
+
+          if [ -z "$DD_APP_KEY" ]; then
+            echo "ERROR: DD_APP_KEY is empty"
+            exit 1
+          else
+            echo "DD_APP_KEY is set"
+          fi
+
+          echo "Running Datadog monitor update..."
+
+          python3 -u monitoring/scripts/datadog/monitor_update_csv.py \
+            -f "$CSV_FILE" \
+            2>&1 | tee monitor_update.log
+
+          EXIT_CODE=${PIPESTATUS[0]}
+
+          echo "Python exit code: $EXIT_CODE"
+
+          echo "===== Last 100 log lines ====="
+          tail -100 monitor_update.log
+
+          exit $EXIT_CODE
 
       - name: Slack Notification
         env:
