@@ -1,5 +1,5 @@
-name: Update monitor newrelic job
-run-name: Monitor Newrelic Update Job 
+name: Update monitor Datadog job
+run-name: Monitor Datadog Update Job 
 on:
   schedule:
     - cron: '0 10 * * *'
@@ -8,7 +8,7 @@ on:
       csv_file:
         description: 'CSV file to run'
         required: true
-        default: https://raw.githubusercontent.com/CBIIT/datacommons-devops/main/monitoring/FNL-Monitoring-List.csv
+        default: https://raw.githubusercontent.com/CBIIT/datacommons-devops/testing/datadog-monitors/monitoring/cbioPortal-Monitoring-List.csv
 
 jobs:
   run-monitor:
@@ -28,7 +28,7 @@ jobs:
         id: install-dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r monitoring/scripts/requirements.txt
+          pip install -r monitoring/scripts/datadog/requirements.txt
 
       - name: Run the monitor update script
         id: monitor-update
@@ -39,12 +39,12 @@ jobs:
           LOCATION: ${{ secrets.LOCATION }}
           LOCATION_KEY: ${{ secrets.LOCATION_KEY }}
         run: |
-          CSV_FILE="https://raw.githubusercontent.com/CBIIT/datacommons-devops/main/monitoring/FNL-Monitoring-List.csv"
+          CSV_FILE="https://raw.githubusercontent.com/CBIIT/datacommons-devops/testing/datadog-monitors/monitoring/cbioPortal-Monitoring-List.csv"
           if [ -n "${{ github.event.inputs.csv_file }}" ]; then
             CSV_FILE="${{ github.event.inputs.csv_file }}"
           fi
 
-          python3 monitoring/scripts/monitor_update_csv.py -f "$CSV_FILE"
+          python3 monitoring/scripts/datadog/monitor_update_csv.py -f "$CSV_FILE"
 
       - name: Slack Notification
         env:
@@ -53,5 +53,5 @@ jobs:
         with:
           status: ${{ job.status }}
           steps: ${{ toJson(steps) }}
-          message: "Newrelic Monitors Updated"
+          message: "Datadog Monitors Updated"
         if: always()
