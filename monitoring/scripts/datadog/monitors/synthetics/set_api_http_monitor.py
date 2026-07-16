@@ -42,7 +42,6 @@ def setmonitor(project, tier, api, notification):
         "name": monitor_name,
         "options": {
             "tick_every": freq,
-            "ssl_certificate": True,
         },
         "status": "live",
         "tags": [
