@@ -148,7 +148,12 @@ def _xpath_string_literal(text):
 
 def _default_browser_check(url, validation_text):
     """Mode B: no Browser_Query, build a check straight from Validation_Text."""
-    xpath = "//*[contains(text(), {})]".format(_xpath_string_literal(validation_text))
+    # Real pages frequently contain more than one element with the same
+    # text (e.g. a duplicate nav item hidden behind a mobile/hamburger
+    # menu), and DataDog's userLocator errors ("Multiple elements found")
+    # if the XPath doesn't resolve to exactly one node -- so pin to the
+    # first match rather than leaving the locator ambiguous.
+    xpath = "(//*[contains(text(), {})])[1]".format(_xpath_string_literal(validation_text))
     return {
         "url": url,
         "xpath": xpath,
