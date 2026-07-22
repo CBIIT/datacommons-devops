@@ -166,11 +166,15 @@ def setSynthetics(input_url):
             if api["query"]:
                 # NR Scripted API → DD multi-step API test
                 set_api_multistep_monitor.setmonitor(project, tier, api, notification)
-            elif api["browser_query"]:
-                # NR Scripted Browser → DD browser test
+            elif api["browser_query"] or api["text"]:
+                # NR Scripted Browser, or Validation_Text with no script at
+                # all (assume the page may be JS-rendered, so a raw HTTP
+                # body-contains check can't be trusted) → DD browser test
                 set_browser_monitor.setmonitor(project, tier, api, notification)
+                if tier.lower() == "prod" and api["name"].lower() == "portal":
+                    set_ssl_monitor.setmonitor(project, tier, api, notification)
             elif tier.lower() == "prod" and api["name"].lower() == "portal":
-                # Prod portal: HTTP check + SSL certificate check
+                # Prod portal with no script/validation text: HTTP check + SSL certificate check
                 set_api_http_monitor.setmonitor(project, tier, api, notification)
                 set_ssl_monitor.setmonitor(project, tier, api, notification)
             else:
