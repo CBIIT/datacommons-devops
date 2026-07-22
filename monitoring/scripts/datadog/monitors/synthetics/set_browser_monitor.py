@@ -200,6 +200,7 @@ def setmonitor(project, tier, api, notification):
                         "value": assert_text,
                         "element": {
                             "userLocator": {
+                                "failTestOnCannotLocate": True,
                                 "values": [
                                     {"type": "xpath", "value": parsed["xpath"]},
                                 ],
