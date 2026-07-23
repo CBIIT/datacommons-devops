@@ -74,17 +74,9 @@ def upsert_synthetic_test(public_id, test_type, payload):
                 headers=h,
                 data=json.dumps(payload),
             )
-            print("URL:", "{}/{}".format(base, public_id))
-            print("Status:", response.status_code)
-            print("Request payload:")
-            print(json.dumps(payload, indent=2))
-            print("Response:")
-            print(response.text)
             response.raise_for_status()
-        except requests.exceptions.HTTPError:
-            print(response.status_code)
-            print(response.text)
-            raise
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
         return public_id
     else:
         # DataDog create endpoint: POST /api/v1/synthetics/tests/api  (or /browser)
@@ -96,16 +88,8 @@ def upsert_synthetic_test(public_id, test_type, payload):
                 data=json.dumps(payload),
             )
             response.raise_for_status()
-            print("URL:", endpoint)
-            print("Status:", response.status_code)
-            print("Request payload:")
-            print(json.dumps(payload, indent=2))
-            print("Response:")
-            print(response.text)
-        except requests.exceptions.HTTPError:
-            print(response.status_code)
-            print(response.text)
-            raise
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
         return response.json().get("public_id")
 
 
