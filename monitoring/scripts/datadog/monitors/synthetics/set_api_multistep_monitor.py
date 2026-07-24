@@ -249,15 +249,15 @@ def setmonitor(project, tier, api, notification):
                     "assertions": assertions,
                 }
             ]
-            
+
         },
         "locations": locations,
         # Structured alarm message; named %(key)s substitution below (order-safe)
         "message": (
-            "State Change\n"
+            "**State Change**\n"
             "{{#is_recovery}}ALARM → OK{{/is_recovery}}{{#is_alert}}OK → ALARM{{/is_alert}}\n"
             "\n"
-            "Location\n"
+            "**Region**\n"
             "%(location)s\n"
             "\n"
             "Description\n"
