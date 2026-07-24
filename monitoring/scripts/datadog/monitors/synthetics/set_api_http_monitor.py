@@ -36,35 +36,30 @@ def setmonitor(project, tier, api, notification):
             },
         },
         "locations": locations,
-        # Structured alarm message; keep %s substitution order matching below
+        # Structured alarm message; named %(key)s substitution below (order-safe)
         "message": (
-            "{{#is_alert}}ALARM{{/is_alert}}{{#is_recovery}}OK{{/is_recovery}}: {{monitor.name}}\n"
-            "\n"
             "State Change\n"
             "{{#is_recovery}}ALARM → OK{{/is_recovery}}{{#is_alert}}OK → ALARM{{/is_alert}}\n"
             "\n"
             "Location\n"
-            "%s\n"
+            "%(location)s\n"
             "\n"
             "Description\n"
-            "{{#is_alert}}CRITICAL: The %s endpoint in %s tier is failing its synthetic HTTP "
-            "availability check (GET %s). This indicates the endpoint is returning an "
-            "unexpected status code or failing response validation, meaning the service may be "
-            "unavailable or misbehaving.{{/is_alert}}\n"
-            "{{#is_recovery}}RESOLVED: The %s endpoint in %s tier has recovered and is passing "
-            "its synthetic HTTP availability check (GET %s).{{/is_recovery}}\n"
+            "{{#is_alert}}CRITICAL: The %(name)s endpoint in %(tier)s tier is failing its "
+            "synthetic HTTP availability check (GET %(url)s). This indicates the endpoint is "
+            "returning an unexpected status code or failing response validation, meaning the "
+            "service may be unavailable or misbehaving.{{/is_alert}}\n"
+            "{{#is_recovery}}RESOLVED: The %(name)s endpoint in %(tier)s tier has recovered and "
+            "is passing its synthetic HTTP availability check (GET %(url)s).{{/is_recovery}}\n"
             "\n"
-            "%s"
-        ) % (
-            api["location"],
-            api["name"],
-            tier,
-            api["url"],
-            api["name"],
-            tier,
-            api["url"],
-            notification,
-        ),
+            "%(notification)s"
+        ) % {
+            "location": ", ".join(locations),
+            "name": api["name"],
+            "tier": tier,
+            "url": api["url"],
+            "notification": notification,
+        },
         "name": monitor_name,
         "options": {
             "tick_every": freq,

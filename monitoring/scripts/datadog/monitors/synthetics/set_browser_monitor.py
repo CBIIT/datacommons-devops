@@ -228,33 +228,30 @@ def setmonitor(project, tier, api, notification):
         },
         "steps": steps,
         "locations": locations,
+        # Structured alarm message; named %(key)s substitution below (order-safe)
         "message": (
-            "{{#is_alert}}ALARM{{/is_alert}}{{#is_recovery}}OK{{/is_recovery}}: {{monitor.name}}\n"
-            "\n"
             "State Change\n"
             "{{#is_recovery}}ALARM → OK{{/is_recovery}}{{#is_alert}}OK → ALARM{{/is_alert}}\n"
             "\n"
             "Location\n"
-            "%s\n"
+            "%(location)s\n"
             "\n"
             "Description\n"
-            "{{#is_alert}}CRITICAL: The %s endpoint in %s tier is failing its synthetic browser "
-            "check (%s). This indicates the expected element/content could not be found on the "
-            "rendered page, meaning the service may be unavailable or misbehaving.{{/is_alert}}\n"
-            "{{#is_recovery}}RESOLVED: The %s endpoint in %s tier has recovered and is passing "
-            "its synthetic browser check (%s).{{/is_recovery}}\n"
+            "{{#is_alert}}CRITICAL: The %(name)s endpoint in %(tier)s tier is failing its "
+            "synthetic browser check (%(url)s). This indicates the expected element/content "
+            "could not be found on the rendered page, meaning the service may be unavailable "
+            "or misbehaving.{{/is_alert}}\n"
+            "{{#is_recovery}}RESOLVED: The %(name)s endpoint in %(tier)s tier has recovered and "
+            "is passing its synthetic browser check (%(url)s).{{/is_recovery}}\n"
             "\n"
-            "%s"
-        ) % (
-            api["location"],
-            api["name"],
-            tier,
-            (parsed["url"] if parsed else None) or api["url"],
-            api["name"],
-            tier,
-            (parsed["url"] if parsed else None) or api["url"],
-            notification,
-        ),
+            "%(notification)s"
+        ) % {
+            "location": ", ".join(locations),
+            "name": api["name"],
+            "tier": tier,
+            "url": (parsed["url"] if parsed else None) or api["url"],
+            "notification": notification,
+        },
         "name": monitor_name,
         "options": {
             "tick_every": freq,
