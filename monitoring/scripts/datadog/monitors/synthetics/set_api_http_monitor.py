@@ -36,8 +36,34 @@ def setmonitor(project, tier, api, notification):
             },
         },
         "locations": locations,
-        "message": "{} {} {} is down or unreachable.\n{}".format(
-            project, tier, api["name"], notification
+        # Structured alarm message; keep %s substitution order matching below
+        "message": (
+            "{{#is_alert}}ALARM{{/is_alert}}{{#is_recovery}}OK{{/is_recovery}}: {{monitor.name}}\n"
+            "\n"
+            "State Change\n"
+            "{{#is_recovery}}ALARM → OK{{/is_recovery}}{{#is_alert}}OK → ALARM{{/is_alert}}\n"
+            "\n"
+            "Location\n"
+            "%s\n"
+            "\n"
+            "Description\n"
+            "{{#is_alert}}CRITICAL: The %s endpoint in %s tier is failing its synthetic HTTP "
+            "availability check (GET %s). This indicates the endpoint is returning an "
+            "unexpected status code or failing response validation, meaning the service may be "
+            "unavailable or misbehaving.{{/is_alert}}\n"
+            "{{#is_recovery}}RESOLVED: The %s endpoint in %s tier has recovered and is passing "
+            "its synthetic HTTP availability check (GET %s).{{/is_recovery}}\n"
+            "\n"
+            "%s"
+        ) % (
+            api["location"],
+            api["name"],
+            tier,
+            api["url"],
+            api["name"],
+            tier,
+            api["url"],
+            notification,
         ),
         "name": monitor_name,
         "options": {

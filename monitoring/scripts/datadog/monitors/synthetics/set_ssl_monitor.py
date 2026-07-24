@@ -34,8 +34,30 @@ def setmonitor(project, tier, api, notification):
             },
         },
         "locations": locations,
-        "message": "{} {} SSL certificate is expiring soon or invalid.\n{}".format(
-            project, tier, notification
+        "message": (
+            "{{#is_alert}}ALARM{{/is_alert}}{{#is_recovery}}OK{{/is_recovery}}: {{monitor.name}}\n"
+            "\n"
+            "State Change\n"
+            "{{#is_recovery}}ALARM → OK{{/is_recovery}}{{#is_alert}}OK → ALARM{{/is_alert}}\n"
+            "\n"
+            "Location\n"
+            "%s\n"
+            "\n"
+            "Description\n"
+            "{{#is_alert}}CRITICAL: The SSL certificate for %s in %s tier is expiring within 30 "
+            "days or is invalid. This indicates the certificate may need renewal, meaning the "
+            "service could become inaccessible over HTTPS.{{/is_alert}}\n"
+            "{{#is_recovery}}RESOLVED: The SSL certificate for %s in %s tier is valid and not "
+            "expiring within 30 days.{{/is_recovery}}\n"
+            "\n"
+            "%s"
+        ) % (
+            api["location"],
+            domain,
+            tier,
+            domain,
+            tier,
+            notification,
         ),
         "name": monitor_name,
         "options": {
