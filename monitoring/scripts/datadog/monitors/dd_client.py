@@ -37,6 +37,46 @@ def synthetics_location(private_flag):
     return ["aws:us-east-1"]
 
 
+def tick_every(tier):
+    """Standard synthetic-test run interval: 10 min in prod, 30 min elsewhere."""
+    return 600 if tier.lower() == "prod" else 1800
+
+
+def default_tags(project, tier):
+    """The project/tier tag pair every monitor is tagged with."""
+    return [
+        "project:{}".format(project.lower()),
+        "tier:{}".format(tier.lower()),
+    ]
+
+
+def build_alarm_message(locations, description_alert, description_recovery, notification):
+    """
+    Shared State Change / Region / Description / notification skeleton used
+    by every DataDog monitor's "message" field. *description_alert* and
+    *description_recovery* are the already-filled-in sentences shown inside
+    the {{#is_alert}}/{{#is_recovery}} blocks.
+    """
+    return (
+        "**State Change**\n"
+        "{{#is_recovery}}ALARM → OK{{/is_recovery}}{{#is_alert}}OK → ALARM{{/is_alert}}\n"
+        "\n"
+        "**Region**\n"
+        "%(location)s\n"
+        "\n"
+        "Description\n"
+        "{{#is_alert}}%(alert)s{{/is_alert}}\n"
+        "{{#is_recovery}}%(recovery)s{{/is_recovery}}\n"
+        "\n"
+        "%(notification)s"
+    ) % {
+        "location": ", ".join(locations),
+        "alert": description_alert,
+        "recovery": description_recovery,
+        "notification": notification,
+    }
+
+
 def find_synthetic_test(name):
     """
     Return the public_id of an existing DataDog synthetic test whose name
@@ -91,6 +131,22 @@ def upsert_synthetic_test(public_id, test_type, payload):
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
         return response.json().get("public_id")
+
+
+def upsert_and_report(monitor_name, test_type, payload):
+    """
+    Find-or-create + upsert + status prints, shared by every synthetic
+    monitor module's setmonitor(). Returns the public_id.
+    """
+    public_id = find_synthetic_test(monitor_name)
+    if public_id:
+        print("{} already exists, updating with latest configuration.".format(monitor_name))
+    else:
+        print("{} not found, creating.".format(monitor_name))
+
+    public_id = upsert_synthetic_test(public_id, test_type, payload)
+    print("{} upserted (public_id: {}).".format(monitor_name, public_id))
+    return public_id
 
 
 def find_monitor(name):

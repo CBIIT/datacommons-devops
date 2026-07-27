@@ -50,6 +50,7 @@ Runs every 10 min (prod) or 30 min (other tiers).
 import re
 
 from monitors import dd_client
+from monitors.synthetics.script_parsing import extract_balanced_braces
 
 
 _CONFIG_BLOCK_RE = re.compile(r"CONFIG\s*=\s*\{")
@@ -61,19 +62,6 @@ _XPATH_CONTAINS_TEXT_RE = re.compile(
 )
 _WAIT_CALL_RE = re.compile(r"waitForAndFindElement\([^,]+,\s*(\d+)\s*\)")
 _XPATH_LOCATOR_RE = re.compile(r"\$driver\.By\.xpath\(")
-
-
-def _extract_balanced_braces(text, open_brace_index):
-    """Return the substring from open_brace_index through its matching '}'."""
-    depth = 0
-    for i in range(open_brace_index, len(text)):
-        if text[i] == "{":
-            depth += 1
-        elif text[i] == "}":
-            depth -= 1
-            if depth == 0:
-                return text[open_brace_index : i + 1]
-    return None
 
 
 def _first_group(match):
@@ -94,7 +82,7 @@ def _parse_browser_check(script):
     config_marker = _CONFIG_BLOCK_RE.search(script)
     if not config_marker:
         return None
-    config_block = _extract_balanced_braces(script, config_marker.end() - 1)
+    config_block = extract_balanced_braces(script, config_marker.end() - 1)
     if config_block is None:
         return None
 
@@ -164,7 +152,7 @@ def _default_browser_check(url, validation_text):
 
 def setmonitor(project, tier, api, notification):
     monitor_name = "{} {} {} Monitor".format(project, tier, api["name"])
-    freq = 600 if tier.lower() == "prod" else 1800  # seconds
+    freq = dd_client.tick_every(tier)
     locations = dd_client.synthetics_location(api["location"])
 
     browser_query = (api.get("browser_query") or "").strip()
@@ -215,62 +203,44 @@ def setmonitor(project, tier, api, notification):
                 }
             )
 
+    resolved_url = (parsed["url"] if parsed else None) or api["url"]
+    description_fmt = {"name": api["name"], "tier": tier, "url": resolved_url}
+
     payload = {
         "config": {
             "assertions": [],
             "request": {
                 "headers": {},
                 "method": "GET",
-                "url": (parsed["url"] if parsed else None) or api["url"],
+                "url": resolved_url,
             },
             "setCookie": "",
             "variables": [],
         },
         "steps": steps,
         "locations": locations,
-        # Structured alarm message; named %(key)s substitution below (order-safe)
-        "message": (
-            "**State Change**\n"
-            "{{#is_recovery}}ALARM → OK{{/is_recovery}}{{#is_alert}}OK → ALARM{{/is_alert}}\n"
-            "\n"
-            "**Region**\n"
-            "%(location)s\n"
-            "\n"
-            "Description\n"
-            "{{#is_alert}}CRITICAL: The %(name)s endpoint in %(tier)s tier is failing its "
-            "synthetic browser check (%(url)s). This indicates the expected element/content "
-            "could not be found on the rendered page, meaning the service may be unavailable "
-            "or misbehaving.{{/is_alert}}\n"
-            "{{#is_recovery}}RESOLVED: The %(name)s endpoint in %(tier)s tier has recovered and "
-            "is passing its synthetic browser check (%(url)s).{{/is_recovery}}\n"
-            "\n"
-            "%(notification)s"
-        ) % {
-            "location": ", ".join(locations),
-            "name": api["name"],
-            "tier": tier,
-            "url": (parsed["url"] if parsed else None) or api["url"],
-            "notification": notification,
-        },
+        "message": dd_client.build_alarm_message(
+            locations,
+            (
+                "CRITICAL: The %(name)s endpoint in %(tier)s tier is failing its synthetic "
+                "browser check (%(url)s). This indicates the expected element/content could "
+                "not be found on the rendered page, meaning the service may be unavailable or "
+                "misbehaving."
+            ) % description_fmt,
+            (
+                "RESOLVED: The %(name)s endpoint in %(tier)s tier has recovered and is "
+                "passing its synthetic browser check (%(url)s)."
+            ) % description_fmt,
+            notification,
+        ),
         "name": monitor_name,
         "options": {
             "tick_every": freq,
             "device_ids": ["laptop_large"],
         },
         "status": "live",
-        "tags": [
-            "project:{}".format(project.lower()),
-            "tier:{}".format(tier.lower()),
-        ],
+        "tags": dd_client.default_tags(project, tier),
         "type": "browser",
     }
 
-    public_id = dd_client.find_synthetic_test(monitor_name)
-    if public_id:
-        print("{} already exists, updating with latest configuration.".format(monitor_name))
-    else:
-        print("{} not found, creating.".format(monitor_name))
-
-    public_id = dd_client.upsert_synthetic_test(public_id, "browser", payload)
-    print("{} upserted (public_id: {}).".format(monitor_name, public_id))
-    return public_id
+    return dd_client.upsert_and_report(monitor_name, "browser", payload)

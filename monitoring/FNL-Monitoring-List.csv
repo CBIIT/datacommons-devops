@@ -801,8 +801,8 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
 
   }
 );",,TRUE,C07E28M8R7T,,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,Datasets,TRUE,C09KQ60AGRY,,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,,"const assert = require('assert');
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,Datasets,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,"const assert = require('assert');
 
 const CONFIG = {
     URL: 'https://cbioportal-dev-content.ccdi.cancer.gov/',
@@ -847,7 +847,7 @@ $http.get('https://cbioportal-dev-about.ccdi.cancer.gov/version.json',
 
     assert.ok('version' in body, 'Expected object to have version key');
   }
-);",,TRUE,C09KQ60AGRY,,,
+);",,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,API,https://cbioportal-api-dev.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
@@ -867,9 +867,9 @@ $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
     const firstObj = body[0];
     assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
   }
-);",,TRUE,C09KQ60AGRY,,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,Datasets,TRUE,C09KQ60AGRY,,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,,"const assert = require('assert');
+);",,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,Datasets,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,,,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,"const assert = require('assert');
 
 const CONFIG = {
     URL: 'https://cbioportal-qa-content.ccdi.cancer.gov/',
@@ -914,7 +914,7 @@ $http.get('https://cbioportal-qa-about.ccdi.cancer.gov/version.json',
 
     assert.ok('version' in body, 'Expected object to have version key');
   }
-);",,TRUE,C09KQ60AGRY,,,
+);",,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,API,https://cbioportal-api-qa.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api-qa.ccdi.cancer.gov/api/cancer-types',
@@ -935,9 +935,9 @@ $http.get('https://cbioportal-api-qa.ccdi.cancer.gov/api/cancer-types',
     assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
 
   }
-);",,TRUE,C09KQ60AGRY,,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Portal,https://cbioportal-stage.ccdi.cancer.gov,,Datasets,TRUE,C09KQ60AGRY,,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Content,https://cbioportal-stage-content.ccdi.cancer.gov,,,TRUE,C09KQ60AGRY,,,"const assert = require('assert');
+);",,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Portal,https://cbioportal-stage.ccdi.cancer.gov,,Datasets,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Content,https://cbioportal-stage-content.ccdi.cancer.gov,,,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,"const assert = require('assert');
 
 const CONFIG = {
     URL: 'https://cbioportal-stage-content.ccdi.cancer.gov/',
@@ -982,7 +982,7 @@ $http.get('https://cbioportal-stage-about.ccdi.cancer.gov/version.json',
 
     assert.ok('version' in body, 'Expected object to have version key');
   }
-);",,TRUE,C09KQ60AGRY,,,
+);",,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,API,https://cbioportal-api-stage.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api-stage.ccdi.cancer.gov/api/cancer-types',
@@ -1003,9 +1003,9 @@ $http.get('https://cbioportal-api-stage.ccdi.cancer.gov/api/cancer-types',
     assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
 
   }
-);",,TRUE,C09KQ60AGRY,,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Portal,https://cbioportal.ccdi.cancer.gov,,Datasets,TRUE,C09TVCQB108,,,
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Content,https://cbioportal-content.ccdi.cancer.gov,,,TRUE,C09TVCQB108,,,"const assert = require('assert');
+);",,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Portal,https://cbioportal.ccdi.cancer.gov,,Datasets,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Content,https://cbioportal-content.ccdi.cancer.gov,,,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,"const assert = require('assert');
 
 const CONFIG = {
     URL: 'https://cbioportal-content.ccdi.cancer.gov/',
@@ -1050,7 +1050,7 @@ $http.get('https://cbioportal-about.ccdi.cancer.gov/version.json',
 
     assert.ok('version' in body, 'Expected object to have version key');
   }
-);",,TRUE,C09TVCQB108,,,
+);",,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,API,https://cbioportal-api.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api.ccdi.cancer.gov/api/cancer-types',
@@ -1071,7 +1071,7 @@ $http.get('https://cbioportal-api.ccdi.cancer.gov/api/cancer-types',
     assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
 
   }
-);",,TRUE,C09TVCQB108,,,
+);",,TRUE,Expand_Data_Commons-ccdi-prod-cbio,,,
 Cancer Data Aggregator,CDA,CRDC,Dev,API,https://cda-dev.datacommons.cancer.gov/,"var assert = require('assert');
 
 $http.get('https://cda-dev.datacommons.cancer.gov/columns/',
@@ -1094,7 +1094,7 @@ $http.get('https://cda-dev.datacommons.cancer.gov/columns/',
     assert.ok('nullable' in firstObj, 'Expected object to have nullable key.');
     assert.ok('description' in firstObj, 'Expected object to have description key.');
   }
-);",,TRUE,C0A1NM8PRAP,,,
+);",,TRUE,Expand_Data_Commons-crdc-prod-cda,,,
 Cancer Data Aggregator,CDA,CRDC,Qa,API,https://cda-qa.datacommons.cancer.gov/,"var assert = require('assert');
 
 $http.get('https://cda-qa.datacommons.cancer.gov/columns/',
@@ -1117,7 +1117,7 @@ $http.get('https://cda-qa.datacommons.cancer.gov/columns/',
     assert.ok('nullable' in firstObj, 'Expected object to have nullable key.');
     assert.ok('description' in firstObj, 'Expected object to have description key.');
   }
-);",,TRUE,C0A1NM8PRAP,,,
+);",,TRUE,Expand_Data_Commons-crdc-prod-cda,,,
 Cancer Data Aggregator,CDA,CRDC,Stage,API,https://cda-stage.datacommons.cancer.gov/,"var assert = require('assert');
 
 $http.get('https://cda-stage.datacommons.cancer.gov/columns/',
@@ -1140,7 +1140,7 @@ $http.get('https://cda-stage.datacommons.cancer.gov/columns/',
     assert.ok('nullable' in firstObj, 'Expected object to have nullable key.');
     assert.ok('description' in firstObj, 'Expected object to have description key.');
   }
-);",,TRUE,C0A1NM8PRAP,,,
+);",,TRUE,Expand_Data_Commons-crdc-prod-cda,,,
 Cancer Data Aggregator,CDA,CRDC,Prod,API,https://cda.datacommons.cancer.gov/,"var assert = require('assert');
 
 $http.get('https://cda.datacommons.cancer.gov/columns/',
@@ -1163,7 +1163,7 @@ $http.get('https://cda.datacommons.cancer.gov/columns/',
     assert.ok('nullable' in firstObj, 'Expected object to have nullable key.');
     assert.ok('description' in firstObj, 'Expected object to have description key.');
   }
-);",,TRUE,C0A1RL83C05,,,
+);",,TRUE,Expand_Data_Commons-crdc-prod-cda,,,
 DataCentric Federation,DCC,CCDI,Dev,API-SUBJECT,https://dcc-dev.ccdi.cancer.gov/api/v1/subject?sex=M&page=1,"var assert = require('assert');
 
 function parseJson(body) {

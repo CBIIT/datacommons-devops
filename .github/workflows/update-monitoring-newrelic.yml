@@ -8,7 +8,7 @@ on:
       csv_file:
         description: 'CSV file to run'
         required: true
-        default: https://raw.githubusercontent.com/CBIIT/datacommons-devops/testing/datadog-monitors/monitoring/Cbio-CDA-Prod-FNL-Monitoring-List.csv
+        default: https://raw.githubusercontent.com/CBIIT/datacommons-devops/main/monitoring/FNL-Monitoring-List.csv
 
 jobs:
   run-monitor:
@@ -39,46 +39,13 @@ jobs:
           DD_PRIVATE_LOCATION_ID: aws:us-gov-west-1
           DD_SITE: "ddog-gov.com"
         run: |
-          set -x  # Enable bash command tracing
-
-          CSV_FILE="https://raw.githubusercontent.com/CBIIT/datacommons-devops/testing/datadog-monitors/monitoring/Cbio-CDA-Prod-FNL-Monitoring-List.csv"
+          CSV_FILE="https://raw.githubusercontent.com/CBIIT/datacommons-devops/main/monitoring/FNL-Monitoring-List.csv"
 
           if [ -n "${{ github.event.inputs.csv_file }}" ]; then
             CSV_FILE="${{ github.event.inputs.csv_file }}"
           fi
 
-          echo "Using CSV file: $CSV_FILE"
-          echo "Datadog site: $DD_SITE"
-
-          # Validate secrets exist without printing values
-          if [ -z "$DD_API_KEY" ]; then
-            echo "ERROR: DD_API_KEY is empty"
-            exit 1
-          else
-            echo "DD_API_KEY is set"
-          fi
-
-          if [ -z "$DD_APP_KEY" ]; then
-            echo "ERROR: DD_APP_KEY is empty"
-            exit 1
-          else
-            echo "DD_APP_KEY is set"
-          fi
-
-          echo "Running Datadog monitor update..."
-
-          python3 -u monitoring/scripts/datadog/monitor_update_csv.py \
-            -f "$CSV_FILE" \
-            2>&1 | tee monitor_update.log
-
-          EXIT_CODE=${PIPESTATUS[0]}
-
-          echo "Python exit code: $EXIT_CODE"
-
-          echo "===== Last 100 log lines ====="
-          tail -100 monitor_update.log
-
-          exit $EXIT_CODE
+          python3 -u monitoring/scripts/datadog/monitor_update_csv.py -f "$CSV_FILE"
 
       - name: Slack Notification
         env:

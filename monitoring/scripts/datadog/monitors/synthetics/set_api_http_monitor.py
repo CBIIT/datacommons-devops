@@ -16,7 +16,7 @@ from monitors import dd_client
 
 def setmonitor(project, tier, api, notification):
     monitor_name = "{} {} {} Monitor".format(project, tier, api["name"])
-    freq = 600 if tier.lower() == "prod" else 1800  # seconds
+    freq = dd_client.tick_every(tier)
     locations = dd_client.synthetics_location(api["location"])
 
     assertions = [
@@ -27,6 +27,8 @@ def setmonitor(project, tier, api, notification):
             {"operator": "contains", "type": "body", "target": api["text"]}
         )
 
+    description_fmt = {"name": api["name"], "tier": tier, "url": api["url"]}
+
     payload = {
         "config": {
             "assertions": assertions,
@@ -36,49 +38,28 @@ def setmonitor(project, tier, api, notification):
             },
         },
         "locations": locations,
-        # Structured alarm message; named %(key)s substitution below (order-safe)
-        "message": (
-            "**State Change**\n"
-            "{{#is_recovery}}ALARM → OK{{/is_recovery}}{{#is_alert}}OK → ALARM{{/is_alert}}\n"
-            "\n"
-            "**Region**\n"
-            "%(location)s\n"
-            "\n"
-            "Description\n"
-            "{{#is_alert}}CRITICAL: The %(name)s endpoint in %(tier)s tier is failing its "
-            "synthetic HTTP availability check (GET %(url)s). This indicates the endpoint is "
-            "returning an unexpected status code or failing response validation, meaning the "
-            "service may be unavailable or misbehaving.{{/is_alert}}\n"
-            "{{#is_recovery}}RESOLVED: The %(name)s endpoint in %(tier)s tier has recovered and "
-            "is passing its synthetic HTTP availability check (GET %(url)s).{{/is_recovery}}\n"
-            "\n"
-            "%(notification)s"
-        ) % {
-            "location": ", ".join(locations),
-            "name": api["name"],
-            "tier": tier,
-            "url": api["url"],
-            "notification": notification,
-        },
+        "message": dd_client.build_alarm_message(
+            locations,
+            (
+                "CRITICAL: The %(name)s endpoint in %(tier)s tier is failing its synthetic "
+                "HTTP availability check (GET %(url)s). This indicates the endpoint is "
+                "returning an unexpected status code or failing response validation, meaning "
+                "the service may be unavailable or misbehaving."
+            ) % description_fmt,
+            (
+                "RESOLVED: The %(name)s endpoint in %(tier)s tier has recovered and is "
+                "passing its synthetic HTTP availability check (GET %(url)s)."
+            ) % description_fmt,
+            notification,
+        ),
         "name": monitor_name,
         "options": {
             "tick_every": freq,
         },
         "status": "live",
-        "tags": [
-            "project:{}".format(project.lower()),
-            "tier:{}".format(tier.lower()),
-        ],
+        "tags": dd_client.default_tags(project, tier),
         "type": "api",
         "subtype": "http",
     }
 
-    public_id = dd_client.find_synthetic_test(monitor_name)
-    if public_id:
-        print("{} already exists, updating with latest configuration.".format(monitor_name))
-    else:
-        print("{} not found, creating.".format(monitor_name))
-
-    public_id = dd_client.upsert_synthetic_test(public_id, "api", payload)
-    print("{} upserted (public_id: {}).".format(monitor_name, public_id))
-    return public_id
+    return dd_client.upsert_and_report(monitor_name, "api", payload)

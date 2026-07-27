@@ -21,6 +21,7 @@ def setmonitor(project, tier, api, notification):
     freq = 86400  # once per day in seconds
 
     locations = dd_client.synthetics_location(api["location"])
+    description_fmt = {"domain": domain, "tier": tier}
 
     payload = {
         "config": {
@@ -34,47 +35,27 @@ def setmonitor(project, tier, api, notification):
             },
         },
         "locations": locations,
-        # Structured alarm message; named %(key)s substitution below (order-safe)
-        "message": (
-            "**State Change**\n"
-            "{{#is_recovery}}ALARM → OK{{/is_recovery}}{{#is_alert}}OK → ALARM{{/is_alert}}\n"
-            "\n"
-            "**Region**\n"
-            "%(location)s\n"
-            "\n"
-            "Description\n"
-            "{{#is_alert}}CRITICAL: The SSL certificate for %(domain)s in %(tier)s tier is "
-            "expiring within 30 days or is invalid. This indicates the certificate may need "
-            "renewal, meaning the service could become inaccessible over HTTPS.{{/is_alert}}\n"
-            "{{#is_recovery}}RESOLVED: The SSL certificate for %(domain)s in %(tier)s tier is "
-            "valid and not expiring within 30 days.{{/is_recovery}}\n"
-            "\n"
-            "%(notification)s"
-        ) % {
-            "location": ", ".join(locations),
-            "domain": domain,
-            "tier": tier,
-            "notification": notification,
-        },
+        "message": dd_client.build_alarm_message(
+            locations,
+            (
+                "CRITICAL: The SSL certificate for %(domain)s in %(tier)s tier is expiring "
+                "within 30 days or is invalid. This indicates the certificate may need "
+                "renewal, meaning the service could become inaccessible over HTTPS."
+            ) % description_fmt,
+            (
+                "RESOLVED: The SSL certificate for %(domain)s in %(tier)s tier is valid and "
+                "not expiring within 30 days."
+            ) % description_fmt,
+            notification,
+        ),
         "name": monitor_name,
         "options": {
             "tick_every": freq,
         },
         "status": "live",
-        "tags": [
-            "project:{}".format(project.lower()),
-            "tier:{}".format(tier.lower()),
-        ],
+        "tags": dd_client.default_tags(project, tier),
         "type": "api",
         "subtype": "ssl",
     }
 
-    public_id = dd_client.find_synthetic_test(monitor_name)
-    if public_id:
-        print("{} already exists, updating with latest configuration.".format(monitor_name))
-    else:
-        print("{} not found, creating.".format(monitor_name))
-
-    public_id = dd_client.upsert_synthetic_test(public_id, "api", payload)
-    print("{} upserted (public_id: {}).".format(monitor_name, public_id))
-    return public_id
+    return dd_client.upsert_and_report(monitor_name, "api", payload)

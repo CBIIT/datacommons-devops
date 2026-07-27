@@ -40,6 +40,7 @@ import json
 import re
 
 from monitors import dd_client
+from monitors.synthetics.script_parsing import extract_balanced_braces
 
 
 _HTTP_CALL_STRING_RE = re.compile(
@@ -110,7 +111,7 @@ def _extract_helper_functions(script):
     """Return the full source text of every named top-level helper function."""
     helpers = []
     for match in _HELPER_FUNC_RE.finditer(script):
-        text = _extract_balanced_braces(script, match.end() - 1)
+        text = extract_balanced_braces(script, match.end() - 1)
         if text:
             helpers.append(script[match.start() : match.start() + len(match.group()) - 1 + len(text)])
     return helpers
@@ -131,7 +132,7 @@ def _parse_js_assertion(script):
     if callback_match is None:
         return None
 
-    body_text = _extract_balanced_braces(script, callback_match.end() - 1)
+    body_text = extract_balanced_braces(script, callback_match.end() - 1)
     if body_text is None:
         return None
     inner = body_text[1:-1]
@@ -151,19 +152,6 @@ def _parse_js_assertion(script):
 
     code = _ASSERT_CALL_RE.sub("dd.assert.", "\n".join(lines))
     return {"type": "javascript", "code": code}
-
-
-def _extract_balanced_braces(text, open_brace_index):
-    """Return the substring from open_brace_index through its matching '}'."""
-    depth = 0
-    for i in range(open_brace_index, len(text)):
-        if text[i] == "{":
-            depth += 1
-        elif text[i] == "}":
-            depth -= 1
-            if depth == 0:
-                return text[open_brace_index : i + 1]
-    return None
 
 
 def _js_object_literal_to_json(js_obj):
@@ -191,7 +179,7 @@ def _parse_post_body(script):
     if not marker:
         return ""
 
-    js_obj = _extract_balanced_braces(script, marker.end() - 1)
+    js_obj = extract_balanced_braces(script, marker.end() - 1)
     if js_obj is None:
         return ""
 
@@ -201,7 +189,7 @@ def _parse_post_body(script):
 
 def setmonitor(project, tier, api, notification):
     monitor_name = "{} {} {} Monitor".format(project, tier, api["name"])
-    freq = 600 if tier.lower() == "prod" else 1800  # seconds
+    freq = dd_client.tick_every(tier)
     locations = dd_client.synthetics_location(api["location"])
 
     script = api["query"]
@@ -239,6 +227,13 @@ def setmonitor(project, tier, api, notification):
     print("{}: assertions being sent to DataDog:".format(monitor_name))
     print(json.dumps(assertions, indent=2))
 
+    description_fmt = {
+        "name": api["name"],
+        "tier": tier,
+        "method": method,
+        "url": request["url"],
+    }
+
     payload = {
         "config": {
             "steps": [
@@ -252,50 +247,28 @@ def setmonitor(project, tier, api, notification):
 
         },
         "locations": locations,
-        # Structured alarm message; named %(key)s substitution below (order-safe)
-        "message": (
-            "**State Change**\n"
-            "{{#is_recovery}}ALARM → OK{{/is_recovery}}{{#is_alert}}OK → ALARM{{/is_alert}}\n"
-            "\n"
-            "**Region**\n"
-            "%(location)s\n"
-            "\n"
-            "Description\n"
-            "{{#is_alert}}CRITICAL: The %(name)s endpoint in %(tier)s tier is failing its "
-            "synthetic API check (%(method)s %(url)s). This indicates the endpoint is returning "
-            "an unexpected status code or failing response validation, meaning the service may "
-            "be unavailable or misbehaving.{{/is_alert}}\n"
-            "{{#is_recovery}}RESOLVED: The %(name)s endpoint in %(tier)s tier has recovered and "
-            "is passing its synthetic API check (%(method)s %(url)s).{{/is_recovery}}\n"
-            "\n"
-            "%(notification)s"
-        ) % {
-            "location": ", ".join(locations),
-            "name": api["name"],
-            "tier": tier,
-            "method": method,
-            "url": request["url"],
-            "notification": notification,
-        },
+        "message": dd_client.build_alarm_message(
+            locations,
+            (
+                "CRITICAL: The %(name)s endpoint in %(tier)s tier is failing its synthetic "
+                "API check (%(method)s %(url)s). This indicates the endpoint is returning an "
+                "unexpected status code or failing response validation, meaning the service "
+                "may be unavailable or misbehaving."
+            ) % description_fmt,
+            (
+                "RESOLVED: The %(name)s endpoint in %(tier)s tier has recovered and is "
+                "passing its synthetic API check (%(method)s %(url)s)."
+            ) % description_fmt,
+            notification,
+        ),
         "name": monitor_name,
         "options": {
             "tick_every": freq,
         },
         "status": "live",
-        "tags": [
-            "project:{}".format(project.lower()),
-            "tier:{}".format(tier.lower()),
-        ],
+        "tags": dd_client.default_tags(project, tier),
         "type": "api",
         "subtype": "multi",
     }
 
-    public_id = dd_client.find_synthetic_test(monitor_name)
-    if public_id:
-        print("{} already exists, updating with latest configuration.".format(monitor_name))
-    else:
-        print("{} not found, creating.".format(monitor_name))
-
-    public_id = dd_client.upsert_synthetic_test(public_id, "api", payload)
-    print("{} upserted (public_id: {}).".format(monitor_name, public_id))
-    return public_id
+    return dd_client.upsert_and_report(monitor_name, "api", payload)
