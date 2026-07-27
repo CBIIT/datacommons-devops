@@ -222,11 +222,6 @@ def setmonitor(project, tier, api, notification):
     if js_assertion:
         assertions.append(js_assertion)
 
-    print("{}: request being sent to DataDog:".format(monitor_name))
-    print(json.dumps(request, indent=2))
-    print("{}: assertions being sent to DataDog:".format(monitor_name))
-    print(json.dumps(assertions, indent=2))
-
     description_fmt = {
         "name": api["name"],
         "tier": tier,
