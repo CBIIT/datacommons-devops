@@ -520,6 +520,12 @@ def setmonitor(project, tier, api, notification):
                                         {"type": "xpath", "value": _COMMON_DISMISS_XPATH},
                                     ],
                                 },
+                                # DataDog requires multiLocator to be present
+                                # (even empty) whenever failTestOnCannotLocate
+                                # is False, or it rejects the step entirely
+                                # with "Missing locator" -- a real quirk hit
+                                # live, not something documented up front.
+                                "multiLocator": {},
                             },
                         },
                     }
