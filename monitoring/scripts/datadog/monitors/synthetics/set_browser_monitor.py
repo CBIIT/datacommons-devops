@@ -74,27 +74,27 @@ Mode B — Browser_Query is empty but Validation_Text is set: some pages
 
 string, and a raw HTTP body-contains check can't see JS-rendered content.
 
-The URL comes straight from the row's URL column, the locator is a default
-
-XPath `//*[contains(text(), '<Validation_Text>')]`, and the timeout
-
-defaults to 20 seconds. Since there's no script, this is just a "does the
-
-page contain this text" check (matching New Relic's plain validation) —
-
+The URL comes straight from the row's URL column, and the timeout defaults
+to 20 seconds. Since there's no script, this is just a "does the page
+contain this text" check (matching New Relic's plain validation) —
 translated as an assertElementPresent step rather than assertElementContent,
-
 since presence doesn't require the element to be visible (assertElementContent
-
 does, and fails with "Element located but it's invisible" for text that's
-
 present but currently hidden behind e.g. a consent modal — a real failure
-
 mode hit on a page with no dismiss mechanism in either New Relic's original
-
 config or this CSV). The "contains text" condition is encoded directly in
-
 the XPath, since assertElementPresent takes no separate check/value.
+
+The locator is two ordered fallback candidates in userLocator.values,
+rather than one fixed XPath: a heading (h1-h4) match first, then a plain
+any-element match. Real pages often have more than one element containing
+the same text -- e.g. a site's <header> repeating the page's own <h1> text
+as a logo/title, confirmed live on one page -- so matching "the first
+element anywhere with this text" can land on a decorative duplicate
+instead of the real content. Preferring headings avoids that without
+excluding <header>/<nav>/<footer> outright, since the plain any-element
+fallback still searches those regions too when nothing in the page's
+headings matches.
 
 
 
@@ -369,16 +369,28 @@ def _default_browser_check(url, validation_text):
     """Mode B: no Browser_Query, build a check straight from Validation_Text."""
 
     # Real pages frequently contain more than one element with the same
-
-    # text (e.g. a duplicate nav item hidden behind a mobile/hamburger
-
-    # menu), and DataDog's userLocator errors ("Multiple elements found")
-
-    # if the XPath doesn't resolve to exactly one node -- so pin to the
-
-    # first match rather than leaving the locator ambiguous.
-
-    xpath = "(//*[contains(text(), {})])[1]".format(_xpath_string_literal(validation_text))
+    # text -- a duplicate nav item hidden behind a mobile/hamburger menu,
+    # or (confirmed live) a site logo/title in the page <header> repeating
+    # the same text as the actual visible heading. DataDog's userLocator
+    # also errors ("Multiple elements found") if a single XPath doesn't
+    # resolve to exactly one node.
+    #
+    # Rather than excluding <header>/<nav>/<footer> outright (which would
+    # also block legitimate matches that really do live there), this gives
+    # DataDog two ordered candidates in "values": a heading (h1-h6) match
+    # first -- headings are the semantic "main content" marker and, on the
+    # one real case seen so far, correctly skipped the header's duplicate
+    # logo text (which wasn't itself a heading) -- falling back to a plain
+    # any-element match (header/nav/footer included) if no heading matches
+    # at all, so text that's only ever found in header/nav/footer still
+    # gets checked.
+    literal = _xpath_string_literal(validation_text)
+    heading_xpath = (
+        "(//h1[contains(text(), {text})] | //h2[contains(text(), {text})] "
+        "| //h3[contains(text(), {text})] | //h4[contains(text(), {text})])[1]"
+    ).format(text=literal)
+    anywhere_xpath = "(//*[contains(text(), {text})])[1]".format(text=literal)
+    xpath = [heading_xpath, anywhere_xpath]
 
     return {
 
@@ -554,40 +566,31 @@ def setmonitor(project, tier, api, notification):
 
                 # "contains text" condition is already encoded in the XPath.
 
+                # parsed["xpath"] is a list of ordered fallback candidates
+                # for Mode B (heading match, then anywhere-on-page match),
+                # or a single string for Mode A -- normalize to a list of
+                # {"type": "xpath", "value": ...} locator values either way.
+                xpath_candidates = parsed["xpath"]
+                if isinstance(xpath_candidates, str):
+                    xpath_candidates = [xpath_candidates]
                 steps.append(
-
                     {
-
                         "name": "Assert element present",
-
                         "type": "assertElementPresent",
-
                         "timeout": parsed["timeout_s"],
-
                         "isCritical": True,
-
                         "params": {
-
                             "element": {
-
                                 "userLocator": {
-
                                     "failTestOnCannotLocate": True,
-
                                     "values": [
-
-                                        {"type": "xpath", "value": parsed["xpath"]},
-
+                                        {"type": "xpath", "value": x}
+                                        for x in xpath_candidates
                                     ],
-
                                 },
-
                             },
-
                         },
-
                     }
-
                 )
 
             else:
