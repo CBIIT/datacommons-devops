@@ -164,10 +164,17 @@ _CLICK_CALL_RE = re.compile(r"\.click\(\s*\)")
 
 # Best-effort locator for a common interstitial "Continue"/consent-banner
 # button (e.g. the federal ".gov warning" modal seen on several of these
-# sites). Used with failTestOnCannotLocate=False so it's a safe no-op on
-# pages that don't have one -- extend with more `|`-joined alternatives
-# (e.g. "Accept", "I Agree") if other banner wordings show up in practice.
-_COMMON_DISMISS_XPATH = "//button[contains(text(), 'Continue')]"
+# sites). Not restricted to a <button> tag: the visible "Continue" text is
+# often nested one level deeper in a child element (e.g. MUI's
+# <span class="MuiButton-label-...">Continue</span> inside the real
+# <button>), and XPath's text() only matches an element's own direct text,
+# not descendants -- so matching any tag finds the actual leaf holding the
+# text regardless of markup. Pinned to the first match (same defensive
+# pattern as the main text-assertion XPath) in case more than one element
+# happens to match. Used with failTestOnCannotLocate=False so it's a safe
+# no-op on pages that don't have one -- extend with more `|`-joined
+# alternatives (e.g. "Accept", "I Agree") if other banner wordings show up.
+_COMMON_DISMISS_XPATH = "(//*[contains(text(), 'Continue')])[1]"
 
 
 
