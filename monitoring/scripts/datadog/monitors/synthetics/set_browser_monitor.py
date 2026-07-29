@@ -162,6 +162,13 @@ _XPATH_LOCATOR_RE = re.compile(r"\$driver\.By\.xpath\(")
 
 _CLICK_CALL_RE = re.compile(r"\.click\(\s*\)")
 
+# Best-effort locator for a common interstitial "Continue"/consent-banner
+# button (e.g. the federal ".gov warning" modal seen on several of these
+# sites). Used with failTestOnCannotLocate=False so it's a safe no-op on
+# pages that don't have one -- extend with more `|`-joined alternatives
+# (e.g. "Accept", "I Agree") if other banner wordings show up in practice.
+_COMMON_DISMISS_XPATH = "//button[contains(text(), 'Continue')]"
+
 
 
 
@@ -493,6 +500,30 @@ def setmonitor(project, tier, api, notification):
                 )
 
             if mode_b:
+
+                # Mode B has no CSV-configured dismiss step (there's no
+                # script to put one in), so try a generic, best-effort
+                # click at a common interstitial/consent-banner button
+                # first. failTestOnCannotLocate=False makes this a safe
+                # no-op on pages that don't have one.
+                steps.append(
+                    {
+                        "name": "Dismiss interstitial (best effort)",
+                        "type": "click",
+                        "timeout": 10,
+                        "isCritical": False,
+                        "params": {
+                            "element": {
+                                "userLocator": {
+                                    "failTestOnCannotLocate": False,
+                                    "values": [
+                                        {"type": "xpath", "value": _COMMON_DISMISS_XPATH},
+                                    ],
+                                },
+                            },
+                        },
+                    }
+                )
 
                 # Mode B has no script -- it's a plain "does this text exist
 
