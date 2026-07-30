@@ -116,3 +116,4 @@ $http.get('https://cda.datacommons.cancer.gov/columns/',
   }
 );",,TRUE,Expand_Data_Commons-crdc-prod-cda,,,
 General commons,gen,CRDC,Prod,Portal,https://general.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-prod-cds,,,
+General commons,gen,CRDC,Prod,API,https://general.datacommons.cancer.gov/version,,,TRUE,Expand_Data_Commons-crdc-prod-cds,,,
