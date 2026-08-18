@@ -91,6 +91,22 @@ def _make_notification(alert_email, slack_channel):
     return " ".join(parts)
 
 
+# Lower-tier CSV rows have shown up spelled several ways for the same
+# environment (Dev/dev, QA/Qa/qa, Stage/stage). Monitor names embed the tier
+# verbatim, so without this, 'PROJECT QA Portal Monitor' and
+# 'PROJECT qa Portal Monitor' would be two live monitors for one environment.
+# Prod is deliberately excluded: Popsci's rows use lowercase 'prod' while
+# every other project uses 'Prod', and normalising that here would rename
+# Popsci's already-live monitor into a duplicate instead of updating it.
+_LOWER_TIER_CANONICAL = {"dev": "Dev", "qa": "Qa", "stage": "Stage", "perf": "Perf"}
+
+
+def _canonical_tier(raw_tier):
+    """Normalise non-prod tier spelling; prod passes through unchanged."""
+    tier = (raw_tier or "").strip()
+    return _LOWER_TIER_CANONICAL.get(tier.lower(), tier)
+
+
 def setMonitors(input_url):
     """Provision infrastructure metric-alert monitors (ALB, Fargate, OpenSearch)."""
     with contextlib.closing(requests.get(input_url, stream=True)) as csvfile:
@@ -99,7 +115,7 @@ def setMonitors(input_url):
 
         for row in data:
             project = row["Project_Acronym"].upper()
-            tier = row["Tier"]
+            tier = _canonical_tier(row["Tier"])
             alert_email = row["Alert_Email"] or os.getenv("DD_ALERT_EMAIL", "")
             slack_channel = row["Slack_Channel"]
             resources = [r.strip() for r in row["Monitored_Resources"].split(",")]
@@ -139,7 +155,7 @@ def setSynthetics(input_url):
 
         for row in data:
             project = row["Project_Acronym"].upper()
-            tier = row["Tier"]
+            tier = _canonical_tier(row["Tier"])
             endpoint_name = row["Endpoint_Name"]
             monitor_url = row["URL"]
             alert_email = row["Alert_Email"] or os.getenv("DD_ALERT_EMAIL", "")
