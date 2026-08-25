@@ -121,3 +121,39 @@ General commons,gen,CRDC,Stage,Portal,https://general-stage.datacommons.cancer.g
 General commons,gen,CRDC,Stage,API,https://general-stage.datacommons.cancer.gov/version,,,TRUE,Expand_Data_Commons-crdc-subprod-cds,,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,Portal,https://hub.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdcdh-prod-system-alerts,,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,Portal,https://hub-stage.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdcdh-system-alerts,,,
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,API,https://hub.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://hub.datacommons.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    dateObject = new Date();
+    assert.ok(dateObject.getTime() === dateObject.getTime());
+
+  }
+);",,TRUE,Expand_Data_Commons-crdcdh-prod-system-alerts,,,
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,API,https://hub-stage.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://hub-stage.datacommons.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    dateObject = new Date();
+    assert.ok(dateObject.getTime() === dateObject.getTime());
+
+  }
+);",,TRUE,Expand_Data_Commons-crdcdh-system-alerts,,,
