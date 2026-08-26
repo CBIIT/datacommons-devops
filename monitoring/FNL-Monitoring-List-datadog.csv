@@ -134,8 +134,9 @@ $http.get('https://hub.datacommons.cancer.gov/version',
     console.log('Response:', response.statusCode);
 
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    dateObject = new Date();
-    assert.ok(dateObject.getTime() === dateObject.getTime());
+    const parsedBody = JSON.parse(body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+    assert.ok('date' in parsedBody, 'Expected object to have date key');
 
   }
 );",,TRUE,Expand_Data_Commons-crdcdh-prod-system-alerts,,,
@@ -152,8 +153,9 @@ $http.get('https://hub-stage.datacommons.cancer.gov/version',
     console.log('Response:', response.statusCode);
 
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    dateObject = new Date();
-    assert.ok(dateObject.getTime() === dateObject.getTime());
+    const parsedBody = JSON.parse(body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+    assert.ok('date' in parsedBody, 'Expected object to have date key');
 
   }
 );",,TRUE,Expand_Data_Commons-crdcdh-system-alerts,,,
