@@ -599,6 +599,204 @@ def test_no_public_ingress_to_services():
         )
 
 
+# ---------------------------------------------------------------------------
+# WAF (WAFv2) security — accepted endpoints, rate limiting, payload size,
+# and rule evaluation order
+# ---------------------------------------------------------------------------
+
+def _get_waf_rules(template):
+    """Return (web_acls, rules_by_name) for every AWS::WAFv2::WebACL in the template.
+
+    rules_by_name maps rule Name -> rule dict (Priority/Statement/Action/...), pooled
+    across all WebACLs found, since a stack is expected to define at most one ACL.
+    """
+    web_acls = template.find_resources("AWS::WAFv2::WebACL")
+    rules_by_name = {}
+    for acl in web_acls.values():
+        for rule in acl.get("Properties", {}).get("Rules", []):
+            rules_by_name[rule["Name"]] = rule
+    return web_acls, rules_by_name
+
+
+def test_waf_web_acl_default_action_blocks_by_default():
+    """Test that the WebACL default-denies; only requests matching an explicit Allow rule should pass through"""
+    stack, template, config = _create_test_stack()
+
+    # Only test if a WAFv2 WebACL is deployed
+    if not template.find_resources("AWS::WAFv2::WebACL"):
+        return
+
+    template.has_resource_properties("AWS::WAFv2::WebACL", {
+        "DefaultAction": {"Block": Match.any_value()}
+    })
+
+
+def test_waf_accepted_endpoints_allow_rule_present():
+    """Test that an explicit rule scopes Allow to the known application URI paths, not an unconditional match"""
+    stack, template, config = _create_test_stack()
+
+    web_acls, rules = _get_waf_rules(template)
+    if not web_acls:
+        return
+
+    allow_rules = [r for r in rules.values() if "Allow" in r.get("Action", {})]
+    assert allow_rules, (
+        "WebACL has no Allow rules — with a Block default action, no traffic would ever be served"
+    )
+
+    for rule in allow_rules:
+        statement = rule.get("Statement", {})
+        # The allow rule(s) must scope to specific URI paths (byte match / regex / or-statement
+        # of paths) rather than an unconditional match, so unknown/unlisted endpoints remain
+        # blocked by the WebACL's default action.
+        scopes_to_paths = (
+            "ByteMatchStatement" in statement
+            or "RegexMatchStatement" in statement
+            or "RegexPatternSetReferenceStatement" in statement
+            or "OrStatement" in statement
+        )
+        assert scopes_to_paths, (
+            f"Allow rule '{rule.get('Name')}' does not scope to specific accepted endpoints "
+            "(expected a ByteMatch/Regex/Or statement matching the URI path)"
+        )
+
+
+def test_waf_rate_limit_rule_configured_with_reasonable_limit():
+    """Test that a rate-based rule throttles abusive per-IP traffic within a sane request budget"""
+    stack, template, config = _create_test_stack()
+
+    web_acls, rules = _get_waf_rules(template)
+    if not web_acls:
+        return
+
+    rate_rules = [r for r in rules.values() if "RateBasedStatement" in r.get("Statement", {})]
+    assert rate_rules, (
+        "WebACL has no RateBasedStatement rule — unmetered clients could exhaust backend capacity"
+    )
+
+    for rule in rate_rules:
+        stmt = rule["Statement"]["RateBasedStatement"]
+        assert stmt.get("AggregateKeyType") == "IP", (
+            f"Rate rule '{rule.get('Name')}' must aggregate by IP, got '{stmt.get('AggregateKeyType')}'"
+        )
+
+        limit = stmt.get("Limit")
+        assert limit is not None, f"Rate rule '{rule.get('Name')}' is missing a Limit"
+        # WAFv2 rate-based rules evaluate over a rolling 5-minute window; keep the ceiling low
+        # enough to actually stop abuse but high enough to avoid throttling normal users.
+        assert 100 <= limit <= 2000, (
+            f"Rate rule '{rule.get('Name')}' Limit={limit} is outside the reasonable "
+            "100-2000 requests/5min range"
+        )
+
+        action = rule.get("Action", {})
+        assert "Block" in action or "Captcha" in action or "Challenge" in action, (
+            f"Rate rule '{rule.get('Name')}' must Block/Captcha/Challenge offending clients, "
+            "not merely Count or Allow them"
+        )
+
+
+def test_waf_payload_size_constraint_configured():
+    """Test that a size-constraint rule rejects oversized request bodies to prevent resource exhaustion"""
+    stack, template, config = _create_test_stack()
+
+    web_acls, rules = _get_waf_rules(template)
+    if not web_acls:
+        return
+
+    size_rules = [r for r in rules.values() if "SizeConstraintStatement" in r.get("Statement", {})]
+    assert size_rules, (
+        "WebACL has no SizeConstraintStatement rule — oversized payloads are never rejected"
+    )
+
+    for rule in size_rules:
+        stmt = rule["Statement"]["SizeConstraintStatement"]
+        field = stmt.get("FieldToMatch", {})
+        assert "Body" in field, (
+            f"Size rule '{rule.get('Name')}' should inspect the request Body, got {field}"
+        )
+        assert stmt.get("ComparisonOperator") == "GT", (
+            f"Size rule '{rule.get('Name')}' must use GT so payloads larger than the limit are flagged"
+        )
+        size = stmt.get("Size")
+        assert size is not None and 0 < size <= 8192, (
+            f"Size rule '{rule.get('Name')}' Size={size} should be a reasonable body cap "
+            "(<=8KB) unless the app explicitly requires larger uploads"
+        )
+
+        action = rule.get("Action", {})
+        assert "Block" in action, f"Size rule '{rule.get('Name')}' must Block oversized payloads"
+
+
+def test_waf_rule_priorities_are_unique():
+    """Test that no two rules share a Priority — duplicate priorities make evaluation order ambiguous"""
+    stack, template, config = _create_test_stack()
+
+    web_acls, rules = _get_waf_rules(template)
+    if not web_acls:
+        return
+
+    priorities = [r["Priority"] for r in rules.values()]
+    assert len(priorities) == len(set(priorities)), (
+        f"Duplicate WAF rule priorities found: {sorted(priorities)}"
+    )
+
+
+def test_waf_security_block_rules_precede_endpoint_allow_rule():
+    """Test that rate-limit and payload-size Block rules are evaluated BEFORE the endpoint Allow rule.
+
+    WAFv2 evaluates rules in ascending Priority order and stops at the first terminating
+    (non-Count) action. If the "accepted endpoints" Allow rule had a lower priority number
+    than the rate-limit/size-constraint Block rules, a request to a known-good path would be
+    allowed through before WAF ever checks whether it is oversized or abusive — silently
+    invalidating those protections.
+    """
+    stack, template, config = _create_test_stack()
+
+    web_acls, rules = _get_waf_rules(template)
+    if not web_acls:
+        return
+
+    allow_rules = [r for r in rules.values() if "Allow" in r.get("Action", {})]
+    block_rules = [
+        r for r in rules.values()
+        if "RateBasedStatement" in r.get("Statement", {})
+        or "SizeConstraintStatement" in r.get("Statement", {})
+    ]
+
+    if not allow_rules or not block_rules:
+        return
+
+    min_allow_priority = min(r["Priority"] for r in allow_rules)
+    for rule in block_rules:
+        assert rule["Priority"] < min_allow_priority, (
+            f"Rule '{rule.get('Name')}' (priority {rule['Priority']}) must run before the "
+            f"endpoint Allow rule (priority {min_allow_priority}); otherwise the Allow rule "
+            "would terminate evaluation first and this protection would never trigger"
+        )
+
+
+def test_waf_web_acl_attached_to_alb_or_cloudfront():
+    """Test that the WAFv2 WebACL is actually associated with the ALB or CloudFront — an unattached ACL protects nothing"""
+    stack, template, config = _create_test_stack()
+
+    # Only test if a WAFv2 WebACL is deployed
+    if not template.find_resources("AWS::WAFv2::WebACL"):
+        return
+
+    associations = template.find_resources("AWS::WAFv2::WebACLAssociation")
+    cf_distributions = template.find_resources("AWS::CloudFront::Distribution")
+    cf_has_waf = any(
+        d.get("Properties", {}).get("DistributionConfig", {}).get("WebACLId")
+        for d in cf_distributions.values()
+    )
+
+    assert associations or cf_has_waf, (
+        "A WAFv2 WebACL is defined but not associated with any ALB (WebACLAssociation) "
+        "or CloudFront distribution (WebACLId) — it will not filter any traffic"
+    )
+
+
 if __name__ == "__main__":
     # Run all security tests
     security_test_functions = [
@@ -628,6 +826,14 @@ if __name__ == "__main__":
         test_cloudfront_https_enforcement,
         # test_cloudfront_distribution_uses_key_group,
         test_no_public_ingress_to_services,
+        # WAF security
+        test_waf_web_acl_default_action_blocks_by_default,
+        test_waf_accepted_endpoints_allow_rule_present,
+        test_waf_rate_limit_rule_configured_with_reasonable_limit,
+        test_waf_payload_size_constraint_configured,
+        test_waf_rule_priorities_are_unique,
+        test_waf_security_block_rules_precede_endpoint_allow_rule,
+        test_waf_web_acl_attached_to_alb_or_cloudfront,
     ]
     
     print("Running comprehensive CDK Security tests...")
