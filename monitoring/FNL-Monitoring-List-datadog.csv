@@ -134,7 +134,7 @@ $http.get('https://hub.datacommons.cancer.gov/version',
     console.log('Response:', response.statusCode);
 
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = JSON.parse(response.body);
+    const parsedBody = JSON.parse(dd.response.body);
     assert.ok('version' in parsedBody, 'Expected object to have version key');
     assert.ok('date' in parsedBody, 'Expected object to have date key');
 
@@ -153,7 +153,7 @@ $http.get('https://hub-stage.datacommons.cancer.gov/version',
     console.log('Response:', response.statusCode);
 
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = JSON.parse(response.body);
+    const parsedBody = JSON.parse(dd.response.body);
     assert.ok('version' in parsedBody, 'Expected object to have version key');
     assert.ok('date' in parsedBody, 'Expected object to have date key');
 
