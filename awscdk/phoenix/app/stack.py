@@ -4,7 +4,7 @@ from aws_cdk import Stack, Duration, RemovalPolicy
 from aws_cdk import aws_ec2 as ec2
 from aws_cdk import aws_ecs as ecs
 from aws_cdk import aws_kms as kms
-# from aws_cdk import aws_iam as iam
+from aws_cdk import aws_iam as iam
 from aws_cdk import aws_rds as rds
 from aws_cdk import aws_elasticloadbalancingv2 as elbv2
 from aws_cdk import aws_certificatemanager as cfm
@@ -96,32 +96,53 @@ class Stack(Stack):
         secrets={
             "PHOENIX_SECRET":ecs.Secret.from_secrets_manager(self.secret, 'phoenix_secret'),
             "PHOENIX_DEFAULT_ADMIN_INITIAL_PASSWORD":ecs.Secret.from_secrets_manager(self.secret, 'phoenix_admin_password'),
-            "PHOENIX_SQL_DATABASE_USER":ecs.Secret.from_secrets_manager(self.secret, 'username'),
-            "PHOENIX_SQL_DATABASE_PASSWORD":ecs.Secret.from_secrets_manager(self.secret, 'password'),
-            "PHOENIX_SQL_DATABASE_NAME":ecs.Secret.from_secrets_manager(self.secret, 'dbname')
+            "PHOENIX_POSTGRES_USER":ecs.Secret.from_secrets_manager(self.secret, 'username'),
+            "PHOENIX_POSTGRES_PASSWORD":ecs.Secret.from_secrets_manager(self.secret, 'password'),
+            "PHOENIX_POSTGRES_DB":ecs.Secret.from_secrets_manager(self.secret, 'dbname')
         }
 
         environment={
-            "PHOENIX_SQL_DATABASE_HOST": self.postgres.db_instance_endpoint_address,
+            "PHOENIX_POSTGRES_HOST": self.postgres.db_instance_endpoint_address,
             "PHOENIX_TELEMETRY_ENABLED": "false",
             "PHOENIX_ENABLE_AUTH": "true",
-            "PHOENIX_SQL_DATABASE_SCHEMA": "postgresql",
-            "PHOENIX_SQL_DATABASE_PORT": "5432"
+            # "PHOENIX_POSTGRES_SCHEMA": "postgresql",
+            "PHOENIX_POSTGRES_PORT": "5432"
         }
 
         taskDefinition = ecs.FargateTaskDefinition(self,
             "{}-{}-taskDef".format(self.namingPrefix, service),
             cpu=config.getint(service, 'cpu'),
-            memory_limit_mib=config.getint(service, 'memory')
+            memory_limit_mib=config.getint(service, 'memory'),
+            runtime_platform=ecs.RuntimePlatform(
+                cpu_architecture=ecs.CpuArchitecture.ARM64,
+                operating_system_family=ecs.OperatingSystemFamily.LINUX,
+            ),
         )
+
+        bedrockPolicy = iam.ManagedPolicy(
+            self, "BedrockInvokePolicy",
+            statements=[
+                iam.PolicyStatement(
+                    effect=iam.Effect.ALLOW,
+                    actions=[
+                        "bedrock:InvokeModel",
+                        "bedrock:InvokeModelWithResponseStream",
+                    ],
+                    resources=[
+                        f"arn:aws:bedrock:{self.region}::foundation-model/anthropic.claude-*",
+                    ],
+                )
+            ],
+        )
+
+        taskDefinition.task_role.add_managed_policy(bedrockPolicy)
 
         phoenixContainer = taskDefinition.add_container(
             service,
-            image=ecs.ContainerImage.from_registry(config[service]['image']),
+            image=ecs.ContainerImage.from_asset("phoenix-image"),
             cpu=config.getint(service, 'cpu'),
             memory_limit_mib=config.getint(service, 'memory'),
             port_mappings=[ecs.PortMapping(container_port=config.getint(service, 'port'), name=service)],
-            # user="root",
             entry_point=entry_point,
             secrets=secrets,
             environment=environment,
