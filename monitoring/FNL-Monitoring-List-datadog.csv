@@ -116,8 +116,44 @@ $http.get('https://cda.datacommons.cancer.gov/columns/',
   }
 );",,TRUE,Expand_Data_Commons-crdc-prod-cda,,,
 General commons,gen,CRDC,Prod,Portal,https://general.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-prod-cds,,,
+General commons,gen,CRDC,Prod,API,https://general.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://general.datacommons.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    const parsedBody = JSON.parse(dd.response.body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+
+  }
+);",,TRUE,Expand_Data_Commons-crdc-prod-cds,,,
 General commons,gen,CRDC,Prod,API,https://general.datacommons.cancer.gov/version,,,TRUE,Expand_Data_Commons-crdc-prod-cds,,,
 General commons,gen,CRDC,Stage,Portal,https://general-stage.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-cds,,,
+General commons,gen,CRDC,Stage,API,https://general-stage.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://general-stage.datacommons.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    const parsedBody = JSON.parse(dd.response.body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+
+  }
+);",,TRUE,Expand_Data_Commons-crdc-subprod-cds,,,
 General commons,gen,CRDC,Stage,API,https://general-stage.datacommons.cancer.gov/version,,,TRUE,Expand_Data_Commons-crdc-subprod-cds,,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,Portal,https://hub.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdcdh-prod-system-alerts,,,
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,Portal,https://hub-stage.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdcdh-system-alerts,,,
