@@ -236,7 +236,7 @@ $http.get('https://clinical-stage.datacommons.cancer.gov/version',
 );",,TRUE,Expand_Data_Commons-crdc-subprod-ctdc,,,
 
 Cancer Research Data Commons Hub,icdc,CRDC,Prod,Portal,https://caninecommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-icdc,,,
-Cancer Research Data Commons Hub,icdc-hub,CRDC,Stage,Portal,https://caninecommons-stage.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-icdc,,,
+Cancer Research Data Commons Hub,icdc,CRDC,Stage,Portal,https://caninecommons-stage.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-icdc,,,
 Cancer Research Data Commons Hub,icdc,CRDC,Prod,API,https://caninecommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://caninecommons.cancer.gov/version',
