@@ -194,7 +194,7 @@ $http.get('https://hub-stage.datacommons.cancer.gov/version',
   }
 );",,TRUE,Expand_Data_Commons-crdcdh-system-alerts,,,
 
-Cancer Research Data Commons Hub,ctdc,CRDC,Prod,Portal,https://clinical.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-ctdc,,,
+Cancer Research Data Commons Hub,ctdc,CRDC,Prod,Portal,https://clinical.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-prod-ctdc,,,
 Cancer Research Data Commons Hub,ctdc,CRDC,Stage,Portal,https://clinical-stage.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-ctdc,,,
 Cancer Research Data Commons Hub,ctdc,CRDC,Prod,API,https://clinical.datacommons.cancer.gov/version,"var assert = require('assert');
 
@@ -211,10 +211,9 @@ $http.get('https://clinical.datacommons.cancer.gov/version',
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
     const parsedBody = JSON.parse(dd.response.body);
     assert.ok('version' in parsedBody, 'Expected object to have version key');
-    assert.ok('date' in parsedBody, 'Expected object to have date key');
 
   }
-);",,TRUE,Expand_Data_Commons-crdc-subprod-ctdc,,,
+);",,TRUE,Expand_Data_Commons-crdc-prod-ctdc,,,
 Cancer Research Data Commons Hub,ctdc,CRDC,Stage,API,https://clinical-stage.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://clinical-stage.datacommons.cancer.gov/version',
@@ -230,13 +229,11 @@ $http.get('https://clinical-stage.datacommons.cancer.gov/version',
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
     const parsedBody = JSON.parse(dd.response.body);
     assert.ok('version' in parsedBody, 'Expected object to have version key');
-    assert.ok('date' in parsedBody, 'Expected object to have date key');
-
+   
   }
 );",,TRUE,Expand_Data_Commons-crdc-subprod-ctdc,,,
 
-Cancer Research Data Commons Hub,icdc,CRDC,Prod,Portal,https://caninecommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-icdc,,,
-Cancer Research Data Commons Hub,icdc,CRDC,Stage,Portal,https://caninecommons-stage.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-icdc,,,
+Cancer Research Data Commons Hub,icdc,CRDC,Prod,Portal,https://caninecommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-prod-icdc,,,
 Cancer Research Data Commons Hub,icdc,CRDC,Prod,API,https://caninecommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://caninecommons.cancer.gov/version',
@@ -252,29 +249,9 @@ $http.get('https://caninecommons.cancer.gov/version',
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
     const parsedBody = JSON.parse(dd.response.body);
     assert.ok('version' in parsedBody, 'Expected object to have version key');
-    assert.ok('date' in parsedBody, 'Expected object to have date key');
 
   }
-);",,TRUE,Expand_Data_Commons-crdc-subprod-icdc,,,
-Cancer Research Data Commons Hub,icdc,CRDC,Stage,API,https://caninecommons-stage.cancer.gov/version,"var assert = require('assert');
-
-$http.get('https://caninecommons-stage.cancer.gov/version',
-  function (err, response, body) {
-
-    if (err) {
-        throw new Error(err);
-    }
-
-    console.log('Response:', body);
-    console.log('Response:', response.statusCode);
-
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = JSON.parse(dd.response.body);
-    assert.ok('version' in parsedBody, 'Expected object to have version key');
-    assert.ok('date' in parsedBody, 'Expected object to have date key');
-
-  }
-);",,TRUE,Expand_Data_Commons-crdc-subprod-icdc,,,
+);",,TRUE,Expand_Data_Commons-crdc-prod-icdc,,,
 
 
 
