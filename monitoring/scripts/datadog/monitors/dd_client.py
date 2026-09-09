@@ -25,16 +25,32 @@ def headers():
     }
 
 
-def synthetics_location(private_flag):
+# Datadog Private Location running inside the AWS network, able to resolve
+# the internal-only DNS for our Dev/Qa/Stage/Perf hosts (the equivalent of
+# New Relic's private location — see monitoring/locations/README.md). Prod
+# is untouched: it keeps using DD_PRIVATE_LOCATION_ID below, whatever that
+# is currently set to.
+LOWER_TIER_PRIVATE_LOCATION_ID = os.getenv(
+    "DD_LOWER_TIER_PRIVATE_LOCATION_ID",
+    "pl:fnl-datacommons-lowertier-a486d0a8c7047ed6e07da409545ba253",
+)
+_LOWER_TIERS = ("dev", "qa", "stage", "perf")
+
+
+def synthetics_location(private_flag, tier=None):
     """Return a list with one DataDog location identifier."""
-    if str(private_flag).lower() == "true":
-        loc = os.getenv("DD_PRIVATE_LOCATION_ID", "")
-        if not loc:
-            raise SystemExit(
-                "DD_PRIVATE_LOCATION_ID is required for private-location tests."
-            )
-        return [loc]
-    return ["aws:us-east-1"]
+    if str(private_flag).lower() != "true":
+        return ["aws:us-east-1"]
+
+    if tier and tier.strip().lower() in _LOWER_TIERS:
+        return [LOWER_TIER_PRIVATE_LOCATION_ID]
+
+    loc = os.getenv("DD_PRIVATE_LOCATION_ID", "")
+    if not loc:
+        raise SystemExit(
+            "DD_PRIVATE_LOCATION_ID is required for private-location tests."
+        )
+    return [loc]
 
 
 def tick_every(tier):

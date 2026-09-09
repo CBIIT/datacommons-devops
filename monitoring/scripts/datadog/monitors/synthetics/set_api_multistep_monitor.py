@@ -190,7 +190,7 @@ def _parse_post_body(script):
 def setmonitor(project, tier, api, notification):
     monitor_name = "{} {} {} Monitor".format(project, tier, api["name"])
     freq = dd_client.tick_every(tier)
-    locations = dd_client.synthetics_location(api["location"])
+    locations = dd_client.synthetics_location(api["location"], tier)
 
     script = api["query"]
     method, parsed_url = _parse_request(script)

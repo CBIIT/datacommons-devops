@@ -418,7 +418,7 @@ def setmonitor(project, tier, api, notification):
 
     freq = dd_client.tick_every(tier)
 
-    locations = dd_client.synthetics_location(api["location"])
+    locations = dd_client.synthetics_location(api["location"], tier)
 
 
 
