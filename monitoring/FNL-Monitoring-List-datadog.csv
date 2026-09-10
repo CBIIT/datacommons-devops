@@ -1,6 +1,6 @@
 Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Validation_Text,Private_Location,Slack_Channel,Alert_Email,Monitored_Resources,Browser_Query
-Populatioin Sciences Data Commons,Popsci,CRDC,prod,Portal,https://populationsciences.datacommons.cancer.gov/,,Population,TRUE,Expand_Data_Commons-crdc-prod-popsci,,,
-Populatioin Sciences Data Commons,Popsci,CRDC,prod,API-OS,https://populationsciences.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+Population Sciences Data Commons,Popsci,CRDC,prod,Portal,https://populationsciences.datacommons.cancer.gov/,,Population,TRUE,Expand_Data_Commons-crdc-prod-popsci,,,
+Population Sciences Data Commons,Popsci,CRDC,prod,API-OS,https://populationsciences.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://populationsciences.datacommons.cancer.gov/v1/graphql/',
   {
@@ -277,3 +277,28 @@ $http.get('https://caninecommons-stage.cancer.gov/version',
 );",,TRUE,Expand_Data_Commons-crdc-subprod-icdc,,,
 CCDI C3DC,c3dc,CCDI,Stage,Portal,https://clinicalcommons-stage.ccdi.cancer.gov,,,TRUE,Expand_Data_Commons-ccdi-subprod-c3dc,,,
 CCDI C3DC,c3dc,CCDI,Prod,Portal,https://clinicalcommons.ccdi.cancer.gov,,,FALSE,Expand_Data_Commons-ccdi-prod-c3dc,,,
+Index of NCI Studies,ins,CCDI,Prod,Portal,https://studycatalog.cancer.gov,,,TRUE,Expand_Data_Commons-ccdi-prod-ins,,,
+Index of NCI Studies,ins,CCDI,Prod,API,https://studycatalog.cancer.gov/v1/graphql,"var assert = require('assert');
+
+$http.post('https://studycatalog.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: '{ idsLists { case_ids } }',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+    
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('case_ids' in body.data.idsLists);
+    assert.match(body.data.idsLists.case_ids[0], /INS-/);
+  }
+);",,TRUE,Expand_Data_Commons-ccdi-prod-ins,,,
