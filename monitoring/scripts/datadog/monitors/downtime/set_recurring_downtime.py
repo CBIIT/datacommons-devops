@@ -214,6 +214,7 @@ def setdowntime(
     existing_id = _find_existing_downtime(monitor_id)
 
     if existing_id:
+        payload["data"]["id"] = existing_id
         print(
             "  Updating existing downtime {} for monitor {}".format(
                 existing_id, monitor_id
