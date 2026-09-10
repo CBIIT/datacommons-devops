@@ -274,7 +274,7 @@ $http.get('https://caninecommons-stage.cancer.gov/version',
   }
 );",,TRUE,Expand_Data_Commons-crdc-subprod-icdc,,,
 CCDI C3DC,c3dc,CCDI,Stage,Portal,https://clinicalcommons-stage.ccdi.cancer.gov,,,TRUE,Expand_Data_Commons-ccdi-subprod-c3dc,,,
-CCDI C3DC,c3dc,CCDI,Prod,Portal,https://clinicalcommons.ccdi.cancer.gov,,,FALSE,Expand_Data_Commons-ccdi-prod-c3dc,,,
+CCDI C3DC,c3dc,CCDI,Prod,Portal,https://clinicalcommons.ccdi.cancer.gov,,,TRUE,Expand_Data_Commons-ccdi-prod-c3dc,,,
 Index of NCI Studies,ins,CCDI,Prod,Portal,https://studycatalog.cancer.gov,,,TRUE,Expand_Data_Commons-ccdi-prod-ins,,,
 Index of NCI Studies,ins,CCDI,Prod,API,https://studycatalog.cancer.gov/v1/graphql,"var assert = require('assert');
 
