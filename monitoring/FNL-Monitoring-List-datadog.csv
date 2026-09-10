@@ -193,7 +193,7 @@ $http.get('https://hub-stage.datacommons.cancer.gov/version',
 
   }
 );",,TRUE,Expand_Data_Commons-crdcdh-system-alerts,,,
-
+,,,,,,,,,,,,
 Cancer Research Data Commons Hub,ctdc,CRDC,Prod,Portal,https://clinical.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-ctdc,,,
 Cancer Research Data Commons Hub,ctdc,CRDC,Stage,Portal,https://clinical-stage.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-ctdc,,,
 Cancer Research Data Commons Hub,ctdc,CRDC,Prod,API,https://clinical.datacommons.cancer.gov/version,"var assert = require('assert');
@@ -234,7 +234,7 @@ $http.get('https://clinical-stage.datacommons.cancer.gov/version',
 
   }
 );",,TRUE,Expand_Data_Commons-crdc-subprod-ctdc,,,
-
+,,,,,,,,,,,,
 Cancer Research Data Commons Hub,icdc,CRDC,Prod,Portal,https://caninecommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-icdc,,,
 Cancer Research Data Commons Hub,icdc,CRDC,Stage,Portal,https://caninecommons-stage.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-icdc,,,
 Cancer Research Data Commons Hub,icdc,CRDC,Prod,API,https://caninecommons.cancer.gov/version,"var assert = require('assert');
@@ -275,6 +275,5 @@ $http.get('https://caninecommons-stage.cancer.gov/version',
 
   }
 );",,TRUE,Expand_Data_Commons-crdc-subprod-icdc,,,
-
-
-
+CCDI C3DC,c3dc,CCDI,Stage,Portal,https://clinicalcommons-stage.ccdi.cancer.gov,,,TRUE,Expand_Data_Commons-ccdi-subprod-c3dc,,,
+CCDI C3DC,c3dc,CCDI,Prod,Portal,https://clinicalcommons.ccdi.cancer.gov,,,FALSE,Expand_Data_Commons-ccdi-prod-c3dc,,,
