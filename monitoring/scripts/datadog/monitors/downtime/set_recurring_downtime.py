@@ -192,6 +192,7 @@ def setdowntime(
             "type": "downtime",
             "attributes": {
                 "monitor_identifier": {"monitor_id": monitor_id},
+                "scope": "*",
                 "display_timezone": timezone,
                 "message": message,
                 "mute_first_recovery_notification": False,
