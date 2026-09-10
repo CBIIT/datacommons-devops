@@ -227,9 +227,6 @@ def setSynthetics(input_url):
         data = csv.DictReader(codecs.iterdecode(csvfile.iter_lines(), "utf-8"))
 
         for row in data:
-            if row.get("Endpoint_Name") in ("Portal", "API") and row.get("Project_Acronym") == "crdc-hub":
-                print("DEBUG keys:", list(row.keys()))
-                print("DEBUG Downtime_Start:", repr(row.get("Downtime_Start")))
             project = row["Project_Acronym"].upper()
             tier = row["Tier"]
             endpoint_name = row["Endpoint_Name"]
