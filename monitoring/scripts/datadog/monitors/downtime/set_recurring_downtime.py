@@ -21,7 +21,7 @@ import requests
 
 DD_SITE = os.getenv("DD_SITE", "datadoghq.com")
 BASE_URL = "https://api.{}/api/v2/downtime".format(DD_SITE)
-
+SYNTHETICS_URL = "https://api.{}/api/v1/synthetics/tests".format(DD_SITE)
 
 def _headers():
     return {
@@ -30,6 +30,45 @@ def _headers():
         "DD-APPLICATION-KEY": os.environ["DD_APP_KEY"],
     }
 
+def _resolve_monitor_id(identifier):
+    """
+    The Downtime API's monitor_identifier.monitor_id field needs the
+    numeric monitor ID Datadog auto-creates behind every monitor/synthetic
+    test — NOT a Synthetics public_id string (e.g. "dqp-fwf-y5c").
+
+    If `identifier` is already an int (or a numeric string), it's assumed
+    to be a real monitor_id and is returned as-is. Otherwise it's treated
+    as a Synthetics public_id and resolved via GET /synthetics/tests/{id},
+    whose response includes the underlying numeric "monitor_id".
+    """
+    if isinstance(identifier, int):
+        return identifier
+
+    identifier = str(identifier)
+    if identifier.isdigit():
+        return int(identifier)
+
+    # Treat as a Synthetics public_id and look up its numeric monitor_id.
+    resp = requests.get(
+        "{}/{}".format(SYNTHETICS_URL, identifier), headers=_headers()
+    )
+    if not resp.ok:
+        print(
+            "  WARNING: could not resolve monitor_id for synthetics "
+            "public_id {} ({}): {}".format(identifier, resp.status_code, resp.text)
+        )
+        return None
+
+    data = resp.json()
+    monitor_id = data.get("monitor_id")
+    if monitor_id is None:
+        print(
+            "  WARNING: synthetics test {} has no monitor_id in its "
+            "response — cannot schedule downtime.".format(identifier)
+        )
+        return None
+
+    return monitor_id
 
 def _find_existing_downtime(monitor_id):
     """
@@ -122,6 +161,15 @@ def setdowntime(
     if not monitor_id:
         print("  Skipping downtime — no monitor_id provided.")
         return None
+
+    resolved_id = _resolve_monitor_id(monitor_id)
+    if not resolved_id:
+        print(
+            "  Skipping downtime — could not resolve a numeric monitor_id "
+            "from {!r}.".format(monitor_id)
+        )
+        return None
+    monitor_id = resolved_id
 
     if not downtime_start or not downtime_end:
         print("  Skipping downtime — Downtime_Start/Downtime_End not set in CSV.")
