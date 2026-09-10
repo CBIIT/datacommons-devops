@@ -192,7 +192,7 @@ $http.get('https://hub-stage.datacommons.cancer.gov/version',
     assert.ok('date' in parsedBody, 'Expected object to have date key');
 
   }
-);",,TRUE,Expand_Data_Commons-crdcdh-system-alerts,,,19:00,07:00,America/New_York,
+);",,TRUE,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,07:00,America/New_York,
 
 Cancer Research Data Commons Hub,ctdc,CRDC,Prod,Portal,https://clinical.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,
 Cancer Research Data Commons Hub,ctdc,CRDC,Stage,Portal,https://clinical-stage.datacommons.cancer.gov,,,TRUE,Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,
