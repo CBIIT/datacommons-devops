@@ -300,3 +300,4 @@ $http.post('https://studycatalog.cancer.gov/v1/graphql/',
     assert.match(body.data.idsLists.case_ids[0], /INS-/);
   }
 );",,TRUE,Expand_Data_Commons-ccdi-prod-ins,,,,,,,
+CCDI Datasharing,Datasharing Hub,CCDI,Prod,Portal,https://datasharing.cancer.gov/post/Data/cancer-data-resources/,,,TRUE,Expand_Data_Commons-ccdi-datasharing-prod,,,,,,,
