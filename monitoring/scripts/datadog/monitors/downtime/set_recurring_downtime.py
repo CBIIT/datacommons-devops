@@ -108,9 +108,14 @@ def _build_rrule(days_of_week=None):
 
 def _duration_string(start_hhmm, end_hhmm):
     """
-    Compute an ISO-8601-ish duration string (e.g. "12h", "12h30m") from
-    HH:MM start/end strings, assuming the window may cross midnight
-    (e.g. 19:00 -> 07:00 is a 12-hour span).
+    Compute a Datadog-compatible duration string from HH:MM start/end times,
+    assuming the window may cross midnight (e.g. 19:00 -> 07:00).
+    Datadog's recurrence duration only accepts a SINGLE unit — one of
+    "Nm" (minutes), "Nh" (hours), "Nd" (days), or "Nw" (weeks). Combined
+    strings like "12h30m" are rejected with a 400. To support arbitrary
+    start/end times (not just clean hour boundaries), we express the
+    duration in whole minutes whenever it isn't an exact multiple of 60,
+    and in hours otherwise.
     """
     sh, sm = (int(x) for x in start_hhmm.split(":"))
     eh, em = (int(x) for x in end_hhmm.split(":"))
@@ -123,12 +128,18 @@ def _duration_string(start_hhmm, end_hhmm):
         end_minutes += 24 * 60
 
     total_minutes = end_minutes - start_minutes
-    hours, minutes = divmod(total_minutes, 60)
 
-    if minutes:
-        return "{}h{}m".format(hours, minutes)
-    return "{}h".format(hours)
+    if total_minutes <= 0:
+        raise ValueError(
+            "Computed a non-positive downtime duration ({} minutes) from "
+            "start={} end={} — check Downtime_Start/Downtime_End.".format(
+                total_minutes, start_hhmm, end_hhmm
+            )
+        )
 
+    if total_minutes % 60 == 0:
+        return "{}h".format(total_minutes // 60)
+    return "{}m".format(total_minutes)
 
 def setdowntime(
     monitor_id,
