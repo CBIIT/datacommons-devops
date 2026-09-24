@@ -32,7 +32,7 @@ def headers():
 # is currently set to.
 LOWER_TIER_PRIVATE_LOCATION_ID = os.getenv(
     "DD_LOWER_TIER_PRIVATE_LOCATION_ID",
-    "pl:fnl-datacommons-lowertier-a486d0a8c7047ed6e07da409545ba253",
+    "pl:datadog-lowerter-private-location-a4dfa43d0f1db3da041b9723807eba74",
 )
 _LOWER_TIERS = ("dev", "qa", "stage", "perf")
 
