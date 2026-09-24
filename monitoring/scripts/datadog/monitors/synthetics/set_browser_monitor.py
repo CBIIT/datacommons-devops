@@ -530,6 +530,13 @@ def setmonitor(project, tier, api, notification):
                         "name": "Dismiss interstitial (best effort)",
                         "type": "click",
                         "timeout": 10,
+                        # DataDog only honors isCritical when allowFailure is
+                        # also set -- without it, a failed "not found" click
+                        # still blocks the rest of the run (retries, then
+                        # fails the whole test) on any page with no
+                        # "Continue" banner, e.g. a returning-visitor session
+                        # that already dismissed it once.
+                        "allowFailure": True,
                         "isCritical": False,
                         "params": {
                             "element": {
