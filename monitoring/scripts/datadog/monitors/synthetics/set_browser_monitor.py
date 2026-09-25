@@ -781,18 +781,13 @@ def setmonitor(project, tier, api, notification):
 
             "device_ids": ["laptop_large"],
 
-            # Paired with the cache-busting warm-up step above. The stale-asset
-            # problem is per-request and transient -- a retry a few minutes
-            # later normally lands on a healthy edge node or a refreshed cache
-            # entry -- so this keeps one bad edge response from paging anyone.
-            # Interval is in milliseconds; 300000 = 5 minutes.
-            "retry": {
-
-                "count": 2,
-
-                "interval": 300000,
-
-            },
+            # Deliberately no "retry" here. DataDog's retry marks a location
+            # failed only after every retry fails, so a retry both delays the
+            # alert (count x interval) and suppresses it entirely whenever a
+            # retry passes -- which silently swallowed real browser failures
+            # and stopped them reaching Slack. The cache-busting warm-up step
+            # above handles the transient CDN case instead; alerting stays
+            # immediate, matching the API monitors.
 
         },
 
