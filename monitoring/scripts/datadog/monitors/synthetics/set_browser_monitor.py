@@ -431,19 +431,41 @@ def _default_browser_check(url, validation_text):
 #
 # Paired with options.retry in the payload below -- please don't remove either
 # without first confirming the CDN caching issue is actually fixed upstream.
+_CACHE_BUST_VAR = "CACHEBUST"
+
+
+def _cache_bust_variable():
+    """
+    Local variable supplying the cache-buster's per-run random value.
+
+    DataDog's built-in generators ({{numeric(n)}}, {{uuid}}, ...) only work as
+    the *pattern* of a declared variable -- written inline in a step they are
+    not expanded, and the test is rejected at creation. So the generator is
+    declared here and the step references it by name instead. A value baked in
+    at provisioning time would be constant, and would itself just get cached
+    after the first run, defeating the point.
+    """
+    return {
+        "name": _CACHE_BUST_VAR,
+        "type": "text",
+        "pattern": "{{numeric(10)}}",
+        "example": "1234567890",
+    }
+
+
 def _cache_bust_step(url):
     """First step of every browser test: reload the page bypassing edge cache."""
     separator = "&" if "?" in url else "?"
-    # {{ uuid }} is a DataDog built-in, evaluated per run. A value baked in at
-    # provisioning time would be constant and would itself just get cached
-    # after the first run, defeating the point.
+    # goToUrl takes its destination under params.value (not params.url).
     return {
         "name": "Cache-busting warm-up",
         "type": "goToUrl",
         "timeout": 15,
         "allowFailure": True,
         "isCritical": False,
-        "params": {"url": url + separator + "_cb={{ uuid }}"},
+        "params": {
+            "value": "{}{}_cb={{{{{}}}}}".format(url, separator, _CACHE_BUST_VAR),
+        },
     }
 
 
@@ -713,7 +735,9 @@ def setmonitor(project, tier, api, notification):
 
             "setCookie": "",
 
-            "variables": [],
+            # Declares CACHEBUST for the cache-busting warm-up step above.
+
+            "variables": [_cache_bust_variable()],
 
         },
 
