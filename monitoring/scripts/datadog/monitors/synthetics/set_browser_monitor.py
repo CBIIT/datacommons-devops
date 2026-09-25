@@ -412,6 +412,41 @@ def _default_browser_check(url, validation_text):
 
 
 
+# Cache-busting warm-up step, prepended to every browser monitor.
+#
+# WHY: CDN edge nodes intermittently serve stale/broken cached static assets --
+# manifest.json or JS chunks coming back as HTML, which surfaces in the browser
+# console as "SyntaxError: Unexpected token '<'". Which edge node answers a
+# given request varies, so whether a run sees good or broken assets is luck of
+# the draw. That makes it look like flaky failures scattered across projects
+# and tiers with no pattern. This is an upstream CDN caching problem, NOT a bug
+# in these scripts, the locators, or the monitoring setup.
+#
+# This step re-navigates to the same page with a unique query parameter, so the
+# request misses any stale edge-cached entry and is served fresh; the dismiss
+# and assertion steps that follow then run against that fresh load. It asserts
+# nothing itself, and is allowFailure/non-critical so that if the cache-buster
+# is ever rejected (a WAF blocking the unfamiliar query param, say) the monitor
+# quietly falls back to the normal page load instead of failing.
+#
+# Paired with options.retry in the payload below -- please don't remove either
+# without first confirming the CDN caching issue is actually fixed upstream.
+def _cache_bust_step(url):
+    """First step of every browser test: reload the page bypassing edge cache."""
+    separator = "&" if "?" in url else "?"
+    # {{ uuid }} is a DataDog built-in, evaluated per run. A value baked in at
+    # provisioning time would be constant and would itself just get cached
+    # after the first run, defeating the point.
+    return {
+        "name": "Cache-busting warm-up",
+        "type": "goToUrl",
+        "timeout": 15,
+        "allowFailure": True,
+        "isCritical": False,
+        "params": {"url": url + separator + "_cb={{ uuid }}"},
+    }
+
+
 def setmonitor(project, tier, api, notification):
 
     monitor_name = "{} {} {} Monitor".format(project, tier, api["name"])
@@ -446,7 +481,11 @@ def setmonitor(project, tier, api, notification):
 
 
 
-    steps = []
+    resolved_url = (parsed["url"] if parsed else None) or api["url"]
+
+    # Cache-busting warm-up runs first for every browser monitor, including
+    # the URL-only fallbacks below -- see _cache_bust_step for the reasoning.
+    steps = [_cache_bust_step(resolved_url)]
 
     if parsed is None:
 
@@ -652,8 +691,6 @@ def setmonitor(project, tier, api, notification):
 
 
 
-    resolved_url = (parsed["url"] if parsed else None) or api["url"]
-
     description_fmt = {"name": api["name"], "tier": tier, "url": resolved_url}
 
 
@@ -719,6 +756,19 @@ def setmonitor(project, tier, api, notification):
             "tick_every": freq,
 
             "device_ids": ["laptop_large"],
+
+            # Paired with the cache-busting warm-up step above. The stale-asset
+            # problem is per-request and transient -- a retry a few minutes
+            # later normally lands on a healthy edge node or a refreshed cache
+            # entry -- so this keeps one bad edge response from paging anyone.
+            # Interval is in milliseconds; 300000 = 5 minutes.
+            "retry": {
+
+                "count": 2,
+
+                "interval": 300000,
+
+            },
 
         },
 
