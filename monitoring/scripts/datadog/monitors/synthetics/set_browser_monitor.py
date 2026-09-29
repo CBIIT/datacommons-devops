@@ -429,8 +429,8 @@ def _default_browser_check(url, validation_text):
 # is ever rejected (a WAF blocking the unfamiliar query param, say) the monitor
 # quietly falls back to the normal page load instead of failing.
 #
-# Paired with options.retry in the payload below -- please don't remove either
-# without first confirming the CDN caching issue is actually fixed upstream.
+# Paired with the refresh step below -- please don't remove either without
+# first confirming the CDN caching issue is actually fixed upstream.
 _CACHE_BUST_VAR = "CACHEBUST"
 
 
@@ -466,6 +466,68 @@ def _cache_bust_step(url):
         "params": {
             "value": "{}{}_cb={{{{{}}}}}".format(url, separator, _CACHE_BUST_VAR),
         },
+    }
+
+
+# Browser-level reload, immediately after the cache-busting navigation above.
+#
+# WHY: the cache-buster only changes the document URL -- the JS chunks and
+# manifest.json it pulls in keep their own URLs and their own edge-cache
+# entries, so a poisoned asset can still be served on that first load. A real
+# reload is a second, independent roll of the dice: a different edge node may
+# answer, and anything already revalidated stays warm. Cheap insurance against
+# the same stale-asset failure the cache-buster targets.
+#
+# Non-critical for the same reason as the cache-buster: this exists to improve
+# the odds, never to invent a new way for the monitor to fail.
+def _refresh_step():
+    """Second step of every browser test: force a genuine browser reload."""
+    return {
+        "name": "Reload page",
+        "type": "refresh",
+        "timeout": 15,
+        "allowFailure": True,
+        "isCritical": False,
+        "params": {},
+    }
+
+
+# Diagnostic only -- never blocks the test.
+#
+# WHY: when a browser monitor fails we currently can't tell "the React app
+# crashed on init" (the SyntaxError: Unexpected token '<' case, caused by a
+# CDN serving HTML in place of a JS chunk) apart from "the app mounted fine
+# but the expected content genuinely isn't there". Those want completely
+# different follow-up, and guessing between them has cost us real time.
+#
+# This step records the answer on every run: if it ALSO failed, the app never
+# mounted -> CDN/asset problem. If it passed but the content assertion still
+# failed -> the app is healthy and the content is actually missing or the
+# locator is wrong. allowFailure/isCritical keep it purely observational.
+#
+# The root element id differs per app -- the portals use "root" while the
+# cbioportal content sites use "reactRoot" (both verified against the live
+# HTML) -- so all the known ids are tried before giving up, and "app" is
+# included as the other common convention for whatever ships next.
+_REACT_MOUNTED_JS = (
+    "var root = document.getElementById('root')\n"
+    "        || document.getElementById('reactRoot')\n"
+    "        || document.getElementById('app');\n"
+    "return !!(root && root.children.length > 0);"
+)
+
+
+def _react_mounted_step():
+    """Diagnostic: did the SPA actually mount anything into its root node?"""
+    return {
+        "name": "Assert React app mounted",
+        "type": "assertFromJavascript",
+        "timeout": 20,
+        "allowFailure": True,
+        "isCritical": False,
+        # assertFromJavascript takes the snippet under params.code, and the
+        # snippet must `return` the value being asserted.
+        "params": {"code": _REACT_MOUNTED_JS},
     }
 
 
@@ -505,9 +567,10 @@ def setmonitor(project, tier, api, notification):
 
     resolved_url = (parsed["url"] if parsed else None) or api["url"]
 
-    # Cache-busting warm-up runs first for every browser monitor, including
-    # the URL-only fallbacks below -- see _cache_bust_step for the reasoning.
-    steps = [_cache_bust_step(resolved_url)]
+    # Cache-busting warm-up then a reload run first for every browser monitor,
+    # including the URL-only fallbacks below -- see _cache_bust_step and
+    # _refresh_step for the reasoning. Both are non-critical.
+    steps = [_cache_bust_step(resolved_url), _refresh_step()]
 
     if parsed is None:
 
@@ -641,6 +704,10 @@ def setmonitor(project, tier, api, notification):
                 xpath_candidates = parsed["xpath"]
                 if isinstance(xpath_candidates, str):
                     xpath_candidates = [xpath_candidates]
+                # Diagnostic, immediately before the real assertion so the two
+                # results sit side by side in the run -- see
+                # _react_mounted_step.
+                steps.append(_react_mounted_step())
                 steps.append(
                     {
                         "name": "Assert element present",
@@ -670,6 +737,10 @@ def setmonitor(project, tier, api, notification):
                 # visible elements -- assertElementContent's visibility
 
                 # requirement is the faithful translation of that behavior.
+
+                # Diagnostic first -- see _react_mounted_step.
+
+                steps.append(_react_mounted_step())
 
                 steps.append(
 
