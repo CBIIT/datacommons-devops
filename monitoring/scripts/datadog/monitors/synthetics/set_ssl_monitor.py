@@ -8,6 +8,8 @@ DataDog equivalent: API test, subtype 'ssl'
   - Checks that the SSL certificate on the target host does not expire within
     30 days (same threshold as the New Relic monitor).
   - Runs once per day (same as New Relic EVERY_DAY period).
+  - Retries transient failures before alerting, so a single network/handshake
+    blip from the probing location does not page a false "cert invalid".
   - Created only for Prod Portal endpoints (caller decides when to invoke this).
 """
 
@@ -51,6 +53,12 @@ def setmonitor(project, tier, api, notification):
         "name": monitor_name,
         "options": {
             "tick_every": freq,
+            # Retry transient failures before alerting. This SSL check runs only
+            # once per day from a single (often cross-partition) location, so
+            # without retries a lone network/handshake blip fires a CRITICAL
+            # "cert expiring/invalid" alert even when the certificate is valid.
+            # Two quick retries smooth these false positives.
+            "retry": {"count": 2, "interval": 5000},  # interval in ms
         },
         "status": "live",
         "tags": dd_client.default_tags(project, tier),
