@@ -180,22 +180,21 @@ def test_container_secrets_security():
     if not task_def_resources:
         return
 
-    # Containers should get secrets from Secrets Manager, not environment variables
-    # Secrets use Fn::Join with secret reference and field name
-    template.has_resource_properties("AWS::ECS::TaskDefinition", {
-        "ContainerDefinitions": [
-            {
-                "Secrets": Match.array_with([
-                    {
-                        "Name": Match.any_value(),
-                        "ValueFrom": {
-                            "Fn::Join": Match.any_value()  # Validates Fn::Join structure exists
-                        }
-                    }
-                ])
-            }
-        ]
-    })
+    # Inspect every container (including sidecars) rather than matching the
+    # ContainerDefinitions array exactly, since that array's length varies
+    # depending on how many sidecar containers a task definition has.
+    found_secure_secret = False
+    for resource_id, resource in task_def_resources.items():
+        containers = resource.get("Properties", {}).get("ContainerDefinitions", [])
+        for container in containers:
+            for secret in container.get("Secrets", []):
+                assert "Fn::Join" in secret.get("ValueFrom", {}), (
+                    f"{resource_id} container '{container.get('Name')}' secret "
+                    f"'{secret.get('Name')}' must reference Secrets Manager via Fn::Join"
+                )
+                found_secure_secret = True
+
+    assert found_secure_secret, "Expected at least one container to retrieve secrets from Secrets Manager"
 
 
 def test_alb_https_enforcement():
@@ -421,19 +420,21 @@ def test_container_security_context():
     stack, template, config = _create_test_stack()
 
     # Only test if ECS task definitions are deployed
-    if not template.find_resources("AWS::ECS::TaskDefinition"):
+    task_def_resources = template.find_resources("AWS::ECS::TaskDefinition")
+    if not task_def_resources:
         return
 
-    # Containers should not run as privileged
-    template.has_resource_properties("AWS::ECS::TaskDefinition", {
-        "ContainerDefinitions": [
-            {
-                "Privileged": Match.absent(),  # Should not be privileged
-                # "ReadonlyRootFilesystem": Match.any_value(),
-                # "User": Match.any_value()
-            }
-        ]
-    })
+    # Check every container (including sidecars) individually rather than matching
+    # the ContainerDefinitions array exactly, since its length varies with sidecars,
+    # and so that every sidecar is held to the same "not privileged" requirement.
+    for resource_id, resource in task_def_resources.items():
+        containers = resource.get("Properties", {}).get("ContainerDefinitions", [])
+        for container in containers:
+            assert "Privileged" not in container, (
+                f"{resource_id} container '{container.get('Name')}' should not be privileged"
+            )
+            # "ReadonlyRootFilesystem": Match.any_value(),
+            # "User": Match.any_value()
 
 
 def test_fargate_security():
