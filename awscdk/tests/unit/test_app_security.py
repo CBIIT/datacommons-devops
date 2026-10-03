@@ -135,20 +135,33 @@ def test_iam_role_naming_aspect():
 
     # Roles should have the prefix applied by MyAspect for compliance
     expected_prefix = f"{config['iam']['role_prefix']}-{config['main']['tier']}"
-    
-    template.has_resource_properties("AWS::IAM::Role", {
-        "RoleName": Match.string_like_regexp(f"^{expected_prefix}-.*")
-    })
+
+    # Check every role, not just one, since MyAspect is expected to rename all of them
+    role_resources = template.find_resources("AWS::IAM::Role")
+    assert role_resources, "Expected at least one IAM::Role in the stack"
+    for resource_id, resource in role_resources.items():
+        role_name = resource.get("Properties", {}).get("RoleName")
+        assert isinstance(role_name, str) and role_name.startswith(f"{expected_prefix}-"), (
+            f"Role {resource_id} RoleName '{role_name}' does not start with expected prefix '{expected_prefix}-'"
+        )
 
 
 def test_permission_boundaries():
     """Test that permission boundaries are applied to IAM roles for security compliance"""
     stack, template, config = _create_test_stack()
 
-    if config.has_option('iam', 'permission_boundary'):
-        template.has_resource_properties("AWS::IAM::Role", {
-            "PermissionsBoundary": config['iam']['permission_boundary']
-        })
+    if not config.has_option('iam', 'permission_boundary'):
+        return
+
+    # Every role must carry the boundary, not just one
+    expected_boundary = config['iam']['permission_boundary']
+    role_resources = template.find_resources("AWS::IAM::Role")
+    assert role_resources, "Expected at least one IAM::Role in the stack"
+    for resource_id, resource in role_resources.items():
+        boundary = resource.get("Properties", {}).get("PermissionsBoundary")
+        assert boundary == expected_boundary, (
+            f"Role {resource_id} PermissionsBoundary '{boundary}' does not match expected '{expected_boundary}'"
+        )
 
 
 def test_iam_role_trust_policies():
@@ -169,6 +182,23 @@ def test_iam_role_trust_policies():
             ]
         }
     })
+
+
+def test_iam_policies_no_wildcard_actions():
+    """Test that IAM policy documents do not grant blanket wildcard actions"""
+    stack, template, config = _create_test_stack()
+
+    disallowed_actions = {"*", "iam:*", "s3:*"}
+
+    for resource_id, resource in template.find_resources("AWS::IAM::Policy").items():
+        statements = resource.get("Properties", {}).get("PolicyDocument", {}).get("Statement", [])
+        for statement in statements:
+            if statement.get("Effect") != "Allow":
+                continue
+            actions = statement.get("Action", [])
+            actions = actions if isinstance(actions, list) else [actions]
+            offending = disallowed_actions.intersection(actions)
+            assert not offending, f"{resource_id} grants disallowed wildcard action(s) {offending}"
 
 
 def test_container_secrets_security():
@@ -195,6 +225,72 @@ def test_container_secrets_security():
                 found_secure_secret = True
 
     assert found_secure_secret, "Expected at least one container to retrieve secrets from Secrets Manager"
+
+
+def test_kms_key_policy_least_privilege():
+    """Test that customer-managed KMS keys restrict access to least privilege if deployed"""
+    stack, template, config = _create_test_stack()
+
+    kms_resources = template.find_resources("AWS::KMS::Key")
+    if not kms_resources:
+        return
+
+    def _actions(statement):
+        actions = statement.get("Action", [])
+        return actions if isinstance(actions, list) else [actions]
+
+    def _is_root_principal(statement):
+        principal = statement.get("Principal", {})
+        aws_principal = principal.get("AWS", {}) if isinstance(principal, dict) else {}
+        # CDK renders the root principal via an Fn::Join/Fn::Sub containing ":root"
+        return "root" in str(aws_principal)
+
+    for resource_id, resource in kms_resources.items():
+        statements = resource.get("Properties", {}).get("KeyPolicy", {}).get("Statement", [])
+        assert statements, f"KMS key {resource_id} should have a key policy with statements"
+
+        has_root_full_access = False
+        for statement in statements:
+            actions = _actions(statement)
+            if _is_root_principal(statement) and "kms:*" in actions:
+                has_root_full_access = True
+                continue
+
+            # Non-root principals (e.g. cross-account roles) must never get a wildcard action
+            assert "*" not in actions and "kms:*" not in actions, (
+                f"KMS key {resource_id} grants a non-root principal a wildcard action: {actions}"
+            )
+            assert set(actions).issubset({"kms:Decrypt", "kms:DescribeKey"}), (
+                f"KMS key {resource_id} grants a non-root principal actions beyond "
+                f"kms:Decrypt/kms:DescribeKey: {actions}"
+            )
+
+        assert has_root_full_access, f"KMS key {resource_id} should grant the account root full access"
+
+
+def test_secrets_manager_resource_policy_least_privilege():
+    """Test that Secrets Manager resource policies restrict access to GetSecretValue only if deployed"""
+    stack, template, config = _create_test_stack()
+
+    policy_resources = template.find_resources("AWS::SecretsManager::ResourcePolicy")
+    if not policy_resources:
+        return
+
+    for resource_id, resource in policy_resources.items():
+        statements = resource.get("Properties", {}).get("ResourcePolicy", {}).get("Statement", [])
+        assert statements, f"Secrets Manager resource policy {resource_id} should have statements"
+
+        for statement in statements:
+            actions = statement.get("Action", [])
+            actions = actions if isinstance(actions, list) else [actions]
+            assert actions and set(actions) == {"secretsmanager:GetSecretValue"}, (
+                f"{resource_id} statement should only allow secretsmanager:GetSecretValue, found {actions}"
+            )
+
+            principal = statement.get("Principal", {})
+            assert principal != "*", f"{resource_id} must not grant access to a wildcard principal"
+            if isinstance(principal, dict):
+                assert principal.get("AWS") != "*", f"{resource_id} must not grant access to a wildcard AWS principal"
 
 
 def test_alb_https_enforcement():
@@ -300,6 +396,16 @@ def test_cloudfront_key_security():
         "PublicKeyConfig": {
             "Name": Match.any_value(),
             "EncodedKey": Match.any_value()
+        }
+    })
+
+    # A KeyGroup/PublicKey existing on their own enforce nothing — the distribution's
+    # default behavior must actually reference the key group to require signed URLs
+    template.has_resource_properties("AWS::CloudFront::Distribution", {
+        "DistributionConfig": {
+            "DefaultCacheBehavior": {
+                "TrustedKeyGroups": Match.any_value()
+            }
         }
     })
 
@@ -557,26 +663,6 @@ def test_cloudfront_https_enforcement():
     })
 
 
-# def test_cloudfront_distribution_uses_key_group():
-#     """Test that the CloudFront distribution enforces signed URLs via a trusted key group if deployed"""
-#     stack, template, config = _create_test_stack()
-# 
-#     # Only test if a CloudFront distribution is deployed
-#     if not template.find_resources("AWS::CloudFront::Distribution"):
-#         return
-# 
-#     # trusted_key_groups=[key_group] is set on the default behavior in stack.py
-#     # CloudFormation renders this as TrustedKeyGroups in DefaultCacheBehavior
-#     # This ensures unsigned requests are rejected by the distribution
-#     template.has_resource_properties("AWS::CloudFront::Distribution", {
-#         "DistributionConfig": {
-#             "DefaultCacheBehavior": {
-#                 "TrustedKeyGroups": Match.any_value()
-#             }
-#         }
-#     })
-
-
 def test_no_public_ingress_to_services():
     """Test that only the ALB accepts inbound traffic from the public internet (ports 80 and 443)"""
     stack, template, config = _create_test_stack()
@@ -610,7 +696,10 @@ if __name__ == "__main__":
         test_iam_role_naming_aspect,
         test_permission_boundaries,
         test_iam_role_trust_policies,
+        test_iam_policies_no_wildcard_actions,
         test_container_secrets_security,
+        test_kms_key_policy_least_privilege,
+        test_secrets_manager_resource_policy_least_privilege,
         test_alb_https_enforcement,
         test_alb_ssl_certificate,
         test_alb_security_policy,
@@ -627,7 +716,6 @@ if __name__ == "__main__":
         test_opensearch_slow_logging,
         test_removal_policies,
         test_cloudfront_https_enforcement,
-        # test_cloudfront_distribution_uses_key_group,
         test_no_public_ingress_to_services,
     ]
     
