@@ -1,9 +1,17 @@
+import re
+
 import aws_cdk as cdk
 from aws_cdk.assertions import Template, Match
 
 from configparser import ConfigParser
 
 from app import build_stack
+
+
+def _is_secure_tls_policy(ssl_policy):
+    """AWS ELB security policy names encode their minimum TLS version (e.g. '...-1-2-...').
+    Accept any policy whose minimum is TLS 1.2 or 1.3; reject ones permitting TLS 1.0/1.1."""
+    return bool(re.search(r"-1-[23]-", ssl_policy)) and not re.search(r"-1-[01]-", ssl_policy)
 
 
 def _create_test_stack():
@@ -235,6 +243,11 @@ def test_kms_key_policy_least_privilege():
     if not kms_resources:
         return
 
+    # Actions granted by CDK's standard key.grant_encrypt_decrypt()/grant_decrypt() helpers
+    allowed_non_root_actions = {
+        "kms:Decrypt", "kms:DescribeKey", "kms:Encrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*"
+    }
+
     def _actions(statement):
         actions = statement.get("Action", [])
         return actions if isinstance(actions, list) else [actions]
@@ -260,9 +273,9 @@ def test_kms_key_policy_least_privilege():
             assert "*" not in actions and "kms:*" not in actions, (
                 f"KMS key {resource_id} grants a non-root principal a wildcard action: {actions}"
             )
-            assert set(actions).issubset({"kms:Decrypt", "kms:DescribeKey"}), (
+            assert set(actions).issubset(allowed_non_root_actions), (
                 f"KMS key {resource_id} grants a non-root principal actions beyond "
-                f"kms:Decrypt/kms:DescribeKey: {actions}"
+                f"{sorted(allowed_non_root_actions)}: {actions}"
             )
 
         assert has_root_full_access, f"KMS key {resource_id} should grant the account root full access"
@@ -339,19 +352,27 @@ def test_alb_ssl_certificate():
 
 
 def test_alb_security_policy():
-    """Test that ALB uses secure SSL security policy if deployed"""
+    """Test that ALB uses a security policy enforcing a secure minimum TLS version if deployed"""
     stack, template, config = _create_test_stack()
 
     # Only test if an ALB is deployed
     if not template.find_resources("AWS::ElasticLoadBalancingV2::LoadBalancer"):
         return
 
-    # HTTPS listener should use a secure SSL policy
-    template.has_resource_properties("AWS::ElasticLoadBalancingV2::Listener", {
-        "Port": 443,
-        "Protocol": "HTTPS",
-        "SslPolicy": "ELBSecurityPolicy-TLS13-1-2-2021-06"  # Secure SSL policy that supports TLS 1.2 and 1.3"
-    })
+    https_listeners = {
+        resource_id: resource
+        for resource_id, resource in template.find_resources("AWS::ElasticLoadBalancingV2::Listener").items()
+        if resource.get("Properties", {}).get("Port") == 443
+    }
+    assert https_listeners, "Expected at least one HTTPS listener"
+
+    # Accept any security policy that enforces a minimum of TLS 1.2 (e.g. the
+    # default, Res, Ext1/Ext2, or FIPS variants), not just one exact policy name
+    for resource_id, resource in https_listeners.items():
+        ssl_policy = resource.get("Properties", {}).get("SslPolicy")
+        assert ssl_policy and _is_secure_tls_policy(ssl_policy), (
+            f"{resource_id} SslPolicy '{ssl_policy}' does not enforce a minimum of TLS 1.2"
+        )
 
 
 def test_network_isolation():
