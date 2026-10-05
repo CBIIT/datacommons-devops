@@ -391,6 +391,62 @@ def test_alb_security_policy():
         )
 
 
+def _https_listener_attributes(template):
+    """Return {listener_resource_id: {attribute_key: attribute_value}} for every port-443 listener."""
+    https_listeners = {
+        resource_id: resource
+        for resource_id, resource in template.find_resources("AWS::ElasticLoadBalancingV2::Listener").items()
+        if resource.get("Properties", {}).get("Port") == 443
+    }
+    assert https_listeners, "Expected at least one HTTPS listener"
+    return {
+        resource_id: {
+            attribute.get("Key"): attribute.get("Value")
+            for attribute in resource.get("Properties", {}).get("ListenerAttributes", [])
+        }
+        for resource_id, resource in https_listeners.items()
+    }
+
+
+def test_alb_listener_enforces_hsts_preload_header():
+    """Test that the ALB HTTPS listener injects the required HSTS preload header if deployed"""
+    stack, template, config = _create_test_stack()
+
+    if not template.find_resources("AWS::ElasticLoadBalancingV2::LoadBalancer"):
+        return
+
+    for resource_id, attributes in _https_listener_attributes(template).items():
+        assert attributes.get("routing.http.response.strict_transport_security.header_value") == (
+            "max-age=31536000; includeSubDomains; preload"
+        ), f"{resource_id} does not enforce the required HSTS preload header"
+
+
+def test_alb_listener_enforces_x_content_type_options_header():
+    """Test that the ALB HTTPS listener injects X-Content-Type-Options: nosniff if deployed"""
+    stack, template, config = _create_test_stack()
+
+    if not template.find_resources("AWS::ElasticLoadBalancingV2::LoadBalancer"):
+        return
+
+    for resource_id, attributes in _https_listener_attributes(template).items():
+        assert attributes.get("routing.http.response.x_content_type_options.header_value") == "nosniff", (
+            f"{resource_id} does not set X-Content-Type-Options: nosniff"
+        )
+
+
+def test_alb_listener_disables_server_header():
+    """Test that the ALB HTTPS listener disables the Server response header if deployed"""
+    stack, template, config = _create_test_stack()
+
+    if not template.find_resources("AWS::ElasticLoadBalancingV2::LoadBalancer"):
+        return
+
+    for resource_id, attributes in _https_listener_attributes(template).items():
+        assert attributes.get("routing.http.response.server.enabled") == "false", (
+            f"{resource_id} does not disable the Server response header"
+        )
+
+
 def test_network_isolation():
     """Test that ECS services are properly isolated in private subnets if deployed"""
     stack, template, config = _create_test_stack()
@@ -740,6 +796,9 @@ if __name__ == "__main__":
         test_alb_https_enforcement,
         test_alb_ssl_certificate,
         test_alb_security_policy,
+        test_alb_listener_enforces_hsts_preload_header,
+        test_alb_listener_enforces_x_content_type_options_header,
+        test_alb_listener_disables_server_header,
         test_network_isolation,
         test_cloudfront_key_security,
         test_opensearch_allowed_ips_security,
