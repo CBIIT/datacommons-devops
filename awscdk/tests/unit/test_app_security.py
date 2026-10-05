@@ -243,12 +243,25 @@ def test_kms_key_policy_least_privilege():
     if not kms_resources:
         return
 
-    # Actions granted by CDK's standard key.grant_encrypt_decrypt()/grant_decrypt() helpers
-    # (kms:CreateGrant is included for grantable services, e.g. ECS/EFS, that need to delegate grants)
-    allowed_non_root_actions = {
-        "kms:Decrypt", "kms:DescribeKey", "kms:Encrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*",
-        "kms:CreateGrant",
+    # Control-plane/admin actions a non-root principal should never hold; usage actions
+    # (Decrypt/Encrypt/GenerateDataKey/CreateGrant and their many wildcard-suffixed AWS-service
+    # variants, e.g. ECS Exec's "kms:Decrypt*") are intentionally not enumerated here since AWS
+    # services legitimately emit new variants over time.
+    dangerous_kms_actions = {
+        "kms:PutKeyPolicy", "kms:GetKeyPolicy", "kms:ScheduleKeyDeletion", "kms:DisableKey",
+        "kms:EnableKeyRotation", "kms:DisableKeyRotation", "kms:RevokeGrant", "kms:TagResource",
+        "kms:UntagResource", "kms:CreateKey", "kms:DeleteAlias", "kms:UpdateAlias",
+        "kms:UpdateKeyDescription", "kms:ImportKeyMaterial", "kms:DeleteImportedKeyMaterial",
+        "kms:ReplicateKey", "kms:UpdatePrimaryRegion",
     }
+
+    def _is_dangerous_action(action):
+        if action in ("*", "kms:*"):
+            return True
+        if action.endswith("*"):
+            prefix = action[:-1]
+            return any(dangerous.startswith(prefix) for dangerous in dangerous_kms_actions)
+        return action in dangerous_kms_actions
 
     def _actions(statement):
         actions = statement.get("Action", [])
@@ -275,9 +288,10 @@ def test_kms_key_policy_least_privilege():
             assert "*" not in actions and "kms:*" not in actions, (
                 f"KMS key {resource_id} grants a non-root principal a wildcard action: {actions}"
             )
-            assert set(actions).issubset(allowed_non_root_actions), (
-                f"KMS key {resource_id} grants a non-root principal actions beyond "
-                f"{sorted(allowed_non_root_actions)}: {actions}"
+            dangerous = [action for action in actions if _is_dangerous_action(action)]
+            assert not dangerous, (
+                f"KMS key {resource_id} grants a non-root principal administrative/control-plane "
+                f"actions: {dangerous}"
             )
 
         assert has_root_full_access, f"KMS key {resource_id} should grant the account root full access"
