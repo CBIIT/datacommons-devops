@@ -244,8 +244,10 @@ def test_kms_key_policy_least_privilege():
         return
 
     # Actions granted by CDK's standard key.grant_encrypt_decrypt()/grant_decrypt() helpers
+    # (kms:CreateGrant is included for grantable services, e.g. ECS/EFS, that need to delegate grants)
     allowed_non_root_actions = {
-        "kms:Decrypt", "kms:DescribeKey", "kms:Encrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*"
+        "kms:Decrypt", "kms:DescribeKey", "kms:Encrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*",
+        "kms:CreateGrant",
     }
 
     def _actions(statement):
