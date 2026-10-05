@@ -412,74 +412,20 @@ def _default_browser_check(url, validation_text):
 
 
 
-# Cache-busting warm-up step, prepended to every browser monitor.
+# Browser-level reload, run before the dismiss/assertion steps.
 #
 # WHY: CDN edge nodes intermittently serve stale/broken cached static assets --
 # manifest.json or JS chunks coming back as HTML, which surfaces in the browser
 # console as "SyntaxError: Unexpected token '<'". Which edge node answers a
 # given request varies, so whether a run sees good or broken assets is luck of
-# the draw. That makes it look like flaky failures scattered across projects
-# and tiers with no pattern. This is an upstream CDN caching problem, NOT a bug
-# in these scripts, the locators, or the monitoring setup.
+# the draw, and it looks like flaky failures scattered across projects and
+# tiers with no pattern. This is an upstream CDN caching problem, NOT a bug in
+# these scripts, the locators, or the monitoring setup.
 #
-# This step re-navigates to the same page with a unique query parameter, so the
-# request misses any stale edge-cached entry and is served fresh; the dismiss
-# and assertion steps that follow then run against that fresh load. It asserts
-# nothing itself, and is allowFailure/non-critical so that if the cache-buster
-# is ever rejected (a WAF blocking the unfamiliar query param, say) the monitor
-# quietly falls back to the normal page load instead of failing.
-#
-# Paired with the refresh step below -- please don't remove either without
-# first confirming the CDN caching issue is actually fixed upstream.
-_CACHE_BUST_VAR = "CACHEBUST"
-
-
-def _cache_bust_variable():
-    """
-    Local variable supplying the cache-buster's per-run random value.
-
-    DataDog's built-in generators ({{numeric(n)}}, {{uuid}}, ...) only work as
-    the *pattern* of a declared variable -- written inline in a step they are
-    not expanded, and the test is rejected at creation. So the generator is
-    declared here and the step references it by name instead. A value baked in
-    at provisioning time would be constant, and would itself just get cached
-    after the first run, defeating the point.
-    """
-    return {
-        "name": _CACHE_BUST_VAR,
-        "type": "text",
-        "pattern": "{{numeric(10)}}",
-        "example": "1234567890",
-    }
-
-
-def _cache_bust_step(url):
-    """First step of every browser test: reload the page bypassing edge cache."""
-    separator = "&" if "?" in url else "?"
-    # goToUrl takes its destination under params.value (not params.url).
-    return {
-        "name": "Cache-busting warm-up",
-        "type": "goToUrl",
-        "timeout": 15,
-        "allowFailure": True,
-        "isCritical": False,
-        "params": {
-            "value": "{}{}_cb={{{{{}}}}}".format(url, separator, _CACHE_BUST_VAR),
-        },
-    }
-
-
-# Browser-level reload, immediately after the cache-busting navigation above.
-#
-# WHY: the cache-buster only changes the document URL -- the JS chunks and
-# manifest.json it pulls in keep their own URLs and their own edge-cache
-# entries, so a poisoned asset can still be served on that first load. A real
-# reload is a second, independent roll of the dice: a different edge node may
-# answer, and anything already revalidated stays warm. Cheap insurance against
-# the same stale-asset failure the cache-buster targets.
-#
-# Non-critical for the same reason as the cache-buster: this exists to improve
-# the odds, never to invent a new way for the monitor to fail.
+# A reload is a second, independent roll of the dice: a different edge node may
+# answer, and anything already revalidated stays warm. It asserts nothing, and
+# is allowFailure/non-critical -- it exists to improve the odds, never to
+# invent a new way for the monitor to fail.
 def _refresh_step():
     """Second step of every browser test: force a genuine browser reload."""
     return {
@@ -489,45 +435,6 @@ def _refresh_step():
         "allowFailure": True,
         "isCritical": False,
         "params": {},
-    }
-
-
-# Diagnostic only -- never blocks the test.
-#
-# WHY: when a browser monitor fails we currently can't tell "the React app
-# crashed on init" (the SyntaxError: Unexpected token '<' case, caused by a
-# CDN serving HTML in place of a JS chunk) apart from "the app mounted fine
-# but the expected content genuinely isn't there". Those want completely
-# different follow-up, and guessing between them has cost us real time.
-#
-# This step records the answer on every run: if it ALSO failed, the app never
-# mounted -> CDN/asset problem. If it passed but the content assertion still
-# failed -> the app is healthy and the content is actually missing or the
-# locator is wrong. allowFailure/isCritical keep it purely observational.
-#
-# The root element id differs per app -- the portals use "root" while the
-# cbioportal content sites use "reactRoot" (both verified against the live
-# HTML) -- so all the known ids are tried before giving up, and "app" is
-# included as the other common convention for whatever ships next.
-_REACT_MOUNTED_JS = (
-    "var root = document.getElementById('root')\n"
-    "        || document.getElementById('reactRoot')\n"
-    "        || document.getElementById('app');\n"
-    "return !!(root && root.children.length > 0);"
-)
-
-
-def _react_mounted_step():
-    """Diagnostic: did the SPA actually mount anything into its root node?"""
-    return {
-        "name": "Assert React app mounted",
-        "type": "assertFromJavascript",
-        "timeout": 20,
-        "allowFailure": True,
-        "isCritical": False,
-        # assertFromJavascript takes the snippet under params.code, and the
-        # snippet must `return` the value being asserted.
-        "params": {"code": _REACT_MOUNTED_JS},
     }
 
 
@@ -567,10 +474,9 @@ def setmonitor(project, tier, api, notification):
 
     resolved_url = (parsed["url"] if parsed else None) or api["url"]
 
-    # Cache-busting warm-up then a reload run first for every browser monitor,
-    # including the URL-only fallbacks below -- see _cache_bust_step and
-    # _refresh_step for the reasoning. Both are non-critical.
-    steps = [_cache_bust_step(resolved_url), _refresh_step()]
+    # A reload runs first for every browser monitor, including the URL-only
+    # fallbacks below -- see _refresh_step for the reasoning. Non-critical.
+    steps = [_refresh_step()]
 
     if parsed is None:
 
@@ -704,10 +610,6 @@ def setmonitor(project, tier, api, notification):
                 xpath_candidates = parsed["xpath"]
                 if isinstance(xpath_candidates, str):
                     xpath_candidates = [xpath_candidates]
-                # Diagnostic, immediately before the real assertion so the two
-                # results sit side by side in the run -- see
-                # _react_mounted_step.
-                steps.append(_react_mounted_step())
                 steps.append(
                     {
                         "name": "Assert element present",
@@ -737,10 +639,6 @@ def setmonitor(project, tier, api, notification):
                 # visible elements -- assertElementContent's visibility
 
                 # requirement is the faithful translation of that behavior.
-
-                # Diagnostic first -- see _react_mounted_step.
-
-                steps.append(_react_mounted_step())
 
                 steps.append(
 
@@ -806,9 +704,7 @@ def setmonitor(project, tier, api, notification):
 
             "setCookie": "",
 
-            # Declares CACHEBUST for the cache-busting warm-up step above.
-
-            "variables": [_cache_bust_variable()],
+            "variables": [],
 
         },
 
