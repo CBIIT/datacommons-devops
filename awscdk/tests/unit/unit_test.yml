@@ -1,0 +1,221 @@
+name: POPSCI CDK Unit Testing
+permissions: 
+  contents: write
+  id-token: write
+on:
+  workflow_dispatch:
+    inputs:
+      security_tests_branch:
+        description: "Branch of datacommons-devops to pull security tests from"
+        required: false
+        default: "main"
+  push:
+    paths:
+      - awscdk/bento/**
+run-name: ${{ format('CDK Unit Tests (branch:{0})', github.ref_name || '') }}
+jobs:
+  build:
+    name: Popsci CDK Unit Testing
+    permissions:
+      contents: write
+      id-token: write
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+    - name: Check out code
+      uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5     # v2.7.0
+      with:
+          fetch-depth: 0            # needed for rebase
+          persist-credentials: true # so pushes use GITHUB_TOKEN
+
+    - name: Configure git identity
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    - name: Trust workspace
+      run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa     # v4.8.0
+      with:
+        python-version: "3.9"
+ 
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # install stack Python dependencies
+        cd awscdk/bento && pip3 install --ignore-installed --break-system-packages -r requirements.txt
+
+    - name: AWS OIDC Authentication
+      id: aws-auth
+      uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502     # v4.0.2
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        role-session-name: ${{ github.actor }}
+    
+    - name: Get config files
+      id: get-config
+      env:
+        ENV_NAME: dev
+        BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+      run: |
+        if [[ "$ENV_NAME" =~ ^(dev|qa|stage|prod)$ ]]; then
+          echo "Environment is $ENV_NAME"
+        else
+          BRANCH_NAME=$(echo $BRANCH_NAME | tr '_' '-')
+          echo "Environment is $ENV_NAME"
+          echo "Branch name is $BRANCH_NAME"
+        fi
+
+        vars=$(python3 scripts/readYML.py versions.yaml)
+        for v in $vars; do command="export $v"; eval $command;  done
+
+        FRONTEND_IMAGE="${FRONTEND_IMAGE:-$IMAGE_FRONTEND}"
+        echo "FRONTEND_IMAGE=$FRONTEND_IMAGE" >> $GITHUB_ENV
+        BACKEND_IMAGE="${BACKEND_IMAGE:-$IMAGE_BACKEND}"
+        echo "BACKEND_IMAGE=$BACKEND_IMAGE" >> $GITHUB_ENV
+        CGC_IMAGE="${CGC_IMAGE:-$IMAGE_CGC}"
+        echo "CGC_IMAGE=$CGC_IMAGE" >> $GITHUB_ENV
+
+        cd awscdk/bento/
+        aws s3api get-object --bucket crdc-popsci-cdk-config-bucket --key config/config.ini.$ENV_NAME ./config.ini.$ENV_NAME
+        
+        envsubst < config.ini.$ENV_NAME > config.ini
+
+    - name: Get security tests
+      uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5     # v2.7.0
+      with:
+        repository: CBIIT/datacommons-devops
+        ref: ${{ inputs.security_tests_branch || 'main' }}
+        path: external
+        sparse-checkout: |
+          awscdk/tests/unit/test_app_security.py
+        sparse-checkout-cone-mode: false
+
+    - name: Copy security tests
+      run: |
+        cp external/awscdk/tests/unit/test_app_security.py awscdk/bento/tests/unit/test_app_security.py
+    
+    - name: Execute Unit Tests
+      id: execute-unit-tests
+      env:
+        AWS_DEFAULT_ACCOUNT: ${{ secrets.AWS_ACCOUNT }}
+        AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+        ENV_NAME: dev
+        CDK_CMD: ${{ inputs.cdk_command }}
+      run: |
+
+        cd awscdk/bento && pytest --junitxml=tests/cdk.out/unit-test-report.xml
+
+      continue-on-error: true
+
+    # Step 0 — Upload the test report as a GA artifact
+    - name: Upload test report artifact
+      id: upload-artifact
+      if: steps.execute-unit-tests.outcome == 'failure'
+      uses: actions/upload-artifact@v4
+      with:
+        name: unit-test-report-${{ github.run_number }}
+        path: ./awscdk/bento/tests/cdk.out/unit-test-report.xml
+        retention-days: 30
+
+    # Step 1 — Start a Copilot agent task directly via the Agent Tasks REST API.
+    #           base_ref ensures Copilot branches from and targets the test branch,
+    #           not main. No GraphQL, no issue assignment, no rebase needed.
+    - name: Start Copilot agent task
+      id: start-task
+      if: steps.execute-unit-tests.outcome == 'failure'
+      env:
+        GH_TOKEN: ${{ secrets.COPILOT_TOKEN }}
+        BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+        SECURITY_TESTS_REPO: CBIIT/datacommons-devops
+        SECURITY_TESTS_BRANCH: ${{ inputs.security_tests_branch || 'main' }}
+      run: |
+        set -euo pipefail
+
+        SHA="${{ github.sha }}"
+        SHORT="${SHA:0:7}"
+        COMMIT_URL="${{ github.server_url }}/${{ github.repository }}/commit/${SHA}"
+        RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        ARTIFACT_NAME="unit-test-report-${{ github.run_number }}"
+
+        echo "Starting Copilot agent task..."
+        echo "  repo   : ${{ github.repository }}"
+        echo "  branch : $BRANCH_NAME"
+        echo "  commit : $SHORT"
+        echo "  security tests repo   : $SECURITY_TESTS_REPO"
+        echo "  security tests branch : $SECURITY_TESTS_BRANCH"
+
+        PROMPT="This task was triggered automatically by workflow '${{ github.workflow }}' (run #${{ github.run_number }}).
+
+        Commit: ${COMMIT_URL}
+
+        The unit test report (\`${ARTIFACT_NAME}\`) is attached to the Actions run that triggered this task: ${RUN_URL}
+        Download it from the Artifacts section at the bottom of that page.
+
+        Please perform the following actions:
+        - Analyze and summarize the test results in the artifact attached to the linked Actions run.
+        - The unit tests include security tests sourced from the \`${SECURITY_TESTS_BRANCH}\` branch of \`${SECURITY_TESTS_REPO}\` at the time this run executed. The specific file used was: https://github.com/${SECURITY_TESTS_REPO}/blob/${SECURITY_TESTS_BRANCH}/awscdk/tests/unit/test_app_security.py
+        - NOTE: These security tests MUST remain in the central datacommons-devops repo to be picked up by the security test workflow, but they are relevant to review here since they will run alongside the unit tests and may have insights relevant to any failures. These tests MUST NOT be moved into the local repo. If you need to reproduce the test run, use the \`${SECURITY_TESTS_BRANCH}\` branch of \`${SECURITY_TESTS_REPO}\` to obtain the security test file.
+        - Determine whether the failure was expected due to code changes in commit ${SHORT}.
+        - If the failure was not expected, investigate the cause.
+        - If the failure was expected due to code changes, suggest unit test updates to bring the tests in line with the CDK code.
+        - Fix any coding errors and apply any needed updates, to either code or test files, so that all tests pass.
+        - Open a pull request targeting branch ${BRANCH_NAME} with your changes."
+
+        HTTP_CODE=$(curl -sS -o /tmp/task_response.json -w "%{http_code}" \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${GH_TOKEN}" \
+          -H "X-GitHub-Api-Version: 2026-03-10" \
+          "https://api.github.com/agents/repos/${{ github.repository }}/tasks" \
+          -d "$(jq -n \
+            --arg prompt "$PROMPT" \
+            --arg base_ref "$BRANCH_NAME" \
+            '{prompt: $prompt, base_ref: $base_ref}')")
+
+        echo "HTTP status: $HTTP_CODE"
+        cat /tmp/task_response.json
+        echo ""
+
+        if [ "$HTTP_CODE" -ge 400 ]; then
+          echo "::error::Task creation failed with HTTP $HTTP_CODE."
+          jq -r '.message // "no message"' /tmp/task_response.json
+          exit 1
+        fi
+
+        TASK_ID=$(jq -r '.id // empty' /tmp/task_response.json)
+        TASK_URL=$(jq -r '.html_url // empty' /tmp/task_response.json)
+        TASK_STATE=$(jq -r '.state // "unknown"' /tmp/task_response.json)
+
+        if [ -z "$TASK_ID" ]; then
+          echo "::error::No task id in response despite HTTP $HTTP_CODE."
+          exit 1
+        fi
+
+        echo "Task created successfully."
+        echo "  id    : $TASK_ID"
+        echo "  state : $TASK_STATE"
+        echo "  url   : $TASK_URL"
+
+        echo "task_id=$TASK_ID"   >> "$GITHUB_OUTPUT"
+        echo "task_url=$TASK_URL" >> "$GITHUB_OUTPUT"
+
+    # Final gate: fail the job if tests failed
+    - name: Fail job if tests failed
+      if: ${{ always() && steps.execute-unit-tests.outcome == 'failure' }}
+      run: |
+        echo "Unit tests failed — Copilot task created at: ${{ steps.start-task.outputs.task_url }}"
+        exit 1
+
+    - name: Slack Notification
+      if: ${{ failure() }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      uses: act10ns/slack@87c73aef9f8838eb6feae81589a6b1487a4a9e08   # v1.6.0
+      with:
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
+        message: "PopSci Unit Tests - Branch: ${{ github.head_ref || github.ref_name }}"

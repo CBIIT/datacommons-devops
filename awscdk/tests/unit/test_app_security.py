@@ -1,9 +1,17 @@
+import re
+
 import aws_cdk as cdk
 from aws_cdk.assertions import Template, Match
 
 from configparser import ConfigParser
 
 from app import build_stack
+
+
+def _is_secure_tls_policy(ssl_policy):
+    """AWS ELB security policy names encode their minimum TLS version (e.g. '...-1-2-...').
+    Accept any policy whose minimum is TLS 1.2 or 1.3; reject ones permitting TLS 1.0/1.1."""
+    return bool(re.search(r"-1-[23]-", ssl_policy)) and not re.search(r"-1-[01]-", ssl_policy)
 
 
 def _create_test_stack():
@@ -135,20 +143,33 @@ def test_iam_role_naming_aspect():
 
     # Roles should have the prefix applied by MyAspect for compliance
     expected_prefix = f"{config['iam']['role_prefix']}-{config['main']['tier']}"
-    
-    template.has_resource_properties("AWS::IAM::Role", {
-        "RoleName": Match.string_like_regexp(f"^{expected_prefix}-.*")
-    })
+
+    # Check every role, not just one, since MyAspect is expected to rename all of them
+    role_resources = template.find_resources("AWS::IAM::Role")
+    assert role_resources, "Expected at least one IAM::Role in the stack"
+    for resource_id, resource in role_resources.items():
+        role_name = resource.get("Properties", {}).get("RoleName")
+        assert isinstance(role_name, str) and role_name.startswith(f"{expected_prefix}-"), (
+            f"Role {resource_id} RoleName '{role_name}' does not start with expected prefix '{expected_prefix}-'"
+        )
 
 
 def test_permission_boundaries():
     """Test that permission boundaries are applied to IAM roles for security compliance"""
     stack, template, config = _create_test_stack()
 
-    if config.has_option('iam', 'permission_boundary'):
-        template.has_resource_properties("AWS::IAM::Role", {
-            "PermissionsBoundary": config['iam']['permission_boundary']
-        })
+    if not config.has_option('iam', 'permission_boundary'):
+        return
+
+    # Every role must carry the boundary, not just one
+    expected_boundary = config['iam']['permission_boundary']
+    role_resources = template.find_resources("AWS::IAM::Role")
+    assert role_resources, "Expected at least one IAM::Role in the stack"
+    for resource_id, resource in role_resources.items():
+        boundary = resource.get("Properties", {}).get("PermissionsBoundary")
+        assert boundary == expected_boundary, (
+            f"Role {resource_id} PermissionsBoundary '{boundary}' does not match expected '{expected_boundary}'"
+        )
 
 
 def test_iam_role_trust_policies():
@@ -171,6 +192,23 @@ def test_iam_role_trust_policies():
     })
 
 
+def test_iam_policies_no_wildcard_actions():
+    """Test that IAM policy documents do not grant blanket wildcard actions"""
+    stack, template, config = _create_test_stack()
+
+    disallowed_actions = {"*", "iam:*", "s3:*"}
+
+    for resource_id, resource in template.find_resources("AWS::IAM::Policy").items():
+        statements = resource.get("Properties", {}).get("PolicyDocument", {}).get("Statement", [])
+        for statement in statements:
+            if statement.get("Effect") != "Allow":
+                continue
+            actions = statement.get("Action", [])
+            actions = actions if isinstance(actions, list) else [actions]
+            offending = disallowed_actions.intersection(actions)
+            assert not offending, f"{resource_id} grants disallowed wildcard action(s) {offending}"
+
+
 def test_container_secrets_security():
     """Test that containers retrieve secrets securely from Secrets Manager if deployed"""
     stack, template, config = _create_test_stack()
@@ -180,22 +218,108 @@ def test_container_secrets_security():
     if not task_def_resources:
         return
 
-    # Containers should get secrets from Secrets Manager, not environment variables
-    # Secrets use Fn::Join with secret reference and field name
-    template.has_resource_properties("AWS::ECS::TaskDefinition", {
-        "ContainerDefinitions": [
-            {
-                "Secrets": Match.array_with([
-                    {
-                        "Name": Match.any_value(),
-                        "ValueFrom": {
-                            "Fn::Join": Match.any_value()  # Validates Fn::Join structure exists
-                        }
-                    }
-                ])
-            }
-        ]
-    })
+    # Inspect every container (including sidecars) rather than matching the
+    # ContainerDefinitions array exactly, since that array's length varies
+    # depending on how many sidecar containers a task definition has.
+    found_secure_secret = False
+    for resource_id, resource in task_def_resources.items():
+        containers = resource.get("Properties", {}).get("ContainerDefinitions", [])
+        for container in containers:
+            for secret in container.get("Secrets", []):
+                assert "Fn::Join" in secret.get("ValueFrom", {}), (
+                    f"{resource_id} container '{container.get('Name')}' secret "
+                    f"'{secret.get('Name')}' must reference Secrets Manager via Fn::Join"
+                )
+                found_secure_secret = True
+
+    assert found_secure_secret, "Expected at least one container to retrieve secrets from Secrets Manager"
+
+
+def test_kms_key_policy_least_privilege():
+    """Test that customer-managed KMS keys restrict access to least privilege if deployed"""
+    stack, template, config = _create_test_stack()
+
+    kms_resources = template.find_resources("AWS::KMS::Key")
+    if not kms_resources:
+        return
+
+    # Control-plane/admin actions a non-root principal should never hold; usage actions
+    # (Decrypt/Encrypt/GenerateDataKey/CreateGrant and their many wildcard-suffixed AWS-service
+    # variants, e.g. ECS Exec's "kms:Decrypt*") are intentionally not enumerated here since AWS
+    # services legitimately emit new variants over time.
+    dangerous_kms_actions = {
+        "kms:PutKeyPolicy", "kms:GetKeyPolicy", "kms:ScheduleKeyDeletion", "kms:DisableKey",
+        "kms:EnableKeyRotation", "kms:DisableKeyRotation", "kms:RevokeGrant", "kms:TagResource",
+        "kms:UntagResource", "kms:CreateKey", "kms:DeleteAlias", "kms:UpdateAlias",
+        "kms:UpdateKeyDescription", "kms:ImportKeyMaterial", "kms:DeleteImportedKeyMaterial",
+        "kms:ReplicateKey", "kms:UpdatePrimaryRegion",
+    }
+
+    def _is_dangerous_action(action):
+        if action in ("*", "kms:*"):
+            return True
+        if action.endswith("*"):
+            prefix = action[:-1]
+            return any(dangerous.startswith(prefix) for dangerous in dangerous_kms_actions)
+        return action in dangerous_kms_actions
+
+    def _actions(statement):
+        actions = statement.get("Action", [])
+        return actions if isinstance(actions, list) else [actions]
+
+    def _is_root_principal(statement):
+        principal = statement.get("Principal", {})
+        aws_principal = principal.get("AWS", {}) if isinstance(principal, dict) else {}
+        # CDK renders the root principal via an Fn::Join/Fn::Sub containing ":root"
+        return "root" in str(aws_principal)
+
+    for resource_id, resource in kms_resources.items():
+        statements = resource.get("Properties", {}).get("KeyPolicy", {}).get("Statement", [])
+        assert statements, f"KMS key {resource_id} should have a key policy with statements"
+
+        has_root_full_access = False
+        for statement in statements:
+            actions = _actions(statement)
+            if _is_root_principal(statement) and "kms:*" in actions:
+                has_root_full_access = True
+                continue
+
+            # Non-root principals (e.g. cross-account roles) must never get a wildcard action
+            assert "*" not in actions and "kms:*" not in actions, (
+                f"KMS key {resource_id} grants a non-root principal a wildcard action: {actions}"
+            )
+            dangerous = [action for action in actions if _is_dangerous_action(action)]
+            assert not dangerous, (
+                f"KMS key {resource_id} grants a non-root principal administrative/control-plane "
+                f"actions: {dangerous}"
+            )
+
+        assert has_root_full_access, f"KMS key {resource_id} should grant the account root full access"
+
+
+def test_secrets_manager_resource_policy_least_privilege():
+    """Test that Secrets Manager resource policies restrict access to GetSecretValue only if deployed"""
+    stack, template, config = _create_test_stack()
+
+    policy_resources = template.find_resources("AWS::SecretsManager::ResourcePolicy")
+    if not policy_resources:
+        return
+
+    for resource_id, resource in policy_resources.items():
+        statements = resource.get("Properties", {}).get("ResourcePolicy", {}).get("Statement", [])
+        assert statements, f"Secrets Manager resource policy {resource_id} should have statements"
+
+        for statement in statements:
+            actions = statement.get("Action", [])
+            actions = actions if isinstance(actions, list) else [actions]
+            assert actions and set(actions) == {"secretsmanager:GetSecretValue"}, (
+                f"{resource_id} statement should only allow secretsmanager:GetSecretValue, found {actions}"
+            )
+
+            principal = statement.get("Principal", {})
+            assert principal != "*", f"{resource_id} must not grant access to a wildcard principal"
+            if isinstance(principal, dict):
+                assert principal.get("AWS") != "*", f"{resource_id} must not grant access to a wildcard AWS principal"
 
 
 def test_alb_https_enforcement():
@@ -244,19 +368,83 @@ def test_alb_ssl_certificate():
 
 
 def test_alb_security_policy():
-    """Test that ALB uses secure SSL security policy if deployed"""
+    """Test that ALB uses a security policy enforcing a secure minimum TLS version if deployed"""
     stack, template, config = _create_test_stack()
 
     # Only test if an ALB is deployed
     if not template.find_resources("AWS::ElasticLoadBalancingV2::LoadBalancer"):
         return
 
-    # HTTPS listener should use a secure SSL policy
-    template.has_resource_properties("AWS::ElasticLoadBalancingV2::Listener", {
-        "Port": 443,
-        "Protocol": "HTTPS",
-        "SslPolicy": "ELBSecurityPolicy-TLS13-1-2-2021-06"  # Secure SSL policy that supports TLS 1.2 and 1.3"
-    })
+    https_listeners = {
+        resource_id: resource
+        for resource_id, resource in template.find_resources("AWS::ElasticLoadBalancingV2::Listener").items()
+        if resource.get("Properties", {}).get("Port") == 443
+    }
+    assert https_listeners, "Expected at least one HTTPS listener"
+
+    # Accept any security policy that enforces a minimum of TLS 1.2 (e.g. the
+    # default, Res, Ext1/Ext2, or FIPS variants), not just one exact policy name
+    for resource_id, resource in https_listeners.items():
+        ssl_policy = resource.get("Properties", {}).get("SslPolicy")
+        assert ssl_policy and _is_secure_tls_policy(ssl_policy), (
+            f"{resource_id} SslPolicy '{ssl_policy}' does not enforce a minimum of TLS 1.2"
+        )
+
+
+def _https_listener_attributes(template):
+    """Return {listener_resource_id: {attribute_key: attribute_value}} for every port-443 listener."""
+    https_listeners = {
+        resource_id: resource
+        for resource_id, resource in template.find_resources("AWS::ElasticLoadBalancingV2::Listener").items()
+        if resource.get("Properties", {}).get("Port") == 443
+    }
+    assert https_listeners, "Expected at least one HTTPS listener"
+    return {
+        resource_id: {
+            attribute.get("Key"): attribute.get("Value")
+            for attribute in resource.get("Properties", {}).get("ListenerAttributes", [])
+        }
+        for resource_id, resource in https_listeners.items()
+    }
+
+
+def test_alb_listener_enforces_hsts_preload_header():
+    """Test that the ALB HTTPS listener injects the required HSTS preload header if deployed"""
+    stack, template, config = _create_test_stack()
+
+    if not template.find_resources("AWS::ElasticLoadBalancingV2::LoadBalancer"):
+        return
+
+    for resource_id, attributes in _https_listener_attributes(template).items():
+        assert attributes.get("routing.http.response.strict_transport_security.header_value") == (
+            "max-age=31536000; includeSubDomains; preload"
+        ), f"{resource_id} does not enforce the required HSTS preload header"
+
+
+def test_alb_listener_enforces_x_content_type_options_header():
+    """Test that the ALB HTTPS listener injects X-Content-Type-Options: nosniff if deployed"""
+    stack, template, config = _create_test_stack()
+
+    if not template.find_resources("AWS::ElasticLoadBalancingV2::LoadBalancer"):
+        return
+
+    for resource_id, attributes in _https_listener_attributes(template).items():
+        assert attributes.get("routing.http.response.x_content_type_options.header_value") == "nosniff", (
+            f"{resource_id} does not set X-Content-Type-Options: nosniff"
+        )
+
+
+def test_alb_listener_disables_server_header():
+    """Test that the ALB HTTPS listener disables the Server response header if deployed"""
+    stack, template, config = _create_test_stack()
+
+    if not template.find_resources("AWS::ElasticLoadBalancingV2::LoadBalancer"):
+        return
+
+    for resource_id, attributes in _https_listener_attributes(template).items():
+        assert attributes.get("routing.http.response.server.enabled") == "false", (
+            f"{resource_id} does not disable the Server response header"
+        )
 
 
 def test_network_isolation():
@@ -301,6 +489,16 @@ def test_cloudfront_key_security():
         "PublicKeyConfig": {
             "Name": Match.any_value(),
             "EncodedKey": Match.any_value()
+        }
+    })
+
+    # A KeyGroup/PublicKey existing on their own enforce nothing — the distribution's
+    # default behavior must actually reference the key group to require signed URLs
+    template.has_resource_properties("AWS::CloudFront::Distribution", {
+        "DistributionConfig": {
+            "DefaultCacheBehavior": {
+                "TrustedKeyGroups": Match.any_value()
+            }
         }
     })
 
@@ -421,19 +619,21 @@ def test_container_security_context():
     stack, template, config = _create_test_stack()
 
     # Only test if ECS task definitions are deployed
-    if not template.find_resources("AWS::ECS::TaskDefinition"):
+    task_def_resources = template.find_resources("AWS::ECS::TaskDefinition")
+    if not task_def_resources:
         return
 
-    # Containers should not run as privileged
-    template.has_resource_properties("AWS::ECS::TaskDefinition", {
-        "ContainerDefinitions": [
-            {
-                "Privileged": Match.absent(),  # Should not be privileged
-                # "ReadonlyRootFilesystem": Match.any_value(),
-                # "User": Match.any_value()
-            }
-        ]
-    })
+    # Check every container (including sidecars) individually rather than matching
+    # the ContainerDefinitions array exactly, since its length varies with sidecars,
+    # and so that every sidecar is held to the same "not privileged" requirement.
+    for resource_id, resource in task_def_resources.items():
+        containers = resource.get("Properties", {}).get("ContainerDefinitions", [])
+        for container in containers:
+            assert "Privileged" not in container, (
+                f"{resource_id} container '{container.get('Name')}' should not be privileged"
+            )
+            # "ReadonlyRootFilesystem": Match.any_value(),
+            # "User": Match.any_value()
 
 
 def test_fargate_security():
@@ -556,26 +756,6 @@ def test_cloudfront_https_enforcement():
     })
 
 
-# def test_cloudfront_distribution_uses_key_group():
-#     """Test that the CloudFront distribution enforces signed URLs via a trusted key group if deployed"""
-#     stack, template, config = _create_test_stack()
-# 
-#     # Only test if a CloudFront distribution is deployed
-#     if not template.find_resources("AWS::CloudFront::Distribution"):
-#         return
-# 
-#     # trusted_key_groups=[key_group] is set on the default behavior in stack.py
-#     # CloudFormation renders this as TrustedKeyGroups in DefaultCacheBehavior
-#     # This ensures unsigned requests are rejected by the distribution
-#     template.has_resource_properties("AWS::CloudFront::Distribution", {
-#         "DistributionConfig": {
-#             "DefaultCacheBehavior": {
-#                 "TrustedKeyGroups": Match.any_value()
-#             }
-#         }
-#     })
-
-
 def test_no_public_ingress_to_services():
     """Test that only the ALB accepts inbound traffic from the public internet (ports 80 and 443)"""
     stack, template, config = _create_test_stack()
@@ -609,10 +789,16 @@ if __name__ == "__main__":
         test_iam_role_naming_aspect,
         test_permission_boundaries,
         test_iam_role_trust_policies,
+        test_iam_policies_no_wildcard_actions,
         test_container_secrets_security,
+        test_kms_key_policy_least_privilege,
+        test_secrets_manager_resource_policy_least_privilege,
         test_alb_https_enforcement,
         test_alb_ssl_certificate,
         test_alb_security_policy,
+        test_alb_listener_enforces_hsts_preload_header,
+        test_alb_listener_enforces_x_content_type_options_header,
+        test_alb_listener_disables_server_header,
         test_network_isolation,
         test_cloudfront_key_security,
         test_opensearch_allowed_ips_security,
@@ -626,7 +812,6 @@ if __name__ == "__main__":
         test_opensearch_slow_logging,
         test_removal_policies,
         test_cloudfront_https_enforcement,
-        # test_cloudfront_distribution_uses_key_group,
         test_no_public_ingress_to_services,
     ]
     
