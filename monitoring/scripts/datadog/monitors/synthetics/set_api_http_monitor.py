@@ -17,7 +17,7 @@ from monitors import dd_client
 def setmonitor(project, tier, api, notification):
     monitor_name = "{} {} {} Monitor".format(project, tier, api["name"])
     freq = dd_client.tick_every(tier)
-    locations = dd_client.synthetics_location(api["location"])
+    locations = dd_client.synthetics_location(api["location"], tier)
 
     assertions = [
         {"operator": "is", "type": "statusCode", "target": 200},
