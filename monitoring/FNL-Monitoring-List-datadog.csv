@@ -1,6 +1,81 @@
 Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Validation_Text,Private_Location,Slack_Channel,Alert_Email,Monitored_Resources,Browser_Query
-Populatioin Sciences Data Commons,Popsci,CRDC,prod,Portal,https://populationsciences.datacommons.cancer.gov/,,Population,TRUE,Expand_Data_Commons-crdc-prod-popsci,,,
-Populatioin Sciences Data Commons,Popsci,CRDC,prod,API-OS,https://populationsciences.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+Population Sciences Data Commons,Popsci,CRDC,dev,Portal,https://populationsciences-dev.datacommons.cancer.gov/,,Population,TRUE,Expand_Data_Commons-crdc-subprod-popsci,,,
+Population Sciences Data Commons,Popsci,CRDC,dev,API-OS,https://populationsciences-dev.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://populationsciences-dev.datacommons.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: 'query studyFiles($data_file_uuid: [String]){studyFiles(data_file_uuid: $data_file_uuid){data_file_uuid}}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('studyFiles' in body.data);
+
+  }
+);",,TRUE,C07E28M8R7T,,,
+Population Sciences Data Commons,Popsci,CRDC,qa,Portal,https://populationsciences-qa.datacommons.cancer.gov/,,Population,TRUE,C07E28Expand_Data_Commons-crdc-subprod-popsciM8R7T,,,
+Population Sciences Data Commons,Popsci,CRDC,qa,API-OS,https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: 'query studyFiles($data_file_uuid: [String]){studyFiles(data_file_uuid: $data_file_uuid){data_file_uuid}}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('studyFiles' in body.data);
+
+  }
+);",,TRUE,C07E28M8R7T,,,
+Population Sciences Data Commons,Popsci,CRDC,stage,Portal,https://populationsciences-stage.datacommons.cancer.gov/,,Population,TRUE,Expand_Data_Commons-crdc-subprod-popsci,,,
+Population Sciences Data Commons,Popsci,CRDC,stage,API-OS,https://populationsciences-stage.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+
+$http.post('https://populationsciences-stage.datacommons.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: 'query studyFiles($data_file_uuid: [String]){studyFiles(data_file_uuid: $data_file_uuid){data_file_uuid}}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('studyFiles' in body.data);
+
+  }
+);",,TRUE,C07E28M8R7T,,,
+Population Sciences Data Commons,Popsci,CRDC,prod,Portal,https://populationsciences.datacommons.cancer.gov/,,Population,TRUE,Expand_Data_Commons-crdc-prod-popsci,,,
+Population Sciences Data Commons,Popsci,CRDC,prod,API-OS,https://populationsciences.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://populationsciences.datacommons.cancer.gov/v1/graphql/',
   {
