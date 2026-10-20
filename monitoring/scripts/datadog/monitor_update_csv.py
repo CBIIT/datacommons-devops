@@ -269,12 +269,13 @@ def setSynthetics(input_url):
                 "name": endpoint_name,
                 "url": monitor_url,
                 "location": row["Private_Location"],
-                # The CSV "location" column ("Public" or "Private") decides
+                # The CSV "Location" column ("Public" or "Private") decides
                 # where the test runs from -- see synthetics_location() in
-                # dd_client.py. It is carried as "location_type" because the
-                # key "location" above is already taken by the older
-                # Private_Location flag.
-                "location_type": (row.get("location") or "").strip(),
+                # dd_client.py. Lowercased here so the comparison downstream
+                # is not affected by how the value was typed in the sheet.
+                # It is carried as "location_type" because the key "location"
+                # above is already taken by the older Private_Location flag.
+                "location_type": (row.get("Location") or "").strip().lower(),
                 "query": row["Endpoint_Query"],
                 "browser_query": row["Browser_Query"],
                 "text": row["Validation_Text"],
