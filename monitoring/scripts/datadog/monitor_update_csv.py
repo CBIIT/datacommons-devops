@@ -19,13 +19,15 @@ Slack_Channel values in the CSV are channel IDs; these must match a channel
 name configured in the DataDog Slack integration. Update the slack_channel
 handling in _make_notification() if your workspace uses a different scheme.
 
-CSV column "location" — where each synthetic test runs from:
+CSV column "Location" — where each synthetic test runs from. The value is
+not case-sensitive.
   Public    DataDog's managed location (public internet). Use for endpoints
             that are publicly reachable.
   Private   Our private location inside the AWS network. Required for
             endpoints whose DNS only resolves internally, which is most
             Dev/Qa/Stage hosts.
-  (blank)   Falls back to deciding by tier. Prefer setting it explicitly.
+  (blank)   Defaults to Private, which can reach both internal and public
+            endpoints. Still worth setting explicitly.
 An unrecognised value stops the run so the CSV can be corrected.
 
 New CSV columns (all optional — leave Downtime_Start blank to skip):
@@ -268,14 +270,11 @@ def setSynthetics(input_url):
             api = {
                 "name": endpoint_name,
                 "url": monitor_url,
-                "location": row["Private_Location"],
                 # The CSV "Location" column ("Public" or "Private") decides
                 # where the test runs from -- see synthetics_location() in
                 # dd_client.py. Lowercased here so the comparison downstream
                 # is not affected by how the value was typed in the sheet.
-                # It is carried as "location_type" because the key "location"
-                # above is already taken by the older Private_Location flag.
-                "location_type": (row.get("Location") or "").strip().lower(),
+                "location": (row.get("Location") or "").strip().lower(),
                 "query": row["Endpoint_Query"],
                 "browser_query": row["Browser_Query"],
                 "text": row["Validation_Text"],

@@ -22,7 +22,7 @@ def setmonitor(project, tier, api, notification):
     domain = api["url"].replace("https://", "").replace("http://", "").rstrip("/")
     freq = 86400  # once per day in seconds
 
-    locations = dd_client.synthetics_location(api["location"], tier, api.get("location_type"))
+    locations = dd_client.synthetics_location(api["location"])
     description_fmt = {"domain": domain, "tier": tier}
 
     payload = {
