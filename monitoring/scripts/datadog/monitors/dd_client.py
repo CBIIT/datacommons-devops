@@ -46,64 +46,44 @@ PRIVATE_LOCATION_ID = os.getenv(
 )
 PUBLIC_LOCATION_ID = os.getenv("DD_PUBLIC_LOCATION_ID", "aws:us-gov-west-1")
 
-# Tiers treated as non-production by the legacy fallback below.
-_LOWER_TIERS = ("dev", "qa", "stage", "perf")
 
-
-def synthetics_location(private_flag, tier=None, location=None):
+def synthetics_location(location= "private"):
     """
     Decide which Datadog location a synthetic test should run from.
 
-    Driven by the CSV's "location" column:
+    Driven entirely by the CSV's "Location" column:
 
-        location = Public   -> Datadog's managed location
-        location = Private  -> our private location inside the AWS network
+        Location = Public   -> Datadog's managed location
+        Location = Private  -> our private location inside the AWS network
 
-    Set this per row in FNL-Monitoring-List-datadog.csv. The value is not
-    case-sensitive and surrounding spaces are ignored.
+    Set this on every row of FNL-Monitoring-List-datadog.csv. The value is
+    not case-sensitive and surrounding spaces are ignored.
 
-    An unrecognised value stops the run instead of guessing. A typo that
-    silently routed an internal-only endpoint to a public location would
-    create a monitor that can never pass and alerts forever, so it is safer
-    to fail immediately and have the CSV corrected.
+    A blank value defaults to Private. That is the safer default of the two:
+    the private location sits inside the network and can still reach public
+    endpoints, whereas a public location cannot reach internal-only hosts at
+    all. A new row added without a Location therefore keeps working rather
+    than failing the run.
 
-    If the column is left blank, the older behaviour applies: the tier decides
-    (Dev/Qa/Stage/Perf use the private location, everything else uses
-    DD_PRIVATE_LOCATION_ID). This is only a safety net for rows that have not
-    been filled in yet -- prefer setting the column explicitly.
+    An unrecognised value still stops the run. A blank cell means "not filled
+    in yet", but a value like 'privte' means someone intended something
+    specific and mistyped it, and quietly treating that as a default could
+    route a monitor to the wrong place.
 
     Returns a single-item list, which is the shape Datadog expects.
     """
     requested = (location or "").strip().lower()
 
-    if requested == "private":
+    if requested in ("", "private"):
         return [PRIVATE_LOCATION_ID]
 
     if requested == "public":
         return [PUBLIC_LOCATION_ID]
 
-    if requested:
-        raise SystemExit(
-            "Unrecognised location {!r} in the CSV. Expected 'Public' or "
-            "'Private'.".format(location)
-        )
-
-    # --- Fallback: "location" column is blank, so fall back to the tier. ---
-
-    # Private_Location=FALSE meant "run from a public location" before the
-    # location column existed.
-    if str(private_flag).lower() != "true":
-        return ["aws:us-east-1"]
-
-    if tier and tier.strip().lower() in _LOWER_TIERS:
-        return [PRIVATE_LOCATION_ID]
-
-    loc = os.getenv("DD_PRIVATE_LOCATION_ID", "")
-    if not loc:
-        raise SystemExit(
-            "DD_PRIVATE_LOCATION_ID is required for private-location tests."
-        )
-    return [loc]
+    raise SystemExit(
+        "Location is {!r} in the CSV. Expected 'Public' or 'Private' "
+        "(leave blank to default to Private).".format(location)
+    )
 
 
 def tick_every(tier):
