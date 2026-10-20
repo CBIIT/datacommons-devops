@@ -25,25 +25,78 @@ def headers():
     }
 
 
-# Datadog Private Location running inside the AWS network, able to resolve
-# the internal-only DNS for our Dev/Qa/Stage/Perf hosts (the equivalent of
-# New Relic's private location — see monitoring/locations/README.md). Prod
-# is untouched: it keeps using DD_PRIVATE_LOCATION_ID below, whatever that
-# is currently set to.
-LOWER_TIER_PRIVATE_LOCATION_ID = os.getenv(
+# Where synthetic tests run from.
+#
+# PRIVATE: a Datadog Private Location agent installed on a host inside our AWS
+# network. Required for any endpoint whose DNS only resolves internally (most
+# Dev/Qa/Stage hosts). This replaces the New Relic private location we used
+# before the migration -- see monitoring/locations/README.md.
+#
+# PUBLIC: a Datadog-managed location, i.e. Datadog's own infrastructure on the
+# public internet. Only works for endpoints that are publicly reachable.
+# This account is on the government site (DD_SITE=ddog-gov.com), so the
+# managed location must be a GovCloud one; the commercial "aws:us-east-1"
+# is not valid on that site.
+#
+# Both can be overridden with an environment variable, so the IDs can be
+# rotated without a code change.
+PRIVATE_LOCATION_ID = os.getenv(
     "DD_LOWER_TIER_PRIVATE_LOCATION_ID",
     "pl:datadog-lowerter-private-location-a4dfa43d0f1db3da041b9723807eba74",
 )
+PUBLIC_LOCATION_ID = os.getenv("DD_PUBLIC_LOCATION_ID", "aws:us-gov-west-1")
+
+# Tiers treated as non-production by the legacy fallback below.
 _LOWER_TIERS = ("dev", "qa", "stage", "perf")
 
 
-def synthetics_location(private_flag, tier=None):
-    """Return a list with one DataDog location identifier."""
+def synthetics_location(private_flag, tier=None, location=None):
+    """
+    Decide which Datadog location a synthetic test should run from.
+
+    Driven by the CSV's "location" column:
+
+        location = Public   -> Datadog's managed location
+        location = Private  -> our private location inside the AWS network
+
+    Set this per row in FNL-Monitoring-List-datadog.csv. The value is not
+    case-sensitive and surrounding spaces are ignored.
+
+    An unrecognised value stops the run instead of guessing. A typo that
+    silently routed an internal-only endpoint to a public location would
+    create a monitor that can never pass and alerts forever, so it is safer
+    to fail immediately and have the CSV corrected.
+
+    If the column is left blank, the older behaviour applies: the tier decides
+    (Dev/Qa/Stage/Perf use the private location, everything else uses
+    DD_PRIVATE_LOCATION_ID). This is only a safety net for rows that have not
+    been filled in yet -- prefer setting the column explicitly.
+
+    Returns a single-item list, which is the shape Datadog expects.
+    """
+    requested = (location or "").strip().lower()
+
+    if requested == "private":
+        return [PRIVATE_LOCATION_ID]
+
+    if requested == "public":
+        return [PUBLIC_LOCATION_ID]
+
+    if requested:
+        raise SystemExit(
+            "Unrecognised location {!r} in the CSV. Expected 'Public' or "
+            "'Private'.".format(location)
+        )
+
+    # --- Fallback: "location" column is blank, so fall back to the tier. ---
+
+    # Private_Location=FALSE meant "run from a public location" before the
+    # location column existed.
     if str(private_flag).lower() != "true":
         return ["aws:us-east-1"]
 
     if tier and tier.strip().lower() in _LOWER_TIERS:
-        return [LOWER_TIER_PRIVATE_LOCATION_ID]
+        return [PRIVATE_LOCATION_ID]
 
     loc = os.getenv("DD_PRIVATE_LOCATION_ID", "")
     if not loc:
