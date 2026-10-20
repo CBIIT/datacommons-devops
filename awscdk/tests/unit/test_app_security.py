@@ -594,8 +594,8 @@ def test_log_group_retention():
     })
 
 
-def test_s3_bucket_security():
-    """Test that ALB access logging to S3 is enabled if an ALB is deployed"""
+def test_alb_access_logs_route_to_configured_bucket():
+    """Test that ALB access logs are routed to the bucket configured in config.ini"""
     stack, template, config = _create_test_stack()
 
     # Only test if an ALB is deployed
@@ -603,15 +603,39 @@ def test_s3_bucket_security():
     if not template.find_resources("AWS::ElasticLoadBalancingV2::LoadBalancer"):
         return
 
-    # ALB should log to a secure S3 bucket
+    expected_bucket_arn = config["alb"]["log_bucket_arn"]
+    expected_bucket_name = expected_bucket_arn.split(":::")[-1]
+
+    # CDK's ALB.log_access_logs() only ever renders the bucket NAME (not the ARN) into the
+    # LoadBalancerAttributes "access_logs.s3.bucket" key (see aws-elasticloadbalancingv2's
+    # BaseLoadBalancer.logAccessLogs: setAttribute(..., bucket.bucketName.toString())).
     template.has_resource_properties("AWS::ElasticLoadBalancingV2::LoadBalancer", {
         "LoadBalancerAttributes": Match.array_with([
             {
                 "Key": "access_logs.s3.enabled",
                 "Value": "true"
+            },
+            {
+                "Key": "access_logs.s3.bucket",
+                "Value": expected_bucket_name
             }
         ])
     })
+
+    # The full ARN only appears verbatim in the bucket policy's GetBucketAcl statement,
+    # since log_access_logs() grants that action on bucket.bucketArn directly.
+    bucket_policies = template.find_resources("AWS::S3::BucketPolicy")
+    matching_statements = [
+        statement
+        for resource in bucket_policies.values()
+        for statement in resource.get("Properties", {}).get("PolicyDocument", {}).get("Statement", [])
+        if statement.get("Resource") == expected_bucket_arn
+    ]
+    assert matching_statements, (
+        f"Expected an S3 bucket policy statement referencing the configured bucket ARN "
+        f"'{expected_bucket_arn}', found none"
+    )
+
 
 
 def test_container_security_context():
@@ -804,7 +828,7 @@ if __name__ == "__main__":
         test_opensearch_allowed_ips_security,
         test_task_role_permissions,
         test_log_group_retention,
-        test_s3_bucket_security,
+        test_alb_access_logs_route_to_configured_bucket,
         test_container_security_context,
         test_fargate_security,
         test_ecs_container_insights,
