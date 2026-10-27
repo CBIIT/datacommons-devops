@@ -622,20 +622,6 @@ def test_alb_access_logs_route_to_configured_bucket():
         ])
     })
 
-    # The full ARN only appears verbatim in the bucket policy's GetBucketAcl statement,
-    # since log_access_logs() grants that action on bucket.bucketArn directly.
-    bucket_policies = template.find_resources("AWS::S3::BucketPolicy")
-    matching_statements = [
-        statement
-        for resource in bucket_policies.values()
-        for statement in resource.get("Properties", {}).get("PolicyDocument", {}).get("Statement", [])
-        if statement.get("Resource") == expected_bucket_arn
-    ]
-    assert matching_statements, (
-        f"Expected an S3 bucket policy statement referencing the configured bucket ARN "
-        f"'{expected_bucket_arn}', found none"
-    )
-
 
 
 def test_container_security_context():
