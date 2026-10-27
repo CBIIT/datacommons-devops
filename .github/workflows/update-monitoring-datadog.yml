@@ -18,11 +18,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.9
+      - name: Set up Python 3.12
         id: python-setup
         uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa     # v4.8.0
         with:
-          python-version: "3.9"
+          python-version: "3.12"
 
       - name: Install Dependencies
         id: install-dependencies
