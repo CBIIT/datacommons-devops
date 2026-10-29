@@ -13,13 +13,15 @@ DataDog equivalent: API test, subtype 'ssl'
   - Created only for Prod Portal endpoints (caller decides when to invoke this).
 """
 
+from urllib.parse import urlparse
+
 from monitors import dd_client
 
 
 def setmonitor(project, tier, api, notification):
     monitor_name = "{} {} Certificate Monitor".format(project, tier)
-    # Strip scheme and trailing slashes to get bare hostname
-    domain = api["url"].replace("https://", "").replace("http://", "").rstrip("/")
+    # SSL tests take a bare hostname; drop scheme, path, query, and port
+    domain = urlparse(api["url"]).hostname
     freq = 86400  # once per day in seconds
 
     locations = dd_client.synthetics_location(api["location"])
