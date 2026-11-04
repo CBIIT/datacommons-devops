@@ -1,0 +1,11 @@
+
+    - name: Run Grype vulnerability scanner
+      id: grype-scan
+      uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439
+      with:
+        image: '${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}'
+        severity-cutoff: medium
+        fail-build: ${{ inputs.fail_on_cve_scan }}
+        output-format: table
+        only-fixed: true
+    
