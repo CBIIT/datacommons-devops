@@ -500,8 +500,8 @@ $http.get('https://general-stage.datacommons.cancer.gov/version',
 
   }
 );",,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Public
-General commons,gen,CRDC,QA,Portal,https://general-qa.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
-General commons,gen,CRDC,QA,API,https://general-qa.datacommons.cancer.gov/version,"var assert = require('assert');
+General commons,gen,CRDC,Qa,Portal,https://general-qa.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
+General commons,gen,CRDC,Qa,API,https://general-qa.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://general-qa.datacommons.cancer.gov/version',
   function (err, response, body) {
@@ -519,8 +519,8 @@ $http.get('https://general-qa.datacommons.cancer.gov/version',
 
   }
 );",,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
-General commons,gen,CRDC,QA2,Portal,https://general-qa2.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
-General commons,gen,CRDC,QA2,API,https://general-qa2.datacommons.cancer.gov/version,"var assert = require('assert');
+General commons,gen,CRDC,Qa2,Portal,https://general-qa2.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
+General commons,gen,CRDC,Qa2,API,https://general-qa2.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://general-qa2.datacommons.cancer.gov/version',
   function (err, response, body) {
@@ -538,8 +538,8 @@ $http.get('https://general-qa2.datacommons.cancer.gov/version',
 
   }
 );",,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
-General commons,gen,CRDC,DEV,Portal,https://general-dev.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
-General commons,gen,CRDC,DEV,API,https://general-dev.datacommons.cancer.gov/version,"var assert = require('assert');
+General commons,gen,CRDC,Dev,Portal,https://general-dev.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
+General commons,gen,CRDC,Dev,API,https://general-dev.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://general-dev.datacommons.cancer.gov/version',
   function (err, response, body) {
@@ -557,8 +557,8 @@ $http.get('https://general-dev.datacommons.cancer.gov/version',
 
   }
 );",,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
-General commons,gen,CRDC,DEV2,Portal,https://general-dev2.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
-General commons,gen,CRDC,DEV2,API,https://general-dev2.datacommons.cancer.gov/version,"var assert = require('assert');
+General commons,gen,CRDC,Dev2,Portal,https://general-dev2.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
+General commons,gen,CRDC,Dev2,API,https://general-dev2.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://general-dev2.datacommons.cancer.gov/version',
   function (err, response, body) {
@@ -616,8 +616,8 @@ $http.get('https://hub-stage.datacommons.cancer.gov/version',
 
   }
 );",,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Public
-Cancer Research Data Commons Hub,crdc-hub,CRDC,QA,Portal,https://hub-qa.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
-Cancer Research Data Commons Hub,crdc-hub,CRDC,QA,API,https://hub-qa.datacommons.cancer.gov/version,"var assert = require('assert');
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Qa,Portal,https://hub-qa.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Qa,API,https://hub-qa.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://hub-qa.datacommons.cancer.gov/version',
   function (err, response, body) {
@@ -636,8 +636,8 @@ $http.get('https://hub-qa.datacommons.cancer.gov/version',
 
   }
 );",,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
-Cancer Research Data Commons Hub,crdc-hub,CRDC,QA2,Portal,https://hub-qa2.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
-Cancer Research Data Commons Hub,crdc-hub,CRDC,QA2,API,https://hub-qa2.datacommons.cancer.gov/version,"var assert = require('assert');
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Qa2,Portal,https://hub-qa2.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Qa2,API,https://hub-qa2.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://hub-qa2.datacommons.cancer.gov/version',
   function (err, response, body) {
@@ -656,8 +656,8 @@ $http.get('https://hub-qa2.datacommons.cancer.gov/version',
 
   }
 );",,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
-Cancer Research Data Commons Hub,crdc-hub,CRDC,DEV,Portal,https://hub-dev.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
-Cancer Research Data Commons Hub,crdc-hub,CRDC,DEV,API,https://hub-dev.datacommons.cancer.gov/version,"var assert = require('assert');
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,Portal,https://hub-dev.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev,API,https://hub-dev.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://hub-dev.datacommons.cancer.gov/version',
   function (err, response, body) {
@@ -676,8 +676,8 @@ $http.get('https://hub-dev.datacommons.cancer.gov/version',
 
   }
 );",,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
-Cancer Research Data Commons Hub,crdc-hub,CRDC,DEV2,Portal,https://hub-dev2.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
-Cancer Research Data Commons Hub,crdc-hub,CRDC,DEV2,API,https://hub-dev2.datacommons.cancer.gov/version,"var assert = require('assert');
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev2,Portal,https://hub-dev2.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Dev2,API,https://hub-dev2.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://hub-dev2.datacommons.cancer.gov/version',
   function (err, response, body) {
