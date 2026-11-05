@@ -481,7 +481,7 @@ $http.get('https://general.datacommons.cancer.gov/version',
 
   }
 );",,Expand_Data_Commons-crdc-prod-cds,,,,,,,,Public
-General commons,gen,CRDC,Stage,Portal,https://general-stage.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
+General commons,gen,CRDC,Stage,Portal,https://general-stage.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Public
 General commons,gen,CRDC,Stage,API,https://general-stage.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://general-stage.datacommons.cancer.gov/version',
@@ -499,9 +499,85 @@ $http.get('https://general-stage.datacommons.cancer.gov/version',
     assert.ok('version' in parsedBody, 'Expected object to have version key');
 
   }
+);",,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Public
+General commons,gen,CRDC,QA,Portal,https://general-qa.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
+General commons,gen,CRDC,QA,API,https://general-qa.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://general-qa.datacommons.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    const parsedBody = JSON.parse(dd.response.body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+
+  }
+);",,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
+General commons,gen,CRDC,QA2,Portal,https://general-qa2.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
+General commons,gen,CRDC,QA2,API,https://general-qa2.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://general-qa2.datacommons.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    const parsedBody = JSON.parse(dd.response.body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+
+  }
+);",,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
+General commons,gen,CRDC,DEV,Portal,https://general-dev.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
+General commons,gen,CRDC,DEV,API,https://general-dev.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://general-dev.datacommons.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    const parsedBody = JSON.parse(dd.response.body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+
+  }
+);",,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
+General commons,gen,CRDC,DEV2,Portal,https://general-dev2.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
+General commons,gen,CRDC,DEV2,API,https://general-dev2.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://general-dev2.datacommons.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    const parsedBody = JSON.parse(dd.response.body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+
+  }
 );",,Expand_Data_Commons-crdc-subprod-cds,,,,,,,,Private
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,Portal,https://hub.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-prod-system-alerts,,,,,,,,Public
-Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,Portal,https://hub-stage.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
+Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,Portal,https://hub-stage.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Public
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Prod,API,https://hub.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://hub.datacommons.cancer.gov/version',
@@ -524,6 +600,86 @@ $http.get('https://hub.datacommons.cancer.gov/version',
 Cancer Research Data Commons Hub,crdc-hub,CRDC,Stage,API,https://hub-stage.datacommons.cancer.gov/version,"var assert = require('assert');
 
 $http.get('https://hub-stage.datacommons.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    const parsedBody = JSON.parse(dd.response.body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+    assert.ok('date' in parsedBody, 'Expected object to have date key');
+
+  }
+);",,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Public
+Cancer Research Data Commons Hub,crdc-hub,CRDC,QA,Portal,https://hub-qa.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
+Cancer Research Data Commons Hub,crdc-hub,CRDC,QA,API,https://hub-qa.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://hub-qa.datacommons.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    const parsedBody = JSON.parse(dd.response.body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+    assert.ok('date' in parsedBody, 'Expected object to have date key');
+
+  }
+);",,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
+Cancer Research Data Commons Hub,crdc-hub,CRDC,QA2,Portal,https://hub-qa2.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
+Cancer Research Data Commons Hub,crdc-hub,CRDC,QA2,API,https://hub-qa2.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://hub-qa2.datacommons.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    const parsedBody = JSON.parse(dd.response.body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+    assert.ok('date' in parsedBody, 'Expected object to have date key');
+
+  }
+);",,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
+Cancer Research Data Commons Hub,crdc-hub,CRDC,DEV,Portal,https://hub-dev.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
+Cancer Research Data Commons Hub,crdc-hub,CRDC,DEV,API,https://hub-dev.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://hub-dev.datacommons.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    const parsedBody = JSON.parse(dd.response.body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+    assert.ok('date' in parsedBody, 'Expected object to have date key');
+
+  }
+);",,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
+Cancer Research Data Commons Hub,crdc-hub,CRDC,DEV2,Portal,https://hub-dev2.datacommons.cancer.gov,,,Expand_Data_Commons-crdcdh-system-alerts,,,,19:00,7:40,America/New_York,,Private
+Cancer Research Data Commons Hub,crdc-hub,CRDC,DEV2,API,https://hub-dev2.datacommons.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://hub-dev2.datacommons.cancer.gov/version',
   function (err, response, body) {
 
     if (err) {
