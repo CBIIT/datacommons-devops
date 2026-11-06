@@ -777,7 +777,55 @@ $http.get('https://caninecommons-stage.cancer.gov/version',
   }
 );",,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,Stage,Portal,https://clinicalcommons-stage.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
+CCDI C3DC,c3dc,CCDI,Stage,API,https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
+
+$http.post('https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: 'query NumberOfParticipants {numberOfParticipants}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfParticipants' in body.data);
+
+  }
+);",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,Prod,Portal,https://clinicalcommons.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-prod-c3dc,,,,,,,,Public
+CCDI C3DC,c3dc,CCDI,Prod,API,https://clinicalcommons.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
+
+$http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: 'query NumberOfParticipants {numberOfParticipants}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfParticipants' in body.data);
+
+  }
+);",,Expand_Data_Commons-ccdi-prod-c3dc,,,,,,,,Public
 Index of NCI Studies,ins,CCDI,Prod,Portal,https://studycatalog.cancer.gov,,,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
 Index of NCI Studies,ins,CCDI,Prod,API,https://studycatalog.cancer.gov/v1/graphql,"var assert = require('assert');
 
