@@ -462,7 +462,7 @@ $http.get('https://cda-stage.datacommons.cancer.gov/columns/',
     assert.ok('description' in firstObj, 'Expected object to have description key.');
   }
 );",,Expand_Data_Commons-crdc-subprod-cda,,,,,,,,Private
-Metamodel Database,mdb,CCDI,Dev,Portal,https://sts-dev.cancer.gov,,,Expand_Data_Commons-mdb-non-prod-systems-alert,,,,,,,,Private
+Metamodel Database,mdb,CCDI,Dev,Portal,https://sts-dev.cancer.gov/docs,,,Expand_Data_Commons-mdb-non-prod-systems-alert,,,,,,,,Private
 Metamodel Database,mdb,CCDI,Dev,API,https://sts-dev.cancer.gov/v2/models/count,"var assert = require('assert');
 
 $http.get('https://sts-dev.cancer.gov/v2/models/count',
