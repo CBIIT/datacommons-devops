@@ -955,7 +955,7 @@ $http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
 
   }
 );",,Expand_Data_Commons-ccdi-prod-c3dc,,,,,,,,Public
-Index of NCI Studies,ins,CCDI,Dev,Portal,https://studycatalog-dev.cancer.gov,,,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,
+Index of NCI Studies,ins,CCDI,Dev,Portal,https://studycatalog-dev.cancer.gov,,,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Private
 Index of NCI Studies,ins,CCDI,Dev,API,https://studycatalog-dev.cancer.gov/v1/graphql/,"var assert = require('assert');
 
 $http.post(
@@ -987,7 +987,7 @@ $http.post(
       'Expected numberOfPrograms to be a non-zero number, got ' + value
     );
   }
-);",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,
+);",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Private
 Index of NCI Studies,ins,CCDI,Dev,API2,https://studycatalog-dev.cancer.gov/service/ping,"""var assert = require('assert');
  
 $http.get('https://studycatalog-dev.cancer.gov/service/ping',
@@ -1006,8 +1006,8 @@ $http.get('https://studycatalog-dev.cancer.gov/service/ping',
     assert.ok('date' in parsedBody, 'Expected object to have date key');
  
   }
-);""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,
-Index of NCI Studies,ins,CCDI,QA,Portal,https://studycatalog-qa.cancer.gov,,,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,
+);""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Private
+Index of NCI Studies,ins,CCDI,QA,Portal,https://studycatalog-qa.cancer.gov,,,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Private
 Index of NCI Studies,ins,CCDI,QA,API,https://studycatalog-qa.cancer.gov/v1/graphql,"var assert = require('assert');
 
 $http.post(
@@ -1039,7 +1039,7 @@ $http.post(
       'Expected numberOfPrograms to be a non-zero number, got ' + value
     );
   }
-);",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,
+);",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Private
 Index of NCI Studies,ins,CCDI,QA,API2,https://studycatalog-qa.cancer.gov/service/ping,"""var assert = require('assert');
  
 $http.get('https://studycatalog-qa.cancer.gov/service/ping',
@@ -1058,7 +1058,7 @@ $http.get('https://studycatalog-qa.cancer.gov/service/ping',
     assert.ok('date' in parsedBody, 'Expected object to have date key');
  
   }
-);""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,
+);""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Private
 Index of NCI Studies,ins,CCDI,Stage,Portal,https://studycatalog-stage.cancer.gov,,,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
 Index of NCI Studies,ins,CCDI,Stage,,https://studycatalog-stage.cancer.gov/v1/graphql,"var assert = require('assert');
 
