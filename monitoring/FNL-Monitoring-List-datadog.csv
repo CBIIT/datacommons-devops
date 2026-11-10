@@ -1,6 +1,6 @@
 Project_Name,Project_Acronym,Program,Tier,Endpoint_Name,URL,Endpoint_Query,Validation_Text,Slack_Channel,Alert_Email,Monitored_Resources,Browser_Query,Downtime_Start,Downtime_End,Downtime_TZ,Downtime_Days,Location
-Population Sciences Data Commons,Popsci,CRDC,Prod,Portal,https://populationsciences.datacommons.cancer.gov/,,Population,Expand_Data_Commons-crdc-prod-popsci,,,,,,,,Public
-Population Sciences Data Commons,Popsci,CRDC,Prod,API-OS,https://populationsciences.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+Population Sciences Data Commons,Popsci,CRDC,prod,Portal,https://populationsciences.datacommons.cancer.gov/,,Population,Expand_Data_Commons-crdc-prod-popsci,,,,,,,,Public
+Population Sciences Data Commons,Popsci,CRDC,prod,API-OS,https://populationsciences.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://populationsciences.datacommons.cancer.gov/v1/graphql/',
   {
@@ -24,8 +24,8 @@ $http.post('https://populationsciences.datacommons.cancer.gov/v1/graphql/',
 
   }
 );",,Expand_Data_Commons-crdc-prod-popsci,,,,,,,,Public
-Population Sciences Data Commons,Popsci,CRDC,Dev,Portal,https://populationsciences-dev.datacommons.cancer.gov/,,Population,Expand_Data_Commons-crdc-subprod-popsci,,,,,,,,Private
-Population Sciences Data Commons,Popsci,CRDC,Dev,API-OS,https://populationsciences-dev.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+Population Sciences Data Commons,Popsci,CRDC,dev,Portal,https://populationsciences-dev.datacommons.cancer.gov/,,Population,Expand_Data_Commons-crdc-subprod-popsci,,,,,,,,Private
+Population Sciences Data Commons,Popsci,CRDC,dev,API-OS,https://populationsciences-dev.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://populationsciences-dev.datacommons.cancer.gov/v1/graphql/',
   {
@@ -49,8 +49,8 @@ $http.post('https://populationsciences-dev.datacommons.cancer.gov/v1/graphql/',
 
   }
 );",,C07E28M8R7T,,,,,,,,Private
-Population Sciences Data Commons,Popsci,CRDC,QA,Portal,https://populationsciences-qa.datacommons.cancer.gov/,,Population,C07E28Expand_Data_Commons-crdc-subprod-popsciM8R7T,,,,,,,,Private
-Population Sciences Data Commons,Popsci,CRDC,QA,API-OS,https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+Population Sciences Data Commons,Popsci,CRDC,qa,Portal,https://populationsciences-qa.datacommons.cancer.gov/,,Population,C07E28Expand_Data_Commons-crdc-subprod-popsciM8R7T,,,,,,,,Private
+Population Sciences Data Commons,Popsci,CRDC,qa,API-OS,https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
   {
@@ -74,8 +74,8 @@ $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
 
   }
 );",,C07E28M8R7T,,,,,,,,Private
-Population Sciences Data Commons,Popsci,CRDC,Stage,Portal,https://populationsciences-stage.datacommons.cancer.gov/,,Population,Expand_Data_Commons-crdc-subprod-popsci,,,,,,,,Private
-Population Sciences Data Commons,Popsci,CRDC,Stage,API-OS,https://populationsciences-stage.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+Population Sciences Data Commons,Popsci,CRDC,stage,Portal,https://populationsciences-stage.datacommons.cancer.gov/,,Population,Expand_Data_Commons-crdc-subprod-popsci,,,,,,,,Private
+Population Sciences Data Commons,Popsci,CRDC,stage,API-OS,https://populationsciences-stage.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://populationsciences-stage.datacommons.cancer.gov/v1/graphql/',
   {
@@ -546,7 +546,6 @@ $http.get('https://sts-qa.cancer.gov/v2/models/',
 
   }
 );",,Expand_Data_Commons-mdb-non-prod-systems-alert,,,,,,,,Private
-,,,,,,,,,,,,,,,,
 Metamodel Database,mdb,CCDI,Stage,Portal,https://sts-stage.cancer.gov/docs,,,Expand_Data_Commons-mdb-non-prod-systems-alert,,,,,,,,Private
 Metamodel Database,mdb,CCDI,Stage,API,https://sts-stage.cancer.gov/v2/models/count,"var assert = require('assert');
 
@@ -591,44 +590,32 @@ $http.get('https://sts-stage.cancer.gov/v2/models/',
 );",,Expand_Data_Commons-mdb-non-prod-systems-alert,,,,,,,,Private
 Metamodel Database,mdb,CCDI,Prod,Portal,https://sts.cancer.gov/docs,,,Expand_Data_Commons-mdb-prod-systems-alert,,,,,,,,Private
 Metamodel Database,mdb,CCDI,Prod,API,https://sts.cancer.gov/v2/models/count,"var assert = require('assert');
-
 $http.get('https://sts.cancer.gov/v2/models/count',
   function (err, response, body) {
-
     if (err) {
         throw new Error(err);
     }
-
     console.log('Raw Body:', body);
     console.log('Status Code:', response.statusCode);
-
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
     var count = Number(String(body).trim());
     assert.ok(!isNaN(count), 'Response should be a number');
     assert.ok(count > 0, 'Count should be greater than 0');
     console.log('Count:', count);
-
   }
 );",,Expand_Data_Commons-mdb-prod-systems-alert,,,,,,,,Private
 Metamodel Database,mdb,CCDI,Prod,API2,https://sts.cancer.gov/v2/models/,"var assert = require('assert');
-
 $http.get('https://sts.cancer.gov/v2/models/',
-
   function (err, response, body) {
-
     if (err) {
         throw new Error(err);
     }
-
     console.log('Response:', body);
     console.log('Response:', response.statusCode);
-
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
     assert.ok(Array.isArray(body), 'Expected response body to be an array.');
-
     const firstObj = body[0];
     assert.ok('handle' in firstObj, 'Expected object to have handle key');
-
   }
 );",,Expand_Data_Commons-mdb-prod-systems-alert,,,,,,,,Private
 General commons,gen,CRDC,Prod,Portal,https://general.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-prod-cds,,,,,,,,Public
@@ -995,7 +982,7 @@ $http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
 
   }
 );",,Expand_Data_Commons-ccdi-prod-c3dc,,,,,,,,Public
-Index of NCI Studies,ins,CCDI,Dev,Portal,https://studycatalog-dev.cancer.gov,,,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Private
+Index of NCI Studies,ins,CCDI,Dev,Portal,https://studycatalog-dev.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-ins,,,,,,,,Private
 Index of NCI Studies,ins,CCDI,Dev,API,https://studycatalog-dev.cancer.gov/v1/graphql/,"var assert = require('assert');
 
 $http.post(
@@ -1027,7 +1014,7 @@ $http.post(
       'Expected numberOfPrograms to be a non-zero number, got ' + value
     );
   }
-);",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Private
+);",,Expand_Data_Commons-ccdi-subprod-ins,,,,,,,,Private
 Index of NCI Studies,ins,CCDI,Dev,API2,https://studycatalog-dev.cancer.gov/service/ping,"""var assert = require('assert');
  
 $http.get('https://studycatalog-dev.cancer.gov/service/ping',
@@ -1046,8 +1033,8 @@ $http.get('https://studycatalog-dev.cancer.gov/service/ping',
     assert.ok('date' in parsedBody, 'Expected object to have date key');
  
   }
-);""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Private
-Index of NCI Studies,ins,CCDI,QA,Portal,https://studycatalog-qa.cancer.gov,,,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Private
+);""",,Expand_Data_Commons-ccdi-subprod-ins,,,,,,,,Private
+Index of NCI Studies,ins,CCDI,QA,Portal,https://studycatalog-qa.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-ins,,,,,,,,Private
 Index of NCI Studies,ins,CCDI,QA,API,https://studycatalog-qa.cancer.gov/v1/graphql,"var assert = require('assert');
 
 $http.post(
@@ -1079,7 +1066,7 @@ $http.post(
       'Expected numberOfPrograms to be a non-zero number, got ' + value
     );
   }
-);",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Private
+);",,Expand_Data_Commons-ccdi-subprod-ins,,,,,,,,Private
 Index of NCI Studies,ins,CCDI,QA,API2,https://studycatalog-qa.cancer.gov/service/ping,"""var assert = require('assert');
  
 $http.get('https://studycatalog-qa.cancer.gov/service/ping',
@@ -1098,9 +1085,9 @@ $http.get('https://studycatalog-qa.cancer.gov/service/ping',
     assert.ok('date' in parsedBody, 'Expected object to have date key');
  
   }
-);""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Private
+);""",,Expand_Data_Commons-ccdi-subprod-ins,,,,,,,,Private
 Index of NCI Studies,ins,CCDI,Stage,Portal,https://studycatalog-stage.cancer.gov,,,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
-Index of NCI Studies,ins,CCDI,Stage,,https://studycatalog-stage.cancer.gov/v1/graphql,"var assert = require('assert');
+Index of NCI Studies,ins,CCDI,Stage,API,https://studycatalog-stage.cancer.gov/v1/graphql,"var assert = require('assert');
 
 $http.post(
   'https://studycatalog-stage.cancer.gov/v1/graphql/',
@@ -1132,7 +1119,7 @@ $http.post(
     );
   }
 );",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
-Index of NCI Studies,ins,CCDI,Stage,,https://studycatalog-stage.cancer.gov/service/ping,"var assert = require('assert');
+Index of NCI Studies,ins,CCDI,Stage,API2,https://studycatalog-stage.cancer.gov/service/ping,"var assert = require('assert');
  
 $http.get('https://studycatalog-stage.cancer.gov/service/ping',
   function (err, response, body) {
