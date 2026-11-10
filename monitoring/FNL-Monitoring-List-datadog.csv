@@ -49,8 +49,8 @@ $http.post('https://populationsciences-dev.datacommons.cancer.gov/v1/graphql/',
 
   }
 );",,C07E28M8R7T,,,,,,,,Private
-Population Sciences Data Commons,Popsci,CRDC,Qa,Portal,https://populationsciences-qa.datacommons.cancer.gov/,,Population,C07E28Expand_Data_Commons-crdc-subprod-popsciM8R7T,,,,,,,,Private
-Population Sciences Data Commons,Popsci,CRDC,Qa,API-OS,https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
+Population Sciences Data Commons,Popsci,CRDC,QA,Portal,https://populationsciences-qa.datacommons.cancer.gov/,,Population,C07E28Expand_Data_Commons-crdc-subprod-popsciM8R7T,,,,,,,,Private
+Population Sciences Data Commons,Popsci,CRDC,QA,API-OS,https://populationsciences-qa.datacommons.cancer.gov/v1/public-graphql/,"var assert = require('assert');
 
 $http.post('https://populationsciences-qa.datacommons.cancer.gov/v1/graphql/',
   {
