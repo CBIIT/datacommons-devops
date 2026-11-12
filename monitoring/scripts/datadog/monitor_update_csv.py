@@ -101,8 +101,11 @@ def main(argv):
 def _make_notification(alert_email, slack_channel):
     """Build the @-mention notification string embedded in every DD monitor message."""
     parts = []
+    # DataDog email: "@<address>". There is no "@email:" prefix; with one,
+    # Datadog reads "@email" as the handle and prints ":<address>" as text
+    # (and the email is not delivered).
     if alert_email:
-        parts.append("@email:{}".format(alert_email))
+        parts.append("@{}".format(alert_email.strip().lstrip("@")))
     # DataDog Slack: @slack-<workspace>-<channel-name>
     # The CSV stores channel IDs; update accordingly once your DD Slack
     # integration is configured with matching channel names.

@@ -128,22 +128,30 @@ def dd_app_base():
     return "https://{}".format(site if site.count(".") >= 2 else "app." + site)
 
 
-def build_synthetic_alert_message(monitor_name, check_type, endpoint, notification):
+def build_synthetic_alert_message(monitor_name, endpoint, notification):
     """
-    Standard Slack payload for every Datadog synthetic monitor.
+    Standard Slack payload for every Datadog synthetic monitor:
 
-    Alert:
+        {{#is_alert}}
         🔴 {MONITOR_NAME} — ALARM
         {ENDPOINT} failing
 
         [View Monitor]({MONITOR_LINK})
+        {{/is_alert}}
 
-    Recovery:
+        {{#is_recovery}}
         ✅ {MONITOR_NAME} — Recovered
         {ENDPOINT}
-        {CHECK_TYPE} check passing again.
+        Check passing again.
 
         [View Monitor]({MONITOR_LINK})
+        {{/is_recovery}}
+
+        {NOTIFICATION}
+
+    The link sits inside each block and the handles go last, after a blank
+    line. If a handle sits on the same line as the link, Slack shows its
+    leftover text right after "View Monitor".
 
     *monitor_name* is the test's own Datadog name (e.g. "CBIOPORTAL Dev
     Content Monitor"), so the Slack title always matches the monitor. It
@@ -151,9 +159,12 @@ def build_synthetic_alert_message(monitor_name, check_type, endpoint, notificati
     "{PROJECT} {TIER} Browser Monitor" title cannot be used because several
     tests share a project/tier/type (e.g. CBIOPORTAL Portal and Content).
 
-    *check_type* is "API", "Browser" or "SSL Certificate", used in the
-    recovery line. *endpoint* is what the test hits: "GET https://..." for
-    API tests, the page URL for browser tests (no method), the host for SSL.
+    *endpoint* is what the test hits: "GET https://..." for API tests, the
+    page URL for browser tests (no method), the host for SSL tests.
+
+    *notification* is the @-handle line, e.g.
+    "@team@example.gov @slack-<account>-<channel>". Email handles are
+    "@<address>"; there is no "@email:" prefix in Datadog.
 
     Resolved when the alert fires:
       - ALARM vs Recovered: Datadog's {{#is_alert}} / {{#is_recovery}} blocks.
@@ -174,26 +185,27 @@ def build_synthetic_alert_message(monitor_name, check_type, endpoint, notificati
     link = "{}/synthetics/details/{{{{synthetics.attributes.test.id}}}}".format(
         dd_app_base()
     )
-    title = monitor_name
 
     return (
-        "{{#is_alert}}"
+        "{{#is_alert}}\n"
         "🔴 %(title)s — ALARM\n"
         "%(endpoint)s failing\n"
-        "{{/is_alert}}"
-        "{{#is_recovery}}"
-        "✅ %(title)s — Recovered\n"
-        "%(endpoint)s\n"
-        "%(check_type)s check passing again.\n"
-        "{{/is_recovery}}"
         "\n"
         "[View Monitor](%(link)s)\n"
+        "{{/is_alert}}\n"
+        "\n"
+        "{{#is_recovery}}\n"
+        "✅ %(title)s — Recovered\n"
+        "%(endpoint)s\n"
+        "Check passing again.\n"
+        "\n"
+        "[View Monitor](%(link)s)\n"
+        "{{/is_recovery}}\n"
         "\n"
         "%(notification)s"
     ) % {
-        "title": title,
+        "title": monitor_name,
         "endpoint": endpoint,
-        "check_type": check_type,
         "link": link,
         "notification": notification,
     }

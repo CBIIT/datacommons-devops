@@ -236,7 +236,7 @@ def setmonitor(project, tier, api, notification):
         },
         "locations": locations,
         "message": dd_client.build_synthetic_alert_message(
-            monitor_name, "API", "{} {}".format(method, request["url"]), notification
+            monitor_name, "{} {}".format(method, request["url"]), notification
         ),
         "name": monitor_name,
         "options": {
