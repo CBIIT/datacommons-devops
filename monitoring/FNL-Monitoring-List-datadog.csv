@@ -1028,9 +1028,7 @@ $http.get('https://studycatalog-dev.cancer.gov/service/ping',
     console.log('Response:', response.statusCode);
  
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = JSON.parse(dd.response.body);
-    assert.ok('version' in parsedBody, 'Expected object to have version key');
-    assert.ok('date' in parsedBody, 'Expected object to have date key');
+    assert.equal(body.trim(), 'pong!', 'Expected response body to be ""pong!""');
  
   }
 );""",,Expand_Data_Commons-ccdi-subprod-ins,,,,,,,,Private
@@ -1080,9 +1078,7 @@ $http.get('https://studycatalog-qa.cancer.gov/service/ping',
     console.log('Response:', response.statusCode);
  
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = JSON.parse(dd.response.body);
-    assert.ok('version' in parsedBody, 'Expected object to have version key');
-    assert.ok('date' in parsedBody, 'Expected object to have date key');
+    assert.equal(body.trim(), 'pong!', 'Expected response body to be ""pong!""');
  
   }
 );""",,Expand_Data_Commons-ccdi-subprod-ins,,,,,,,,Private
@@ -1119,7 +1115,7 @@ $http.post(
     );
   }
 );",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
-Index of NCI Studies,ins,CCDI,Stage,API2,https://studycatalog-stage.cancer.gov/service/ping,"var assert = require('assert');
+Index of NCI Studies,ins,CCDI,Stage,API2,https://studycatalog-stage.cancer.gov/service/ping,"""var assert = require('assert');
  
 $http.get('https://studycatalog-stage.cancer.gov/service/ping',
   function (err, response, body) {
@@ -1132,12 +1128,10 @@ $http.get('https://studycatalog-stage.cancer.gov/service/ping',
     console.log('Response:', response.statusCode);
  
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = JSON.parse(dd.response.body);
-    assert.ok('version' in parsedBody, 'Expected object to have version key');
-    assert.ok('date' in parsedBody, 'Expected object to have date key');
+    assert.equal(body.trim(), 'pong!', 'Expected response body to be ""pong!""');
  
   }
-);",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
+);""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
 Index of NCI Studies,ins,CCDI,Prod,Portal,https://studycatalog.cancer.gov,,,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
 Index of NCI Studies,ins,CCDI,Prod,API,https://studycatalog.cancer.gov/v1/graphql,"var assert = require('assert');
 
@@ -1171,7 +1165,7 @@ $http.post(
     );
   }
 );",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
-Index of NCI Studies,ins,CCDI,Prod,API2,https://studycatalog.cancer.gov/service/ping,"var assert = require('assert');
+Index of NCI Studies,ins,CCDI,Prod,API2,https://studycatalog.cancer.gov/service/ping,"""var assert = require('assert');
  
 $http.get('https://studycatalog.cancer.gov/service/ping',
   function (err, response, body) {
@@ -1184,10 +1178,8 @@ $http.get('https://studycatalog.cancer.gov/service/ping',
     console.log('Response:', response.statusCode);
  
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = JSON.parse(dd.response.body);
-    assert.ok('version' in parsedBody, 'Expected object to have version key');
-    assert.ok('date' in parsedBody, 'Expected object to have date key');
+    assert.equal(body.trim(), 'pong!', 'Expected response body to be ""pong!""');
  
   }
-);",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
+);""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
 CCDI Datasharing,Datasharing Hub,CCDI,Prod,Portal,https://datasharing.cancer.gov/post/Data/cancer-data-resources/,,,Expand_Data_Commons-ccdi-datasharing-prod,,,,,,,,Public
