@@ -710,7 +710,7 @@ def setmonitor(project, tier, api, notification):
 
         "message": dd_client.build_synthetic_alert_message(
 
-            monitor_name, resolved_url, notification
+            monitor_name, "GET {}".format(resolved_url), notification
 
         ),
 

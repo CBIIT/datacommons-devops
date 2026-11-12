@@ -142,7 +142,7 @@ def build_synthetic_alert_message(monitor_name, endpoint, notification):
         {{#is_recovery}}
         ✅ {MONITOR_NAME} — Recovered
         {ENDPOINT}
-        Check passing again.
+        API check passing again.
 
         [View Monitor]({MONITOR_LINK})
         {{/is_recovery}}
@@ -159,8 +159,9 @@ def build_synthetic_alert_message(monitor_name, endpoint, notification):
     "{PROJECT} {TIER} Browser Monitor" title cannot be used because several
     tests share a project/tier/type (e.g. CBIOPORTAL Portal and Content).
 
-    *endpoint* is what the test hits: "GET https://..." for API tests, the
-    page URL for browser tests (no method), the host for SSL tests.
+    *endpoint* is "<METHOD> <URL>" for API and browser tests (browser tests
+    always load the page with GET) and the bare host for SSL tests, which
+    make no HTTP request.
 
     *notification* is the @-handle line, e.g.
     "@team@example.gov @slack-<account>-<channel>". Email handles are
@@ -197,7 +198,7 @@ def build_synthetic_alert_message(monitor_name, endpoint, notification):
         "{{#is_recovery}}\n"
         "✅ %(title)s — Recovered\n"
         "%(endpoint)s\n"
-        "Check passing again.\n"
+        "API check passing again.\n"
         "\n"
         "[View Monitor](%(link)s)\n"
         "{{/is_recovery}}\n"
