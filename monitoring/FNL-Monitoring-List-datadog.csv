@@ -1018,7 +1018,7 @@ $http.post(
 Index of NCI Studies,ins,CCDI,Dev,API2,https://studycatalog-dev.cancer.gov/service/ping,"""var assert = require('assert');
  
 $http.get('https://studycatalog-dev.cancer.gov/service/ping',
-  function (err, response, body) {
+  function (err, response) {
  
     if (err) {
         throw new Error(err);
@@ -1028,7 +1028,7 @@ $http.get('https://studycatalog-dev.cancer.gov/service/ping',
     console.log('Response:', response.statusCode);
  
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    assert.equal(body.trim(), 'pong!', 'Expected response body to be ""pong!""');
+    assert.equal(dd.response.body.trim(), 'pong!', 'Expected response body to be ""pong!""');
  
   }
 );""",,Expand_Data_Commons-ccdi-subprod-ins,,,,,,,,Private
@@ -1068,7 +1068,7 @@ $http.post(
 Index of NCI Studies,ins,CCDI,QA,API2,https://studycatalog-qa.cancer.gov/service/ping,"""var assert = require('assert');
  
 $http.get('https://studycatalog-qa.cancer.gov/service/ping',
-  function (err, response, body) {
+  function (err, response) {
  
     if (err) {
         throw new Error(err);
@@ -1078,7 +1078,7 @@ $http.get('https://studycatalog-qa.cancer.gov/service/ping',
     console.log('Response:', response.statusCode);
  
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    assert.equal(body.trim(), 'pong!', 'Expected response body to be ""pong!""');
+    assert.equal(dd.response.body.trim(), 'pong!', 'Expected response body to be ""pong!""');
  
   }
 );""",,Expand_Data_Commons-ccdi-subprod-ins,,,,,,,,Private
@@ -1118,7 +1118,7 @@ $http.post(
 Index of NCI Studies,ins,CCDI,Stage,API2,https://studycatalog-stage.cancer.gov/service/ping,"""var assert = require('assert');
  
 $http.get('https://studycatalog-stage.cancer.gov/service/ping',
-  function (err, response, body) {
+  function (err, response) {
  
     if (err) {
         throw new Error(err);
@@ -1128,7 +1128,7 @@ $http.get('https://studycatalog-stage.cancer.gov/service/ping',
     console.log('Response:', response.statusCode);
  
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    assert.equal(body.trim(), 'pong!', 'Expected response body to be ""pong!""');
+    assert.equal(dd.response.body.trim(), 'pong!', 'Expected response body to be ""pong!""');
  
   }
 );""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
@@ -1168,7 +1168,7 @@ $http.post(
 Index of NCI Studies,ins,CCDI,Prod,API2,https://studycatalog.cancer.gov/service/ping,"""var assert = require('assert');
  
 $http.get('https://studycatalog.cancer.gov/service/ping',
-  function (err, response, body) {
+  function (err, response) {
  
     if (err) {
         throw new Error(err);
@@ -1178,7 +1178,7 @@ $http.get('https://studycatalog.cancer.gov/service/ping',
     console.log('Response:', response.statusCode);
  
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    assert.equal(body.trim(), 'pong!', 'Expected response body to be ""pong!""');
+    assert.equal(dd.response.body.trim(), 'pong!', 'Expected response body to be ""pong!""');
  
   }
 );""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public

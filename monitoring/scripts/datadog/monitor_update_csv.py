@@ -178,6 +178,11 @@ def _canonical_tier(raw_tier):
     return _LOWER_TIER_CANONICAL.get(tier.lower(), tier)
 
 
+def _is_blank_csv_row(row):
+    """Return whether a CSV row contains only empty or whitespace values."""
+    return not any(isinstance(value, str) and value.strip() for value in row.values())
+
+
 def setMonitors(input_url):
     """Provision infrastructure metric-alert monitors (ALB, Fargate, OpenSearch)."""
     with contextlib.closing(requests.get(input_url, stream=True)) as csvfile:
@@ -185,6 +190,9 @@ def setMonitors(input_url):
         tiers_set = []
 
         for row in data:
+            if _is_blank_csv_row(row):
+                continue
+
             project = row["Project_Acronym"].upper()
             tier = _canonical_tier(row["Tier"])
             alert_email = row["Alert_Email"] or os.getenv("DD_ALERT_EMAIL", "")
@@ -254,6 +262,9 @@ def setSynthetics(input_url):
         data = csv.DictReader(codecs.iterdecode(csvfile.iter_lines(), "utf-8"))
 
         for row in data:
+            if _is_blank_csv_row(row):
+                continue
+
             project = row["Project_Acronym"].upper()
             tier = _canonical_tier(row["Tier"])
             endpoint_name = row["Endpoint_Name"]
