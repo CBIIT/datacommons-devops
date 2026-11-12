@@ -682,10 +682,6 @@ def setmonitor(project, tier, api, notification):
 
 
 
-    description_fmt = {"name": api["name"], "tier": tier, "url": resolved_url}
-
-
-
     payload = {
 
         "config": {
@@ -712,31 +708,9 @@ def setmonitor(project, tier, api, notification):
 
         "locations": locations,
 
-        "message": dd_client.build_alarm_message(
+        "message": dd_client.build_synthetic_alert_message(
 
-            locations,
-
-            (
-
-                "CRITICAL: The %(name)s endpoint in %(tier)s tier is failing its synthetic "
-
-                "browser check (%(url)s). This indicates the expected element/content could "
-
-                "not be found on the rendered page, meaning the service may be unavailable or "
-
-                "misbehaving."
-
-            ) % description_fmt,
-
-            (
-
-                "RESOLVED: The %(name)s endpoint in %(tier)s tier has recovered and is "
-
-                "passing its synthetic browser check (%(url)s)."
-
-            ) % description_fmt,
-
-            notification,
+            project, tier, "Browser", resolved_url, notification
 
         ),
 

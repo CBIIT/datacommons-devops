@@ -99,29 +99,78 @@ def default_tags(project, tier):
     ]
 
 
-def build_alarm_message(locations, description_alert, description_recovery, notification):
+def dd_app_base():
     """
-    Shared State Change / Region / Description / notification skeleton used
-    by every DataDog monitor's "message" field. *description_alert* and
-    *description_recovery* are the already-filled-in sentences shown inside
-    the {{#is_alert}}/{{#is_recovery}} blocks.
+    Base URL of the Datadog web UI for the configured site.
+
+    Single-label sites (datadoghq.com, datadoghq.eu, ddog-gov.com) are served
+    from app.<site>; regional sites (us3.datadoghq.com, ...) are served from
+    the site host itself.
     """
+    site = dd_site()
+    return "https://{}".format(site if site.count(".") >= 2 else "app." + site)
+
+
+def build_synthetic_alert_message(project, tier, check_type, endpoint, notification):
+    """
+    Standard Slack payload for every Datadog synthetic monitor.
+
+    Alert:
+        🔴 {PROJECT} {TIER} {CHECK_TYPE} Monitor — ALARM
+        {ENDPOINT} failing
+
+        [View Monitor]({MONITOR_LINK})
+
+    Recovery:
+        ✅ {PROJECT} {TIER} {CHECK_TYPE} Monitor — Recovered
+        {ENDPOINT}
+        {CHECK_TYPE} check passing again.
+
+        [View Monitor]({MONITOR_LINK})
+
+    *check_type* is "API", "Browser" or "SSL Certificate". *endpoint* is what
+    the test hits: "GET https://..." for API tests, the page URL for browser
+    tests, the host for SSL tests.
+
+    Resolved when the alert fires:
+      - ALARM vs Recovered: Datadog's {{#is_alert}} / {{#is_recovery}} blocks.
+      - MONITOR_LINK: built from {{synthetics.attributes.test.id}}, so it
+        points at whichever test fired. Datadog has no link variable for
+        synthetic tests.
+
+    Filled in when the monitor is created or updated, from the same values
+    that set the monitor's tags and request:
+      - PROJECT / TIER: the values behind the project:/tier: tags. Tags are
+        stored in lower case and Datadog templates cannot upper-case them, so
+        {{tags.project}} would print 'crdc-hub' instead of 'CRDC-HUB'.
+      - ENDPOINT: the test's request config.
+    Every monitor goes through this one function, so no monitor has its own
+    wording. Re-running the CSV sync picks up any tag or URL change.
+    """
+    link = "{}/synthetics/details/{{{{synthetics.attributes.test.id}}}}".format(
+        dd_app_base()
+    )
+    title = "{} {} {} Monitor".format(project, tier, check_type)
+
     return (
-        "**State Change**\n"
-        "{{#is_recovery}}ALARM → OK{{/is_recovery}}{{#is_alert}}OK → ALARM{{/is_alert}}\n"
+        "{{#is_alert}}"
+        "🔴 %(title)s — ALARM\n"
+        "%(endpoint)s failing\n"
+        "{{/is_alert}}"
+        "{{#is_recovery}}"
+        "✅ %(title)s — Recovered\n"
+        "%(endpoint)s\n"
+        "%(check_type)s check passing again.\n"
+        "{{/is_recovery}}"
         "\n"
-        "**Region**\n"
-        "%(location)s\n"
-        "\n"
-        "Description\n"
-        "{{#is_alert}}%(alert)s{{/is_alert}}\n"
-        "{{#is_recovery}}%(recovery)s{{/is_recovery}}\n"
+        "[View Monitor](%(link)s)\n"
         "\n"
         "%(notification)s"
     ) % {
-        "location": ", ".join(locations),
-        "alert": description_alert,
-        "recovery": description_recovery,
+        "title": title,
+        "endpoint": endpoint,
+        "check_type": check_type,
+        "link": link,
         "notification": notification,
     }
 
