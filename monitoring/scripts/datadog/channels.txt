@@ -1,0 +1,22 @@
+# Slack alert channels used in FNL-Monitoring-List-datadog.csv (Slack_Channel column).
+# One per line; "#name", "name" and "<account>-name" forms all work.
+# Lines starting with "# " (hash + space) are comments.
+Expand_Data_Commons-ccdi-datasharing-prod
+Expand_Data_Commons-ccdi-prod-c3dc
+Expand_Data_Commons-ccdi-prod-cbio
+Expand_Data_Commons-ccdi-prod-ins
+Expand_Data_Commons-ccdi-subprod-c3dc
+Expand_Data_Commons-ccdi-subprod-cbio
+Expand_Data_Commons-ccdi-subprod-ins
+Expand_Data_Commons-crdc-prod-cda
+Expand_Data_Commons-crdc-prod-cds
+Expand_Data_Commons-crdc-prod-popsci
+Expand_Data_Commons-crdc-subprod-cda
+Expand_Data_Commons-crdc-subprod-cds
+Expand_Data_Commons-crdc-subprod-ctdc
+Expand_Data_Commons-crdc-subprod-icdc
+Expand_Data_Commons-crdc-subprod-popsci
+Expand_Data_Commons-crdcdh-prod-system-alerts
+Expand_Data_Commons-crdcdh-system-alerts
+Expand_Data_Commons-mdb-non-prod-systems-alert
+Expand_Data_Commons-mdb-prod-systems-alert
