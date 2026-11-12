@@ -39,11 +39,12 @@ def setmonitor(project, tier, api, notification):
         },
         "locations": locations,
         "message": dd_client.build_synthetic_alert_message(
-            project, tier, "SSL Certificate", domain, notification
+            monitor_name, "SSL Certificate", domain, notification
         ),
         "name": monitor_name,
         "options": {
             "tick_every": freq,
+            "monitor_options": dd_client.synthetic_monitor_options(),
             # Retry transient failures before alerting. This SSL check runs only
             # once per day from a single (often cross-partition) location, so
             # without retries a lone network/handshake blip fires a CRITICAL

@@ -91,6 +91,23 @@ def tick_every(tier):
     return 600 if tier.lower() == "prod" else 1800
 
 
+def synthetic_monitor_options():
+    """
+    Notification options shared by every synthetic test.
+
+    "hide_all" sends only our custom message (built by
+    build_synthetic_alert_message) plus the event link. It drops Datadog's
+    default enriched content -- the "Your test failed at least once from
+    location ..." text, tags, footers -- and hides the @email / @slack
+    handles from the rendered message. The handles still trigger delivery.
+
+    It does NOT remove the "Triggered: [Synthetics] <name>" title or the
+    Slack integration's own "Tags" / "Notified" fields; those are set per
+    channel in the Datadog Slack integration, not on the test.
+    """
+    return {"notification_preset_name": "hide_all"}
+
+
 def default_tags(project, tier):
     """The project/tier tag pair every monitor is tagged with."""
     return [
@@ -111,26 +128,32 @@ def dd_app_base():
     return "https://{}".format(site if site.count(".") >= 2 else "app." + site)
 
 
-def build_synthetic_alert_message(project, tier, check_type, endpoint, notification):
+def build_synthetic_alert_message(monitor_name, check_type, endpoint, notification):
     """
     Standard Slack payload for every Datadog synthetic monitor.
 
     Alert:
-        🔴 {PROJECT} {TIER} {CHECK_TYPE} Monitor — ALARM
+        🔴 {MONITOR_NAME} — ALARM
         {ENDPOINT} failing
 
         [View Monitor]({MONITOR_LINK})
 
     Recovery:
-        ✅ {PROJECT} {TIER} {CHECK_TYPE} Monitor — Recovered
+        ✅ {MONITOR_NAME} — Recovered
         {ENDPOINT}
         {CHECK_TYPE} check passing again.
 
         [View Monitor]({MONITOR_LINK})
 
-    *check_type* is "API", "Browser" or "SSL Certificate". *endpoint* is what
-    the test hits: "GET https://..." for API tests, the page URL for browser
-    tests, the host for SSL tests.
+    *monitor_name* is the test's own Datadog name (e.g. "CBIOPORTAL Dev
+    Content Monitor"), so the Slack title always matches the monitor. It
+    already carries project, tier and endpoint name; a generic
+    "{PROJECT} {TIER} Browser Monitor" title cannot be used because several
+    tests share a project/tier/type (e.g. CBIOPORTAL Portal and Content).
+
+    *check_type* is "API", "Browser" or "SSL Certificate", used in the
+    recovery line. *endpoint* is what the test hits: "GET https://..." for
+    API tests, the page URL for browser tests (no method), the host for SSL.
 
     Resolved when the alert fires:
       - ALARM vs Recovered: Datadog's {{#is_alert}} / {{#is_recovery}} blocks.
@@ -140,9 +163,10 @@ def build_synthetic_alert_message(project, tier, check_type, endpoint, notificat
 
     Filled in when the monitor is created or updated, from the same values
     that set the monitor's tags and request:
-      - PROJECT / TIER: the values behind the project:/tier: tags. Tags are
-        stored in lower case and Datadog templates cannot upper-case them, so
-        {{tags.project}} would print 'crdc-hub' instead of 'CRDC-HUB'.
+      - MONITOR_NAME: built from the same project/tier values as the
+        project:/tier: tags. Tags are stored in lower case and Datadog
+        templates cannot upper-case them, so {{tags.project}} would print
+        'crdc-hub' instead of 'CRDC-HUB'.
       - ENDPOINT: the test's request config.
     Every monitor goes through this one function, so no monitor has its own
     wording. Re-running the CSV sync picks up any tag or URL change.
@@ -150,7 +174,7 @@ def build_synthetic_alert_message(project, tier, check_type, endpoint, notificat
     link = "{}/synthetics/details/{{{{synthetics.attributes.test.id}}}}".format(
         dd_app_base()
     )
-    title = "{} {} {} Monitor".format(project, tier, check_type)
+    title = monitor_name
 
     return (
         "{{#is_alert}}"

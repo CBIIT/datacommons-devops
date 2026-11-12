@@ -710,7 +710,7 @@ def setmonitor(project, tier, api, notification):
 
         "message": dd_client.build_synthetic_alert_message(
 
-            project, tier, "Browser", resolved_url, notification
+            monitor_name, "Browser", resolved_url, notification
 
         ),
 
@@ -719,6 +719,7 @@ def setmonitor(project, tier, api, notification):
         "options": {
 
             "tick_every": freq,
+            "monitor_options": dd_client.synthetic_monitor_options(),
 
             "device_ids": ["laptop_large"],
 

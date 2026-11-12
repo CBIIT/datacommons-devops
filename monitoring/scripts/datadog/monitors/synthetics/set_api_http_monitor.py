@@ -37,11 +37,12 @@ def setmonitor(project, tier, api, notification):
         },
         "locations": locations,
         "message": dd_client.build_synthetic_alert_message(
-            project, tier, "API", "GET {}".format(api["url"]), notification
+            monitor_name, "API", "GET {}".format(api["url"]), notification
         ),
         "name": monitor_name,
         "options": {
             "tick_every": freq,
+            "monitor_options": dd_client.synthetic_monitor_options(),
         },
         "status": "live",
         "tags": dd_client.default_tags(project, tier),
