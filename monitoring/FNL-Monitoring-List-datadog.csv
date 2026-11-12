@@ -588,7 +588,6 @@ $http.get('https://sts-stage.cancer.gov/v2/models/',
 
   }
 );",,Expand_Data_Commons-mdb-non-prod-systems-alert,,,,,,,,Private
-Metamodel Database,mdb,CCDI,Prod,Portal,https://sts.cancer.gov/docs,,,Expand_Data_Commons-mdb-prod-systems-alert,,,,,,,,Private
 Metamodel Database,mdb,CCDI,Prod,API,https://sts.cancer.gov/v2/models/count,"var assert = require('assert');
 $http.get('https://sts.cancer.gov/v2/models/count',
   function (err, response, body) {
