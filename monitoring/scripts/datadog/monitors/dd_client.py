@@ -133,7 +133,7 @@ def build_synthetic_alert_message(monitor_name, endpoint, notification):
     Standard Slack payload for every Datadog synthetic monitor:
 
         {{#is_alert}}
-        🔴 {MONITOR_NAME} — ALARM
+        🚨 {MONITOR_NAME} — ALARM
         {ENDPOINT} failing
 
         [View Monitor]({MONITOR_LINK})
@@ -189,7 +189,7 @@ def build_synthetic_alert_message(monitor_name, endpoint, notification):
 
     return (
         "{{#is_alert}}\n"
-        "🔴 %(title)s — ALARM\n"
+        "🚨 %(title)s — ALARM\n"
         "%(endpoint)s failing\n"
         "\n"
         "[View Monitor](%(link)s)\n"
