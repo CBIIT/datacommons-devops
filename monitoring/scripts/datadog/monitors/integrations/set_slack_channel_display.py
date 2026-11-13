@@ -2,46 +2,26 @@
 """
 Hide the "Tags" section in Datadog's Slack alerts.
 
-Why: every Slack alert Datadog posts ends with a "Tags" section (e.g.
-"check_type:browser, project:cbioportal, tier:dev"). That section is not part
-of the monitor message, so neither the message template nor the
-notification preset removes it. It comes from the Datadog Slack
-integration's per-channel display setting "tags".
+The Tags section comes from the Datadog Slack integration's per-channel
+display setting, not from the monitor message. For each Slack channel our
+monitors notify, this sets display.tags = false and keeps every other
+display setting as it is.
 
-What: for each Slack channel our monitors notify, this module sets
-display.tags = false and leaves every other display setting (message,
-notified, snapshot, mute_buttons) exactly as it is. It does not touch the
-monitors, their messages or their project:/tier: tags.
+CSV Slack_Channel values are "<account>-<channel>" (the part after "@slack-"
+in the handle), e.g. "Expand_Data_Commons-ccdi-subprod-cbio" -> account
+"Expand_Data_Commons", channel "#ccdi-subprod-cbio". Each row can use a
+different account. Channel names can contain hyphens, so the value is not
+split on every hyphen: each hyphen, left to right, is tried as the
+account/channel boundary, keeping only splits whose channel part is a valid
+Slack channel name, and the first split Datadog does not answer with 404 is
+used. Values with no valid split are skipped.
 
-Datadog API v1, Slack Integration:
-  GET   /api/v1/integration/slack/configuration/accounts/{account_name}/channels/{channel_name}
-  PATCH /api/v1/integration/slack/configuration/accounts/{account_name}/channels/{channel_name}
-        body: {"name": "#channel", "display": {..current values.., "tags": false}}
-
-Channel names: the CSV's Slack_Channel column holds the part after
-"@slack-" in the notification handle, i.e. "<account>-<channel>", e.g.
-"Expand_Data_Commons-ccdi-subprod-cbio" -> account "Expand_Data_Commons",
-channel "#ccdi-subprod-cbio". The account name is NOT guessed from the value:
-it comes from DD_SLACK_ACCOUNT_NAME (default "Expand_Data_Commons"), and only
-values that start with "<account>-" are processed. Anything else is reported
-as skipped.
-
-Permissions: the DD_APP_KEY user needs the "Integrations Manage" permission
-(integrations_manage). Without it Datadog returns 403. This step logs a
-warning and the monitor run still succeeds.
-
-Auth and site: same as the rest of the scripts (dd_client.headers() and
-dd_client.dd_api_base(), i.e. DD_API_KEY / DD_APP_KEY / DD_SITE from the
-environment). Key values are never printed.
-
-Run locally (runs with the normal monitor sync; add --skip-slack-display to
-leave Slack channel settings alone):
-    export DD_API_KEY=... DD_APP_KEY=... DD_SITE=ddog-gov.com
-    python3 monitoring/scripts/datadog/monitor_update_csv.py -f <csv URL>
+The DD_APP_KEY user needs the "Integrations Manage" permission. Failures are
+counted in the returned summary and never fail the monitor run.
 """
 
 import json
-import os
+import re
 import time
 from urllib.parse import quote
 
@@ -49,24 +29,44 @@ import requests
 
 from monitors import dd_client
 
-DEFAULT_SLACK_ACCOUNT = "Expand_Data_Commons"
-
-# 429 / 5xx retries: waits 2, 4, 8, 16, 32 s (or X-RateLimit-Reset on 429).
 MAX_RETRIES = 5
 BACKOFF_SECONDS = 2
 TIMEOUT_SECONDS = 30
+
+# Slack channel names: lowercase letters, digits, hyphens, underscores; max 80.
+_SLACK_CHANNEL_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{0,79}$")
+
+# Status codes that mean "channel not usable here": warn and skip.
+_SKIP_ERRORS = {
+    403: "the DD_APP_KEY user needs the 'Integrations Manage' "
+         "(integrations_manage) permission.",
+    404: "account or channel is not set up in the Datadog Slack integration.",
+}
 
 
 class SlackDisplayError(Exception):
     """Per-channel failure. *kind* is "skipped" (setup issue) or "failed"."""
 
-    def __init__(self, message, kind="failed"):
+    def __init__(self, message, kind="failed", status=None):
         super().__init__(message)
         self.kind = kind
+        self.status = status
 
 
-def slack_account_name():
-    return (os.getenv("DD_SLACK_ACCOUNT_NAME") or DEFAULT_SLACK_ACCOUNT).strip()
+def _split_candidates(value):
+    """
+    Possible (account, "#channel") splits of a Slack_Channel value, trying
+    each hyphen left to right. Only splits with a non-empty account (no
+    whitespace) and a valid Slack channel name are returned.
+    """
+    candidates = []
+    for i, char in enumerate(value):
+        if char != "-":
+            continue
+        account, channel = value[:i], value[i + 1:].lstrip("#")
+        if account and not re.search(r"\s", account) and _SLACK_CHANNEL_RE.match(channel):
+            candidates.append((account, "#" + channel))
+    return candidates
 
 
 def _channel_url(account, channel):
@@ -76,11 +76,7 @@ def _channel_url(account, channel):
 
 
 def _request(method, url, body=None):
-    """
-    Send one request with dd_client's headers, retrying 429 and 5xx with
-    exponential backoff. Returns the parsed JSON body; raises
-    SlackDisplayError with an operator-friendly message otherwise.
-    """
+    """Send a request, retrying 429 and 5xx with exponential backoff."""
     delay = BACKOFF_SECONDS
     for attempt in range(MAX_RETRIES + 1):
         try:
@@ -99,29 +95,22 @@ def _request(method, url, body=None):
             return response.json() if response.content else {}
 
         if (code == 429 or code >= 500) and attempt < MAX_RETRIES:
-            wait = delay
             reset = response.headers.get("X-RateLimit-Reset", "")
-            if code == 429 and reset.isdigit():
-                wait = max(int(reset), 1)
-            print("    HTTP {} on {}, retrying in {}s ({}/{}).".format(
-                code, method, wait, attempt + 1, MAX_RETRIES))
+            wait = max(int(reset), 1) if code == 429 and reset.isdigit() else delay
             time.sleep(wait)
             delay *= 2
             continue
 
         detail = (response.text or "").strip()[:200]
+        if code in _SKIP_ERRORS:
+            raise SlackDisplayError(
+                "HTTP {}: {} {}".format(code, _SKIP_ERRORS[code], detail),
+                kind="skipped", status=code)
         if code == 401:
             raise SlackDisplayError(
-                "HTTP 401: DD_API_KEY / DD_APP_KEY rejected (or wrong DD_SITE). " + detail)
-        if code == 403:
-            raise SlackDisplayError(
-                "HTTP 403: the DD_APP_KEY user needs the 'Integrations Manage' "
-                "(integrations_manage) permission. " + detail, kind="skipped")
-        if code == 404:
-            raise SlackDisplayError(
-                "HTTP 404: account or channel is not set up in the Datadog Slack "
-                "integration (Datadog -> Integrations -> Slack). " + detail, kind="skipped")
-        raise SlackDisplayError("HTTP {}: {}".format(code, detail))
+                "HTTP 401: DD_API_KEY / DD_APP_KEY rejected (or wrong DD_SITE). " + detail,
+                status=code)
+        raise SlackDisplayError("HTTP {}: {}".format(code, detail), status=code)
 
     raise SlackDisplayError("gave up after {} retries".format(MAX_RETRIES))
 
@@ -129,34 +118,25 @@ def _request(method, url, body=None):
 def _ensure_channel(account, channel):
     """Returns "updated" or "already_correct"."""
     url = _channel_url(account, channel)
-
     current = _request("GET", url)
-    display = dict(current.get("display") or {})
+    display = current.get("display") or {}
     if display.get("tags") is False:
         return "already_correct"
 
-    new_display = dict(display, tags=False)
-    print("  {}: display {} -> {}".format(
-        channel, json.dumps(display, sort_keys=True), json.dumps(new_display, sort_keys=True)))
-
-    _request("PATCH", url, {"name": current.get("name") or channel, "display": new_display})
+    _request("PATCH", url, {
+        "name": current.get("name") or channel,
+        "display": dict(display, tags=False),
+    })
     return "updated"
 
 
 def ensure_slack_tags_hidden(slack_channels):
     """
-    Turn off the Tags section on every Slack channel in *slack_channels*
-    (CSV Slack_Channel values, "<account>-<channel>"). Never raises: every
-    problem is logged and counted so the monitor run is not failed by it.
-    Returns the summary dict of channel lists.
+    Turn off the Tags section on every channel in *slack_channels* (CSV
+    Slack_Channel values). Never raises. Returns the summary dict of lists of
+    CSV values.
     """
-    account = slack_account_name()
-    prefix = account + "-"
     summary = {"updated": [], "already_correct": [], "skipped": [], "failed": []}
-
-    print()
-    print("Slack channel display: hiding Tags (account {})".format(account))
-    print()
 
     seen = set()
     for value in slack_channels:
@@ -165,33 +145,25 @@ def ensure_slack_tags_hidden(slack_channels):
             continue
         seen.add(value)
 
-        if not value.startswith(prefix):
-            print("  {}: skipped, does not start with '{}' (check the CSV "
-                  "Slack_Channel value or DD_SLACK_ACCOUNT_NAME).".format(value, prefix))
+        candidates = _split_candidates(value)
+        if not candidates:
             summary["skipped"].append(value)
             continue
 
-        channel = "#" + value[len(prefix):].lstrip("#")
         try:
-            outcome = _ensure_channel(account, channel)
+            for i, (account, channel) in enumerate(candidates):
+                try:
+                    outcome = _ensure_channel(account, channel)
+                    break
+                except SlackDisplayError as e:
+                    # 404 may just mean the wrong boundary; try the next split.
+                    if e.status == 404 and i < len(candidates) - 1:
+                        continue
+                    raise
         except SlackDisplayError as e:
-            label = "WARNING" if e.kind == "skipped" else "ERROR"
-            print("  {}: {} {}".format(channel, label, e))
-            summary[e.kind].append(channel)
-            continue
-        except Exception as e:  # never fail the monitor run over this step
-            print("  {}: ERROR unexpected {}: {}".format(channel, type(e).__name__, e))
-            summary["failed"].append(channel)
-            continue
+            outcome = e.kind
+        except Exception:  # never fail the monitor run over this step
+            outcome = "failed"
+        summary[outcome].append(value)
 
-        print("  {}: {}".format(channel, outcome.replace("_", " ")))
-        summary[outcome].append(channel)
-
-    print()
-    print("Slack channel display summary: {} updated, {} already correct, "
-          "{} skipped, {} failed.".format(
-              len(summary["updated"]),
-              len(summary["already_correct"]),
-              len(summary["skipped"]),
-              len(summary["failed"])))
     return summary

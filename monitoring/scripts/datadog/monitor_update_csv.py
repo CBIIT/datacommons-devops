@@ -42,8 +42,8 @@ Slack channel display (runs after all monitors are created/updated):
   false on every Slack channel in the CSV's Slack_Channel column. Other
   display settings and the monitors' own tags are left alone. Needs the
   DD_APP_KEY user to have the "Integrations Manage" permission; problems are
-  logged as warnings and never fail the run. Optional env var:
-  DD_SLACK_ACCOUNT_NAME (default "Expand_Data_Commons"). See
+  logged as warnings and never fail the run. The Slack account and channel
+  are parsed from each Slack_Channel value. See
   monitors/integrations/set_slack_channel_display.py.
 
 Usage:
