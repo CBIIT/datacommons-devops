@@ -25,7 +25,6 @@ def setmonitor(project, tier, api, notification):
     freq = 86400  # once per day in seconds
 
     locations = dd_client.synthetics_location(api["location"])
-    description_fmt = {"domain": domain, "tier": tier}
 
     payload = {
         "config": {
@@ -39,22 +38,13 @@ def setmonitor(project, tier, api, notification):
             },
         },
         "locations": locations,
-        "message": dd_client.build_alarm_message(
-            locations,
-            (
-                "CRITICAL: The SSL certificate for %(domain)s in %(tier)s tier is expiring "
-                "within 30 days or is invalid. This indicates the certificate may need "
-                "renewal, meaning the service could become inaccessible over HTTPS."
-            ) % description_fmt,
-            (
-                "RESOLVED: The SSL certificate for %(domain)s in %(tier)s tier is valid and "
-                "not expiring within 30 days."
-            ) % description_fmt,
-            notification,
+        "message": dd_client.build_synthetic_alert_message(
+            monitor_name, domain, notification
         ),
         "name": monitor_name,
         "options": {
             "tick_every": freq,
+            "monitor_options": dd_client.synthetic_monitor_options(),
             # Retry transient failures before alerting. This SSL check runs only
             # once per day from a single (often cross-partition) location, so
             # without retries a lone network/handshake blip fires a CRITICAL

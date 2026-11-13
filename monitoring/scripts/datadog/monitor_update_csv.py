@@ -37,8 +37,19 @@ New CSV columns (all optional — leave Downtime_Start blank to skip):
   Downtime_Days    optional comma list of weekdays, e.g. "MO,TU,WE,TH,FR"
                     (blank = every day)
 
+Slack channel display (runs after all monitors are created/updated):
+  Turns off the "Tags" section in Slack alerts by setting display.tags =
+  false on every Slack channel in the CSV's Slack_Channel column. Other
+  display settings and the monitors' own tags are left alone. Needs the
+  DD_APP_KEY user to have the "Integrations Manage" permission; problems are
+  logged as warnings and never fail the run. The Slack account and channel
+  are parsed from each Slack_Channel value. See
+  monitors/integrations/set_slack_channel_display.py.
+
 Usage:
     python3 monitor_update_csv.py -f <CSV_URL>
+    python3 monitor_update_csv.py -f <CSV_URL> --skip-slack-display
+        Normal run without the Slack display step.
 """
 
 import sys
@@ -73,36 +84,67 @@ from monitors.alerts.alb import (
 )
 from monitors.alerts.opensearch import set_os_cluster_red_monitor
 from monitors.downtime import set_recurring_downtime
+from monitors.integrations import set_slack_channel_display
+
+
+USAGE = "monitor_update_csv.py -f <file> [--skip-slack-display]"
 
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, "hf:", ["file="])
+        opts, args = getopt.getopt(
+            argv, "hf:", ["file=", "skip-slack-display"]
+        )
     except getopt.GetoptError:
-        print("File URL required:   monitor_update_csv.py -f <file>")
+        print("File URL required:   " + USAGE)
         sys.exit(2)
 
     input_url = None
+    skip_slack_display = False
     for opt, arg in opts:
         if opt == "-h":
-            print("monitor_update_csv.py -f <file>")
+            print(USAGE)
             sys.exit()
         elif opt in ("-f", "--file"):
             input_url = arg
+        elif opt == "--skip-slack-display":
+            skip_slack_display = True
 
     if not input_url:
-        print("File URL required:   monitor_update_csv.py -f <file>")
+        print("File URL required:   " + USAGE)
         sys.exit(2)
 
     setMonitors(input_url)
     setSynthetics(input_url)
 
+    # Runs after every monitor is created or updated. Never fails the run.
+    if skip_slack_display:
+        print("Skipping Slack channel display step (--skip-slack-display).")
+    else:
+        set_slack_channel_display.ensure_slack_tags_hidden(
+            _slack_channels(input_url)
+        )
+
+
+def _slack_channels(input_url):
+    """Unique, non-empty Slack_Channel values from the CSV, in file order."""
+    channels = []
+    with contextlib.closing(requests.get(input_url, stream=True)) as csvfile:
+        for row in csv.DictReader(codecs.iterdecode(csvfile.iter_lines(), "utf-8")):
+            value = (row.get("Slack_Channel") or "").strip()
+            if value and value not in channels:
+                channels.append(value)
+    return channels
+
 
 def _make_notification(alert_email, slack_channel):
     """Build the @-mention notification string embedded in every DD monitor message."""
     parts = []
+    # DataDog email: "@<address>". There is no "@email:" prefix; with one,
+    # Datadog reads "@email" as the handle and prints ":<address>" as text
+    # (and the email is not delivered).
     if alert_email:
-        parts.append("@email:{}".format(alert_email))
+        parts.append("@{}".format(alert_email.strip().lstrip("@")))
     # DataDog Slack: @slack-<workspace>-<channel-name>
     # The CSV stores channel IDs; update accordingly once your DD Slack
     # integration is configured with matching channel names.
