@@ -34,9 +34,10 @@ Auth and site: same as the rest of the scripts (dd_client.headers() and
 dd_client.dd_api_base(), i.e. DD_API_KEY / DD_APP_KEY / DD_SITE from the
 environment). Key values are never printed.
 
-Run locally (dry run makes no changes in Datadog):
+Run locally (runs with the normal monitor sync; add --skip-slack-display to
+leave Slack channel settings alone):
     export DD_API_KEY=... DD_APP_KEY=... DD_SITE=ddog-gov.com
-    python3 monitoring/scripts/datadog/monitor_update_csv.py -f <csv URL> --dry-run
+    python3 monitoring/scripts/datadog/monitor_update_csv.py -f <csv URL>
 """
 
 import json
@@ -125,8 +126,8 @@ def _request(method, url, body=None):
     raise SlackDisplayError("gave up after {} retries".format(MAX_RETRIES))
 
 
-def _ensure_channel(account, channel, dry_run):
-    """Returns "updated", "would_update" or "already_correct"."""
+def _ensure_channel(account, channel):
+    """Returns "updated" or "already_correct"."""
     url = _channel_url(account, channel)
 
     current = _request("GET", url)
@@ -137,14 +138,12 @@ def _ensure_channel(account, channel, dry_run):
     new_display = dict(display, tags=False)
     print("  {}: display {} -> {}".format(
         channel, json.dumps(display, sort_keys=True), json.dumps(new_display, sort_keys=True)))
-    if dry_run:
-        return "would_update"
 
     _request("PATCH", url, {"name": current.get("name") or channel, "display": new_display})
     return "updated"
 
 
-def ensure_slack_tags_hidden(slack_channels, dry_run=False):
+def ensure_slack_tags_hidden(slack_channels):
     """
     Turn off the Tags section on every Slack channel in *slack_channels*
     (CSV Slack_Channel values, "<account>-<channel>"). Never raises: every
@@ -153,12 +152,10 @@ def ensure_slack_tags_hidden(slack_channels, dry_run=False):
     """
     account = slack_account_name()
     prefix = account + "-"
-    summary = {"updated": [], "would_update": [], "already_correct": [],
-               "skipped": [], "failed": []}
+    summary = {"updated": [], "already_correct": [], "skipped": [], "failed": []}
 
     print()
-    print("Slack channel display: hiding Tags (account {}){}".format(
-        account, " [DRY RUN]" if dry_run else ""))
+    print("Slack channel display: hiding Tags (account {})".format(account))
     print()
 
     seen = set()
@@ -176,7 +173,7 @@ def ensure_slack_tags_hidden(slack_channels, dry_run=False):
 
         channel = "#" + value[len(prefix):].lstrip("#")
         try:
-            outcome = _ensure_channel(account, channel, dry_run)
+            outcome = _ensure_channel(account, channel)
         except SlackDisplayError as e:
             label = "WARNING" if e.kind == "skipped" else "ERROR"
             print("  {}: {} {}".format(channel, label, e))
@@ -191,10 +188,9 @@ def ensure_slack_tags_hidden(slack_channels, dry_run=False):
         summary[outcome].append(channel)
 
     print()
-    print("Slack channel display summary: {} {}, {} already correct, "
+    print("Slack channel display summary: {} updated, {} already correct, "
           "{} skipped, {} failed.".format(
-              len(summary["would_update"]) if dry_run else len(summary["updated"]),
-              "would update" if dry_run else "updated",
+              len(summary["updated"]),
               len(summary["already_correct"]),
               len(summary["skipped"]),
               len(summary["failed"])))

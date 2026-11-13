@@ -48,9 +48,6 @@ Slack channel display (runs after all monitors are created/updated):
 
 Usage:
     python3 monitor_update_csv.py -f <CSV_URL>
-    python3 monitor_update_csv.py -f <CSV_URL> --dry-run
-        Changes nothing in Datadog: skips monitor/synthetic updates and only
-        shows what the Slack display step would change.
     python3 monitor_update_csv.py -f <CSV_URL> --skip-slack-display
         Normal run without the Slack display step.
 """
@@ -90,20 +87,19 @@ from monitors.downtime import set_recurring_downtime
 from monitors.integrations import set_slack_channel_display
 
 
-USAGE = "monitor_update_csv.py -f <file> [--dry-run] [--skip-slack-display]"
+USAGE = "monitor_update_csv.py -f <file> [--skip-slack-display]"
 
 
 def main(argv):
     try:
         opts, args = getopt.getopt(
-            argv, "hf:", ["file=", "dry-run", "skip-slack-display"]
+            argv, "hf:", ["file=", "skip-slack-display"]
         )
     except getopt.GetoptError:
         print("File URL required:   " + USAGE)
         sys.exit(2)
 
     input_url = None
-    dry_run = False
     skip_slack_display = False
     for opt, arg in opts:
         if opt == "-h":
@@ -111,8 +107,6 @@ def main(argv):
             sys.exit()
         elif opt in ("-f", "--file"):
             input_url = arg
-        elif opt == "--dry-run":
-            dry_run = True
         elif opt == "--skip-slack-display":
             skip_slack_display = True
 
@@ -120,21 +114,15 @@ def main(argv):
         print("File URL required:   " + USAGE)
         sys.exit(2)
 
-    if dry_run:
-        # A dry run must not change anything in Datadog. Monitor and
-        # synthetic provisioning has no preview mode, so it is skipped
-        # entirely; only the Slack display step can report what it would do.
-        print("DRY RUN: skipping monitor and synthetic create/update.")
-    else:
-        setMonitors(input_url)
-        setSynthetics(input_url)
+    setMonitors(input_url)
+    setSynthetics(input_url)
 
     # Runs after every monitor is created or updated. Never fails the run.
     if skip_slack_display:
         print("Skipping Slack channel display step (--skip-slack-display).")
     else:
         set_slack_channel_display.ensure_slack_tags_hidden(
-            _slack_channels(input_url), dry_run=dry_run
+            _slack_channels(input_url)
         )
 
 
