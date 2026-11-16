@@ -932,6 +932,56 @@ $http.get('https://caninecommons-stage.cancer.gov/version',
 
   }
 );",,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Private
+CCDI C3DC,c3dc,CCDI,dev,Portal,https://clinicalcommons-dev.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
+CCDI C3DC,c3dc,CCDI,dev,API,https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
+
+$http.post('https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: 'query NumberOfParticipants {numberOfParticipants}',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfParticipants' in body.data);
+
+  }
+);",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
+CCDI C3DC,c3dc,CCDI,qa,Portal,https://clinicalcommons-qa.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
+CCDI C3DC,c3dc,CCDI,qa,API,https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
+
+$http.post('https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/',
+  {
+    json: {
+    query: 'query DatadogParticipantCounts { searchParticipants(participant_ids: []) { numberOfParticipants numberOfStudies numberOfSamples numberOfFiles } }',
+    variables: {}
+    }
+  },
+
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');    
+    assert.ok('numberOfParticipants' in body.data);
+
+  }
+);",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,Stage,Portal,https://clinicalcommons-stage.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,Stage,API,https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
 
