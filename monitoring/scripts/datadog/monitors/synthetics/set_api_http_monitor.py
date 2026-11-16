@@ -27,8 +27,6 @@ def setmonitor(project, tier, api, notification):
             {"operator": "contains", "type": "body", "target": api["text"]}
         )
 
-    description_fmt = {"name": api["name"], "tier": tier, "url": api["url"]}
-
     payload = {
         "config": {
             "assertions": assertions,
@@ -38,23 +36,13 @@ def setmonitor(project, tier, api, notification):
             },
         },
         "locations": locations,
-        "message": dd_client.build_alarm_message(
-            locations,
-            (
-                "CRITICAL: The %(name)s endpoint in %(tier)s tier is failing its synthetic "
-                "HTTP availability check (GET %(url)s). This indicates the endpoint is "
-                "returning an unexpected status code or failing response validation, meaning "
-                "the service may be unavailable or misbehaving."
-            ) % description_fmt,
-            (
-                "RESOLVED: The %(name)s endpoint in %(tier)s tier has recovered and is "
-                "passing its synthetic HTTP availability check (GET %(url)s)."
-            ) % description_fmt,
-            notification,
+        "message": dd_client.build_synthetic_alert_message(
+            monitor_name, "GET {}".format(api["url"]), notification
         ),
         "name": monitor_name,
         "options": {
             "tick_every": freq,
+            "monitor_options": dd_client.synthetic_monitor_options(),
         },
         "status": "live",
         "tags": dd_client.default_tags(project, tier),
