@@ -986,7 +986,7 @@ $http.post('https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/',
 CCDI C3DC,c3dc,CCDI,qa,Portal,https://clinicalcommons-qa.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,qa,API,https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
 
-$http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
+$http.post('https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
     query: 'query NumberOfParticipants {numberOfParticipants}',
