@@ -1337,3 +1337,183 @@ $http.get('https://studycatalog.cancer.gov/service/ping',
   }
 );""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
 CCDI Datasharing,Datasharing Hub,CCDI,Prod,Portal,https://datasharing.cancer.gov/post/Data/cancer-data-resources/,,,Expand_Data_Commons-ccdi-datasharing-prod,,,,,,,,Public
+CCDI DCC Federation API Server,DCC,CCDI,Dev,API Subject,https://dcc-dev.ccdi.cancer.gov/api/v1/subject,"var assert = require('assert');
+
+$http.get('https://dcc-dev.ccdi.cancer.gov/api/v1/subject',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,Dev,API Sample,https://dcc-dev.ccdi.cancer.gov/api/v1/sample,"var assert = require('assert');
+
+$http.get('https://dcc-dev.ccdi.cancer.gov/api/v1/sample',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,Dev,API File,https://dcc-dev.ccdi.cancer.gov/api/v1/file,"var assert = require('assert');
+
+$http.get('https://dcc-dev.ccdi.cancer.gov/api/v1/file',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,qa,API Subject,https://dcc-qa.ccdi.cancer.gov/api/v1/subject,"var assert = require('assert');
+
+$http.get('https://dcc-qa.ccdi.cancer.gov/api/v1/subject',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,qa,API Sample,https://dcc-qa.ccdi.cancer.gov/api/v1/sample,"var assert = require('assert');
+
+$http.get('https://dcc-qa.ccdi.cancer.gov/api/v1/sample',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,qa,API File,https://dcc-qa.ccdi.cancer.gov/api/v1/file,"var assert = require('assert');
+
+$http.get('https://dcc-qa.ccdi.cancer.gov/api/v1/file',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,stage,API Subject,https://dcc-stage.ccdi.cancer.gov/api/v1/subject,"var assert = require('assert');
+
+$http.get('https://dcc-stage.ccdi.cancer.gov/api/v1/subject',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,stage,API Sample,https://dcc-stage.ccdi.cancer.gov/api/v1/sample,"var assert = require('assert');
+
+$http.get('https://dcc-stage.ccdi.cancer.gov/api/v1/sample',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,stage,API File,https://dcc-stage.ccdi.cancer.gov/api/v1/file,"var assert = require('assert');
+
+$http.get('https://dcc-stage.ccdi.cancer.gov/api/v1/file',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,prod,API Subject,https://dcc.ccdi.cancer.gov/api/v1/subject,"var assert = require('assert');
+
+$http.get('https://dcc.ccdi.cancer.gov/api/v1/subject',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-prod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,prod,API Sample,https://dcc.ccdi.cancer.gov/api/v1/sample,"var assert = require('assert');
+
+$http.get('https://dcc.ccdi.cancer.gov/api/v1/sample',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-prod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,prod,API File,https://dcc.ccdi.cancer.gov/api/v1/file,"var assert = require('assert');
+
+$http.get('https://dcc.ccdi.cancer.gov/api/v1/file',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-prod-dcc,,,,,,,,Private
