@@ -86,9 +86,73 @@ def synthetics_location(location= "private"):
     )
 
 
-def tick_every(tier):
-    """Standard synthetic-test run interval: 10 min in prod, 30 min elsewhere."""
+# Projects piloting the Layered Monitoring Strategy (v2.6, Layer 1). Only the
+# projects listed here get the strategy's frequency, retry, failure duration,
+# tags and extra API assertions; every other project's tests are built
+# exactly as before. Add a project here once the pilot has been verified.
+#
+#   app / team   values for the app: and team: tags
+#   services     CSV Endpoint_Name (lower case) -> service: tag value
+#   api_checks   CSV Endpoint_Name (lower case) -> extra assertion bundles
+#                added to that endpoint's API test (see pilot_api_assertions)
+STRATEGY_PILOT = {
+    "cbioportal": {
+        "app": "cbioportal",
+        "team": "devops",
+        "services": {
+            "portal": "cbio-site",
+            "content": "cbio-frontend",
+            "about": "cbio-about",
+            "api": "cbio-backend",
+        },
+        "api_checks": {
+            "api": ["json_content_type", "no_error_envelope", "response_time"],
+            "about": ["json_content_type", "version_number"],
+        },
+    },
+}
+
+# Strategy L1: one fast retry ~5 s after a failure, then the test must keep
+# failing for 2 consecutive runs before it alerts. One location is used, so
+# persistence over time replaces the strategy's ">=2 of 3 locations" rule.
+_PILOT_TICK = {"prod": 300, "other": 900}  # 5 min prod, 15 min lower tiers
+_PILOT_RETRY = {"count": 1, "interval": 5000}  # interval in ms
+_PILOT_RESPONSE_TIME_MS = 2000
+
+
+def pilot_config(project):
+    """The project's STRATEGY_PILOT entry, or None if it is not in the pilot."""
+    return STRATEGY_PILOT.get((project or "").strip().lower())
+
+
+def _pilot_tier_key(tier):
+    return "prod" if tier.lower() == "prod" else "other"
+
+
+def tick_every(tier, project=None):
+    """
+    Synthetic-test run interval.
+
+    Pilot projects: 5 min in prod, 15 min elsewhere (strategy L1).
+    Everyone else: 10 min in prod, 30 min elsewhere.
+    """
+    if pilot_config(project):
+        return _PILOT_TICK[_pilot_tier_key(tier)]
     return 600 if tier.lower() == "prod" else 1800
+
+
+def failure_options(project, tier):
+    """
+    Extra synthetic options for pilot projects: one fast retry plus
+    min_failure_duration of two runs (10 min prod, 30 min lower tiers), so a
+    single failed run never alerts. Returns {} for non-pilot projects.
+    """
+    if not pilot_config(project):
+        return {}
+    return {
+        "retry": dict(_PILOT_RETRY),
+        "min_failure_duration": 2 * _PILOT_TICK[_pilot_tier_key(tier)],
+    }
 
 
 def synthetic_monitor_options():
@@ -114,6 +178,82 @@ def default_tags(project, tier):
         "project:{}".format(project.lower()),
         "tier:{}".format(tier.lower()),
     ]
+
+
+def synthetic_tags(project, tier, endpoint_name):
+    """
+    Tags for a synthetic test.
+
+    Pilot projects use the strategy's tag standard: service, env, app, team,
+    and tier:page (the test is allowed to notify -- every cBio test does
+    today). Here tier: means notification tier, so the environment moves to
+    env:. Everyone else keeps default_tags (project:, tier:<environment>).
+    """
+    config = pilot_config(project)
+    if not config:
+        return default_tags(project, tier)
+
+    endpoint = (endpoint_name or "").strip().lower()
+    service = config["services"].get(endpoint) or "{}-{}".format(
+        config["app"], endpoint.replace(" ", "-")
+    )
+    return [
+        "service:{}".format(service),
+        "env:{}".format(tier.lower()),
+        "app:{}".format(config["app"]),
+        "team:{}".format(config["team"]),
+        "tier:page",
+    ]
+
+
+def pilot_api_assertions(project, endpoint_name):
+    """
+    Extra API-test assertions for pilot projects, per the strategy's API
+    checklist. Empty for non-pilot projects and for endpoints without
+    api_checks. Bundles:
+
+      json_content_type  response Content-Type contains application/json
+                         (a proxy/WAF HTML error page fails)
+      no_error_envelope  body does not contain an "error" JSON key/value
+                         (a 200 response carrying an error body fails)
+      response_time      responds in under 2 s (generous; catches slow but
+                         working degradation)
+      version_number     $.version looks like a version number, e.g.
+                         1.4.0.2 (liveness only -- never proof of DB health)
+    """
+    config = pilot_config(project)
+    if not config:
+        return []
+
+    checks = config.get("api_checks", {}).get((endpoint_name or "").strip().lower(), [])
+    bundles = {
+        "json_content_type": {
+            "type": "header",
+            "property": "content-type",
+            "operator": "contains",
+            "target": "application/json",
+        },
+        "no_error_envelope": {
+            "type": "body",
+            "operator": "doesNotContain",
+            "target": '"error"',
+        },
+        "response_time": {
+            "type": "responseTime",
+            "operator": "lessThan",
+            "target": _PILOT_RESPONSE_TIME_MS,
+        },
+        "version_number": {
+            "type": "body",
+            "operator": "validatesJSONPath",
+            "target": {
+                "jsonPath": "$.version",
+                "operator": "matches",
+                "targetValue": r"^\d+\.\d+",
+            },
+        },
+    }
+    return [dict(bundles[name]) for name in checks]
 
 
 def dd_app_base():

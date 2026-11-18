@@ -16,7 +16,7 @@ from monitors import dd_client
 
 def setmonitor(project, tier, api, notification):
     monitor_name = "{} {} {} Monitor".format(project, tier, api["name"])
-    freq = dd_client.tick_every(tier)
+    freq = dd_client.tick_every(tier, project)
     locations = dd_client.synthetics_location(api["location"])
 
     assertions = [
@@ -43,9 +43,10 @@ def setmonitor(project, tier, api, notification):
         "options": {
             "tick_every": freq,
             "monitor_options": dd_client.synthetic_monitor_options(),
+            **dd_client.failure_options(project, tier),
         },
         "status": "live",
-        "tags": dd_client.default_tags(project, tier),
+        "tags": dd_client.synthetic_tags(project, tier, api["name"]),
         "type": "api",
         "subtype": "http",
     }

@@ -442,7 +442,7 @@ def setmonitor(project, tier, api, notification):
 
     monitor_name = "{} {} {} Monitor".format(project, tier, api["name"])
 
-    freq = dd_client.tick_every(tier)
+    freq = dd_client.tick_every(tier, project)
 
     locations = dd_client.synthetics_location(api["location"])
 
@@ -730,12 +730,18 @@ def setmonitor(project, tier, api, notification):
             # and stopped them reaching Slack. The cache-busting warm-up step
             # above handles the transient CDN case instead; alerting stays
             # immediate, matching the API monitors.
+            #
+            # Exception: projects in the strategy pilot (dd_client.STRATEGY_PILOT)
+            # get one fast retry plus min_failure_duration. The failure-duration
+            # rule means a real, persistent failure still alerts (after two
+            # failed runs); the retry only absorbs a one-off blip.
+            **dd_client.failure_options(project, tier),
 
         },
 
         "status": "live",
 
-        "tags": dd_client.default_tags(project, tier),
+        "tags": dd_client.synthetic_tags(project, tier, api["name"]),
 
         "type": "browser",
 

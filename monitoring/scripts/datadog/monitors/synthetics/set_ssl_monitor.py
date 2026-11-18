@@ -53,7 +53,8 @@ def setmonitor(project, tier, api, notification):
             "retry": {"count": 2, "interval": 5000},  # interval in ms
         },
         "status": "live",
-        "tags": dd_client.default_tags(project, tier),
+        # Tags only: the daily schedule and 2 retries above are kept as is.
+        "tags": dd_client.synthetic_tags(project, tier, api["name"]),
         "type": "api",
         "subtype": "ssl",
     }
