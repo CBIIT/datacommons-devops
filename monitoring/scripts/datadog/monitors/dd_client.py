@@ -180,6 +180,22 @@ def default_tags(project, tier):
     ]
 
 
+def synthetic_test_name(project, tier, journey):
+    """
+    Datadog name of a synthetic test. Tests are matched by exact name on every
+    sync, so changing this creates new tests: delete the old ones first.
+
+    Pilot projects use the strategy's '<app> – <journey>' format, with the
+    environment appended so the four tiers stay unique:
+    'cbioportal – API (prod)'. Everyone else keeps
+    '<PROJECT> <Tier> <journey> Monitor'.
+    """
+    config = pilot_config(project)
+    if not config:
+        return "{} {} {} Monitor".format(project, tier, journey)
+    return "{} – {} ({})".format(config["app"], journey, tier.lower())
+
+
 def synthetic_tags(project, tier, endpoint_name):
     """
     Tags for a synthetic test.

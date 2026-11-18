@@ -440,7 +440,7 @@ def _refresh_step():
 
 def setmonitor(project, tier, api, notification):
 
-    monitor_name = "{} {} {} Monitor".format(project, tier, api["name"])
+    monitor_name = dd_client.synthetic_test_name(project, tier, api["name"])
 
     freq = dd_client.tick_every(tier, project)
 

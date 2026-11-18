@@ -19,7 +19,7 @@ from monitors import dd_client
 
 
 def setmonitor(project, tier, api, notification):
-    monitor_name = "{} {} Certificate Monitor".format(project, tier)
+    monitor_name = dd_client.synthetic_test_name(project, tier, "Certificate")
     # SSL tests take a bare hostname; drop scheme, path, query, and port
     domain = urlparse(api["url"]).hostname
     freq = 86400  # once per day in seconds
