@@ -113,8 +113,11 @@ STRATEGY_PILOT = {
 }
 
 # Strategy L1: one fast retry ~5 s after a failure, then the test must keep
-# failing for 2 consecutive runs before it alerts. One location is used, so
-# persistence over time replaces the strategy's ">=2 of 3 locations" rule.
+# failing for one full run interval (5 min prod, 15 min lower tiers) before it
+# alerts. Datadog counts that time from the first failed run, so the alert
+# fires on the 2nd consecutive failed run ("≥2 consecutive runs (or ≥3–5
+# minutes)" in the strategy). One location is used, so persistence over time
+# replaces the strategy's ">=2 of 3 locations" rule.
 _PILOT_TICK = {"prod": 300, "other": 900}  # 5 min prod, 15 min lower tiers
 _PILOT_RETRY = {"count": 1, "interval": 5000}  # interval in ms
 _PILOT_RESPONSE_TIME_MS = 2000
@@ -144,14 +147,16 @@ def tick_every(tier, project=None):
 def failure_options(project, tier):
     """
     Extra synthetic options for pilot projects: one fast retry plus
-    min_failure_duration of two runs (10 min prod, 30 min lower tiers), so a
-    single failed run never alerts. Returns {} for non-pilot projects.
+    min_failure_duration of one run interval (5 min prod, 15 min lower
+    tiers). The time counts from the first failed run, so the alert fires on
+    the 2nd consecutive failed run and a single failed run never alerts.
+    Returns {} for non-pilot projects.
     """
     if not pilot_config(project):
         return {}
     return {
         "retry": dict(_PILOT_RETRY),
-        "min_failure_duration": 2 * _PILOT_TICK[_pilot_tier_key(tier)],
+        "min_failure_duration": _PILOT_TICK[_pilot_tier_key(tier)],
     }
 
 
