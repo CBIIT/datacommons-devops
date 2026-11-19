@@ -1107,22 +1107,23 @@ $http.post('https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/',
   }
 );",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,dev,API Participant Read,https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
-
 $http.post('https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/',
   {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
     json: {
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
-      variables: {}
+      variables: {},
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }'
     }
   },
   function (err, response, body) {
     if (err) {
       throw new Error(err);
     }
-
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
     assert.deepStrictEqual(body.errors || [], [], 'Expected no GraphQL errors');
-
     var rows = body.data.participantOverview;
     assert.ok(Array.isArray(rows), 'participantOverview should be an array');
     assert.strictEqual(rows.length, 1, 'Expected exactly one participant');
@@ -1158,22 +1159,23 @@ $http.post('https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/',
   }
 );",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,qa,API Participant Read,https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
-
 $http.post('https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/',
   {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
     json: {
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
-      variables: {}
+      variables: {},
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }'
     }
   },
   function (err, response, body) {
     if (err) {
       throw new Error(err);
     }
-
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
     assert.deepStrictEqual(body.errors || [], [], 'Expected no GraphQL errors');
-
     var rows = body.data.participantOverview;
     assert.ok(Array.isArray(rows), 'participantOverview should be an array');
     assert.strictEqual(rows.length, 1, 'Expected exactly one participant');
@@ -1209,22 +1211,23 @@ $http.post('https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/',
   }
 );",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,Stage,API Participant Read,https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
-
 $http.post('https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/',
   {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
     json: {
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
-      variables: {}
+      variables: {},
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }'
     }
   },
   function (err, response, body) {
     if (err) {
       throw new Error(err);
     }
-
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
     assert.deepStrictEqual(body.errors || [], [], 'Expected no GraphQL errors');
-
     var rows = body.data.participantOverview;
     assert.ok(Array.isArray(rows), 'participantOverview should be an array');
     assert.strictEqual(rows.length, 1, 'Expected exactly one participant');
@@ -1260,22 +1263,23 @@ $http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
   }
 );",,Expand_Data_Commons-ccdi-prod-c3dc,,,,,,,,Public
 CCDI C3DC,c3dc,CCDI,Prod,API Participant Read,https://clinicalcommons.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
-
 $http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
   {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
     json: {
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
-      variables: {}
+      variables: {},
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }'
     }
   },
   function (err, response, body) {
     if (err) {
       throw new Error(err);
     }
-
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
     assert.deepStrictEqual(body.errors || [], [], 'Expected no GraphQL errors');
-
     var rows = body.data.participantOverview;
     assert.ok(Array.isArray(rows), 'participantOverview should be an array');
     assert.strictEqual(rows.length, 1, 'Expected exactly one participant');
@@ -1486,3 +1490,183 @@ $http.get('https://studycatalog.cancer.gov/service/ping',
   }
 );""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
 CCDI Datasharing,Datasharing Hub,CCDI,Prod,Portal,https://datasharing.cancer.gov/post/Data/cancer-data-resources/,,,Expand_Data_Commons-ccdi-datasharing-prod,,,,,,,,Public
+CCDI DCC Federation API Server,DCC,CCDI,Dev,API Subject,https://dcc-dev.ccdi.cancer.gov/api/v1/subject,"var assert = require('assert');
+
+$http.get('https://dcc-dev.ccdi.cancer.gov/api/v1/subject',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,Dev,API Sample,https://dcc-dev.ccdi.cancer.gov/api/v1/sample,"var assert = require('assert');
+
+$http.get('https://dcc-dev.ccdi.cancer.gov/api/v1/sample',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,Dev,API File,https://dcc-dev.ccdi.cancer.gov/api/v1/file,"var assert = require('assert');
+
+$http.get('https://dcc-dev.ccdi.cancer.gov/api/v1/file',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,qa,API Subject,https://dcc-qa.ccdi.cancer.gov/api/v1/subject,"var assert = require('assert');
+
+$http.get('https://dcc-qa.ccdi.cancer.gov/api/v1/subject',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,qa,API Sample,https://dcc-qa.ccdi.cancer.gov/api/v1/sample,"var assert = require('assert');
+
+$http.get('https://dcc-qa.ccdi.cancer.gov/api/v1/sample',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,qa,API File,https://dcc-qa.ccdi.cancer.gov/api/v1/file,"var assert = require('assert');
+
+$http.get('https://dcc-qa.ccdi.cancer.gov/api/v1/file',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,stage,API Subject,https://dcc-stage.ccdi.cancer.gov/api/v1/subject,"var assert = require('assert');
+
+$http.get('https://dcc-stage.ccdi.cancer.gov/api/v1/subject',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,stage,API Sample,https://dcc-stage.ccdi.cancer.gov/api/v1/sample,"var assert = require('assert');
+
+$http.get('https://dcc-stage.ccdi.cancer.gov/api/v1/sample',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,stage,API File,https://dcc-stage.ccdi.cancer.gov/api/v1/file,"var assert = require('assert');
+
+$http.get('https://dcc-stage.ccdi.cancer.gov/api/v1/file',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-subprod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,prod,API Subject,https://dcc.ccdi.cancer.gov/api/v1/subject,"var assert = require('assert');
+
+$http.get('https://dcc.ccdi.cancer.gov/api/v1/subject',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-prod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,prod,API Sample,https://dcc.ccdi.cancer.gov/api/v1/sample,"var assert = require('assert');
+
+$http.get('https://dcc.ccdi.cancer.gov/api/v1/sample',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-prod-dcc,,,,,,,,Private
+CCDI DCC Federation API Server,DCC,CCDI,prod,API File,https://dcc.ccdi.cancer.gov/api/v1/file,"var assert = require('assert');
+
+$http.get('https://dcc.ccdi.cancer.gov/api/v1/file',
+  function (err, response, body) {
+    if (err) {
+      throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+    
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response.');
+    assert.ok(body !== undefined && body !== null, 'Expected a JSON response body.');
+  }
+);",,Expand_Data_Commons-ccdi-prod-dcc,,,,,,,,Private
