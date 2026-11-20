@@ -852,11 +852,110 @@ $http.get('https://hub-dev2.datacommons.cancer.gov/version',
 
   }
 );",,Expand_Data_Commons-crdcdh-system-alerts,,,,18:00,7:40,America/New_York,,Private
-Cancer Research Data Commons Hub,ctdc,CRDC,Prod,Portal,https://clinical.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,,Public
+Cancer Research Data Commons Hub,ctdc,CRDC,Dev,Portal,https://clinical-dev.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,,Private
+Cancer Research Data Commons Hub,ctdc,CRDC,Dev,API,https://clinical-dev.datacommons.cancer.gov/v1/graphql/,"var assert = require('assert');
+
+$http.post('https://clinical-dev.datacommons.cancer.gov/v1/graphql/',
+  {
+    json: {
+      query: '{ getAllStudies { study_id study_name } }',
+      variables: {}
+    }
+  },
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+
+    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+
+    assert.ok(
+      !parsedBody.errors || (Array.isArray(parsedBody.errors) && parsedBody.errors.length === 0),
+      'GraphQL errors: ' + JSON.stringify(parsedBody.errors)
+    );
+
+    const studies = parsedBody.data && parsedBody.data.getAllStudies;
+
+    assert.ok(Array.isArray(studies), 'Expected getAllStudies to be an array');
+    assert.ok(studies.length > 0, 'Expected at least one study');
+
+    const firstStudy = studies[0];
+
+    assert.ok(
+      typeof firstStudy.study_id === 'string' && firstStudy.study_id.trim().length > 0,
+      'Expected non-empty study_id'
+    );
+
+    assert.ok(
+      typeof firstStudy.study_name === 'string' && firstStudy.study_name.trim().length > 0,
+      'Expected non-empty study_name'
+    );
+
+  }
+);","GraphQL response must return HTTP 200, no errors, and at least one study with non-empty study_id and study_name",Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,,Private
+Cancer Research Data Commons Hub,ctdc,CRDC,Qa,Portal,https://clinical-qa.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,,Private
+Cancer Research Data Commons Hub,ctdc,CRDC,Qa,API,https://clinical-qa.datacommons.cancer.gov/v1/graphql/,"var assert = require('assert');
+
+$http.post('https://clinical-qa.datacommons.cancer.gov/v1/graphql/',
+  {
+    json: {
+      query: '{ getAllStudies { study_id study_name } }',
+      variables: {}
+    }
+  },
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+
+    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+
+    assert.ok(
+      !parsedBody.errors || (Array.isArray(parsedBody.errors) && parsedBody.errors.length === 0),
+      'GraphQL errors: ' + JSON.stringify(parsedBody.errors)
+    );
+
+    const studies = parsedBody.data && parsedBody.data.getAllStudies;
+
+    assert.ok(Array.isArray(studies), 'Expected getAllStudies to be an array');
+    assert.ok(studies.length > 0, 'Expected at least one study');
+
+    const firstStudy = studies[0];
+
+    assert.ok(
+      typeof firstStudy.study_id === 'string' && firstStudy.study_id.trim().length > 0,
+      'Expected non-empty study_id'
+    );
+
+    assert.ok(
+      typeof firstStudy.study_name === 'string' && firstStudy.study_name.trim().length > 0,
+      'Expected non-empty study_name'
+    );
+
+  }
+);","GraphQL response must return HTTP 200, no errors, and at least one study with non-empty study_id and study_name",Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,,Private
 Cancer Research Data Commons Hub,ctdc,CRDC,Stage,Portal,https://clinical-stage.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,,Private
-Cancer Research Data Commons Hub,ctdc,CRDC,Prod,API,https://clinical.datacommons.cancer.gov/version,"var assert = require('assert');
+Cancer Research Data Commons Hub,ctdc,CRDC,Stage,API,https://clinical-stage.datacommons.cancer.gov/v1/graphql/,"var assert = require('assert');
 
-$http.get('https://clinical.datacommons.cancer.gov/version',
+$http.post('https://clinical-stage.datacommons.cancer.gov/v1/graphql/',
+  {
+    json: {
+      query: '{ getAllStudies { study_id study_name } }',
+      variables: {}
+    }
+  },
   function (err, response, body) {
 
     if (err) {
@@ -867,15 +966,43 @@ $http.get('https://clinical.datacommons.cancer.gov/version',
     console.log('Response:', response.statusCode);
 
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = JSON.parse(dd.response.body);
-    assert.ok('version' in parsedBody, 'Expected object to have version key');
-    assert.ok('date' in parsedBody, 'Expected object to have date key');
+
+    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+
+    assert.ok(
+      !parsedBody.errors || (Array.isArray(parsedBody.errors) && parsedBody.errors.length === 0),
+      'GraphQL errors: ' + JSON.stringify(parsedBody.errors)
+    );
+
+    const studies = parsedBody.data && parsedBody.data.getAllStudies;
+
+    assert.ok(Array.isArray(studies), 'Expected getAllStudies to be an array');
+    assert.ok(studies.length > 0, 'Expected at least one study');
+
+    const firstStudy = studies[0];
+
+    assert.ok(
+      typeof firstStudy.study_id === 'string' && firstStudy.study_id.trim().length > 0,
+      'Expected non-empty study_id'
+    );
+
+    assert.ok(
+      typeof firstStudy.study_name === 'string' && firstStudy.study_name.trim().length > 0,
+      'Expected non-empty study_name'
+    );
 
   }
-);",,Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,,Public
-Cancer Research Data Commons Hub,ctdc,CRDC,Stage,API,https://clinical-stage.datacommons.cancer.gov/version,"var assert = require('assert');
+);","GraphQL response must return HTTP 200, no errors, and at least one study with non-empty study_id and study_name",Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,,Private
+Cancer Research Data Commons Hub,ctdc,CRDC,Prod,Portal,https://clinical.datacommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,,Public
+Cancer Research Data Commons Hub,ctdc,CRDC,Prod,API,https://clinical.datacommons.cancer.gov/v1/graphql/,"var assert = require('assert');
 
-$http.get('https://clinical-stage.datacommons.cancer.gov/version',
+$http.post('https://clinical.datacommons.cancer.gov/v1/graphql/',
+  {
+    json: {
+      query: '{ getAllStudies { study_id study_name } }',
+      variables: {}
+    }
+  },
   function (err, response, body) {
 
     if (err) {
@@ -886,12 +1013,34 @@ $http.get('https://clinical-stage.datacommons.cancer.gov/version',
     console.log('Response:', response.statusCode);
 
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = JSON.parse(dd.response.body);
-    assert.ok('version' in parsedBody, 'Expected object to have version key');
-    assert.ok('date' in parsedBody, 'Expected object to have date key');
+
+    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+
+    assert.ok(
+      !parsedBody.errors || (Array.isArray(parsedBody.errors) && parsedBody.errors.length === 0),
+      'GraphQL errors: ' + JSON.stringify(parsedBody.errors)
+    );
+
+    const studies = parsedBody.data && parsedBody.data.getAllStudies;
+
+    assert.ok(Array.isArray(studies), 'Expected getAllStudies to be an array');
+    assert.ok(studies.length > 0, 'Expected at least one study');
+
+    const firstStudy = studies[0];
+
+    assert.ok(
+      typeof firstStudy.study_id === 'string' && firstStudy.study_id.trim().length > 0,
+      'Expected non-empty study_id'
+    );
+
+    assert.ok(
+      typeof firstStudy.study_name === 'string' && firstStudy.study_name.trim().length > 0,
+      'Expected non-empty study_name'
+    );
 
   }
-);",,Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,,Private
+);","GraphQL response must return HTTP 200, no errors, and at least one study with non-empty study_id and study_name",Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,,Public
+
 Cancer Research Data Commons Hub,icdc,CRDC,Dev,Portal,https://caninecommons-dev.cancer.gov,,,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Private
 Cancer Research Data Commons Hub,icdc,CRDC,Dev,API,https://caninecommons-dev.cancer.gov/v1/graphql/,"var assert = require('assert');
 
