@@ -892,157 +892,11 @@ $http.get('https://clinical-stage.datacommons.cancer.gov/version',
 
   }
 );",,Expand_Data_Commons-crdc-subprod-ctdc,,,,,,,,Private
-Cancer Research Data Commons Hub,icdc,CRDC,Dev,Portal,https://caninecommons-dev.cancer.gov,,,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Private
-Cancer Research Data Commons Hub,icdc,CRDC,Dev,API,https://caninecommons-dev.cancer.gov/v1/graphql/,"var assert = require('assert');
-
-$http.post('https://caninecommons-dev.cancer.gov/v1/graphql/',
-  {
-    json: {
-      query: '{ studiesByProgram(first: 1) { program_id clinical_study_name } }',
-      variables: {}
-    }
-  },
-  function (err, response, body) {
-
-    if (err) {
-        throw new Error(err);
-    }
-
-    console.log('Response:', body);
-    console.log('Response:', response.statusCode);
-
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-
-    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
-
-    assert.ok(
-      !parsedBody.errors || (Array.isArray(parsedBody.errors) && parsedBody.errors.length === 0),
-      'GraphQL errors: ' + JSON.stringify(parsedBody.errors)
-    );
-
-    const studies = parsedBody.data && parsedBody.data.studiesByProgram;
-
-    assert.ok(Array.isArray(studies), 'Expected studiesByProgram to be an array');
-    assert.ok(studies.length > 0, 'Expected at least one study');
-
-    const firstStudy = studies[0];
-
-    assert.ok(
-      typeof firstStudy.program_id === 'string' && firstStudy.program_id.trim().length > 0,
-      'Expected non-empty program_id'
-    );
-
-    assert.ok(
-      typeof firstStudy.clinical_study_name === 'string' && firstStudy.clinical_study_name.trim().length > 0,
-      'Expected non-empty clinical_study_name'
-    );
-
-  }
-);",,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Private
-Cancer Research Data Commons Hub,icdc,CRDC,Qa,Portal,https://caninecommons-qa.cancer.gov,,,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Private
-Cancer Research Data Commons Hub,icdc,CRDC,Qa,API,https://caninecommons-qa.cancer.gov/v1/graphql/,"var assert = require('assert');
-
-$http.post('https://caninecommons-qa.cancer.gov/v1/graphql/',
-  {
-    json: {
-      query: '{ studiesByProgram(first: 1) { program_id clinical_study_name } }',
-      variables: {}
-    }
-  },
-  function (err, response, body) {
-
-    if (err) {
-        throw new Error(err);
-    }
-
-    console.log('Response:', body);
-    console.log('Response:', response.statusCode);
-
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-
-    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
-
-    assert.ok(
-      !parsedBody.errors || (Array.isArray(parsedBody.errors) && parsedBody.errors.length === 0),
-      'GraphQL errors: ' + JSON.stringify(parsedBody.errors)
-    );
-
-    const studies = parsedBody.data && parsedBody.data.studiesByProgram;
-
-    assert.ok(Array.isArray(studies), 'Expected studiesByProgram to be an array');
-    assert.ok(studies.length > 0, 'Expected at least one study');
-
-    const firstStudy = studies[0];
-
-    assert.ok(
-      typeof firstStudy.program_id === 'string' && firstStudy.program_id.trim().length > 0,
-      'Expected non-empty program_id'
-    );
-
-    assert.ok(
-      typeof firstStudy.clinical_study_name === 'string' && firstStudy.clinical_study_name.trim().length > 0,
-      'Expected non-empty clinical_study_name'
-    );
-
-  }
-);",,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Private
-Cancer Research Data Commons Hub,icdc,CRDC,Stage,Portal,https://caninecommons-stage.cancer.gov,,,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Private
-Cancer Research Data Commons Hub,icdc,CRDC,Stage,API,https://caninecommons-stage.cancer.gov/v1/graphql/,"var assert = require('assert');
-
-$http.post('https://caninecommons-stage.cancer.gov/v1/graphql/',
-  {
-    json: {
-      query: '{ studiesByProgram(first: 1) { program_id clinical_study_name } }',
-      variables: {}
-    }
-  },
-  function (err, response, body) {
-
-    if (err) {
-        throw new Error(err);
-    }
-
-    console.log('Response:', body);
-    console.log('Response:', response.statusCode);
-
-    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-
-    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
-
-    assert.ok(
-      !parsedBody.errors || (Array.isArray(parsedBody.errors) && parsedBody.errors.length === 0),
-      'GraphQL errors: ' + JSON.stringify(parsedBody.errors)
-    );
-
-    const studies = parsedBody.data && parsedBody.data.studiesByProgram;
-
-    assert.ok(Array.isArray(studies), 'Expected studiesByProgram to be an array');
-    assert.ok(studies.length > 0, 'Expected at least one study');
-
-    const firstStudy = studies[0];
-
-    assert.ok(
-      typeof firstStudy.program_id === 'string' && firstStudy.program_id.trim().length > 0,
-      'Expected non-empty program_id'
-    );
-
-    assert.ok(
-      typeof firstStudy.clinical_study_name === 'string' && firstStudy.clinical_study_name.trim().length > 0,
-      'Expected non-empty clinical_study_name'
-    );
-
-  }
-);",,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Private
 Cancer Research Data Commons Hub,icdc,CRDC,Prod,Portal,https://caninecommons.cancer.gov,,,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Public
-Cancer Research Data Commons Hub,icdc,CRDC,Prod,API,https://caninecommons.cancer.gov/v1/graphql/,"var assert = require('assert');
+Cancer Research Data Commons Hub,icdc,CRDC,Stage,Portal,https://caninecommons-stage.cancer.gov,,,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Private
+Cancer Research Data Commons Hub,icdc,CRDC,Prod,API,https://caninecommons.cancer.gov/version,"var assert = require('assert');
 
-$http.post('https://caninecommons.cancer.gov/v1/graphql/',
-  {
-    json: {
-      query: '{ studiesByProgram(first: 1) { program_id clinical_study_name } }',
-      variables: {}
-    }
-  },
+$http.get('https://caninecommons.cancer.gov/version',
   function (err, response, body) {
 
     if (err) {
@@ -1053,33 +907,31 @@ $http.post('https://caninecommons.cancer.gov/v1/graphql/',
     console.log('Response:', response.statusCode);
 
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-
-    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
-
-    assert.ok(
-      !parsedBody.errors || (Array.isArray(parsedBody.errors) && parsedBody.errors.length === 0),
-      'GraphQL errors: ' + JSON.stringify(parsedBody.errors)
-    );
-
-    const studies = parsedBody.data && parsedBody.data.studiesByProgram;
-
-    assert.ok(Array.isArray(studies), 'Expected studiesByProgram to be an array');
-    assert.ok(studies.length > 0, 'Expected at least one study');
-
-    const firstStudy = studies[0];
-
-    assert.ok(
-      typeof firstStudy.program_id === 'string' && firstStudy.program_id.trim().length > 0,
-      'Expected non-empty program_id'
-    );
-
-    assert.ok(
-      typeof firstStudy.clinical_study_name === 'string' && firstStudy.clinical_study_name.trim().length > 0,
-      'Expected non-empty clinical_study_name'
-    );
+    const parsedBody = JSON.parse(dd.response.body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+    assert.ok('date' in parsedBody, 'Expected object to have date key');
 
   }
 );",,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Public
+Cancer Research Data Commons Hub,icdc,CRDC,Stage,API,https://caninecommons-stage.cancer.gov/version,"var assert = require('assert');
+
+$http.get('https://caninecommons-stage.cancer.gov/version',
+  function (err, response, body) {
+
+    if (err) {
+        throw new Error(err);
+    }
+
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
+
+    assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
+    const parsedBody = JSON.parse(dd.response.body);
+    assert.ok('version' in parsedBody, 'Expected object to have version key');
+    assert.ok('date' in parsedBody, 'Expected object to have date key');
+
+  }
+);",,Expand_Data_Commons-crdc-subprod-icdc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,dev,Portal,https://clinicalcommons-dev.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,dev,API,https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
 
@@ -1108,28 +960,27 @@ $http.post('https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/',
 CCDI C3DC,c3dc,CCDI,dev,API Participant Read,https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
 $http.post('https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/',
   {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
     json: {
-      variables: {},
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }'
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
+      variables: {}
     }
   },
   function (err, response, body) {
     if (err) {
       throw new Error(err);
     }
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    assert.deepStrictEqual(body.errors || [], [], 'Expected no GraphQL errors');
-    var rows = body.data.participantOverview;
+    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+    assert.deepStrictEqual(parsedBody.errors || [], [], 'Expected no GraphQL errors');
+    const rows = parsedBody.data && parsedBody.data.participantOverview;
     assert.ok(Array.isArray(rows), 'participantOverview should be an array');
     assert.strictEqual(rows.length, 1, 'Expected exactly one participant');
-    ['participant_id', 'study_id'].forEach(function (field) {
+    for (const field of ['participant_id', 'study_id']) {
       assert.strictEqual(typeof rows[0][field], 'string', field + ' should be a string');
       assert.ok(rows[0][field].trim().length > 0, field + ' should not be empty');
-    });
+    }
   }
 );",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,qa,Portal,https://clinicalcommons-qa.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
@@ -1160,28 +1011,27 @@ $http.post('https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/',
 CCDI C3DC,c3dc,CCDI,qa,API Participant Read,https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
 $http.post('https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/',
   {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
     json: {
-      variables: {},
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }'
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
+      variables: {}
     }
   },
   function (err, response, body) {
     if (err) {
       throw new Error(err);
     }
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    assert.deepStrictEqual(body.errors || [], [], 'Expected no GraphQL errors');
-    var rows = body.data.participantOverview;
+    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+    assert.deepStrictEqual(parsedBody.errors || [], [], 'Expected no GraphQL errors');
+    const rows = parsedBody.data && parsedBody.data.participantOverview;
     assert.ok(Array.isArray(rows), 'participantOverview should be an array');
     assert.strictEqual(rows.length, 1, 'Expected exactly one participant');
-    ['participant_id', 'study_id'].forEach(function (field) {
+    for (const field of ['participant_id', 'study_id']) {
       assert.strictEqual(typeof rows[0][field], 'string', field + ' should be a string');
       assert.ok(rows[0][field].trim().length > 0, field + ' should not be empty');
-    });
+    }
   }
 );",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,Stage,Portal,https://clinicalcommons-stage.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
@@ -1212,28 +1062,27 @@ $http.post('https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/',
 CCDI C3DC,c3dc,CCDI,Stage,API Participant Read,https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
 $http.post('https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/',
   {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
     json: {
-      variables: {},
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }'
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
+      variables: {}
     }
   },
   function (err, response, body) {
     if (err) {
       throw new Error(err);
     }
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    assert.deepStrictEqual(body.errors || [], [], 'Expected no GraphQL errors');
-    var rows = body.data.participantOverview;
+    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+    assert.deepStrictEqual(parsedBody.errors || [], [], 'Expected no GraphQL errors');
+    const rows = parsedBody.data && parsedBody.data.participantOverview;
     assert.ok(Array.isArray(rows), 'participantOverview should be an array');
     assert.strictEqual(rows.length, 1, 'Expected exactly one participant');
-    ['participant_id', 'study_id'].forEach(function (field) {
+    for (const field of ['participant_id', 'study_id']) {
       assert.strictEqual(typeof rows[0][field], 'string', field + ' should be a string');
       assert.ok(rows[0][field].trim().length > 0, field + ' should not be empty');
-    });
+    }
   }
 );",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,Prod,Portal,https://clinicalcommons.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-prod-c3dc,,,,,,,,Public
@@ -1264,28 +1113,27 @@ $http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
 CCDI C3DC,c3dc,CCDI,Prod,API Participant Read,https://clinicalcommons.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
 $http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
   {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
     json: {
-      variables: {},
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }'
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
+      variables: {}
     }
   },
   function (err, response, body) {
     if (err) {
       throw new Error(err);
     }
+    console.log('Response:', body);
+    console.log('Response:', response.statusCode);
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    assert.deepStrictEqual(body.errors || [], [], 'Expected no GraphQL errors');
-    var rows = body.data.participantOverview;
+    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+    assert.deepStrictEqual(parsedBody.errors || [], [], 'Expected no GraphQL errors');
+    const rows = parsedBody.data && parsedBody.data.participantOverview;
     assert.ok(Array.isArray(rows), 'participantOverview should be an array');
     assert.strictEqual(rows.length, 1, 'Expected exactly one participant');
-    ['participant_id', 'study_id'].forEach(function (field) {
+    for (const field of ['participant_id', 'study_id']) {
       assert.strictEqual(typeof rows[0][field], 'string', field + ' should be a string');
       assert.ok(rows[0][field].trim().length > 0, field + ' should not be empty');
-    });
+    }
   }
 );",,Expand_Data_Commons-ccdi-prod-c3dc,,,,,,,,Public
 Index of NCI Studies,ins,CCDI,Dev,Portal,https://studycatalog-dev.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-ins,,,,,,,,Private
