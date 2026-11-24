@@ -19,8 +19,37 @@ Slack_Channel values in the CSV are channel IDs; these must match a channel
 name configured in the DataDog Slack integration. Update the slack_channel
 handling in _make_notification() if your workspace uses a different scheme.
 
+CSV column "Location" — where each synthetic test runs from. The value is
+not case-sensitive.
+  Public    DataDog's managed location (public internet). Use for endpoints
+            that are publicly reachable.
+  Private   Our private location inside the AWS network. Required for
+            endpoints whose DNS only resolves internally, which is most
+            Dev/Qa/Stage hosts.
+  (blank)   Defaults to Private, which can reach both internal and public
+            endpoints. Still worth setting explicitly.
+An unrecognised value stops the run so the CSV can be corrected.
+
+New CSV columns (all optional — leave Downtime_Start blank to skip):
+  Downtime_Start   "HH:MM" 24-hour local start time, e.g. "19:00"
+  Downtime_End     "HH:MM" 24-hour local end time, e.g. "07:00"
+  Downtime_TZ      IANA timezone, e.g. "America/New_York"
+  Downtime_Days    optional comma list of weekdays, e.g. "MO,TU,WE,TH,FR"
+                    (blank = every day)
+
+Slack channel display (runs after all monitors are created/updated):
+  Turns off the "Tags" section in Slack alerts by setting display.tags =
+  false on every Slack channel in the CSV's Slack_Channel column. Other
+  display settings and the monitors' own tags are left alone. Needs the
+  DD_APP_KEY user to have the "Integrations Manage" permission; problems are
+  logged as warnings and never fail the run. The Slack account and channel
+  are parsed from each Slack_Channel value. See
+  monitors/integrations/set_slack_channel_display.py.
+
 Usage:
     python3 monitor_update_csv.py -f <CSV_URL>
+    python3 monitor_update_csv.py -f <CSV_URL> --skip-slack-display
+        Normal run without the Slack display step.
 """
 
 import sys
@@ -30,6 +59,7 @@ import os
 import csv
 import codecs
 import contextlib
+import datetime
 
 import requests
 
@@ -53,42 +83,146 @@ from monitors.alerts.alb import (
     set_alb_unhealthy_hosts_monitor,
 )
 from monitors.alerts.opensearch import set_os_cluster_red_monitor
+from monitors.downtime import set_recurring_downtime
+from monitors.integrations import set_slack_channel_display
+
+
+USAGE = "monitor_update_csv.py -f <file> [--skip-slack-display]"
 
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, "hf:", ["file="])
+        opts, args = getopt.getopt(
+            argv, "hf:", ["file=", "skip-slack-display"]
+        )
     except getopt.GetoptError:
-        print("File URL required:   monitor_update_csv.py -f <file>")
+        print("File URL required:   " + USAGE)
         sys.exit(2)
 
     input_url = None
+    skip_slack_display = False
     for opt, arg in opts:
         if opt == "-h":
-            print("monitor_update_csv.py -f <file>")
+            print(USAGE)
             sys.exit()
         elif opt in ("-f", "--file"):
             input_url = arg
+        elif opt == "--skip-slack-display":
+            skip_slack_display = True
 
     if not input_url:
-        print("File URL required:   monitor_update_csv.py -f <file>")
+        print("File URL required:   " + USAGE)
         sys.exit(2)
 
     setMonitors(input_url)
     setSynthetics(input_url)
 
+    # Runs after every monitor is created or updated. Never fails the run.
+    if skip_slack_display:
+        print("Skipping Slack channel display step (--skip-slack-display).")
+    else:
+        set_slack_channel_display.ensure_slack_tags_hidden(
+            _slack_channels(input_url)
+        )
+
+
+def _slack_channels(input_url):
+    """Unique, non-empty Slack_Channel values from the CSV, in file order."""
+    channels = []
+    with contextlib.closing(requests.get(input_url, stream=True)) as csvfile:
+        for row in csv.DictReader(codecs.iterdecode(csvfile.iter_lines(), "utf-8")):
+            value = (row.get("Slack_Channel") or "").strip()
+            if value and value not in channels:
+                channels.append(value)
+    return channels
+
 
 def _make_notification(alert_email, slack_channel):
     """Build the @-mention notification string embedded in every DD monitor message."""
     parts = []
+    # DataDog email: "@<address>". There is no "@email:" prefix; with one,
+    # Datadog reads "@email" as the handle and prints ":<address>" as text
+    # (and the email is not delivered).
     if alert_email:
-        parts.append("@email:{}".format(alert_email))
+        parts.append("@{}".format(alert_email.strip().lstrip("@")))
     # DataDog Slack: @slack-<workspace>-<channel-name>
     # The CSV stores channel IDs; update accordingly once your DD Slack
     # integration is configured with matching channel names.
     if slack_channel:
         parts.append("@slack-{}".format(slack_channel))
     return " ".join(parts)
+
+def _maybe_set_downtime(row, monitor_id, label):
+    """
+    Reads Downtime_Start / Downtime_End / Downtime_TZ / Downtime_Days from
+    the CSV row and, if present, schedules/updates a recurring downtime for
+    the given monitor_id. No-ops silently if Downtime_Start is blank.
+    """
+    downtime_start = (row.get("Downtime_Start") or "").strip()
+    if not downtime_start:
+        return
+
+    if not monitor_id:
+        print(
+            "  Skipping downtime for {} — monitor was not created "
+            "(or its ID wasn't returned) this run.".format(label)
+        )
+        return
+
+    downtime_end = (row.get("Downtime_End") or "").strip()
+    downtime_tz = (row.get("Downtime_TZ") or "UTC").strip()
+    days_raw = (row.get("Downtime_Days") or "").strip()
+    days_of_week = [d.strip().upper() for d in days_raw.split(",")] if days_raw else None
+
+    if not downtime_end:
+        print(
+            "  Skipping downtime for {} — Downtime_Start given but "
+            "Downtime_End is blank.".format(label)
+        )
+        return
+
+    # First occurrence date: today, in whatever local date the box running
+    # this script considers "today". Since the schedule recurs daily (or on
+    # specific weekdays) indefinitely, the exact first date mostly just
+    # needs to be "on or before now" — Datadog will roll forward to the
+    # next valid occurrence per the rrule.
+    start_date = datetime.date.today().isoformat()
+
+    print(
+        "  Scheduling downtime for {}: {}-{} {} (days={})".format(
+            label, downtime_start, downtime_end, downtime_tz, days_of_week or "daily"
+        )
+    )
+
+    set_recurring_downtime.setdowntime(
+        monitor_id=monitor_id,
+        downtime_start=downtime_start,
+        downtime_end=downtime_end,
+        timezone=downtime_tz,
+        message="Auto-scheduled: service shut down for cost savings during this window.",
+        days_of_week=days_of_week,
+        start_date=start_date,
+    )
+
+# Lower-tier CSV rows have shown up spelled several ways for the same
+# environment (Dev/dev, QA/Qa/qa, Stage/stage). Monitor names embed the tier
+# verbatim, so without this, 'PROJECT QA Portal Monitor' and
+# 'PROJECT qa Portal Monitor' would be two live monitors for one environment.
+# Prod is deliberately excluded: Popsci's rows use lowercase 'prod' while
+# every other project uses 'Prod', and normalising that here would rename
+# Popsci's already-live monitor into a duplicate instead of updating it.
+_LOWER_TIER_CANONICAL = {"dev": "Dev", "qa": "Qa", "stage": "Stage", "perf": "Perf"}
+
+
+def _canonical_tier(raw_tier):
+    """Normalise non-prod tier spelling; prod passes through unchanged."""
+    tier = (raw_tier or "").strip()
+    return _LOWER_TIER_CANONICAL.get(tier.lower(), tier)
+
+
+def _is_blank_csv_row(row):
+    """Return whether a CSV row contains only empty or whitespace values."""
+    return not any(isinstance(value, str) and value.strip() for value in row.values())
 
 
 def setMonitors(input_url):
@@ -98,8 +232,11 @@ def setMonitors(input_url):
         tiers_set = []
 
         for row in data:
+            if _is_blank_csv_row(row):
+                continue
+
             project = row["Project_Acronym"].upper()
-            tier = row["Tier"]
+            tier = _canonical_tier(row["Tier"])
             alert_email = row["Alert_Email"] or os.getenv("DD_ALERT_EMAIL", "")
             slack_channel = row["Slack_Channel"]
             resources = [r.strip() for r in row["Monitored_Resources"].split(",")]
@@ -112,22 +249,51 @@ def setMonitors(input_url):
 
                 if "opensearch" in resources:
                     print("adding opensearch config")
-                    set_os_cluster_red_monitor.setmonitor(project, tier, notification)
+                    monitor_id = set_os_cluster_red_monitor.setmonitor(project, tier, notification)
+                    _maybe_set_downtime(row, monitor_id, "{} {} opensearch".format(project, tier))
 
                 if "alb" in resources:
                     print("adding alb config")
-                    set_alb_4xx_monitor.setmonitor(project, tier, notification)
-                    set_alb_5xx_monitor.setmonitor(project, tier, notification)
-                    set_alb_target_5xx_monitor.setmonitor(project, tier, notification)
-                    set_alb_response_time_monitor.setmonitor(project, tier, notification)
-                    set_alb_tls_monitor.setmonitor(project, tier, notification)
-                    set_alb_unhealthy_hosts_monitor.setmonitor(project, tier, notification)
+                    monitor_id = set_alb_4xx_monitor.setmonitor(project, tier, notification)
+                    _maybe_set_downtime(row, monitor_id, "{} {} alb-4xx".format(project, tier))
+
+                    monitor_id = set_alb_5xx_monitor.setmonitor(project, tier, notification)
+                    _maybe_set_downtime(row, monitor_id, "{} {} alb-5xx".format(project, tier))
+
+                    monitor_id = set_alb_target_5xx_monitor.setmonitor(project, tier, notification)
+                    _maybe_set_downtime(
+                        row, monitor_id, "{} {} alb-target-5xx".format(project, tier)
+                    )
+
+                    monitor_id = set_alb_response_time_monitor.setmonitor(project, tier, notification)
+                    _maybe_set_downtime(
+                        row, monitor_id, "{} {} alb-response-time".format(project, tier)
+                    )
+
+                    monitor_id = set_alb_tls_monitor.setmonitor(project, tier, notification)
+                    _maybe_set_downtime(row, monitor_id, "{} {} alb-tls".format(project, tier))
+
+                    monitor_id = set_alb_unhealthy_hosts_monitor.setmonitor(project, tier, notification)
+                    _maybe_set_downtime(
+                        row, monitor_id, "{} {} alb-unhealthy-hosts".format(project, tier)
+                    )
 
                 if "fargate" in resources:
                     print("adding fargate config")
-                    set_fargate_cpu_monitor.setmonitor(project, tier, notification)
-                    set_fargate_mem_monitor.setmonitor(project, tier, notification)
-                    set_fargate_restarts_monitor.setmonitor(project, tier, notification)
+                    monitor_id = set_fargate_cpu_monitor.setmonitor(project, tier, notification)
+                    _maybe_set_downtime(
+                        row, monitor_id, "{} {} fargate-cpu".format(project, tier)
+                    )
+
+                    monitor_id = set_fargate_mem_monitor.setmonitor(project, tier, notification)
+                    _maybe_set_downtime(
+                        row, monitor_id, "{} {} fargate-mem".format(project, tier)
+                    )
+
+                    monitor_id = set_fargate_restarts_monitor.setmonitor(project, tier, notification)
+                    _maybe_set_downtime(
+                        row, monitor_id, "{} {} fargate-restarts".format(project, tier)
+                    )
 
                 tiers_set.append(project + "-" + tier)
 
@@ -138,48 +304,57 @@ def setSynthetics(input_url):
         data = csv.DictReader(codecs.iterdecode(csvfile.iter_lines(), "utf-8"))
 
         for row in data:
+            if _is_blank_csv_row(row):
+                continue
+
             project = row["Project_Acronym"].upper()
-            tier = row["Tier"]
+            tier = _canonical_tier(row["Tier"])
             endpoint_name = row["Endpoint_Name"]
             monitor_url = row["URL"]
             alert_email = row["Alert_Email"] or os.getenv("DD_ALERT_EMAIL", "")
             slack_channel = row["Slack_Channel"]
             notification = _make_notification(alert_email, slack_channel)
+            label = "{} {} {}".format(project, tier, endpoint_name)
 
             print()
-            print(
-                "Adding Synthetics Configuration For: {} {} {}".format(
-                    project, tier, endpoint_name
-                )
-            )
+            print("Adding Synthetics Configuration For: {}".format(label))
             print()
 
             api = {
                 "name": endpoint_name,
                 "url": monitor_url,
-                "location": row["Private_Location"],
+                # The CSV "Location" column ("Public" or "Private") decides
+                # where the test runs from -- see synthetics_location() in
+                # dd_client.py. Lowercased here so the comparison downstream
+                # is not affected by how the value was typed in the sheet.
+                "location": (row.get("Location") or "").strip().lower(),
                 "query": row["Endpoint_Query"],
                 "browser_query": row["Browser_Query"],
                 "text": row["Validation_Text"],
             }
 
+            monitor_id = None
+
             if api["query"]:
                 # NR Scripted API → DD multi-step API test
-                set_api_multistep_monitor.setmonitor(project, tier, api, notification)
+                monitor_id = set_api_multistep_monitor.setmonitor(project, tier, api, notification)
             elif api["browser_query"] or api["text"]:
                 # NR Scripted Browser, or Validation_Text with no script at
                 # all (assume the page may be JS-rendered, so a raw HTTP
                 # body-contains check can't be trusted) → DD browser test
-                set_browser_monitor.setmonitor(project, tier, api, notification)
+                monitor_id = set_browser_monitor.setmonitor(project, tier, api, notification)
                 if tier.lower() == "prod" and api["name"].lower() == "portal":
-                    set_ssl_monitor.setmonitor(project, tier, api, notification)
+                    ssl_id = set_ssl_monitor.setmonitor(project, tier, api, notification)
+                    _maybe_set_downtime(row, ssl_id, label + " ssl")
             elif tier.lower() == "prod" and api["name"].lower() == "portal":
                 # Prod portal with no script/validation text: HTTP check + SSL certificate check
-                set_api_http_monitor.setmonitor(project, tier, api, notification)
-                set_ssl_monitor.setmonitor(project, tier, api, notification)
+                monitor_id = set_api_http_monitor.setmonitor(project, tier, api, notification)
+                ssl_id = set_ssl_monitor.setmonitor(project, tier, api, notification)
+                _maybe_set_downtime(row, ssl_id, label + " ssl")
             else:
                 # All other endpoints: simple HTTP availability check
-                set_api_http_monitor.setmonitor(project, tier, api, notification)
+                monitor_id = set_api_http_monitor.setmonitor(project, tier, api, notification)
+            _maybe_set_downtime(row, monitor_id, label)
 
 
 if __name__ == "__main__":

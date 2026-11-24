@@ -412,6 +412,32 @@ def _default_browser_check(url, validation_text):
 
 
 
+# Browser-level reload, run before the dismiss/assertion steps.
+#
+# WHY: CDN edge nodes intermittently serve stale/broken cached static assets --
+# manifest.json or JS chunks coming back as HTML, which surfaces in the browser
+# console as "SyntaxError: Unexpected token '<'". Which edge node answers a
+# given request varies, so whether a run sees good or broken assets is luck of
+# the draw, and it looks like flaky failures scattered across projects and
+# tiers with no pattern. This is an upstream CDN caching problem, NOT a bug in
+# these scripts, the locators, or the monitoring setup.
+#
+# A reload is a second, independent roll of the dice: a different edge node may
+# answer, and anything already revalidated stays warm. It asserts nothing, and
+# is allowFailure/non-critical -- it exists to improve the odds, never to
+# invent a new way for the monitor to fail.
+def _refresh_step():
+    """Second step of every browser test: force a genuine browser reload."""
+    return {
+        "name": "Reload page",
+        "type": "refresh",
+        "timeout": 15,
+        "allowFailure": True,
+        "isCritical": False,
+        "params": {},
+    }
+
+
 def setmonitor(project, tier, api, notification):
 
     monitor_name = "{} {} {} Monitor".format(project, tier, api["name"])
@@ -446,7 +472,11 @@ def setmonitor(project, tier, api, notification):
 
 
 
-    steps = []
+    resolved_url = (parsed["url"] if parsed else None) or api["url"]
+
+    # A reload runs first for every browser monitor, including the URL-only
+    # fallbacks below -- see _refresh_step for the reasoning. Non-critical.
+    steps = [_refresh_step()]
 
     if parsed is None:
 
@@ -530,6 +560,13 @@ def setmonitor(project, tier, api, notification):
                         "name": "Dismiss interstitial (best effort)",
                         "type": "click",
                         "timeout": 10,
+                        # DataDog only honors isCritical when allowFailure is
+                        # also set -- without it, a failed "not found" click
+                        # still blocks the rest of the run (retries, then
+                        # fails the whole test) on any page with no
+                        # "Continue" banner, e.g. a returning-visitor session
+                        # that already dismissed it once.
+                        "allowFailure": True,
                         "isCritical": False,
                         "params": {
                             "element": {
@@ -645,12 +682,6 @@ def setmonitor(project, tier, api, notification):
 
 
 
-    resolved_url = (parsed["url"] if parsed else None) or api["url"]
-
-    description_fmt = {"name": api["name"], "tier": tier, "url": resolved_url}
-
-
-
     payload = {
 
         "config": {
@@ -677,31 +708,9 @@ def setmonitor(project, tier, api, notification):
 
         "locations": locations,
 
-        "message": dd_client.build_alarm_message(
+        "message": dd_client.build_synthetic_alert_message(
 
-            locations,
-
-            (
-
-                "CRITICAL: The %(name)s endpoint in %(tier)s tier is failing its synthetic "
-
-                "browser check (%(url)s). This indicates the expected element/content could "
-
-                "not be found on the rendered page, meaning the service may be unavailable or "
-
-                "misbehaving."
-
-            ) % description_fmt,
-
-            (
-
-                "RESOLVED: The %(name)s endpoint in %(tier)s tier has recovered and is "
-
-                "passing its synthetic browser check (%(url)s)."
-
-            ) % description_fmt,
-
-            notification,
+            monitor_name, "GET {}".format(resolved_url), notification
 
         ),
 
@@ -710,8 +719,17 @@ def setmonitor(project, tier, api, notification):
         "options": {
 
             "tick_every": freq,
+            "monitor_options": dd_client.synthetic_monitor_options(),
 
             "device_ids": ["laptop_large"],
+
+            # Deliberately no "retry" here. DataDog's retry marks a location
+            # failed only after every retry fails, so a retry both delays the
+            # alert (count x interval) and suppresses it entirely whenever a
+            # retry passes -- which silently swallowed real browser failures
+            # and stopped them reaching Slack. The cache-busting warm-up step
+            # above handles the transient CDN case instead; alerting stays
+            # immediate, matching the API monitors.
 
         },
 
