@@ -221,9 +221,11 @@ def setmonitor(project, tier, api, notification):
     js_assertion = _parse_js_assertion(script)
     if js_assertion:
         assertions.append(js_assertion)
-    # Pilot projects only: Content-Type / error-body / response-time / version
-    # checks from the strategy's API checklist. Empty for everyone else.
+    # Pilot projects only: Content-Type / response-time / version checks from
+    # the strategy's API checklist, plus the CSV's Success_Element /
+    # Error_Text body checks. Empty for everyone else.
     assertions.extend(dd_client.pilot_api_assertions(project, api["name"]))
+    assertions.extend(dd_client.pilot_text_assertions(project, api))
 
     payload = {
         "config": {

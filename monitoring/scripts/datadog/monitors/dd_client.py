@@ -106,7 +106,7 @@ STRATEGY_PILOT = {
             "api": "cbio-backend",
         },
         "api_checks": {
-            "api": ["json_content_type", "no_error_envelope", "response_time"],
+            "api": ["json_content_type", "response_time"],
             "about": ["json_content_type", "version_number"],
         },
     },
@@ -235,12 +235,12 @@ def pilot_api_assertions(project, endpoint_name):
 
       json_content_type  response Content-Type contains application/json
                          (a proxy/WAF HTML error page fails)
-      no_error_envelope  body does not contain an "error" JSON key/value
-                         (a 200 response carrying an error body fails)
       response_time      responds in under 2 s (generous; catches slow but
                          working degradation)
       version_number     $.version looks like a version number, e.g.
                          1.4.0.2 (liveness only -- never proof of DB health)
+
+    Success/error text checks come from the CSV (see pilot_text_assertions).
     """
     config = pilot_config(project)
     if not config:
@@ -253,11 +253,6 @@ def pilot_api_assertions(project, endpoint_name):
             "property": "content-type",
             "operator": "contains",
             "target": "application/json",
-        },
-        "no_error_envelope": {
-            "type": "body",
-            "operator": "doesNotContain",
-            "target": '"error"',
         },
         "response_time": {
             "type": "responseTime",
@@ -275,6 +270,34 @@ def pilot_api_assertions(project, endpoint_name):
         },
     }
     return [dict(bundles[name]) for name in checks]
+
+
+def split_texts(value):
+    """A CSV text cell split on "|" into its non-blank, trimmed texts."""
+    return [t.strip() for t in (value or "").split("|") if t.strip()]
+
+
+def pilot_text_assertions(project, api):
+    """
+    API-test body checks built from the CSV's plain-text columns, for pilot
+    projects only (other projects ignore the columns):
+
+      Success_Element  each text must be in the response body
+      Error_Text       no text may be in the response body
+
+    Several texts can be given per cell, separated by "|".
+    """
+    if not pilot_config(project):
+        return []
+    assertions = [
+        {"type": "body", "operator": "contains", "target": text}
+        for text in split_texts(api.get("success_element"))
+    ]
+    assertions += [
+        {"type": "body", "operator": "doesNotContain", "target": text}
+        for text in split_texts(api.get("error_text"))
+    ]
+    return assertions
 
 
 def dd_app_base():

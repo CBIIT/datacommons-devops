@@ -99,7 +99,7 @@ $http.post('https://populationsciences-stage.datacommons.cancer.gov/v1/graphql/'
 
   }
 );",,C07E28M8R7T,,,,,,,,Private
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Portal,https://cbioportal.ccdi.cancer.gov,,Datasets,Expand_Data_Commons-ccdi-prod-cbio,,,,,,,,Public,Pediatric Cancer Studies,
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Portal,https://cbioportal.ccdi.cancer.gov,,Datasets,Expand_Data_Commons-ccdi-prod-cbio,,,,,,,,Public,Pediatric Cancer Studies,Request has been terminated|Unsuccessful HTTP response|Parser is unable to parse the response
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,Content,https://cbioportal-content.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-prod-cbio,,,"const assert = require('assert');
 
 const CONFIG = {
@@ -127,7 +127,7 @@ async function runMonitor() {
 runMonitor().catch(err => {
     console.error('Monitor Failed:', err.message);
     throw err;
-});",,,,,Public,Pediatric Cancer Studies,Request has been terminated
+});",,,,,Public,Pediatric Cancer Studies,Request has been terminated|Unsuccessful HTTP response|Parser is unable to parse the response
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,About,https://cbioportal-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-about.ccdi.cancer.gov/version.json',
@@ -145,7 +145,7 @@ $http.get('https://cbioportal-about.ccdi.cancer.gov/version.json',
 
     assert.ok('version' in body, 'Expected object to have version key');
   }
-);",,Expand_Data_Commons-ccdi-prod-cbio,,,,,,,,Public
+);",,Expand_Data_Commons-ccdi-prod-cbio,,,,,,,,Public,"""version""","""unknown""|<html"
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Prod,API,https://cbioportal-api.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api.ccdi.cancer.gov/api/cancer-types',
@@ -166,8 +166,8 @@ $http.get('https://cbioportal-api.ccdi.cancer.gov/api/cancer-types',
     assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
 
   }
-);",,Expand_Data_Commons-ccdi-prod-cbio,,,,,,,,Public
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,Datasets,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private,Pediatric Cancer Studies,
+);",,Expand_Data_Commons-ccdi-prod-cbio,,,,,,,,Public,cancerTypeId,"""error""|""message""|<html"
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Portal,https://cbioportal-dev.ccdi.cancer.gov,,Datasets,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private,Pediatric Cancer Studies,Request has been terminated|Unsuccessful HTTP response|Parser is unable to parse the response
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,Content,https://cbioportal-dev-content.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-cbio,,,"const assert = require('assert');
 
 const CONFIG = {
@@ -195,7 +195,7 @@ async function runMonitor() {
 runMonitor().catch(err => {
     console.error('Monitor Failed:', err.message);
     throw err;
-});",,,,,Private,Pediatric Cancer Studies,Request has been terminated
+});",,,,,Private,Pediatric Cancer Studies,Request has been terminated|Unsuccessful HTTP response|Parser is unable to parse the response
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,About,https://cbioportal-dev-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-dev-about.ccdi.cancer.gov/version.json',
@@ -213,7 +213,7 @@ $http.get('https://cbioportal-dev-about.ccdi.cancer.gov/version.json',
 
     assert.ok('version' in body, 'Expected object to have version key');
   }
-);",,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private
+);",,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private,"""version""","""unknown""|<html"
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Dev,API,https://cbioportal-api-dev.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
@@ -233,8 +233,8 @@ $http.get('https://cbioportal-api-dev.ccdi.cancer.gov/api/cancer-types',
     const firstObj = body[0];
     assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
   }
-);",,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,Datasets,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private,Pediatric Cancer Studies,
+);",,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private,cancerTypeId,"""error""|""message""|<html"
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Portal,https://cbioportal-qa.ccdi.cancer.gov,,Datasets,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private,Pediatric Cancer Studies,Request has been terminated|Unsuccessful HTTP response|Parser is unable to parse the response
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,Content,https://cbioportal-qa-content.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-cbio,,,"const assert = require('assert');
 
 const CONFIG = {
@@ -262,7 +262,7 @@ async function runMonitor() {
 runMonitor().catch(err => {
     console.error('Monitor Failed:', err.message);
     throw err;
-});",,,,,Private,Pediatric Cancer Studies,Request has been terminated
+});",,,,,Private,Pediatric Cancer Studies,Request has been terminated|Unsuccessful HTTP response|Parser is unable to parse the response
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,About,https://cbioportal-qa-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-qa-about.ccdi.cancer.gov/version.json',
@@ -280,7 +280,7 @@ $http.get('https://cbioportal-qa-about.ccdi.cancer.gov/version.json',
 
     assert.ok('version' in body, 'Expected object to have version key');
   }
-);",,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private
+);",,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private,"""version""","""unknown""|<html"
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Qa,API,https://cbioportal-api-qa.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api-qa.ccdi.cancer.gov/api/cancer-types',
@@ -301,8 +301,8 @@ $http.get('https://cbioportal-api-qa.ccdi.cancer.gov/api/cancer-types',
     assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
 
   }
-);",,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private
-cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Portal,https://cbioportal-stage.ccdi.cancer.gov,,Datasets,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private,Pediatric Cancer Studies,
+);",,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private,cancerTypeId,"""error""|""message""|<html"
+cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Portal,https://cbioportal-stage.ccdi.cancer.gov,,Datasets,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private,Pediatric Cancer Studies,Request has been terminated|Unsuccessful HTTP response|Parser is unable to parse the response
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,Content,https://cbioportal-stage-content.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-cbio,,,"const assert = require('assert');
 
 const CONFIG = {
@@ -330,7 +330,7 @@ async function runMonitor() {
 runMonitor().catch(err => {
     console.error('Monitor Failed:', err.message);
     throw err;
-});",,,,,Private,Pediatric Cancer Studies,Request has been terminated
+});",,,,,Private,Pediatric Cancer Studies,Request has been terminated|Unsuccessful HTTP response|Parser is unable to parse the response
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,About,https://cbioportal-stage-about.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-stage-about.ccdi.cancer.gov/version.json',
@@ -348,7 +348,7 @@ $http.get('https://cbioportal-stage-about.ccdi.cancer.gov/version.json',
 
     assert.ok('version' in body, 'Expected object to have version key');
   }
-);",,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private
+);",,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private,"""version""","""unknown""|<html"
 cBioPortal for Cancer Genomics,cbioportal,CCDI,Stage,API,https://cbioportal-api-stage.ccdi.cancer.gov,"var assert = require('assert');
 
 $http.get('https://cbioportal-api-stage.ccdi.cancer.gov/api/cancer-types',
@@ -369,7 +369,7 @@ $http.get('https://cbioportal-api-stage.ccdi.cancer.gov/api/cancer-types',
     assert.ok('cancerTypeId' in firstObj, 'Expected object to have cancerTypeId key');
 
   }
-);",,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private
+);",,Expand_Data_Commons-ccdi-subprod-cbio,,,,,,,,Private,cancerTypeId,"""error""|""message""|<html"
 Cancer Data Aggregator,CDA,CRDC,Prod,API,https://cda.datacommons.cancer.gov/,"var assert = require('assert');
 
 $http.get('https://cda.datacommons.cancer.gov/columns/',

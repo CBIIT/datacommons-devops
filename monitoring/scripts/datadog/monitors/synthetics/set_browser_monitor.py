@@ -452,7 +452,8 @@ def _success_and_error_steps(api, project):
                        must be present within 30 s. The XPath is built here,
                        so the CSV holds text only.
       Error_Text       text the app shows when a backend call fails. The
-                       page must not contain it.
+                       page must not contain it. Several texts can be given,
+                       separated by "|"; each becomes its own step.
     """
     if not dd_client.pilot_config(project):
         return []
@@ -482,14 +483,14 @@ def _success_and_error_steps(api, project):
             }
         )
 
-    if error_text:
+    for text in dd_client.split_texts(error_text):
         steps.append(
             {
-                "name": "Error text not shown",
+                "name": "Error text not shown: {}".format(text),
                 "type": "assertPageLacks",
                 "timeout": 10,
                 "isCritical": True,
-                "params": {"value": error_text},
+                "params": {"value": text},
             }
         )
 
