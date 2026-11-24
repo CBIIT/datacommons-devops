@@ -1,0 +1,86 @@
+
+    - name: Run ClamAV virus scanner
+      id: clamav-scan
+      env:
+        CLAMAV_DETECT_PUA: "false"          # set "true" to enable PUA detection
+        # CLAMAV_PUA_EXCLUDE: "Win.Trojan"    # comma-separated PUA categories to ignore
+        CLAMAV_FAIL_ON_FINDING: ${{ inputs.fail_on_av_scan }}
+      run: |
+        # Install ClamAV
+        sudo apt-get update -qq
+        sudo apt-get install -y clamav clamav-freshclam
+
+        # Stop services to unlock the DB
+        sudo systemctl stop clamav-freshclam clamav-daemon 2>/dev/null || true
+        sudo systemctl disable clamav-freshclam clamav-daemon 2>/dev/null || true
+
+        # Suppress the NotifyClamd error from freshclam
+        sudo sed -i '/^NotifyClamd/d' /etc/clamav/freshclam.conf 2>/dev/null || true
+
+        # Update virus definitions
+        sudo freshclam
+
+        # Save and extract the image
+        mkdir -p /tmp/image-scan /tmp/image-layers
+        docker save ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} -o /tmp/image.tar
+        tar xf /tmp/image.tar -C /tmp/image-scan
+
+        # Handle both legacy (layer.tar) and OCI (blobs/sha256) image layouts
+        # Legacy Docker image format
+        for layer_tar in /tmp/image-scan/*/layer.tar; do
+          [ -f "$layer_tar" ] && tar xf "$layer_tar" -C /tmp/image-layers 2>/dev/null || true
+        done
+
+        # OCI image format (blobs/sha256/*)
+        for blob in /tmp/image-scan/blobs/sha256/*; do
+          if [ -f "$blob" ] && file "$blob" | grep -q "tar archive\|gzip compressed"; then
+            tar xf "$blob" -C /tmp/image-layers 2>/dev/null || true
+          fi
+        done
+
+        echo "Total files staged for scanning: $(find /tmp/image-layers -type f | wc -l)"
+
+        # Build the clamscan argument list based on config
+        SCAN_ARGS=(
+          --recursive
+          --infected
+          --max-filesize=500M
+          --max-scansize=1G
+          --exclude-dir="^/proc"
+          --exclude-dir="^/sys"
+        )
+
+        if [ "${CLAMAV_DETECT_PUA}" = "true" ]; then
+          SCAN_ARGS+=(--detect-pua=yes)
+          # Exclude noisy PUA categories if any are specified
+          if [ -n "${CLAMAV_PUA_EXCLUDE}" ]; then
+            IFS=',' read -ra CATS <<< "${CLAMAV_PUA_EXCLUDE}"
+            for cat in "${CATS[@]}"; do
+              SCAN_ARGS+=(--exclude-pua="$(echo "$cat" | xargs)")
+            done
+          fi
+        fi
+
+        # Run the scan, capturing exit code (1 = virus found, 2 = error)
+        set +e
+        clamscan "${SCAN_ARGS[@]}" /tmp/image-layers
+        SCAN_EXIT=$?
+        set -e
+
+        echo "clamscan exit code: ${SCAN_EXIT}"
+
+        if [ "${SCAN_EXIT}" -eq 2 ]; then
+          echo "::error::ClamAV encountered an error during scanning."
+          exit 2
+        fi
+
+        if [ "${SCAN_EXIT}" -eq 1 ]; then
+          if [ "${CLAMAV_FAIL_ON_FINDING}" = "true" ]; then
+            echo "::error::ClamAV found infected files."
+            exit 1
+          else
+            echo "::warning::ClamAV found infected files, but CLAMAV_FAIL_ON_FINDING is false. Continuing."
+          fi
+        fi
+  
+      continue-on-error: false

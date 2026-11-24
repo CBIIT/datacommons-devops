@@ -1,0 +1,151 @@
+name: External PR Policy
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - labeled
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  enforce-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce PR source policy
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const overrideLabelName = "allow-external-pr";
+
+            const sameRepo =
+              pr.head.repo &&
+              pr.head.repo.full_name === pr.base.repo.full_name;
+
+            const labels = pr.labels.map(l => l.name);
+            const hasOverrideLabel = labels.includes(overrideLabelName);
+
+            console.log(`PR #${pr.number}`);
+            console.log(`Source repo: ${pr.head.repo?.full_name}`);
+            console.log(`Target repo: ${pr.base.repo.full_name}`);
+            console.log(`Same repo: ${sameRepo}`);
+            console.log(`Override label: ${hasOverrideLabel}`);
+            console.log(`Action: ${context.payload.action}`);
+
+            // --- Security: drop a stale override when new commits arrive ---
+            // If code changes (synchronize) while the override label is set,
+            // remove the label so a maintainer must review the new diff and
+            // re-apply it. Prevents approve-then-swap attacks.
+            if (context.payload.action === "synchronize" && hasOverrideLabel) {
+              try {
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  name: overrideLabelName
+                });
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  body:
+                    "New commits were pushed, so the `allow-external-pr` " +
+                    "override has been removed. A maintainer must re-apply " +
+                    "it after reviewing the updated changes."
+                });
+              } catch (e) {
+                console.log(`Could not remove label: ${e.message}`);
+              }
+              // Re-evaluate below as if the label is gone.
+              const idx = labels.indexOf(overrideLabelName);
+              if (idx > -1) labels.splice(idx, 1);
+            }
+
+            const hasOverrideNow = labels.includes(overrideLabelName);
+
+            // --- Handle maintainer-applied override label ---
+            if (
+              context.payload.action === "labeled" &&
+              context.payload.label?.name === overrideLabelName
+            ) {
+              const actor = context.actor;
+              const permission =
+                await github.rest.repos.getCollaboratorPermissionLevel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  username: actor
+                });
+
+              const allowed = ["write", "maintain", "admin"];
+              if (!allowed.includes(permission.data.permission)) {
+                console.log(`${actor} lacks permission to approve external PRs`);
+                // Remove the unauthorized label so it can't grant access.
+                try {
+                  await github.rest.issues.removeLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: pr.number,
+                    name: overrideLabelName
+                  });
+                } catch (e) {
+                  console.log(`Could not remove label: ${e.message}`);
+                }
+                return;
+              }
+
+              console.log(`Override approved by ${actor}`);
+              if (pr.state === "closed") {
+                await github.rest.pulls.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  state: "open"
+                });
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  body: `External PR override approved by @${actor}. Reopening pull request.`
+                });
+              }
+              return;
+            }
+
+            // --- Allowed cases ---
+            if (sameRepo || hasOverrideNow) {
+              console.log("PR source is allowed.");
+              return;
+            }
+
+            // --- Reject everything else ---
+            if (pr.state !== "closed") {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body: [
+                  "Thanks for the contribution.",
+                  "",
+                  "This repository only accepts pull requests from branches " +
+                  "within this repository.",
+                  "",
+                  "Pull requests from forks are automatically closed.",
+                  "",
+                  "A maintainer may apply the `allow-external-pr` label to " +
+                  "approve an exception."
+                ].join("\n")
+              });
+              await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                state: "closed"
+              });
+              console.log(`Closed disallowed PR #${pr.number}`);
+            }
