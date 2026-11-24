@@ -961,7 +961,7 @@ CCDI C3DC,c3dc,CCDI,dev,API Participant Read,https://clinicalcommons-dev.ccdi.ca
 $http.post('https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: \""participant_id\"", sort_direction: \""asc\"") { participant_id study_id } }',
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
       variables: {}
     }
   },
@@ -1012,7 +1012,7 @@ CCDI C3DC,c3dc,CCDI,qa,API Participant Read,https://clinicalcommons-qa.ccdi.canc
 $http.post('https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: \""participant_id\"", sort_direction: \""asc\"") { participant_id study_id } }',
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
       variables: {}
     }
   },
@@ -1063,7 +1063,7 @@ CCDI C3DC,c3dc,CCDI,Stage,API Participant Read,https://clinicalcommons-stage.ccd
 $http.post('https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: \""participant_id\"", sort_direction: \""asc\"") { participant_id study_id } }',
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
       variables: {}
     }
   },
@@ -1114,7 +1114,7 @@ CCDI C3DC,c3dc,CCDI,Prod,API Participant Read,https://clinicalcommons.ccdi.cance
 $http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: \""participant_id\"", sort_direction: \""asc\"") { participant_id study_id } }',
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
       variables: {}
     }
   },

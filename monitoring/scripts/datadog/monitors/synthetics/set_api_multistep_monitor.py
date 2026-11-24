@@ -74,7 +74,7 @@ _STATUS_ASSERT_LINE_RE = re.compile(r"assert\.equal\(\s*response\.statusCode[^;]
 _ASSERT_CALL_RE = re.compile(r"\bassert\.")
 _JSON_BLOCK_RE = re.compile(r"json\s*:\s*\{")
 _BARE_KEY_RE = re.compile(r"(?<=[{,\s])(\w+)\s*:")
-_SQ_STRING_RE = re.compile(r"'((?:[^'\\]|\\.)*)'")
+_JS_STRING_RE = re.compile(r"""'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*" """, re.VERBOSE)
 
 
 def _parse_request(script):
@@ -157,13 +157,26 @@ def _parse_js_assertion(script):
 def _js_object_literal_to_json(js_obj):
     """
     Best-effort conversion of a simple JS object literal (bare keys,
-    single-quoted strings) into a JSON string. Returns None if the result
-    isn't valid JSON.
+    single-quoted strings) into a JSON string without rewriting text inside
+    string values. Returns None if the result isn't valid JSON.
     """
-    quoted_keys = _BARE_KEY_RE.sub(r'"\1":', js_obj)
-    double_quoted = _SQ_STRING_RE.sub(lambda m: json.dumps(m.group(1)), quoted_keys)
+    strings = []
+
+    def mask_string(match):
+        literal = match.group(0)
+        if literal.startswith("'"):
+            literal = json.dumps(literal[1:-1])
+        index = len(strings)
+        strings.append(literal)
+        return "\x00{}\x00".format(index)
+
+    masked_strings = _JS_STRING_RE.sub(mask_string, js_obj)
+    quoted_keys = _BARE_KEY_RE.sub(r'"\1":', masked_strings)
+    for index, literal in enumerate(strings):
+        quoted_keys = quoted_keys.replace("\x00{}\x00".format(index), literal)
+
     try:
-        return json.dumps(json.loads(double_quoted))
+        return json.dumps(json.loads(quoted_keys))
     except ValueError:
         return None
 
