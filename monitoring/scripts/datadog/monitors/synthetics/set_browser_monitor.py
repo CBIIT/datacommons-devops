@@ -446,9 +446,11 @@ def _success_and_error_steps(api, project):
     (dd_client.STRATEGY_PILOT, i.e. cBio), in every tier; other projects
     ignore these columns.
 
-      Success_Element  XPath of an element that only exists when the page
-                       loaded its data from the backend (e.g. a row built
-                       from an API response). Must be present within 30 s.
+      Success_Element  plain text that only shows when the page loaded its
+                       data from the backend (e.g. a name built from an API
+                       response). An element whose own text is exactly this
+                       must be present within 30 s. The XPath is built here,
+                       so the CSV holds text only.
       Error_Text       text the app shows when a backend call fails. The
                        page must not contain it.
     """
@@ -456,10 +458,13 @@ def _success_and_error_steps(api, project):
         return []
 
     steps = []
-    success_xpath = (api.get("success_element") or "").strip()
+    success_text = (api.get("success_element") or "").strip()
     error_text = (api.get("error_text") or "").strip()
 
-    if success_xpath:
+    if success_text:
+        success_xpath = "(//*[text()[normalize-space()={}]])[1]".format(
+            _xpath_string_literal(success_text)
+        )
         steps.append(
             {
                 "name": "Success element present",
