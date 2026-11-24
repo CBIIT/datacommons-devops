@@ -961,25 +961,26 @@ CCDI C3DC,c3dc,CCDI,dev,API Participant Read,https://clinicalcommons-dev.ccdi.ca
 $http.post('https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
-      variables: {}
+      variables: {},
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }'
     }
   },
-  function (err, response, body) {
+  function (err, response, responseBody) {
     if (err) {
       throw new Error(err);
     }
-    console.log('Response:', body);
+    console.log('Response:', responseBody);
     console.log('Response:', response.statusCode);
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
-    assert.deepStrictEqual(parsedBody.errors || [], [], 'Expected no GraphQL errors');
-    const rows = parsedBody.data && parsedBody.data.participantOverview;
-    assert.ok(Array.isArray(rows), 'participantOverview should be an array');
-    assert.strictEqual(rows.length, 1, 'Expected exactly one participant');
-    for (const field of ['participant_id', 'study_id']) {
-      assert.strictEqual(typeof rows[0][field], 'string', field + ' should be a string');
-      assert.ok(rows[0][field].trim().length > 0, field + ' should not be empty');
+
+    const body = JSON.parse(dd.response.body);
+    dd.expect(body.errors ?? []).to.deep.equal([]);
+    const rows = body.data.participantOverview;
+    dd.expect(rows).to.be.an(""array"").with.lengthOf(1);
+
+    for (const field of [""participant_id"", ""study_id""]) {
+      dd.expect(rows[0][field], field).to.be.a(""string"").and.not.empty;
+
     }
   }
 );""",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
@@ -1012,25 +1013,26 @@ CCDI C3DC,c3dc,CCDI,qa,API Participant Read,https://clinicalcommons-qa.ccdi.canc
 $http.post('https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
-      variables: {}
+      variables: {},
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }'
     }
   },
-  function (err, response, body) {
+  function (err, response, responseBody) {
     if (err) {
       throw new Error(err);
     }
-    console.log('Response:', body);
+    console.log('Response:', responseBody);
     console.log('Response:', response.statusCode);
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
-    assert.deepStrictEqual(parsedBody.errors || [], [], 'Expected no GraphQL errors');
-    const rows = parsedBody.data && parsedBody.data.participantOverview;
-    assert.ok(Array.isArray(rows), 'participantOverview should be an array');
-    assert.strictEqual(rows.length, 1, 'Expected exactly one participant');
-    for (const field of ['participant_id', 'study_id']) {
-      assert.strictEqual(typeof rows[0][field], 'string', field + ' should be a string');
-      assert.ok(rows[0][field].trim().length > 0, field + ' should not be empty');
+
+    const body = JSON.parse(dd.response.body);
+    dd.expect(body.errors ?? []).to.deep.equal([]);
+    const rows = body.data.participantOverview;
+    dd.expect(rows).to.be.an(""array"").with.lengthOf(1);
+
+    for (const field of [""participant_id"", ""study_id""]) {
+      dd.expect(rows[0][field], field).to.be.a(""string"").and.not.empty;
+
     }
   }
 );""",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
@@ -1063,25 +1065,26 @@ CCDI C3DC,c3dc,CCDI,Stage,API Participant Read,https://clinicalcommons-stage.ccd
 $http.post('https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
-      variables: {}
+      variables: {},
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }'
     }
   },
-  function (err, response, body) {
+  function (err, response, responseBody) {
     if (err) {
       throw new Error(err);
     }
-    console.log('Response:', body);
+    console.log('Response:', responseBody);
     console.log('Response:', response.statusCode);
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
-    assert.deepStrictEqual(parsedBody.errors || [], [], 'Expected no GraphQL errors');
-    const rows = parsedBody.data && parsedBody.data.participantOverview;
-    assert.ok(Array.isArray(rows), 'participantOverview should be an array');
-    assert.strictEqual(rows.length, 1, 'Expected exactly one participant');
-    for (const field of ['participant_id', 'study_id']) {
-      assert.strictEqual(typeof rows[0][field], 'string', field + ' should be a string');
-      assert.ok(rows[0][field].trim().length > 0, field + ' should not be empty');
+
+    const body = JSON.parse(dd.response.body);
+    dd.expect(body.errors ?? []).to.deep.equal([]);
+    const rows = body.data.participantOverview;
+    dd.expect(rows).to.be.an(""array"").with.lengthOf(1);
+
+    for (const field of [""participant_id"", ""study_id""]) {
+      dd.expect(rows[0][field], field).to.be.a(""string"").and.not.empty;
+
     }
   }
 );""",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
@@ -1114,25 +1117,26 @@ CCDI C3DC,c3dc,CCDI,Prod,API Participant Read,https://clinicalcommons.ccdi.cance
 $http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }',
-      variables: {}
+      variables: {},
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: ""participant_id"", sort_direction: ""asc"") { participant_id study_id } }'
     }
   },
-  function (err, response, body) {
+  function (err, response, responseBody) {
     if (err) {
       throw new Error(err);
     }
-    console.log('Response:', body);
+    console.log('Response:', responseBody);
     console.log('Response:', response.statusCode);
     assert.equal(response.statusCode, 200, 'Expected a 200 OK response');
-    const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
-    assert.deepStrictEqual(parsedBody.errors || [], [], 'Expected no GraphQL errors');
-    const rows = parsedBody.data && parsedBody.data.participantOverview;
-    assert.ok(Array.isArray(rows), 'participantOverview should be an array');
-    assert.strictEqual(rows.length, 1, 'Expected exactly one participant');
-    for (const field of ['participant_id', 'study_id']) {
-      assert.strictEqual(typeof rows[0][field], 'string', field + ' should be a string');
-      assert.ok(rows[0][field].trim().length > 0, field + ' should not be empty');
+
+    const body = JSON.parse(dd.response.body);
+    dd.expect(body.errors ?? []).to.deep.equal([]);
+    const rows = body.data.participantOverview;
+    dd.expect(rows).to.be.an(""array"").with.lengthOf(1);
+
+    for (const field of [""participant_id"", ""study_id""]) {
+      dd.expect(rows[0][field], field).to.be.a(""string"").and.not.empty;
+
     }
   }
 );""",,Expand_Data_Commons-ccdi-prod-c3dc,,,,,,,,Public

@@ -72,6 +72,7 @@ _ERR_CHECK_RE = re.compile(r"if\s*\(\s*\w+\s*\)\s*(?:\{[^{}]*\}|[^;{}]*;)")
 _CONSOLE_LOG_RE = re.compile(r"console\.log\([^;]*\);")
 _STATUS_ASSERT_LINE_RE = re.compile(r"assert\.equal\(\s*response\.statusCode[^;]*;")
 _ASSERT_CALL_RE = re.compile(r"\bassert\.")
+_BODY_PARSE_RE = re.compile(r"\bconst\s+\w+\s*=\s*JSON\.parse\(dd\.response\.body\)\s*;")
 _JSON_BLOCK_RE = re.compile(r"json\s*:\s*\{")
 _BARE_KEY_RE = re.compile(r"(?<=[{,\s])(\w+)\s*:")
 _JS_STRING_RE = re.compile(r"""'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*" """, re.VERBOSE)
@@ -146,7 +147,7 @@ def _parse_js_assertion(script):
 
     lines = _extract_helper_functions(script)
     body_param = callback_match.group(3)
-    if body_param:
+    if body_param and not _BODY_PARSE_RE.search(inner):
         lines.append("const {} = JSON.parse(dd.response.body);".format(body_param))
     lines.append(inner)
 
