@@ -2,7 +2,7 @@
 
 import sys, getopt, json, os, csv, codecs, requests, contextlib
 from monitors.alerts.policies import set_fargate_policy, set_alb_policy, set_opensearch_policy, set_synthetics_policy
-from monitors.synthetics import set_synthetics_monitor_simple_browser, set_synthetics_monitor_scripted_api, set_synthetics_monitor_cert_expiration
+from monitors.synthetics import set_synthetics_monitor_simple_browser, set_synthetics_monitor_scripted_api, set_synthetics_monitor_scripted_browser, set_synthetics_monitor_cert_expiration
 from monitors.alerts.destinations import set_email_destination, set_slack_destination
 from monitors.alerts.workflows import set_workflow
 
@@ -72,6 +72,13 @@ def setMonitors(input_url, policyList):
        global key
        key = os.getenv('KEY')
        slack_channel = row["Slack_Channel"]
+       alert_email = row["Alert_Email"]
+       if alert_email:
+         dest_name = project + '-' + tier
+       else:
+         alert_email = os.getenv('EMAIL')
+         dest_name = "DevOps-FNL"
+
        resources = row["Monitored_Resources"].split(",")
 
        if project + '-' + tier not in tiersSet:
@@ -79,7 +86,7 @@ def setMonitors(input_url, policyList):
          print('Adding Monitor Configuration For: {} {}'.format(project, tier))
          print()
 
-         email_id = set_email_destination.setalertemail("DevOps-FNL", project, tier, key)
+         email_id = set_email_destination.setalertemail(dest_name, project, tier, key, alert_email)
          slack_id = set_slack_destination.setalertslack("Expand Data Commons", project, tier, key, slack_channel)
          workflow_id = set_workflow.setalertworkflow(project + " " + tier + " Notifications", email_id, slack_id, project, tier, key)
 
@@ -125,9 +132,13 @@ def setSynthetics(input_url, policyList):
        api = json.loads(json.dumps(api_data))
        api.update({"location": row["Private_Location"]})
        api.update({"query": row["Endpoint_Query"]})
+       api.update({"browser_query": row["Browser_Query"]})
+       api.update({"text": row["Validation_Text"]})
 
        if api['query']:
          set_synthetics_monitor_scripted_api.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
+       elif api['browser_query']:
+         set_synthetics_monitor_scripted_browser.setSyntheticsMonitor(project, tier, key, api, synthetics_policy_id)
        elif tier.lower() == 'prod' and api['name'].lower() == 'portal':
          set_synthetics_monitor_simple_browser.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)
          set_synthetics_monitor_cert_expiration.setsyntheticsmonitor(project, tier, key, api, synthetics_policy_id)

@@ -1,0 +1,154 @@
+@Library('datacommons-jenkins-shared-library@v1.2') _
+import groovy.json.JsonSlurper
+
+@NonCPS
+def sortImages(List imageList) {
+    imageList.sort { a, b ->
+        (a.Name?.toString()?.toLowerCase() ?: '') <=> (b.Name?.toString()?.toLowerCase() ?: '')
+    }
+}
+
+pipeline {
+	agent {
+		node {
+			label 'slave-ncias-d2940-c'
+		}
+	}
+
+  parameters {
+
+  string(defaultValue: "michael.fleming@nih.gov,zhengwu.lu@nih.gov,cole.devries@nih.gov,amit.mukherjee@nih.gov", 
+        description: 'Enter a list of email addresses to notify with results:', 
+        name: 'EmailRecipients')
+
+  }
+  
+  environment {
+
+	CODE_REPO      = "datacommons-devops"
+	CODE_FOLDER    = "datacommons-devops"
+	CODE_BRANCH    = "main"
+
+	API_URI        = "https://api.github.com"
+	ORG            = "CBIIT"
+
+	BASE_IMAGE_TAG = "fnl_base_image"
+
+  }
+
+  stages{
+  	stage('checkout'){
+  		steps {
+
+		checkout([$class: 'GitSCM',
+			branches: [[name: "${env.CODE_BRANCH}"]],
+			extensions: [[$class: 'SubmoduleOption', 
+			recursiveSubmodules: true],
+			[$class: 'RelativeTargetDirectory',
+			relativeTargetDir: "${env.CODE_FOLDER}"]],
+			userRemoteConfigs:
+			[[url: "https://github.com/CBIIT/${env.CODE_REPO}"]]])
+
+        }
+
+  	}
+
+   stage('Image List'){
+
+ 		steps {
+
+ 			script {
+				// set Github Token
+				env.GITHUB_ACCESS_TOKEN = sh(label: 'Get PAT', returnStdout: true, script: "aws secretsmanager get-secret-value --region 'us-east-1' --secret-id github/pat --query SecretString --output text | jq -r '.all_repos'").trim()
+
+				def imageResults = sh(script: "python3 $WORKSPACE/$CODE_FOLDER/jenkins/scripts/check_docker_images.py", returnStdout: true)
+                baseImages = readJSON text: imageResults
+                def imageJson = baseImages['images']
+
+				// consolidate base image list to remove duplicate entries
+				imageList = []
+				imageJson.each { image ->
+				  def currentImage = imageList.find{ it.Name == image.Name }
+				  if( !(currentImage == null) ) {
+					currentImage.Projects += ", $image.Projects"
+				  } else {
+					imageList.add(image)
+				  }
+				}
+				sortImages(imageList)
+			}
+
+		}
+
+ 	}
+
+	stage('Image Scans'){
+
+ 		steps {
+
+ 			script {
+				RESULTS = ""
+				IMAGES = ""
+
+				// Add image list to RESULTS
+				IMAGES += "Images Scanned (total repos checked:  ${baseImages['repo_count']}):\n\n"
+				imageList.each { image ->
+					IMAGES += "Name:  $image.Name     Projects:  $image.Projects\n"
+
+				}
+
+				imageList.each { image ->
+					scout_out=sh(label: 'Get scan results', returnStdout: true, script: "docker scout cves --only-severity critical,high $image.Name").trim()
+					if (!(scout_out.contains("No vulnerable packages detected"))) {
+					    RESULTS += "\n\nResults: $image.Projects\n$scout_out\n\n"
+						RESULTS += "############################################################################################################################"
+					}
+
+				}
+
+				println IMAGES
+				println RESULTS
+
+				if(RESULTS) {
+                    catchError(stageResult: 'FAILURE') {
+                        error 'VULNERABILITIES FOUND'
+                    }
+					RESULTS = IMAGES + RESULTS
+				}
+
+			}
+
+ 		}
+
+  	}
+
+
+  }
+
+  post {
+
+	failure {
+
+		script {
+
+			RESULTS_FILE = sh(label: 'Get results file name', returnStdout: true, script: "echo results_\$(date '+%Y%m%d').txt").trim()
+			writeFile(file: RESULTS_FILE, text: RESULTS)
+
+		}
+		
+		emailext(attachmentsPattern: 'results_*.txt',
+			mimeType: 'text/html',
+			body: "Base Image scan results attached",
+			subject: "Base Image Vulnerabilities Found",
+			to: "${EmailRecipients}")
+    }
+
+    cleanup {
+
+        cleanWs()
+
+    }
+
+  }
+
+}

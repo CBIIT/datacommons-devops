@@ -5,10 +5,9 @@ import json
 import requests
 from monitors.alerts.channels import set_email_channel
 
-def setalertemail(dest_name, project, tier, key):
+def setalertemail(dest_name, project, tier, key, alert_email):
    API_ENDPOINT = 'https://api.newrelic.com/graphql'
    NR_ACCT_ID = os.getenv('NR_ACCT_ID')
-   EMAIL = os.getenv('EMAIL')
 
    dest_found = False
    headers = {
@@ -76,7 +75,7 @@ def setalertemail(dest_name, project, tier, key):
          "properties: ["
            "{"
              "key: \"email\","
-             "value: \"" + EMAIL + "\""
+             "value: \"" + alert_email + "\""
            "}"
          "]"
          "}) {"

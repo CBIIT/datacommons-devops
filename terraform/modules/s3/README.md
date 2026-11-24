@@ -40,7 +40,6 @@ No modules.
 | <a name="input_s3_intelligent_tiering_status"></a> [s3\_intelligent\_tiering\_status](#input\_s3\_intelligent\_tiering\_status) | Set the status of the intelligent tiering configuration. Options include Enabled and Disabled | `string` | `"Enabled"` | no |
 | <a name="input_s3_log_prefix"></a> [s3\_log\_prefix](#input\_s3\_log\_prefix) | The prefix for the destination of the server access logs for an S3 bucket | `string` | `"logs/"` | no |
 | <a name="input_s3_versioning_status"></a> [s3\_versioning\_status](#input\_s3\_versioning\_status) | Set the status of the bucket versioning feature. Options include Enabled and Disabled | `string` | `"Enabled"` | no |
-| <a name="input_stack_name"></a> [stack\_name](#input\_stack\_name) | name of the project | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | tags to associate with this resource | `map(string)` | n/a | yes |
 
 ## Outputs

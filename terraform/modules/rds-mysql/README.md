@@ -5,19 +5,21 @@
 # Usage
 
 <!-- BEGIN_TF_DOCS -->
-# Requirements
+## Requirements
+
+No requirements.
+
+## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
 
-# Providers
+## Modules
 
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
+No modules.
 
-# Resources
+## Resources
 
 | Name | Type |
 |------|------|
@@ -27,13 +29,13 @@
 | [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_security_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
-| [aws_security_group_rule.inbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.outbound](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.trust](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
-# Inputs
+## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
@@ -67,6 +69,7 @@
 | <a name="input_performance_insights_retention_period"></a> [performance\_insights\_retention\_period](#input\_performance\_insights\_retention\_period) | performance insights retention period in days - between 7 and 731 with a multiple of 31 | `number` | `7` | no |
 | <a name="input_program"></a> [program](#input\_program) | the program associated with the application | `string` | n/a | yes |
 | <a name="input_rds_suffix"></a> [rds\_suffix](#input\_rds\_suffix) | suffix to append to the rds instance name | `string` | `"rds"` | no |
+| <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | the prefix to add when creating resources | `string` | n/a | yes |
 | <a name="input_snapshot_identifier"></a> [snapshot\_identifier](#input\_snapshot\_identifier) | snapshot identifier to use for the instance - required if create\_from\_snapshot is true | `string` | `null` | no |
 | <a name="input_storage_throughput"></a> [storage\_throughput](#input\_storage\_throughput) | storage throughput in gibibytes per second - only valid for 'gp3' storage type | `number` | `125` | no |
 | <a name="input_storage_type"></a> [storage\_type](#input\_storage\_type) | type of ebs block storage to associate with the instance - either 'standard', 'gp2', 'gp3', or 'io1' | `string` | `"gp3"` | no |
@@ -76,7 +79,7 @@
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | id of the vpc to create the security group in - required if create\_security\_group is true | `string` | `null` | no |
 | <a name="input_vpc_security_group_ids"></a> [vpc\_security\_group\_ids](#input\_vpc\_security\_group\_ids) | list of security group ids to associate with the instance - required if create\_security\_group is false | `list(string)` | `[]` | no |
 
-# Outputs
+## Outputs
 
 | Name | Description |
 |------|-------------|

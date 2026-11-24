@@ -4,6 +4,7 @@ data "aws_caller_identity" "current" {
 data "aws_region" "current" {}
 
 data "aws_iam_policy_document" "kms" {
+  count = var.create_kms_key ? 1 : 0
 
   statement {
     effect = "Allow"
@@ -52,8 +53,8 @@ data "aws_iam_policy_document" "kms" {
       "kms:Verify"
     ]
     resources = [
-      aws_kms_key.this.arn,
-      aws_kms_alias.this.arn
+      aws_kms_key.this[0].arn,
+      aws_kms_alias.this[0].arn
     ]
   }
 
@@ -78,7 +79,7 @@ data "aws_iam_policy_document" "kms" {
       "kms:DescribeKey"
     ]
     resources = [
-      aws_kms_key.this.arn
+      aws_kms_key.this[0].arn
     ]
     condition {
       test     = "StringEquals"

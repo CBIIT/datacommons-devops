@@ -10,11 +10,15 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
    API_ENDPOINT = 'https://api.newrelic.com/graphql'
    NR_ACCT_ID = os.getenv('NR_ACCT_ID')
    monitor_name = '{} {} Certificate Monitor'.format(project, tier)
-   location = "public: [\"AWS_US_EAST_1\"]"
    domain = api['url'].replace("https://","")
    domain = domain.replace("/","")
    period = "EVERY_DAY"
    daysToFail = "30"
+
+   if api['location'].lower() in ['true']:
+     location = "private: [\"" + os.getenv('LOCATION') + "\"]"
+   else:
+     location = "public: [\"AWS_US_EAST_1\"]"
 
    monitor_found = False
    headers = {
@@ -72,6 +76,10 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
              "domain: \"" + domain + "\","
              "numberDaysToFailBeforeCertExpires: " + daysToFail + ","
              "status: ENABLED,"
+             "runtime: {"
+               "runtimeType: \"NODE_API\","
+               "runtimeTypeVersion: \"16.10\","
+             "},"
              "tags: ["
                "{"
                  "key: \"Project\","
@@ -109,6 +117,10 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
            "domain: \"" + domain + "\","
            "numberDaysToFailBeforeCertExpires: " + daysToFail + ","
            "status: ENABLED,"
+           "runtime: {"
+             "runtimeType: \"NODE_API\","
+             "runtimeTypeVersion: \"16.10\","
+           "},"
            "tags: ["
              "{"
                "key: \"Project\","
@@ -133,7 +145,7 @@ def setsyntheticsmonitor(project, tier, key, api, policy_id):
      except (requests.exceptions.RequestException, ValueError) as e:
        raise SystemExit(e)
      print("{} was created".format(monitor_name))
-
+     
      # get the newly created monitor
      # pause to allow it to be created
      time.sleep(15)

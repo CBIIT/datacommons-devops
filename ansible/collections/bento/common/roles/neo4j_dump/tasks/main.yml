@@ -1,0 +1,9 @@
+- name: Create Dump File
+  include_tasks:
+    file: data-dump.yml
+  when: dump_stage
+
+# - name: Push Dump File
+#   include_tasks:
+#     file: push_dump.yml
+#   when: dump_stage
