@@ -72,9 +72,10 @@ _ERR_CHECK_RE = re.compile(r"if\s*\(\s*\w+\s*\)\s*(?:\{[^{}]*\}|[^;{}]*;)")
 _CONSOLE_LOG_RE = re.compile(r"console\.log\([^;]*\);")
 _STATUS_ASSERT_LINE_RE = re.compile(r"assert\.equal\(\s*response\.statusCode[^;]*;")
 _ASSERT_CALL_RE = re.compile(r"\bassert\.")
+_BODY_PARSE_RE = re.compile(r"\bconst\s+\w+\s*=\s*JSON\.parse\(dd\.response\.body\)\s*;")
 _JSON_BLOCK_RE = re.compile(r"json\s*:\s*\{")
 _BARE_KEY_RE = re.compile(r"(?<=[{,\s])(\w+)\s*:")
-_SQ_STRING_RE = re.compile(r"'((?:[^'\\]|\\.)*)'")
+_JS_STRING_RE = re.compile(r"""'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*" """, re.VERBOSE)
 
 
 def _parse_request(script):
@@ -146,7 +147,7 @@ def _parse_js_assertion(script):
 
     lines = _extract_helper_functions(script)
     body_param = callback_match.group(3)
-    if body_param:
+    if body_param and not _BODY_PARSE_RE.search(inner):
         lines.append("const {} = JSON.parse(dd.response.body);".format(body_param))
     lines.append(inner)
 
@@ -157,13 +158,26 @@ def _parse_js_assertion(script):
 def _js_object_literal_to_json(js_obj):
     """
     Best-effort conversion of a simple JS object literal (bare keys,
-    single-quoted strings) into a JSON string. Returns None if the result
-    isn't valid JSON.
+    single-quoted strings) into a JSON string without rewriting text inside
+    string values. Returns None if the result isn't valid JSON.
     """
-    quoted_keys = _BARE_KEY_RE.sub(r'"\1":', js_obj)
-    double_quoted = _SQ_STRING_RE.sub(lambda m: json.dumps(m.group(1)), quoted_keys)
+    strings = []
+
+    def mask_string(match):
+        literal = match.group(0)
+        if literal.startswith("'"):
+            literal = json.dumps(literal[1:-1])
+        index = len(strings)
+        strings.append(literal)
+        return "\x00{}\x00".format(index)
+
+    masked_strings = _JS_STRING_RE.sub(mask_string, js_obj)
+    quoted_keys = _BARE_KEY_RE.sub(r'"\1":', masked_strings)
+    for index, literal in enumerate(strings):
+        quoted_keys = quoted_keys.replace("\x00{}\x00".format(index), literal)
+
     try:
-        return json.dumps(json.loads(double_quoted))
+        return json.dumps(json.loads(quoted_keys))
     except ValueError:
         return None
 
