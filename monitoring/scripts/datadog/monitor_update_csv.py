@@ -331,6 +331,10 @@ def setSynthetics(input_url):
                 "query": row["Endpoint_Query"],
                 "browser_query": row["Browser_Query"],
                 "text": row["Validation_Text"],
+                # Optional browser checks (see set_browser_monitor.py). Read
+                # with .get() so a CSV without these columns still works.
+                "success_element": row.get("Success_Element") or "",
+                "error_text": row.get("Error_Text") or "",
             }
 
             monitor_id = None

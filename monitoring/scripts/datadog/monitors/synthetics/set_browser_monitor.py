@@ -438,6 +438,59 @@ def _refresh_step():
     }
 
 
+def _success_and_error_steps(api, project):
+    """
+    Optional "the page really loaded its data" checks from the CSV, appended
+    after the main assertion. Blank cells add nothing, so rows without them
+    are built exactly as before. Only applied to strategy pilot projects
+    (dd_client.STRATEGY_PILOT, i.e. cBio), in every tier; other projects
+    ignore these columns.
+
+      Success_Element  XPath of an element that only exists when the page
+                       loaded its data from the backend (e.g. a row built
+                       from an API response). Must be present within 30 s.
+      Error_Text       text the app shows when a backend call fails. The
+                       page must not contain it.
+    """
+    if not dd_client.pilot_config(project):
+        return []
+
+    steps = []
+    success_xpath = (api.get("success_element") or "").strip()
+    error_text = (api.get("error_text") or "").strip()
+
+    if success_xpath:
+        steps.append(
+            {
+                "name": "Success element present",
+                "type": "assertElementPresent",
+                "timeout": 30,
+                "isCritical": True,
+                "params": {
+                    "element": {
+                        "userLocator": {
+                            "failTestOnCannotLocate": True,
+                            "values": [{"type": "xpath", "value": success_xpath}],
+                        },
+                    },
+                },
+            }
+        )
+
+    if error_text:
+        steps.append(
+            {
+                "name": "Error text not shown",
+                "type": "assertPageLacks",
+                "timeout": 10,
+                "isCritical": True,
+                "params": {"value": error_text},
+            }
+        )
+
+    return steps
+
+
 def setmonitor(project, tier, api, notification):
 
     monitor_name = dd_client.synthetic_test_name(project, tier, api["name"])
@@ -681,6 +734,8 @@ def setmonitor(project, tier, api, notification):
                 )
 
 
+
+    steps.extend(_success_and_error_steps(api, project))
 
     payload = {
 
