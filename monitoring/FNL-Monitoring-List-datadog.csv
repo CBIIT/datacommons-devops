@@ -957,12 +957,12 @@ $http.post('https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/',
 
   }
 );",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
-CCDI C3DC,c3dc,CCDI,dev,API Participant Read,https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
+CCDI C3DC,c3dc,CCDI,dev,API Participant Read,https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/,"""var assert = require('assert');
 $http.post('https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
-      variables: {},
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: \""participant_id\"", sort_direction: \""asc\"") { participant_id study_id } }'
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: \""""participant_id\"""", sort_direction: \""""asc\"""") { participant_id study_id } }',
+      variables: {}
     }
   },
   function (err, response, body) {
@@ -982,7 +982,7 @@ $http.post('https://clinicalcommons-dev.ccdi.cancer.gov/v1/graphql/',
       assert.ok(rows[0][field].trim().length > 0, field + ' should not be empty');
     }
   }
-);",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
+);""",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,qa,Portal,https://clinicalcommons-qa.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,qa,API,https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
 
@@ -1008,12 +1008,12 @@ $http.post('https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/',
 
   }
 );",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
-CCDI C3DC,c3dc,CCDI,qa,API Participant Read,https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
+CCDI C3DC,c3dc,CCDI,qa,API Participant Read,https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/,"""var assert = require('assert');
 $http.post('https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
-      variables: {},
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: \""participant_id\"", sort_direction: \""asc\"") { participant_id study_id } }'
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: \""""participant_id\"""", sort_direction: \""""asc\"""") { participant_id study_id } }',
+      variables: {}
     }
   },
   function (err, response, body) {
@@ -1033,7 +1033,7 @@ $http.post('https://clinicalcommons-qa.ccdi.cancer.gov/v1/graphql/',
       assert.ok(rows[0][field].trim().length > 0, field + ' should not be empty');
     }
   }
-);",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
+);""",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,Stage,Portal,https://clinicalcommons-stage.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,Stage,API,https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
 
@@ -1059,12 +1059,12 @@ $http.post('https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/',
 
   }
 );",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
-CCDI C3DC,c3dc,CCDI,Stage,API Participant Read,https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
+CCDI C3DC,c3dc,CCDI,Stage,API Participant Read,https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/,"""var assert = require('assert');
 $http.post('https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
-      variables: {},
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: \""participant_id\"", sort_direction: \""asc\"") { participant_id study_id } }'
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: \""""participant_id\"""", sort_direction: \""""asc\"""") { participant_id study_id } }',
+      variables: {}
     }
   },
   function (err, response, body) {
@@ -1084,7 +1084,7 @@ $http.post('https://clinicalcommons-stage.ccdi.cancer.gov/v1/graphql/',
       assert.ok(rows[0][field].trim().length > 0, field + ' should not be empty');
     }
   }
-);",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
+);""",,Expand_Data_Commons-ccdi-subprod-c3dc,,,,,,,,Private
 CCDI C3DC,c3dc,CCDI,Prod,Portal,https://clinicalcommons.ccdi.cancer.gov,,,Expand_Data_Commons-ccdi-prod-c3dc,,,,,,,,Public
 CCDI C3DC,c3dc,CCDI,Prod,API,https://clinicalcommons.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
 
@@ -1110,12 +1110,12 @@ $http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
 
   }
 );",,Expand_Data_Commons-ccdi-prod-c3dc,,,,,,,,Public
-CCDI C3DC,c3dc,CCDI,Prod,API Participant Read,https://clinicalcommons.ccdi.cancer.gov/v1/graphql/,"var assert = require('assert');
+CCDI C3DC,c3dc,CCDI,Prod,API Participant Read,https://clinicalcommons.ccdi.cancer.gov/v1/graphql/,"""var assert = require('assert');
 $http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
   {
     json: {
-      variables: {},
-      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: \""participant_id\"", sort_direction: \""asc\"") { participant_id study_id } }'
+      query: 'query DatadogParticipantRead { participantOverview(participant_ids: [], first: 1, offset: 0, order_by: \""""participant_id\"""", sort_direction: \""""asc\"""") { participant_id study_id } }',
+      variables: {}
     }
   },
   function (err, response, body) {
@@ -1135,7 +1135,7 @@ $http.post('https://clinicalcommons.ccdi.cancer.gov/v1/graphql/',
       assert.ok(rows[0][field].trim().length > 0, field + ' should not be empty');
     }
   }
-);",,Expand_Data_Commons-ccdi-prod-c3dc,,,,,,,,Public
+);""",,Expand_Data_Commons-ccdi-prod-c3dc,,,,,,,,Public
 Index of NCI Studies,ins,CCDI,Dev,Portal,https://studycatalog-dev.cancer.gov,,,Expand_Data_Commons-ccdi-subprod-ins,,,,,,,,Private
 Index of NCI Studies,ins,CCDI,Dev,API,https://studycatalog-dev.cancer.gov/v1/graphql/,"var assert = require('assert');
 
