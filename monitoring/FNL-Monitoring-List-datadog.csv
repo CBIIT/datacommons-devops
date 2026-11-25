@@ -1626,7 +1626,7 @@ $http.get('https://studycatalog.cancer.gov/service/ping',
  
   }
 );""",,Expand_Data_Commons-ccdi-prod-ins,,,,,,,,Public
-CCDI Datasharing,Datasharing Hub,CCDI,Prod,Portal,https://datasharing.cancer.gov/post/Data/cancer-data-resources/,,,Expand_Data_Commons-ccdi-datasharing-prod,,,,,,,,Public
+CCDI Datasharing,Datasharing Hub,CCDI,Prod,Portal,https://datasharing.cancer.gov/post/About/About-ODS/,,ODS Mission,Expand_Data_Commons-ccdi-datasharing-prod,,,,,,,,Public
 CCDI DCC Federation API Server,DCC,CCDI,Dev,API Subject,https://dcc-dev.ccdi.cancer.gov/api/v1/subject,"var assert = require('assert');
 
 $http.get('https://dcc-dev.ccdi.cancer.gov/api/v1/subject',
